@@ -1,0 +1,9 @@
+{
+  "extends": ["@folio/eslint-config-stripes/acquisitions"],
+  "parser": "@babel/eslint-parser",
+  "overrides": [
+    {
+      "files": [ "src/**/tests/*", "test/**/*" ]
+    }
+  ]
+}
