@@ -23,7 +23,7 @@
     "build": "yarn stripes build --output ./output",
     "lint": "eslint .",
     "start": "yarn stripes serve",
-    "test": "jest --ci --coverage && yarn run test:report",
+    "test": "jest --ci --coverage --passWithNoTests",
     "test:report": "cp -r ./artifacts/coverage-jest ./artifacts/coverage",
     "test:watch": "jest --ci --coverage --watch",
     "build-mod-descriptor": "stripes mod descriptor --full --strict | jq '.[]' > module-descriptor.json ",
