@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Icon, Loading, Row, Headline } from '@folio/stripes/components';
 
-const QueryLoader = ({ title }) => {
+export const QueryLoader = ({ title }) => {
   return (
     <Card
       id="my-card"
@@ -29,5 +29,3 @@ const QueryLoader = ({ title }) => {
 QueryLoader.propTypes = {
   title: PropTypes.string,
 };
-
-export default QueryLoader;

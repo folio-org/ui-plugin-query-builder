@@ -2,10 +2,10 @@ import React, { memo, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row, Accordion, AccordionSet, MultiColumnList, Headline } from '@folio/stripes/components';
 import { PrevNextPagination, usePagination } from '@folio/stripes-acq-components';
-import QueryLoader from '../QueryLoader/QueryLoader';
-import { getTableMetadata } from '../helpers';
+import { QueryLoader } from './QueryLoader';
+import { getTableMetadata } from './helpers';
 
-const QueryViewer = ({
+export const ResultViewer = memo(({
   showPagination = true,
   contentData = [],
   limit = 100,
@@ -21,6 +21,7 @@ const QueryViewer = ({
   isInProgress,
   inProgressTitle,
   height,
+  mlcLoading,
 }) => {
   const { changePage, pagination } = usePagination({ limit, offset });
   const {
@@ -60,12 +61,12 @@ const QueryViewer = ({
             pagingType={null}
             onNeedMoreData={changePage}
             height={height}
+            loading={mlcLoading}
           />
           {showPagination && (
             <PrevNextPagination
               {...pagination}
               totalCount={contentData?.length}
-              disabled={contentData?.length <= limit}
               onChange={changePage}
             />
           )}
@@ -88,9 +89,9 @@ const QueryViewer = ({
   if (isInProgress) return <QueryLoader title={inProgressTitle} />;
 
   return accordionHeadline ? renderWithAccordion() : renderTable();
-};
+});
 
-QueryViewer.propTypes = {
+ResultViewer.propTypes = {
   accordionHeadline: PropTypes.string,
   headline: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   headlineEnd: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
@@ -117,8 +118,6 @@ QueryViewer.propTypes = {
   isInProgress: PropTypes.bool,
   inProgressTitle: PropTypes.string,
   height: PropTypes.number,
-  hidePagination: PropTypes.number,
   showPagination: PropTypes.bool,
+  mlcLoading: PropTypes.bool,
 };
-
-export default memo(QueryViewer);

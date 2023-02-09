@@ -1,11 +1,9 @@
 import React from 'react';
 
-const QueryBuilderModal = () => {
+export const QueryBuilderModal = () => {
   return (
     <div>
       Modal
     </div>
   );
 };
-
-export default QueryBuilderModal;
