@@ -93,6 +93,7 @@ const QueryViewer = ({
 QueryViewer.propTypes = {
   accordionHeadline: PropTypes.string,
   headline: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  headlineEnd: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   contentData: PropTypes.arrayOf(PropTypes.object),
   entityType: PropTypes.shape({
     id: PropTypes.string,
@@ -105,7 +106,6 @@ QueryViewer.propTypes = {
       }),
       labelAlias: PropTypes.string,
       visibleByDefault: PropTypes.bool,
-      values: PropTypes.any,
     })),
   }),
   visibleColumns: PropTypes.arrayOf(PropTypes.string),
@@ -118,6 +118,7 @@ QueryViewer.propTypes = {
   inProgressTitle: PropTypes.string,
   height: PropTypes.number,
   hidePagination: PropTypes.number,
+  showPagination: PropTypes.bool,
 };
 
 export default memo(QueryViewer);
