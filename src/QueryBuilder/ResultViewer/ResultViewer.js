@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo } from 'react';
+import React, { memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row, Accordion, AccordionSet, MultiColumnList, Headline } from '@folio/stripes/components';
 import { PrevNextPagination, usePagination } from '@folio/stripes-acq-components';
@@ -24,11 +24,7 @@ export const ResultViewer = memo(({
   mlcLoading,
 }) => {
   const { changePage, pagination } = usePagination({ limit, offset });
-  const {
-    columnMapping,
-    defaultColumns,
-    defaultVisibleColumns,
-  } = useMemo(() => getTableMetadata(entityType), [entityType]);
+  const { columnMapping, defaultColumns, defaultVisibleColumns } = () => getTableMetadata(entityType);
 
   useEffect(() => {
     onPageChange?.(pagination);
