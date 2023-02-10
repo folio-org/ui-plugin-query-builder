@@ -63,7 +63,7 @@
     "use-deep-compare": "^1.1.0"
   },
   "dependencies": {
-    "@folio/stripes-acq-components": "~3.4.0",
+    "@folio/stripes-acq-components": "~4.0.0",
     "lodash": "^4.17.5",
     "prop-types": "^15.5.10"
   },
