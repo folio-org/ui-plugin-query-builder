@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { ResultViewer } from './ResultViewer';
 import { QueryBuilderModal } from './QueryBuilderModal';
 
@@ -6,10 +7,18 @@ const VIEWER = 'viewer';
 const BUILDER = 'builder';
 
 export const QueryBuilder = ({ componentType, ...rest }) => {
-  if (componentType === VIEWER) return <ResultViewer {...rest} />;
-  if (componentType === BUILDER) return <QueryBuilderModal {...rest} />;
+  const queryClient = new QueryClient();
 
-  return <strong>componentType is required!</strong>;
+  const isContentTypeValid = [VIEWER, BUILDER].includes(componentType);
+
+  if (!isContentTypeValid) return <strong>componentType is required!</strong>;
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {componentType === VIEWER && <ResultViewer {...rest} />}
+      {componentType === BUILDER && <QueryBuilderModal {...rest} />}
+    </QueryClientProvider>
+  );
 };
 
 QueryBuilder.propTypes = {

@@ -1,5 +1,5 @@
 export const getTableMetadata = (entityType) => {
-  const defaultColumns = entityType?.columns.map((cell) => ({
+  const defaultColumns = entityType?.columns?.map((cell) => ({
     label: cell.labelAlias,
     value: cell.name,
     disabled: false,

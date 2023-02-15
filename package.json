@@ -65,7 +65,8 @@
   "dependencies": {
     "@folio/stripes-acq-components": "~3.4.0",
     "lodash": "^4.17.5",
-    "prop-types": "^15.5.10"
+    "prop-types": "^15.5.10",
+    "react-query": "^3.39.3"
   },
   "peerDependencies": {
     "@folio/stripes": "^7.0.0",

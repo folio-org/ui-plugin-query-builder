@@ -1,17 +1,17 @@
-import React, { memo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Row, Accordion, AccordionSet, MultiColumnList, Headline } from '@folio/stripes/components';
-import { PrevNextPagination, usePagination } from '@folio/stripes-acq-components';
+import { Col, Row, Accordion, AccordionSet, MultiColumnList, Headline, Loading } from '@folio/stripes/components';
+import { PrevNextPagination } from '@folio/stripes-acq-components';
 import { QueryLoader } from './QueryLoader';
-import { getTableMetadata } from './helpers';
+import { useAsyncDataSource } from '../../hooks/useAsyncDataSource';
+import { usePagination } from '../../hooks/usePagination';
 
-export const ResultViewer = memo(({
+export const ResultViewer = ({
   showPagination = true,
-  contentData = [],
-  limit = 100,
-  offset = 0,
-  onPageChange,
-  entityType,
+  defaultLimit = 100,
+  defaultOffset = 0,
+  contentDataSource,
+  entityTypeDataSource,
   headline,
   headlineEnd,
   visibleColumns,
@@ -21,55 +21,89 @@ export const ResultViewer = memo(({
   isInProgress,
   inProgressTitle,
   height,
-  mlcLoading,
 }) => {
-  const { changePage, pagination } = usePagination({ limit, offset });
-  const { columnMapping, defaultColumns, defaultVisibleColumns } = () => getTableMetadata(entityType);
+  const { changePage, limit, offset } = usePagination({
+    defaultLimit,
+    defaultOffset,
+  });
 
-  useEffect(() => {
-    onPageChange?.(pagination);
-  }, [pagination]);
+  const {
+    contentData,
+    totalElements,
+    pageSize,
+    isContentDataLoading,
+    isFetching,
+    isEntityTypeLoading,
+    isFetchedAfterMount,
+    columnMapping,
+    defaultColumns,
+    defaultVisibleColumns,
+  } = useAsyncDataSource({
+    entityTypeDataSource,
+    contentDataSource,
+    offset,
+    limit,
+  });
 
   // set visible by default columns once
   useEffect(() => {
-    if (defaultVisibleColumns && defaultColumns) {
+    if (isFetchedAfterMount) {
       onSetDefaultColumns?.(defaultColumns);
       onSetDefaultVisibleColumns?.(defaultVisibleColumns);
     }
-  }, [defaultVisibleColumns, defaultColumns]);
+  }, [isFetchedAfterMount]);
+
+  const renderHeader = () => (
+    <Row between="xs">
+      <Col xs={6}>
+        <Headline size="large" margin="none" tag="h3">
+          {headline({ totalElements, pageSize })}
+        </Headline>
+      </Col>
+      {headlineEnd}
+    </Row>
+  );
 
   const renderTable = () => (
-    <>
-      <Row between="xs">
-        <Col xs={6}>
-          <Headline size="large" margin="none" tag="h3">
-            {headline}
-          </Headline>
-        </Col>
-        {headlineEnd}
-      </Row>
-      <Row>
-        <Col xs={12}>
-          <MultiColumnList
-            contentData={contentData}
-            columnMapping={columnMapping}
-            visibleColumns={visibleColumns}
-            pagingType={null}
-            onNeedMoreData={changePage}
-            height={height}
-            loading={mlcLoading}
+    <Row center="xs">
+      <Col xs={12}>
+        <MultiColumnList
+          contentData={contentData}
+          columnMapping={columnMapping}
+          visibleColumns={visibleColumns}
+          pagingType={null}
+          onNeedMoreData={changePage}
+          height={height}
+          loading={isFetching}
+        />
+        {showPagination && (
+          <PrevNextPagination
+            limit={limit}
+            offset={offset}
+            totalCount={totalElements}
+            onChange={changePage}
           />
-          {showPagination && (
-            <PrevNextPagination
-              {...pagination}
-              totalCount={contentData?.length}
-              onChange={changePage}
-            />
-          )}
-        </Col>
-      </Row>
-    </>
+        )}
+      </Col>
+    </Row>
   );
+
+  const renderContent = () => {
+    if (isContentDataLoading || isEntityTypeLoading) {
+      return (
+        <Row center="xs">
+          <Loading size="large" />
+        </Row>
+      );
+    }
+
+    return (
+      <>
+        {renderHeader()}
+        {renderTable()}
+      </>
+    );
+  };
 
   const renderWithAccordion = () => (
     <AccordionSet>
@@ -77,21 +111,32 @@ export const ResultViewer = memo(({
         id="accordion-id"
         label={accordionHeadline}
       >
-        {renderTable()}
+        {renderContent()}
       </Accordion>
     </AccordionSet>
   );
 
   if (isInProgress) return <QueryLoader title={inProgressTitle} />;
 
-  return accordionHeadline ? renderWithAccordion() : renderTable();
-});
-
+  return accordionHeadline ? renderWithAccordion() : renderContent();
+};
 ResultViewer.propTypes = {
   accordionHeadline: PropTypes.string,
-  headline: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  headline: PropTypes.func,
   headlineEnd: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  contentData: PropTypes.arrayOf(PropTypes.object),
+  contentData: PropTypes.shape({
+    content: PropTypes.arrayOf(PropTypes.object),
+    pageable: PropTypes.object,
+    totalPages: PropTypes.number,
+    totalElements: PropTypes.number,
+    last: PropTypes.bool,
+    size: PropTypes.number,
+    number: PropTypes.number,
+    sort: PropTypes.object,
+    numberOfElements: PropTypes.number,
+    first: PropTypes.bool,
+    empty: PropTypes.bool,
+  }),
   entityType: PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
@@ -108,12 +153,10 @@ ResultViewer.propTypes = {
   visibleColumns: PropTypes.arrayOf(PropTypes.string),
   onSetDefaultVisibleColumns: PropTypes.func,
   onSetDefaultColumns: PropTypes.func,
-  limit: PropTypes.number,
-  offset: PropTypes.number,
-  onPageChange: PropTypes.func,
+  defaultLimit: PropTypes.number,
+  defaultOffset: PropTypes.number,
   isInProgress: PropTypes.bool,
   inProgressTitle: PropTypes.string,
   height: PropTypes.number,
   showPagination: PropTypes.bool,
-  mlcLoading: PropTypes.bool,
 };
