@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Row, Accordion, AccordionSet, MultiColumnList, Headline, Loading } from '@folio/stripes/components';
+import { Col, Row, Accordion, MultiColumnList, Headline, Loading } from '@folio/stripes/components';
 import { PrevNextPagination } from '@folio/stripes-acq-components';
 import { QueryLoader } from './QueryLoader';
 import { useAsyncDataSource } from '../../hooks/useAsyncDataSource';
@@ -106,14 +106,12 @@ export const ResultViewer = ({
   };
 
   const renderWithAccordion = () => (
-    <AccordionSet>
-      <Accordion
-        id="accordion-id"
-        label={accordionHeadline}
-      >
-        {renderContent()}
-      </Accordion>
-    </AccordionSet>
+    <Accordion
+      id="result-viewer-accordion"
+      label={accordionHeadline}
+    >
+      {renderContent()}
+    </Accordion>
   );
 
   if (isInProgress) return <QueryLoader title={inProgressTitle} />;
