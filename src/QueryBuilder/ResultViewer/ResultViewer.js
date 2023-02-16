@@ -32,9 +32,9 @@ export const ResultViewer = ({
     totalElements,
     pageSize,
     isContentDataLoading,
-    isFetching,
+    isContentDataFetching,
     isEntityTypeLoading,
-    isFetchedAfterMount,
+    isContentTypeFetchedAfterMount,
     columnMapping,
     defaultColumns,
     defaultVisibleColumns,
@@ -47,11 +47,11 @@ export const ResultViewer = ({
 
   // set visible by default columns once
   useEffect(() => {
-    if (isFetchedAfterMount) {
+    if (isContentTypeFetchedAfterMount) {
       onSetDefaultColumns?.(defaultColumns);
       onSetDefaultVisibleColumns?.(defaultVisibleColumns);
     }
-  }, [isFetchedAfterMount]);
+  }, [isContentTypeFetchedAfterMount]);
 
   const renderHeader = () => (
     <Row between="xs">
@@ -74,7 +74,7 @@ export const ResultViewer = ({
           pagingType={null}
           onNeedMoreData={changePage}
           height={height}
-          loading={isFetching}
+          loading={isContentDataFetching}
         />
         {showPagination && (
           <PrevNextPagination

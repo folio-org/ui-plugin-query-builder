@@ -12,13 +12,21 @@ export const useAsyncDataSource = ({
 
   const sharedOptions = { refetchOnWindowFocus: false, keepPreviousData: true };
 
-  const { data: recordsData, isLoading: isContentDataLoading, isFetching } = useQuery(
+  const {
+    data: recordsData,
+    isLoading: isContentDataLoading,
+    isFetching: isContentDataFetching,
+  } = useQuery(
     ['contentData', debouncedOffset, debouncedLimit],
     () => contentDataSource({ offset: debouncedOffset, limit: debouncedLimit }),
     sharedOptions,
   );
 
-  const { data: entityType, isLoading: isEntityTypeLoading, isFetchedAfterMount } = useQuery(
+  const {
+    data: entityType,
+    isLoading: isEntityTypeLoading,
+    isFetchedAfterMount: isContentTypeFetchedAfterMount,
+  } = useQuery(
     'entityType',
     entityTypeDataSource,
     sharedOptions,
@@ -30,14 +38,14 @@ export const useAsyncDataSource = ({
 
   return {
     contentData,
-    totalElements,
-    pageSize,
     isContentDataLoading,
-    isFetching,
+    isContentDataFetching,
     isEntityTypeLoading,
-    isFetchedAfterMount,
+    isContentTypeFetchedAfterMount,
     columnMapping,
     defaultColumns,
     defaultVisibleColumns,
+    totalElements,
+    pageSize,
   };
 };
