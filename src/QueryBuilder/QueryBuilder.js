@@ -9,10 +9,6 @@ const BUILDER = 'builder';
 export const QueryBuilder = ({ componentType, ...rest }) => {
   const queryClient = new QueryClient();
 
-  const isContentTypeValid = [VIEWER, BUILDER].includes(componentType);
-
-  if (!isContentTypeValid) return <strong>componentType is required!</strong>;
-
   return (
     <QueryClientProvider client={queryClient}>
       {componentType === VIEWER && <ResultViewer {...rest} />}
