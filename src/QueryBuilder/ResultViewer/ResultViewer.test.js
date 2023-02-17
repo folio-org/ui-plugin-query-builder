@@ -83,4 +83,17 @@ describe('ResultViewer', () => {
       });
     });
   });
+
+  describe('In progress state', () => {
+    it('Should render in progress when ', async () => {
+      const inProgressTitle = 'title';
+
+      render(renderResultViewer({
+        isInProgress: true,
+        inProgressTitle,
+      }));
+
+      expect(screen.getByText(inProgressTitle)).toBeVisible();
+    });
+  });
 });

@@ -1,6 +1,12 @@
 import React from 'react';
 
 jest.mock('@folio/stripes/components', () => ({
+  Card: jest.fn((props) => (
+    <span>
+      <span>{props.headerStart}</span>
+      <span>{props.children}</span>
+    </span>
+  )),
   Badge: jest.fn((props) => (
     <span>
       <span>{props.children}</span>
