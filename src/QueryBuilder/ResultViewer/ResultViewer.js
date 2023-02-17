@@ -68,6 +68,7 @@ export const ResultViewer = ({
     <Row center="xs">
       <Col xs={12}>
         <MultiColumnList
+          data-testid="results-viewer-table"
           contentData={contentData}
           columnMapping={columnMapping}
           visibleColumns={visibleColumns}
@@ -107,7 +108,8 @@ export const ResultViewer = ({
 
   const renderWithAccordion = () => (
     <Accordion
-      id="result-viewer-accordion"
+      id="results-viewer-accordion"
+      data-testid="results-viewer-accordion"
       label={accordionHeadline}
     >
       {renderContent()}
