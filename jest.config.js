@@ -8,4 +8,10 @@ module.exports = {
     'jest-canvas-mock',
   ],
   setupFilesAfterEnv: [path.join(__dirname, './test/jest/jest.setup.js')],
+  moduleNameMapper: {
+    '^.+\\.(css|svg)$': 'identity-obj-proxy',
+  },
+  moduleDirectories: ['node_modules', '<rootDir>'],
+  testMatch: ['**/(lib|src)/**/?(*.)test.{js,jsx}'],
+  testPathIgnorePatterns: ['/node_modules/'],
 };

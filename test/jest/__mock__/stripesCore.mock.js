@@ -1,5 +1,3 @@
-import ky from 'ky';
-
 jest.doMock('@folio/stripes/core', () => {
   return {
     IfInterface: jest.fn(({ name, children }) => {
@@ -10,8 +8,5 @@ jest.doMock('@folio/stripes/core', () => {
     }),
     Pluggable: jest.fn(({ children }) => [children]),
     AppIcon: jest.fn(({ ariaLabel }) => <span>{ariaLabel}</span>),
-    useOkapiKy: () => ky.create({
-      prefixUrl: 'https://test.c',
-    }),
   };
 });
