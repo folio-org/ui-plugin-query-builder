@@ -1,3 +1,3 @@
-export { default } from './src';
+import QueryBuilder from './src';
 
-export * from './src';
+export default props => <QueryBuilder {...props} />;

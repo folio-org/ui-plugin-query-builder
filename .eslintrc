@@ -5,5 +5,14 @@
     {
       "files": [ "src/**/tests/*", "test/**/*" ]
     }
-  ]
+  ],
+  "rules": {
+    "react-hooks/exhaustive-deps": 0,
+    "eol-last": 0,
+    "filenames/match-exported": 0,
+    "jsx-a11y/click-events-have-key-events": 0,
+    "max-lines": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "jsx-a11y/control-has-associated-label": 0
+  }
 }
