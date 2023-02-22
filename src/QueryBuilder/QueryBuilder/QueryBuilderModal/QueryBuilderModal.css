@@ -1,0 +1,21 @@
+@import "@folio/stripes-components/lib/variables";
+
+.repitableContainer {
+  background-color: var(--color-fill);
+  line-height: var(--line-height);
+  margin: 0;
+  box-sizing: border-box;
+  padding-top: 10px;
+  justify-content: flex-end;
+}
+
+.row {
+  flex-wrap: nowrap;
+}
+.col {
+  width: 100%;
+}
+.iconButtonWrapper {
+    margin-left: auto;
+    padding-right: 10px;
+}

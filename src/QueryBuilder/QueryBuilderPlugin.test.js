@@ -1,6 +1,6 @@
 import { screen, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { QueryBuilder } from './QueryBuilder';
+import { QueryBuilderPlugin } from './QueryBuilderPlugin';
 
 jest.mock('./ResultViewer', () => ({
   ResultViewer: jest.fn(() => <div data-testid="viewer" />),
@@ -12,13 +12,13 @@ jest.mock('./QueryBuilderModal', () => ({
 
 describe('Should render different parts of plugin based on componentType', () => {
   it('should render ResultsViewer', () => {
-    render(<QueryBuilder componentType="viewer" />);
+    render(<QueryBuilderPlugin componentType="viewer" />);
 
     expect(screen.getByTestId('viewer')).toBeVisible();
   });
 
   it('should render QueryBuilderModal', () => {
-    render(<QueryBuilder componentType="builder" />);
+    render(<QueryBuilderPlugin componentType="builder" />);
 
     expect(screen.getByTestId('builder')).toBeVisible();
   });
