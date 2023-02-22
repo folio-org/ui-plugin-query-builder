@@ -6,8 +6,8 @@ jest.mock('./ResultViewer', () => ({
   ResultViewer: jest.fn(() => <div data-testid="viewer" />),
 }));
 
-jest.mock('./QueryBuilderModal', () => ({
-  QueryBuilderModal: jest.fn(() => <div data-testid="builder" />),
+jest.mock('./QueryBuilder', () => ({
+  QueryBuilder: jest.fn(() => <div data-testid="builder" />),
 }));
 
 describe('Should render different parts of plugin based on componentType', () => {
