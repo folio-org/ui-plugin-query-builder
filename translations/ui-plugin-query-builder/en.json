@@ -5,7 +5,7 @@
   "modal.cancel": "Cancel",
   "modal.run": "Run query",
   "modal.query": "Query",
-  "modal.test": "TEst query",
+  "modal.test": "Test query",
 
   "columns.boolean": "Boolean",
   "columns.field": "Field",

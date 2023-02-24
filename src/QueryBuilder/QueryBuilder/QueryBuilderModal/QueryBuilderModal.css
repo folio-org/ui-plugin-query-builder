@@ -11,6 +11,7 @@
 
 .row {
   flex-wrap: nowrap;
+  margin: 0;
 }
 .col {
   width: 100%;
