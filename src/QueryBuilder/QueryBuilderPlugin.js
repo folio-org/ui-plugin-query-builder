@@ -1,22 +1,22 @@
 import PropTypes from 'prop-types';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ResultViewer } from './ResultViewer';
-import { QueryBuilderModal } from './QueryBuilderModal';
+import { QueryBuilder } from './QueryBuilder';
 
 const VIEWER = 'viewer';
 const BUILDER = 'builder';
 
-export const QueryBuilder = ({ componentType, ...rest }) => {
+export const QueryBuilderPlugin = ({ componentType, ...rest }) => {
   const queryClient = new QueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>
       {componentType === VIEWER && <ResultViewer {...rest} />}
-      {componentType === BUILDER && <QueryBuilderModal {...rest} />}
+      {componentType === BUILDER && <QueryBuilder {...rest} />}
     </QueryClientProvider>
   );
 };
 
-QueryBuilder.propTypes = {
+QueryBuilderPlugin.propTypes = {
   componentType: PropTypes.oneOf([VIEWER, BUILDER]).isRequired,
 };

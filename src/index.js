@@ -1,1 +1,1 @@
-export { QueryBuilder as default } from './QueryBuilder';
+export { QueryBuilderPlugin as default } from './QueryBuilder';

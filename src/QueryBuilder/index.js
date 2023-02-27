@@ -1,1 +1,1 @@
-export * from './QueryBuilder';
+export * from './QueryBuilderPlugin';
