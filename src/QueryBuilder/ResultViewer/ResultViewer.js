@@ -30,7 +30,6 @@ export const ResultViewer = ({
   const {
     contentData,
     totalElements,
-    pageSize,
     isContentDataLoading,
     isContentDataFetching,
     isEntityTypeLoading,
@@ -57,7 +56,7 @@ export const ResultViewer = ({
     <Row between="xs">
       <Col xs={6}>
         <Headline size="large" margin="none" tag="h3">
-          {headline({ totalElements, pageSize })}
+          {headline({ totalElements, defaultLimit })}
         </Headline>
       </Col>
       {headlineEnd}
