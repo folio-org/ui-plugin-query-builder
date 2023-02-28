@@ -3,9 +3,10 @@ import React, {
 } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button } from '@folio/stripes/components';
+import PropTypes from 'prop-types';
 import { QueryBuilderModal } from './QueryBuilderModal';
 
-export const QueryBuilder = () => {
+export const QueryBuilder = ({ disabled }) => {
   const [isModalShown, setIsModalShown] = useState(false);
 
   const openModal = () => {
@@ -18,6 +19,7 @@ export const QueryBuilder = () => {
         buttonStyle="primary"
         fullWidth
         onClick={openModal}
+        disabled={disabled}
       >
         <FormattedMessage id="ui-plugin-query-builder.trigger" />
       </Button>
@@ -27,4 +29,8 @@ export const QueryBuilder = () => {
       />
     </>
   );
+};
+
+QueryBuilder.propTypes = {
+  disabled: PropTypes.bool,
 };

@@ -32,7 +32,7 @@ export const useAsyncDataSource = ({
     sharedOptions,
   );
 
-  const { content: contentData, totalElements, size: pageSize } = recordsData || {};
+  const { content: contentData, totalElements } = recordsData || {};
 
   const { columnMapping, defaultColumns, defaultVisibleColumns } = getTableMetadata(entityType);
 
@@ -46,6 +46,5 @@ export const useAsyncDataSource = ({
     defaultColumns,
     defaultVisibleColumns,
     totalElements,
-    pageSize,
   };
 };
