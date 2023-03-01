@@ -1,3 +1,13 @@
 {
-    "meta.title": "Abfrage-Generator"
+    "meta.title": "Abfrage-Generator",
+    "trigger": "Build query",
+    "modal.cancel": "Stornieren",
+    "modal.run": "Abfrage ausführen",
+    "modal.query": "Abfrage",
+    "modal.test": "Test query",
+    "columns.boolean": "Boolean",
+    "columns.field": "Feld",
+    "columns.operator": "Operator",
+    "columns.value": "Wert",
+    "columns.action": "Aktionen"
 }

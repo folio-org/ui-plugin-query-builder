@@ -1,3 +1,13 @@
 {
-    "meta.title": "Query builder"
+    "meta.title": "Query builder",
+    "trigger": "Build query",
+    "modal.cancel": "Annuller",
+    "modal.run": "Run query",
+    "modal.query": "Query",
+    "modal.test": "Test query",
+    "columns.boolean": "Boolean",
+    "columns.field": "Field",
+    "columns.operator": "Operator",
+    "columns.value": "Værdi",
+    "columns.action": "Handlinger"
 }

@@ -1,3 +1,13 @@
 {
-    "meta.title": "查询生成器"
+    "meta.title": "查询生成器",
+    "trigger": "Build query",
+    "modal.cancel": "取消",
+    "modal.run": "运行查询",
+    "modal.query": "查询",
+    "modal.test": "Test query",
+    "columns.boolean": "布尔值",
+    "columns.field": "字段",
+    "columns.operator": "布尔算符",
+    "columns.value": "值",
+    "columns.action": "操作"
 }

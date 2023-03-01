@@ -1,3 +1,13 @@
 {
-    "meta.title": "Générateur de requêtes"
+    "meta.title": "Générateur de requêtes",
+    "trigger": "Build query",
+    "modal.cancel": "Annuler",
+    "modal.run": "Exécuter la requête",
+    "modal.query": "Requête",
+    "modal.test": "Test query",
+    "columns.boolean": "Boolean",
+    "columns.field": "Champ",
+    "columns.operator": "Operator",
+    "columns.value": "Valeur",
+    "columns.action": "Actions"
 }

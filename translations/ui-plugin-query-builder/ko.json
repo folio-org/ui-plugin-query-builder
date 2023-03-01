@@ -1,3 +1,13 @@
 {
-    "meta.title": "Query builder"
+    "meta.title": "Query builder",
+    "trigger": "Build query",
+    "modal.cancel": "취소",
+    "modal.run": "Run query",
+    "modal.query": "질의",
+    "modal.test": "Test query",
+    "columns.boolean": "불리언",
+    "columns.field": "Field",
+    "columns.operator": "연산자",
+    "columns.value": "값",
+    "columns.action": "작업"
 }

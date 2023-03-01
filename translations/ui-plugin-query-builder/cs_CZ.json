@@ -1,3 +1,13 @@
 {
-    "meta.title": "Tvůrce dotazů"
+    "meta.title": "Tvůrce dotazů",
+    "trigger": "Sestavit dotaz",
+    "modal.cancel": "Zrušit",
+    "modal.run": "Spustit dotaz",
+    "modal.query": "Dotaz",
+    "modal.test": "Testovací dotaz",
+    "columns.boolean": "Boolean",
+    "columns.field": "Pole",
+    "columns.operator": "Operátor",
+    "columns.value": "Hodnota",
+    "columns.action": "Akce"
 }
