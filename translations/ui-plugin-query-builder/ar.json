@@ -1,3 +1,13 @@
 {
-    "meta.title": "منشئ الاستعلام"
+    "meta.title": "منشئ الاستعلام",
+    "trigger": "Build query",
+    "modal.cancel": "إلغاء",
+    "modal.run": "تشغيل الاستعلام",
+    "modal.query": "استعلام",
+    "modal.test": "Test query",
+    "columns.boolean": "Boolean",
+    "columns.field": "حقل",
+    "columns.operator": "مشغل",
+    "columns.value": "القيمة",
+    "columns.action": "الإجراءات"
 }

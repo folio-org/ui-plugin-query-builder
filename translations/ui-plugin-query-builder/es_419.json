@@ -1,3 +1,13 @@
 {
-    "meta.title": "Query builder"
+    "meta.title": "Query builder",
+    "trigger": "Build query",
+    "modal.cancel": "Cancelar",
+    "modal.run": "Run query",
+    "modal.query": "Query",
+    "modal.test": "Test query",
+    "columns.boolean": "Booleano",
+    "columns.field": "Campo",
+    "columns.operator": "Operador",
+    "columns.value": "Valor",
+    "columns.action": "Acciones"
 }

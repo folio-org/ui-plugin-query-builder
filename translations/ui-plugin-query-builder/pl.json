@@ -1,3 +1,13 @@
 {
-    "meta.title": "Query builder"
+    "meta.title": "Query builder",
+    "trigger": "Build query",
+    "modal.cancel": "Anuluj",
+    "modal.run": "Uruchom zapytanie",
+    "modal.query": "Query",
+    "modal.test": "Test query",
+    "columns.boolean": "Boolean",
+    "columns.field": "Pole",
+    "columns.operator": "Operator",
+    "columns.value": "Wartość",
+    "columns.action": "Akcje"
 }

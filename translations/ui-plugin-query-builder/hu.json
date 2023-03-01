@@ -1,3 +1,13 @@
 {
-    "meta.title": "Query builder"
+    "meta.title": "Query builder",
+    "trigger": "Build query",
+    "modal.cancel": "Mégsem",
+    "modal.run": "Run query",
+    "modal.query": "Query",
+    "modal.test": "Test query",
+    "columns.boolean": "Boolean",
+    "columns.field": "Field",
+    "columns.operator": "Operator",
+    "columns.value": "Érték",
+    "columns.action": "Actions"
 }

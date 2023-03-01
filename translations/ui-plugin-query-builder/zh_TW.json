@@ -1,3 +1,13 @@
 {
-    "meta.title": "Query builder"
+    "meta.title": "Query builder",
+    "trigger": "Build query",
+    "modal.cancel": "取消",
+    "modal.run": "執行查詢",
+    "modal.query": "查詢",
+    "modal.test": "Test query",
+    "columns.boolean": "Boolean",
+    "columns.field": "Field",
+    "columns.operator": "Operator",
+    "columns.value": "值",
+    "columns.action": "操作"
 }
