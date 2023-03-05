@@ -11,24 +11,16 @@ import {
   RepeatableField,
   Row,
   Col,
-  TextField,
 } from '@folio/stripes/components';
 import css from './QueryBuilderModal.css';
 import { QueryBuilderTitle } from '../QueryBuilderTitle';
+import { DataTypeInputs } from '../DataTypeInput';
+// revork with API
+import { entityType } from '../../../../test/jest/data/entityType';
+import { getOperatorsSet, parseDataOptions } from '../utils';
 
-const operatorsMock = [
-  { value: '', label: 'Select operator' },
-  { label: '<', value: '<' },
-  { label: '<', value: '==' },
-];
 const booleanMock = [
   { label: 'AND', value: 'AND' },
-];
-
-const fieldsMock = [
-  { value: '', label: 'Select field' },
-  { value: 'status', label: 'status' },
-  { value: 'patronGroup', label: 'Patron group' },
 ];
 
 export const QueryBuilderModal = ({
@@ -55,6 +47,22 @@ export const QueryBuilderModal = ({
     const filteredFields = results.filter((_, i) => i !== index);
 
     setResults(filteredFields);
+  };
+
+  const handleFieldChange = (e, index) => {
+    const obj = entityType.columns.find(item => item.name === e.target.value);
+
+    setResults(prev => prev.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          dataType: obj.dataType.dataType,
+          values: obj.values,
+        };
+      }
+
+      return item;
+    }));
   };
 
   const handleChange = (e, index, fieldName) => {
@@ -122,17 +130,17 @@ export const QueryBuilderModal = ({
               )}
               <Col className={css.col}>
                 <Select
-                  dataOptions={fieldsMock}
-                  value={field.field}
-                  onChange={(e) => handleChange(e, index, 'field')}
+                  dataOptions={parseDataOptions(entityType.columns)}
+                  value={field.name}
+                  onChange={(e) => handleFieldChange(e, index)}
                   data-testid={`field-option-${index}`}
                   aria-label={`field-option-${index}`}
                 />
               </Col>
-              {(field.field || results.length > 1) && (
+              {(field.dataType || results.length > 1) && (
                 <Col sm={2}>
                   <Select
-                    dataOptions={operatorsMock}
+                    dataOptions={getOperatorsSet(field.dataType)}
                     value={field.operator}
                     onChange={(e) => handleChange(e, index, 'operator')}
                     data-testid={`operator-option-${index}`}
@@ -142,8 +150,10 @@ export const QueryBuilderModal = ({
               )}
               {(field.operator || results.length > 1) && (
                 <Col sm={4}>
-                  <TextField
+                  <DataTypeInputs
+                    dataType={field.dataType}
                     value={field.value}
+                    availableValues={parseDataOptions(field.values)}
                     onChange={(e) => handleChange(e, index, 'value')}
                     data-testid={`input-value-${index}`}
                     aria-label={`input-value-${index}`}
