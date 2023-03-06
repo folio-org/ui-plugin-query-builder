@@ -15,7 +15,7 @@ export const entityType = {
     {
       'name': 'item_effective_call_number',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Effective Call Number',
       'visibleByDefault': false,
@@ -24,7 +24,7 @@ export const entityType = {
     {
       'name': 'item_level_call_number',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Call Number',
       'visibleByDefault': false,
@@ -33,7 +33,7 @@ export const entityType = {
     {
       'name': 'item_effective_shelving_order',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Shelving Order',
       'visibleByDefault': false,
@@ -42,7 +42,7 @@ export const entityType = {
     {
       'name': 'item_holdings_record_id',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Holdings Record Id',
       'visibleByDefault': false,
@@ -51,7 +51,7 @@ export const entityType = {
     {
       'name': 'item_status',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Item Status',
       'visibleByDefault': true,
@@ -60,7 +60,7 @@ export const entityType = {
     {
       'name': 'item_copy_number',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Item Copy Number',
       'visibleByDefault': false,
@@ -69,7 +69,7 @@ export const entityType = {
     {
       'name': 'item_barcode',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Item Barcode',
       'visibleByDefault': true,
@@ -78,7 +78,7 @@ export const entityType = {
     {
       'name': 'item_effective_location_id',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Item Location Id',
       'visibleByDefault': false,
@@ -87,7 +87,7 @@ export const entityType = {
     {
       'name': 'item_effective_location_name',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Item Location Name',
       'visibleByDefault': false,
@@ -96,7 +96,7 @@ export const entityType = {
     {
       'name': 'item_permanent_location_id',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Item Permanent Id',
       'visibleByDefault': false,
@@ -105,7 +105,7 @@ export const entityType = {
     {
       'name': 'item_permanent_location_name',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Item Permanent Location Name',
       'visibleByDefault': false,
@@ -114,7 +114,7 @@ export const entityType = {
     {
       'name': 'item_material_type_id',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Material Id',
       'visibleByDefault': false,
@@ -123,7 +123,7 @@ export const entityType = {
     {
       'name': 'item_material_type',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Material Type',
       'visibleByDefault': true,
@@ -132,7 +132,7 @@ export const entityType = {
     {
       'name': 'instance_id',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Instance Id',
       'visibleByDefault': false,
@@ -141,7 +141,7 @@ export const entityType = {
     {
       'name': 'instance_title',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Instance Title',
       'visibleByDefault': true,
@@ -150,7 +150,7 @@ export const entityType = {
     {
       'name': 'instance_primary_contributor',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'integerType',
       },
       'labelAlias': 'Instance Primary Contributor',
       'visibleByDefault': false,
