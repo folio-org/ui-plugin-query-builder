@@ -1,22 +1,50 @@
-@import "@folio/stripes-components/lib/variables";
+@import "@folio/stripes-components/lib/variables.css";
 
-.repitableContainer {
-  background-color: var(--color-fill);
-  line-height: var(--line-height);
-  margin: 0;
-  box-sizing: border-box;
-  padding-top: 10px;
-  justify-content: flex-end;
+.repeatable {
+    margin: 0;
 }
 
 .row {
-  flex-wrap: nowrap;
-  margin: 0;
+    background-color: var(--color-fill-table-row-odd);
+    line-height: var(--line-height);
+    margin: 0;
+    box-sizing: border-box;
+    justify-content: flex-end;
+    border-bottom: 1px solid var(--color-border-p2);
 }
-.col {
-  width: 100%;
+
+.row.even {
+    background-color: var(--color-fill-table-row-even);
 }
-.iconButtonWrapper {
+
+.rowCell {
+    box-sizing: border-box;
+    padding: 10px 10px 0;
+}
+
+.rowCell:last-child {
     margin-left: auto;
-    padding-right: 10px;
+    text-align: center;
+}
+
+.rowCell:not(:first-child) {
+    border-left: 1px solid var(--color-border-p2);
+}
+
+.control {
+    background-color: var(--bg);
+}
+
+.queryArea {
+    width: 100%;
+    min-height: var(--control-min-size-desktop);
+    max-height: calc(var(--control-min-size-desktop) * 10);
+    padding: 0 5px;
+    margin: 5px 0 10px;
+    background-color: #ebebe4;
+    color: #777;
+    border: 1px solid var(--color-border);
+    box-shadow: none;
+    resize: vertical;
+    overflow-y: auto;
 }
