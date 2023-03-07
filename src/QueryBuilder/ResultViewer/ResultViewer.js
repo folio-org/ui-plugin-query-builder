@@ -149,6 +149,6 @@ ResultViewer.propTypes = {
   inProgressTitle: PropTypes.string,
   height: PropTypes.number,
   showPagination: PropTypes.bool,
-  refreshTrigger: PropTypes.any,
+  refreshTrigger: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   onSuccess: PropTypes.func,
 };
