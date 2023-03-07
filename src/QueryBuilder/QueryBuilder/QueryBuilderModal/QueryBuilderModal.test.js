@@ -38,7 +38,7 @@ describe('QueryBuilderModal', () => {
     renderQueryBuilderModal();
 
     const fieldSelect = screen.getByRole('combobox', { name: /field-option/ });
-    const fieldoption = screen.getByRole('option', { name: /status/ });
+    const fieldoption = screen.getByRole('option', { name: /Item Id/ });
 
     act(() => userEvent.selectOptions(fieldSelect, fieldoption));
 
