@@ -9,21 +9,22 @@ import {
 import css from './QueryBuilderTitle.css';
 
 export const QueryBuilderTitle = ({ results }) => {
-  const isOperatorShown = results.some(result => Boolean(result.field));
-  const isValueShown = results.some(result => Boolean(result.operator));
+  const isOperatorShown = results.some(result => Boolean(result.field.current));
+  const isValueShown = results.some(result => Boolean(result.operator.current));
 
   return (
     <Row className={css.header}>
       {results.length > 1 && (
         <Col
           className={css.headerCell}
-          sm={2}
+          sm={1}
         >
           <FormattedMessage id="ui-plugin-query-builder.columns.boolean" />
         </Col>
       )}
       <Col
         className={css.headerCell}
+        sm={4}
       >
         <FormattedMessage id="ui-plugin-query-builder.columns.field" />
       </Col>
@@ -45,7 +46,7 @@ export const QueryBuilderTitle = ({ results }) => {
       )}
       <Col
         className={css.headerCell}
-        sm={2}
+        sm={1}
       >
         <FormattedMessage id="ui-bulk-edit.layer.column.actions" />
       </Col>
