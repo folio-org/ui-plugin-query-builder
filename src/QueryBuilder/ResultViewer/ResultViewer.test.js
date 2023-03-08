@@ -36,7 +36,9 @@ describe('ResultViewer', () => {
 
   describe('Render accordion and titles', () => {
     it('should render accordion if accordionHeadline prop is present', async () => {
-      render(renderResultViewer());
+      render(renderResultViewer({
+        refreshTrigger: 1,
+      }));
 
       expect(screen.getByTestId('results-viewer-accordion')).toBeVisible();
     });
@@ -73,13 +75,19 @@ describe('ResultViewer', () => {
 
   describe('Records table', () => {
     it('should be rendered with pagination', async () => {
-      render(renderResultViewer());
+      const offset = 300;
+      const limit = 200;
+
+      render(renderResultViewer({
+        defaultLimit: limit,
+        defaultOffset: offset,
+      }));
 
       await waitFor(() => {
         expect(screen.queryByText('Loading')).not.toBeInTheDocument();
 
         expect(screen.getByTestId('results-viewer-table')).toBeVisible();
-        expect(screen.getByText('Pagination')).toBeVisible();
+        expect(screen.getByText(`${offset}-${limit}`)).toBeVisible();
       });
     });
   });
