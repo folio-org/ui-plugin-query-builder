@@ -163,7 +163,10 @@ export const entityType = {
       },
       'labelAlias': 'Status',
       'visibleByDefault': false,
-      'values': [true, false],
+      'values': [
+        {label: 'True', value: true },
+        {label: 'False', value: false },
+      ],
     },
   ],
   'defaultSort': [
