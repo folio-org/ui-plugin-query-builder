@@ -126,24 +126,15 @@ export const RepeatableFields = ({ rows, setRows }) => {
 
               <Col sm={4} className={css.rowCell}>
                 {(row.operator.current) && (
-                  <>
-                    {/* <TextField
-                      className={css.control}
-                      value={row.value.current}
-                      onChange={(e) => handleChange(e.target.value, index, COLUMN_KEYS.VALUE)}
-                      data-testid={`input-value-${index}`}
-                      aria-label={`input-value-${index}`}
-                    /> */}
-                    <DataTypeInput
-                      className={css.control}
-                      value={row.value.current}
-                      dataType={row.field.dataType}
-                      availableValues={row.value.options}
-                      onChange={(e) => handleChange(e.target.value, index, COLUMN_KEYS.VALUE)}
-                      data-testid={`input-value-${index}`}
-                      aria-label={`input-value-${index}`}
-                    />
-                  </>
+                  <DataTypeInput
+                    className={css.control}
+                    value={row.value.current}
+                    dataType={row.field.dataType}
+                    availableValues={row.value.options}
+                    onChange={(e) => handleChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+                    data-testid={`input-value-${index}`}
+                    aria-label={`input-value-${index}`}
+                  />
                 )}
               </Col>
               <Col sm={1} className={css.rowCell}>
