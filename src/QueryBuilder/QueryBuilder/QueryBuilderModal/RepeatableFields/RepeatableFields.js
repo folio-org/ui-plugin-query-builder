@@ -33,13 +33,12 @@ export const RepeatableFields = ({ rows, setRows }) => {
   };
 
   const handleChange = (value, index, fieldName) => {
-    let modifications = () => ({});
     const isField = fieldName === COLUMN_KEYS.FIELD;
     const field = fieldOptions.find(o => o.value === value);
 
-    if (isField) {
-      modifications = (item) => {
-        return {
+    const modifications = (item) => {
+      return isField ?
+        {
           [COLUMN_KEYS.FIELD]: {
             ...item[COLUMN_KEYS.FIELD],
             current: value,
@@ -53,9 +52,8 @@ export const RepeatableFields = ({ rows, setRows }) => {
             options: field.values,
             current: '',
           },
-        };
-      };
-    }
+        } : {};
+    };
 
     setRows(prev => prev.map((item, i) => {
       if (i === index) {
