@@ -5,6 +5,7 @@ import { ResultViewer } from './ResultViewer';
 import { entityType } from '../../../test/jest/data/entityType';
 import { content } from '../../../test/jest/data/content';
 import { delayedResponse } from '../../../test/jest/helpers';
+import * as pagination from '../../hooks/usePagination';
 
 const queryClient = new QueryClient();
 
@@ -48,7 +49,9 @@ describe('ResultViewer', () => {
     });
 
     it('should render subtitle with correct count of records', async () => {
-      render(renderResultViewer());
+      render(renderResultViewer({
+        refreshTrigger: 1,
+      }));
 
       await waitFor(() => {
         expect(screen.queryByText('Loading')).not.toBeInTheDocument();
@@ -72,14 +75,29 @@ describe('ResultViewer', () => {
   });
 
   describe('Records table', () => {
+    const offset = 300;
+    const limit = 200;
+    const changePage = jest.fn();
+
     it('should be rendered with pagination', async () => {
-      render(renderResultViewer());
+      jest.spyOn(pagination, 'usePagination').mockImplementation(() => ({
+        limit,
+        offset,
+        changePage,
+      }));
+
+      render(renderResultViewer({
+        refreshTrigger: 1,
+        defaultLimit: limit,
+        defaultOffset: offset,
+      }));
 
       await waitFor(() => {
         expect(screen.queryByText('Loading')).not.toBeInTheDocument();
 
         expect(screen.getByTestId('results-viewer-table')).toBeVisible();
-        expect(screen.getByText('Pagination')).toBeVisible();
+        expect(screen.getByText(`${offset}-${limit}`)).toBeVisible();
+        expect(changePage).not.toBeCalled();
       });
     });
   });
@@ -94,6 +112,32 @@ describe('ResultViewer', () => {
       }));
 
       expect(screen.getByText(inProgressTitle)).toBeVisible();
+    });
+  });
+
+  describe('Refresh functionality', () => {
+    const offset = 300;
+    const limit = 200;
+    const changePage = jest.fn();
+
+    it('should call changePage to #1 if refreshing triggered', async () => {
+      jest.spyOn(pagination, 'usePagination').mockImplementationOnce(() => ({
+        limit,
+        offset,
+        changePage,
+      }));
+
+      render(renderResultViewer({
+        refreshTrigger: 1,
+        defaultLimit: limit, // change default
+        defaultOffset: offset + 100,
+      }));
+
+      await waitFor(() => {
+        expect(screen.queryByText('Loading')).not.toBeInTheDocument();
+
+        expect(changePage).toBeCalled();
+      });
     });
   });
 });
