@@ -156,6 +156,18 @@ export const entityType = {
       'visibleByDefault': false,
       'values': null,
     },
+    {
+      'name': 'status',
+      'dataType': {
+        'dataType': 'booleanType',
+      },
+      'labelAlias': 'Status',
+      'visibleByDefault': false,
+      'values': [
+        {label: 'True', value: true },
+        {label: 'False', value: false },
+      ],
+    },
   ],
   'defaultSort': [
     {

@@ -3,7 +3,6 @@ import {
   IconButton,
   RepeatableField,
   Select,
-  TextField,
   Col,
   Row,
 } from '@folio/stripes/components';
@@ -14,6 +13,7 @@ import css from '../QueryBuilderModal.css';
 import { COLUMN_KEYS } from '../../constants/columnKeys';
 import { booleanOptions, fieldOptions, getOperatorOptions, rowTemplate } from '../../helpers/selectOptions';
 import { OPERATORS } from '../../constants/operators';
+import { DataTypeInput } from '../DataTypeInput';
 
 export const RepeatableFields = ({ rows, setRows }) => {
   const handleAdd = () => {
@@ -33,22 +33,27 @@ export const RepeatableFields = ({ rows, setRows }) => {
   };
 
   const handleChange = (value, index, fieldName) => {
-    let modifications = {};
     const isField = fieldName === COLUMN_KEYS.FIELD;
+    const field = fieldOptions.find(o => o.value === value);
 
-    if (isField) {
-      const dataType = fieldOptions.find(o => o.value === value).dataType;
-
-      modifications = {
-        [COLUMN_KEYS.OPERATOR]: {
-          options: getOperatorOptions(dataType),
-          current: '',
-        },
-        [COLUMN_KEYS.VALUE]: {
-          current: '',
-        },
-      };
-    }
+    const modifications = (item) => {
+      return isField ?
+        {
+          [COLUMN_KEYS.FIELD]: {
+            ...item[COLUMN_KEYS.FIELD],
+            current: value,
+            dataType: field.dataType,
+          },
+          [COLUMN_KEYS.OPERATOR]: {
+            options: getOperatorOptions(field.dataType),
+            current: '',
+          },
+          [COLUMN_KEYS.VALUE]: {
+            options: field.values,
+            current: '',
+          },
+        } : {};
+    };
 
     setRows(prev => prev.map((item, i) => {
       if (i === index) {
@@ -58,8 +63,8 @@ export const RepeatableFields = ({ rows, setRows }) => {
             ...item[fieldName],
             current: value,
           },
-          ...modifications,
-        };
+          ...modifications(item),
+        }
       }
 
       return item;
@@ -119,9 +124,11 @@ export const RepeatableFields = ({ rows, setRows }) => {
 
               <Col sm={4} className={css.rowCell}>
                 {(row.operator.current) && (
-                  <TextField
+                  <DataTypeInput
                     className={css.control}
                     value={row.value.current}
+                    dataType={row.field.dataType}
+                    availableValues={row.value.options}
                     onChange={(e) => handleChange(e.target.value, index, COLUMN_KEYS.VALUE)}
                     data-testid={`input-value-${index}`}
                     aria-label={`input-value-${index}`}
