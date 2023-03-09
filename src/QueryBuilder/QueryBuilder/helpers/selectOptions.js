@@ -58,6 +58,7 @@ export const fieldOptions = [
     label: et.labelAlias,
     value: et.name,
     dataType: et.dataType.dataType,
+    values: et.values,
   })),
 ];
 

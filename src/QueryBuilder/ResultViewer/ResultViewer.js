@@ -21,6 +21,8 @@ export const ResultViewer = ({
   isInProgress,
   inProgressTitle,
   height,
+  refreshTrigger,
+  onSuccess,
 }) => {
   const { changePage, limit, offset } = usePagination({
     defaultLimit,
@@ -37,11 +39,13 @@ export const ResultViewer = ({
     columnMapping,
     defaultColumns,
     defaultVisibleColumns,
+    refetch,
   } = useAsyncDataSource({
     entityTypeDataSource,
     contentDataSource,
     offset,
     limit,
+    onSuccess,
   });
 
   // set visible by default columns once
@@ -51,6 +55,17 @@ export const ResultViewer = ({
       onSetDefaultVisibleColumns?.(defaultVisibleColumns);
     }
   }, [isContentTypeFetchedAfterMount]);
+
+  // refresh functionality
+  useEffect(() => {
+    if (refreshTrigger) {
+      if (offset === defaultOffset) {
+        refetch();
+      } else {
+        changePage({ offset: defaultOffset, limit: defaultLimit });
+      }
+    }
+  }, [refreshTrigger]);
 
   const renderHeader = () => (
     <Row between="xs">
@@ -134,4 +149,6 @@ ResultViewer.propTypes = {
   inProgressTitle: PropTypes.string,
   height: PropTypes.number,
   showPagination: PropTypes.bool,
+  refreshTrigger: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
+  onSuccess: PropTypes.func,
 };
