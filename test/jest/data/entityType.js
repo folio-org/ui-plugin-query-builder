@@ -180,6 +180,15 @@ export const entityType = {
         { label: 'False', value: false },
       ],
     },
+    {
+      'name': 'position',
+      'dataType': {
+        'dataType': 'integerType',
+      },
+      'labelAlias': 'Position',
+      'visibleByDefault': false,
+      'values': null,
+    },
   ],
   'defaultSort': [
     {
