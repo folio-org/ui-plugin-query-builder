@@ -1,4 +1,5 @@
 import { COLUMN_KEYS } from '../constants/columnKeys';
+import { valueBuilder } from './valueBuilder';
 
 export const getQueryStr = (rows) => {
   return rows.reduce((str, row) => {
@@ -6,8 +7,8 @@ export const getQueryStr = (rows) => {
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
-
-    const baseQuery = `(${field} ${operator} ${value}) `;
+    const buildedValue = valueBuilder(value, field);
+    const baseQuery = `(${field} ${operator} ${buildedValue}) `;
 
     // if there aren't values yet - return empty string
     if (![bool, field, operator, value].some(val => Boolean(val))) {
