@@ -8,7 +8,7 @@ export const getQueryStr = (rows) => {
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
     const buildedValue = valueBuilder(value, field);
-    const baseQuery = `(${field} ${operator} ${buildedValue}) `;
+    const baseQuery = `(${field} ${operator} ${buildedValue})`;
 
     // if there aren't values yet - return empty string
     if (![bool, field, operator, value].some(val => Boolean(val))) {
