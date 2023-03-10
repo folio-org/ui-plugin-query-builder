@@ -64,7 +64,7 @@ export const RepeatableFields = ({ rows, setRows }) => {
             current: value,
           },
           ...modifications(item),
-        }
+        };
       }
 
       return item;
@@ -128,8 +128,9 @@ export const RepeatableFields = ({ rows, setRows }) => {
                     className={css.control}
                     value={row.value.current}
                     dataType={row.field.dataType}
+                    index={index}
                     availableValues={row.value.options}
-                    onChange={(e) => handleChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+                    onChange={handleChange}
                     data-testid={`input-value-${index}`}
                     aria-label={`input-value-${index}`}
                   />

@@ -16,9 +16,16 @@ const extendedLogicalOperators = [
   { label: OPERATORS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
 ];
 
+const rangedUUIDOperators = [
+  { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
+  { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+  { label: OPERATORS.IN, value: OPERATORS.IN },
+  { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
+];
+
 export const getOperatorOptions = (dataType) => {
   const options = {
-    [DATA_TYPES.RangedUUIDType]: baseLogicalOperators,
+    [DATA_TYPES.RangedUUIDType]: rangedUUIDOperators,
 
     [DATA_TYPES.OpenUUIDType]: baseLogicalOperators,
 

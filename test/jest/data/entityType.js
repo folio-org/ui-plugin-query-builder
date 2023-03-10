@@ -58,6 +58,18 @@ export const entityType = {
       'values': null,
     },
     {
+      'name': 'patron_group',
+      'dataType': {
+        'dataType': 'rangedUUIDType',
+      },
+      'labelAlias': 'Patron group',
+      'visibleByDefault': false,
+      'values': [
+        { label: 'UC Academic, Indefinite', value: 'Indefinite' },
+        { label: 'UC Department, Quarter', value: 'Quarter' },
+      ],
+    },
+    {
       'name': 'item_copy_number',
       'dataType': {
         'dataType': 'integerType',
@@ -164,8 +176,8 @@ export const entityType = {
       'labelAlias': 'Status',
       'visibleByDefault': false,
       'values': [
-        {label: 'True', value: true },
-        {label: 'False', value: false },
+        { label: 'True', value: true },
+        { label: 'False', value: false },
       ],
     },
   ],
