@@ -38,7 +38,7 @@ export const entityType = {
       'dataType': {
         'dataType': 'booleanType',
       },
-      'labelAlias': 'Status',
+      'labelAlias': 'Active',
       'visibleByDefault': false,
       'values': [
         { label: 'True', value: true },

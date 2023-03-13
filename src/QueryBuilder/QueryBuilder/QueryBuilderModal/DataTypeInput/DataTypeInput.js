@@ -10,8 +10,8 @@ import { DATA_TYPES } from '../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../constants/columnKeys';
 
 export const DataTypeInput = ({ onChange, dataType, availableValues, className, index, ...rest }) => {
-  switch (true) {
-    case DATA_TYPES.BooleanType === dataType:
+  switch (dataType) {
+    case DATA_TYPES.BooleanType:
       return (
         <div className={className}>
           <Select
@@ -21,7 +21,7 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
           />
         </div>
       );
-    case DATA_TYPES.RangedUUIDType === dataType:
+    case DATA_TYPES.RangedUUIDType:
       return (
         <div className={className}>
           <MultiSelection
