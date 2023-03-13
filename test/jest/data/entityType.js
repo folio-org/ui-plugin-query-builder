@@ -22,151 +22,37 @@ export const entityType = {
       'values': null,
     },
     {
-      'name': 'item_level_call_number',
+      'name': 'patron_group',
       'dataType': {
-        'dataType': 'integerType',
+        'dataType': 'rangedUUIDType',
       },
-      'labelAlias': 'Call Number',
+      'labelAlias': 'Patron group',
       'visibleByDefault': false,
-      'values': null,
+      'values': [
+        { label: 'UC Academic, Indefinite', value: 'Indefinite' },
+        { label: 'UC Department, Quarter', value: 'Quarter' },
+      ],
     },
     {
-      'name': 'item_effective_shelving_order',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Shelving Order',
-      'visibleByDefault': false,
-      'values': null,
-    },
-    {
-      'name': 'item_holdings_record_id',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Holdings Record Id',
-      'visibleByDefault': false,
-      'values': null,
-    },
-    {
-      'name': 'item_status',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Item Status',
-      'visibleByDefault': true,
-      'values': null,
-    },
-    {
-      'name': 'item_copy_number',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Item Copy Number',
-      'visibleByDefault': false,
-      'values': null,
-    },
-    {
-      'name': 'item_barcode',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Item Barcode',
-      'visibleByDefault': true,
-      'values': null,
-    },
-    {
-      'name': 'item_effective_location_id',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Item Location Id',
-      'visibleByDefault': false,
-      'values': null,
-    },
-    {
-      'name': 'item_effective_location_name',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Item Location Name',
-      'visibleByDefault': false,
-      'values': null,
-    },
-    {
-      'name': 'item_permanent_location_id',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Item Permanent Id',
-      'visibleByDefault': false,
-      'values': null,
-    },
-    {
-      'name': 'item_permanent_location_name',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Item Permanent Location Name',
-      'visibleByDefault': false,
-      'values': null,
-    },
-    {
-      'name': 'item_material_type_id',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Material Id',
-      'visibleByDefault': false,
-      'values': null,
-    },
-    {
-      'name': 'item_material_type',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Material Type',
-      'visibleByDefault': true,
-      'values': null,
-    },
-    {
-      'name': 'instance_id',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Instance Id',
-      'visibleByDefault': false,
-      'values': null,
-    },
-    {
-      'name': 'instance_title',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Instance Title',
-      'visibleByDefault': true,
-      'values': null,
-    },
-    {
-      'name': 'instance_primary_contributor',
-      'dataType': {
-        'dataType': 'integerType',
-      },
-      'labelAlias': 'Instance Primary Contributor',
-      'visibleByDefault': false,
-      'values': null,
-    },
-    {
-      'name': 'status',
+      'name': 'Active',
       'dataType': {
         'dataType': 'booleanType',
       },
-      'labelAlias': 'Status',
+      'labelAlias': 'Active',
       'visibleByDefault': false,
       'values': [
-        {label: 'True', value: true },
-        {label: 'False', value: false },
+        { label: 'True', value: true },
+        { label: 'False', value: false },
       ],
+    },
+    {
+      'name': 'position',
+      'dataType': {
+        'dataType': 'integerType',
+      },
+      'labelAlias': 'Position',
+      'visibleByDefault': false,
+      'values': null,
     },
   ],
   'defaultSort': [
