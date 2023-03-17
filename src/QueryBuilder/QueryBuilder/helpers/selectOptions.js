@@ -37,6 +37,8 @@ export const getOperatorOptions = (dataType) => {
 
     [DATA_TYPES.ObjectType]: extendedLogicalOperators,
 
+    [DATA_TYPES.EnumType]: rangedUUIDOperators,
+
     [DATA_TYPES.StringType]: [
       { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
       { label: OPERATORS.IN, value: OPERATORS.IN },

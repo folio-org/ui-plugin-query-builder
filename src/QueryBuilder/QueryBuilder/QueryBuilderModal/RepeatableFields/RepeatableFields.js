@@ -130,6 +130,7 @@ export const RepeatableFields = ({ rows, setRows }) => {
                     dataType={row.field.dataType}
                     index={index}
                     availableValues={row.value.options}
+                    operator={row.operator.current}
                     onChange={handleChange}
                     data-testid={`input-value-${index}`}
                     aria-label={`input-value-${index}`}

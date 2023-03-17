@@ -7,7 +7,7 @@ export const getQueryStr = (rows) => {
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
-    const buildedValue = valueBuilder(value, field);
+    const buildedValue = valueBuilder(value, field, operator);
     const baseQuery = `(${field} ${operator} ${buildedValue})`;
 
     // if there aren't values yet - return empty string
