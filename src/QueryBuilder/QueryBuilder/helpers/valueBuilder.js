@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { fieldOptions } from './selectOptions';
 import { DATA_TYPES } from '../constants/dataTypes';
 
@@ -9,7 +10,7 @@ export const valueBuilder = (value, field) => {
     [DATA_TYPES.IntegerType]: () => value,
     [DATA_TYPES.BooleanType]: () => value,
     [DATA_TYPES.RangedUUIDType]: () => (Array.isArray(value) ? `(${value?.map(el => el.value).join(',')})` : value),
-    [DATA_TYPES.DateType]: () => value,
+    [DATA_TYPES.DateType]: () => (value ? moment(value).toISOString() : ''),
     [DATA_TYPES.ArrayType]: () => value,
     [DATA_TYPES.ObjectType]: () => value,
     [DATA_TYPES.OpenUUIDType]: () => value,

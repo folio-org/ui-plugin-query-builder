@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Select,
+import { Select,
   TextField,
   MultiSelection,
-} from '@folio/stripes/components';
+  Datepicker } from '@folio/stripes/components';
 
 import { DATA_TYPES } from '../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../constants/columnKeys';
@@ -31,10 +30,18 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
           />
         </div>
       );
+    case DATA_TYPES.DateType:
+      return (
+        <Datepicker
+          onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+          {...rest}
+        />
+      );
     default:
       return (
         <TextField
           onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+          usePortal
           {...rest}
         />
       );

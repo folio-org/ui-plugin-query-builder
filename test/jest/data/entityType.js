@@ -54,6 +54,15 @@ export const entityType = {
       'visibleByDefault': false,
       'values': null,
     },
+    {
+      'name': 'expirationDate',
+      'dataType': {
+        'dataType': 'dateType',
+      },
+      'labelAlias': 'Expiration date',
+      'visibleByDefault': false,
+      'values': null,
+    },
   ],
   'defaultSort': [
     {
