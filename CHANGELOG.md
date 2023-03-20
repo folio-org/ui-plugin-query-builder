@@ -4,3 +4,4 @@
 
 * [UIPQB-1](https://issues.folio.org/browse/UIPQB-1) Query plugin - project setup.
 * [UIPQB-5](https://issues.folio.org/browse/UIPQB-5) Field-action-value component: String.
+* [UIPQB-4](https://issues.folio.org/browse/UIPQB-4) UUIDs: field-action-value component.

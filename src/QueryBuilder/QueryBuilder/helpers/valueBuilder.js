@@ -1,7 +1,8 @@
 import { fieldOptions } from './selectOptions';
 import { DATA_TYPES } from '../constants/dataTypes';
+import { OPERATORS } from '../constants/operators';
 
-export const valueBuilder = (value, field) => {
+export const valueBuilder = (value, field, operator) => {
   const dataType = fieldOptions.find(o => o.value === field).dataType || DATA_TYPES.BooleanType;
   // add additional templates for dataTypes
   const valueMap = {
@@ -12,7 +13,11 @@ export const valueBuilder = (value, field) => {
     [DATA_TYPES.DateType]: () => value,
     [DATA_TYPES.ArrayType]: () => value,
     [DATA_TYPES.ObjectType]: () => value,
-    [DATA_TYPES.OpenUUIDType]: () => value,
+    [DATA_TYPES.OpenUUIDType]: () => (
+      (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN)
+        ? `"${value.replace(/,\s?/g, '","')}"`
+        : `"${value}"`
+    ),
     [DATA_TYPES.EnumType]: () => value,
   };
 

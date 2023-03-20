@@ -54,6 +54,15 @@ export const entityType = {
       'visibleByDefault': false,
       'values': null,
     },
+    {
+      'name': 'instanceId',
+      'dataType': {
+        'dataType': 'openUUIDType',
+      },
+      'labelAlias': 'Instance UUID',
+      'visibleByDefault': false,
+      'values': null,
+    },
   ],
   'defaultSort': [
     {
