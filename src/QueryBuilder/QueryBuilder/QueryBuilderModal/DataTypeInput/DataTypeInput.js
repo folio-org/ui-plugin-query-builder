@@ -31,6 +31,7 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
           />
         </div>
       );
+    case DATA_TYPES.ArrayType:
     case DATA_TYPES.EnumType:
       return (
         (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN) ?

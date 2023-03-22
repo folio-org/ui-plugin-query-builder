@@ -34,11 +34,14 @@ export const RepeatableFields = ({ rows, setRows }) => {
 
   const handleChange = (value, index, fieldName) => {
     const isField = fieldName === COLUMN_KEYS.FIELD;
+    const isOperator = fieldName === COLUMN_KEYS.OPERATOR;
     const field = fieldOptions.find(o => o.value === value);
+    const rowField = rows[index].field.current;
+    const memorizedField = fieldOptions.find(o => o.value === rowField);
 
     const modifications = (item) => {
-      return isField ?
-        {
+      if (isField) {
+        return {
           [COLUMN_KEYS.FIELD]: {
             ...item[COLUMN_KEYS.FIELD],
             current: value,
@@ -52,7 +55,18 @@ export const RepeatableFields = ({ rows, setRows }) => {
             options: field.values,
             current: '',
           },
-        } : {};
+        };
+      }
+      if (isOperator) {
+        return {
+          [COLUMN_KEYS.VALUE]: {
+            options: memorizedField.values,
+            current: '',
+          },
+        };
+      }
+
+      return {};
     };
 
     setRows(prev => prev.map((item, i) => {
