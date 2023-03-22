@@ -6,3 +6,4 @@
 * [UIPQB-5](https://issues.folio.org/browse/UIPQB-5) Field-action-value component: String.
 * [UIPQB-9](https://issues.folio.org/browse/UIPQB-9) Date-time property format - action-value component
 * [UIPQB-11](https://issues.folio.org/browse/UIPQB-11) Enum property type - action-value component.
+* [UIPQB-10](https://issues.folio.org/browse/UIPQB-10) Object property type - action-value component
