@@ -22,15 +22,6 @@ export const entityType = {
       'values': null,
     },
     {
-      'name': 'holdingsrecord.electronicAccess.relationship',
-      'dataType': {
-        'dataType': 'stringType',
-      },
-      'labelAlias': 'holdingsrecord.electronicAccess.relationship',
-      'visibleByDefault': false,
-      'values': null,
-    },
-    {
       'name': 'patron_group',
       'dataType': {
         'dataType': 'rangedUUIDType',
@@ -72,6 +63,24 @@ export const entityType = {
         'dataType': 'integerType',
       },
       'labelAlias': 'Position',
+      'visibleByDefault': false,
+      'values': null,
+    },
+    {
+      'name': 'expirationDate',
+      'dataType': {
+        'dataType': 'dateType',
+      },
+      'labelAlias': 'Expiration date',
+      'visibleByDefault': false,
+      'values': null,
+    },
+    {
+      'name': 'holdingsrecord.electronicAccess.relationship',
+      'dataType': {
+        'dataType': 'stringType',
+      },
+      'labelAlias': 'holdingsrecord.electronicAccess.relationship',
       'visibleByDefault': false,
       'values': null,
     },
