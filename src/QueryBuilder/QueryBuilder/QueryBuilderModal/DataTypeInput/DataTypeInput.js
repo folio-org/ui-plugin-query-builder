@@ -73,6 +73,7 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
     case DATA_TYPES.DateType:
       return (
         <Datepicker
+          usePortal
           onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
           {...rest}
         />
@@ -81,7 +82,6 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
       return (
         <TextField
           onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
-          usePortal
           {...rest}
         />
       );

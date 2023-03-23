@@ -74,6 +74,10 @@ export const entityType = {
       'labelAlias': 'Expiration date',
       'visibleByDefault': false,
       'values': null,
+      'valueGetter': {
+        'type': 'rmb_jsonb',
+        'param': 'name',
+      },
     },
     {
       'name': 'instanceId',
@@ -81,6 +85,15 @@ export const entityType = {
         'dataType': 'openUUIDType',
       },
       'labelAlias': 'Instance UUID',
+      'visibleByDefault': false,
+      'values': null,
+    },
+    {
+      'name': 'holdingsrecord_electronicAccess_relationship',
+      'dataType': {
+        'dataType': 'stringType',
+      },
+      'labelAlias': 'holdingsrecord_electronicAccess_relationship',
       'visibleByDefault': false,
       'values': null,
     },
