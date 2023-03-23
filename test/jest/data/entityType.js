@@ -46,11 +46,32 @@ export const entityType = {
       ],
     },
     {
+      'name': 'Status',
+      'dataType': {
+        'dataType': 'enumType',
+      },
+      'labelAlias': 'Status',
+      'visibleByDefault': false,
+      'values': [
+        { label: 'Available', value: 'available' },
+        { label: 'Checked out', value: 'checked' },
+      ],
+    },
+    {
       'name': 'position',
       'dataType': {
         'dataType': 'integerType',
       },
       'labelAlias': 'Position',
+      'visibleByDefault': false,
+      'values': null,
+    },
+    {
+      'name': 'expirationDate',
+      'dataType': {
+        'dataType': 'dateType',
+      },
+      'labelAlias': 'Expiration date',
       'visibleByDefault': false,
       'values': null,
     },

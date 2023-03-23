@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { fieldOptions } from './selectOptions';
 import { DATA_TYPES } from '../constants/dataTypes';
 import { OPERATORS } from '../constants/operators';
@@ -10,7 +11,7 @@ export const valueBuilder = (value, field, operator) => {
     [DATA_TYPES.IntegerType]: () => value,
     [DATA_TYPES.BooleanType]: () => value,
     [DATA_TYPES.RangedUUIDType]: () => (Array.isArray(value) ? `(${value?.map(el => el.value).join(',')})` : value),
-    [DATA_TYPES.DateType]: () => value,
+    [DATA_TYPES.DateType]: () => (value ? moment(value).toISOString() : ''),
     [DATA_TYPES.ArrayType]: () => value,
     [DATA_TYPES.ObjectType]: () => value,
     [DATA_TYPES.OpenUUIDType]: () => (
@@ -18,7 +19,9 @@ export const valueBuilder = (value, field, operator) => {
         ? `"${value.replace(/,\s?/g, '","')}"`
         : `"${value}"`
     ),
-    [DATA_TYPES.EnumType]: () => value,
+    [DATA_TYPES.EnumType]: () => (Array.isArray(value) &&
+    (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN) ?
+      `(${value?.map(el => el.value).join(',')})` : value),
   };
 
   return valueMap[dataType]();
