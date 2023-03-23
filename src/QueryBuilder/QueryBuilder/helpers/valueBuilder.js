@@ -14,7 +14,11 @@ export const valueBuilder = (value, field, operator) => {
     [DATA_TYPES.DateType]: () => (value ? moment(value).toISOString() : ''),
     [DATA_TYPES.ArrayType]: () => value,
     [DATA_TYPES.ObjectType]: () => value,
-    [DATA_TYPES.OpenUUIDType]: () => value,
+    [DATA_TYPES.OpenUUIDType]: () => (
+      (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN)
+        ? `"${value.replace(/,\s?/g, '","')}"`
+        : `"${value}"`
+    ),
     [DATA_TYPES.EnumType]: () => (Array.isArray(value) &&
     (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN) ?
       `(${value?.map(el => el.value).join(',')})` : value),
