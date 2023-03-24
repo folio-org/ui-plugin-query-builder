@@ -31,7 +31,7 @@ export const getOperatorOptions = (dataType) => {
 
     [DATA_TYPES.IntegerType]: baseLogicalOperators,
 
-    [DATA_TYPES.ArrayType]: baseLogicalOperators,
+    [DATA_TYPES.ArrayType]: rangedUUIDOperators,
 
     [DATA_TYPES.DateType]: extendedLogicalOperators,
 

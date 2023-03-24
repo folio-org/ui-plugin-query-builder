@@ -12,7 +12,9 @@ export const valueBuilder = (value, field, operator) => {
     [DATA_TYPES.BooleanType]: () => value,
     [DATA_TYPES.RangedUUIDType]: () => (Array.isArray(value) ? `(${value?.map(el => el.value).join(',')})` : value),
     [DATA_TYPES.DateType]: () => (value ? moment(value).toISOString() : ''),
-    [DATA_TYPES.ArrayType]: () => value,
+    [DATA_TYPES.ArrayType]: () => (Array.isArray(value) &&
+    (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN) ?
+      `(${value?.map(el => el.value).join(',')})` : value),
     [DATA_TYPES.ObjectType]: () => value,
     [DATA_TYPES.OpenUUIDType]: () => (
       (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN)
