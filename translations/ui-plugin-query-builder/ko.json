@@ -9,5 +9,6 @@
     "columns.field": "Field",
     "columns.operator": "연산자",
     "columns.value": "값",
-    "columns.action": "작업"
+    "columns.action": "작업",
+    "control.info.separateValues": "Separate multiple values with a comma."
 }

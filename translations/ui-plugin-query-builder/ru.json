@@ -9,5 +9,6 @@
     "columns.field": "Поле",
     "columns.operator": "Operator",
     "columns.value": "Значение",
-    "columns.action": "Действия"
+    "columns.action": "Действия",
+    "control.info.separateValues": "Separate multiple values with a comma."
 }

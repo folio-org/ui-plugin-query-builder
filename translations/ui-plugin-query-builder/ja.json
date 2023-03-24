@@ -9,5 +9,6 @@
     "columns.field": "Field",
     "columns.operator": "Operator",
     "columns.value": "値",
-    "columns.action": "アクション"
+    "columns.action": "アクション",
+    "control.info.separateValues": "Separate multiple values with a comma."
 }

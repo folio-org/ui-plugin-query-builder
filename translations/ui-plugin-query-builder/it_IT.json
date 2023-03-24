@@ -9,5 +9,6 @@
     "columns.field": "Campo",
     "columns.operator": "Operatore",
     "columns.value": "Valore",
-    "columns.action": "Azioni"
+    "columns.action": "Azioni",
+    "control.info.separateValues": "Separate multiple values with a comma."
 }
