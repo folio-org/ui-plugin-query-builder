@@ -11,12 +11,17 @@ import css from './QueryBuilderModal.css';
 import { rowTemplate } from '../helpers/selectOptions';
 import { getQueryStr } from '../helpers/query';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
+import { COLUMN_KEYS } from '../constants/columnKeys';
 
 export const QueryBuilderModal = ({
   setIsModalShown,
   isOpen = true,
 }) => {
   const [rows, setRows] = useState([rowTemplate]);
+
+  const isQueryFilled = rows.every(row => row[COLUMN_KEYS.FIELD].current
+    && row[COLUMN_KEYS.OPERATOR].current
+    && row[COLUMN_KEYS.VALUE].current?.length);
 
   const handleCancel = () => {
     setIsModalShown(false);
@@ -53,7 +58,7 @@ export const QueryBuilderModal = ({
         {getQueryStr(rows)}
       </div>
       <RepeatableFields rows={rows} setRows={setRows} />
-      <Button disabled>
+      <Button disabled={!isQueryFilled}>
         <FormattedMessage id="ui-plugin-query-builder.modal.test" />
       </Button>
     </Modal>

@@ -1161,7 +1161,7 @@ export const content = {
     'unpaged': false,
   },
   'totalPages': 525,
-  'totalElements': 52448,
+  'totalRecords': 52448,
   'last': false,
   'size': 100,
   'number': 0,

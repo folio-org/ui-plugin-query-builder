@@ -16,7 +16,7 @@ const renderResultViewer = (props) => (
   <QueryClientProvider client={queryClient}>
     <ResultViewer
       accordionHeadline="Query: loan_status ='Open' and user_active = 'false'"
-      headline={({ totalElements }) => `${totalElements} records found`}
+      headline={({ totalRecords }) => `${totalRecords} records found`}
       contentDataSource={() => delayedResponse(300, content)}
       entityTypeDataSource={() => delayedResponse(300, entityType)}
       visibleColumns={[]}
@@ -56,7 +56,7 @@ describe('ResultViewer', () => {
       await waitFor(() => {
         expect(screen.queryByText('Loading')).not.toBeInTheDocument();
 
-        expect(screen.getByText(`${content.totalElements} records found`)).toBeVisible();
+        expect(screen.getByText(`${content.totalRecords} records found`)).toBeVisible();
       });
     });
   });

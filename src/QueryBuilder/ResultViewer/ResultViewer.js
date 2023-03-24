@@ -31,7 +31,7 @@ export const ResultViewer = ({
 
   const {
     contentData,
-    totalElements,
+    totalRecords,
     isContentDataLoading,
     isContentDataFetching,
     isEntityTypeLoading,
@@ -71,7 +71,7 @@ export const ResultViewer = ({
     <Row between="xs">
       <Col xs={6}>
         <Headline size="large" margin="none" tag="h3">
-          {headline({ totalElements, defaultLimit })}
+          {headline({ totalRecords, defaultLimit })}
         </Headline>
       </Col>
       {headlineEnd}
@@ -95,7 +95,7 @@ export const ResultViewer = ({
           <PrevNextPagination
             limit={limit}
             offset={offset}
-            totalCount={totalElements}
+            totalCount={totalRecords}
             onChange={changePage}
           />
         )}
