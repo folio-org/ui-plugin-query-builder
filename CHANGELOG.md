@@ -9,3 +9,4 @@
 * [UIPQB-4](https://issues.folio.org/browse/UIPQB-4) UUIDs: field-action-value component.
 * [UIPQB-10](https://issues.folio.org/browse/UIPQB-10) Object property type - action-value component
 * [UIPQB-6](https://issues.folio.org/browse/UIPQB-6) Array property type - action-value component.
+* [UIPQB-14](https://issues.folio.org/browse/UIPQB-14) Build query string

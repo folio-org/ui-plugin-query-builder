@@ -37,7 +37,7 @@ export const useAsyncDataSource = ({
     sharedOptions,
   );
 
-  const { content: contentData, totalElements } = recordsData || {};
+  const { content: contentData, totalRecords } = recordsData || {};
 
   const { columnMapping, defaultColumns, defaultVisibleColumns } = getTableMetadata(entityType);
 
@@ -50,7 +50,7 @@ export const useAsyncDataSource = ({
     columnMapping,
     defaultColumns,
     defaultVisibleColumns,
-    totalElements,
+    totalRecords,
     refetch,
   };
 };
