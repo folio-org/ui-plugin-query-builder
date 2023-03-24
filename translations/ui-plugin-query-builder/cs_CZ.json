@@ -9,5 +9,6 @@
     "columns.field": "Pole",
     "columns.operator": "Operátor",
     "columns.value": "Hodnota",
-    "columns.action": "Akce"
+    "columns.action": "Akce",
+    "control.info.separateValues": "Separate multiple values with a comma."
 }

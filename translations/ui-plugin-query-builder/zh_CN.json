@@ -9,5 +9,6 @@
     "columns.field": "字段",
     "columns.operator": "布尔算符",
     "columns.value": "值",
-    "columns.action": "操作"
+    "columns.action": "操作",
+    "control.info.separateValues": "Separate multiple values with a comma."
 }

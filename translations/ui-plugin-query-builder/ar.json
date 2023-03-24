@@ -9,5 +9,6 @@
     "columns.field": "حقل",
     "columns.operator": "مشغل",
     "columns.value": "القيمة",
-    "columns.action": "الإجراءات"
+    "columns.action": "الإجراءات",
+    "control.info.separateValues": "Separate multiple values with a comma."
 }
