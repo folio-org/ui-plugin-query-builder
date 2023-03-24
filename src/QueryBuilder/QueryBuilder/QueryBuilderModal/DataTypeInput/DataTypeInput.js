@@ -6,6 +6,7 @@ import { Select,
   TextArea,
   Datepicker } from '@folio/stripes/components';
 
+import { FormattedMessage } from 'react-intl';
 import { DATA_TYPES } from '../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../constants/columnKeys';
 import { OPERATORS } from '../../constants/operators';
@@ -35,10 +36,13 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
     case DATA_TYPES.OpenUUIDType:
       return (
         operator === OPERATORS.IN || operator === OPERATORS.NOT_IN ? (
-          <TextArea
-            rows={1}
-            onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
-          />
+          <>
+            <TextArea
+              rows={1}
+              onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+            />
+            <FormattedMessage id="ui-plugin-query-builder.control.info.separateValues" />
+          </>
         ) : (
           <div className={className}>
             <TextField
