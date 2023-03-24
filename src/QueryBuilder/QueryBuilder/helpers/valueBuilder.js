@@ -16,7 +16,11 @@ export const valueBuilder = (value, field, operator) => {
     (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN) ?
       `(${value?.map(el => el.value).join(',')})` : value),
     [DATA_TYPES.ObjectType]: () => value,
-    [DATA_TYPES.OpenUUIDType]: () => value,
+    [DATA_TYPES.OpenUUIDType]: () => (
+      (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN)
+        ? `"${value.replace(/,\s?/g, '","')}"`
+        : `"${value}"`
+    ),
     [DATA_TYPES.EnumType]: () => (Array.isArray(value) &&
     (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN) ?
       `(${value?.map(el => el.value).join(',')})` : value),

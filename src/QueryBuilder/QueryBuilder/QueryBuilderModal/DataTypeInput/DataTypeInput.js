@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Select,
   TextField,
   MultiSelection,
+  TextArea,
   Datepicker } from '@folio/stripes/components';
 
 import { DATA_TYPES } from '../../constants/dataTypes';
@@ -31,6 +32,22 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
           />
         </div>
       );
+    case DATA_TYPES.OpenUUIDType:
+      return (
+        operator === OPERATORS.IN || operator === OPERATORS.NOT_IN ? (
+          <TextArea
+            rows={1}
+            onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+          />
+        ) : (
+          <div className={className}>
+            <TextField
+              onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+              {...rest}
+            />
+          </div>
+        )
+      );
     case DATA_TYPES.ArrayType:
     case DATA_TYPES.EnumType:
       return (
@@ -57,6 +74,7 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
     case DATA_TYPES.DateType:
       return (
         <Datepicker
+          usePortal
           onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
           {...rest}
         />
@@ -65,7 +83,6 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
       return (
         <TextField
           onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
-          usePortal
           {...rest}
         />
       );
