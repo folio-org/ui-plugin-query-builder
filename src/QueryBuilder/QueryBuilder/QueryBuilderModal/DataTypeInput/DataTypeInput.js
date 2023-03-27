@@ -12,12 +12,17 @@ import { COLUMN_KEYS } from '../../constants/columnKeys';
 import { OPERATORS } from '../../constants/operators';
 
 export const DataTypeInput = ({ onChange, dataType, availableValues, className, index, operator, ...rest }) => {
+  const getSelectOptionsWithPlaceholder = (options) => [
+    { value: '', label: 'Select field', disabled: true },
+    ...options,
+  ];
+
   switch (dataType) {
     case DATA_TYPES.BooleanType:
       return (
         <div className={className}>
           <Select
-            dataOptions={availableValues}
+            dataOptions={getSelectOptionsWithPlaceholder(availableValues)}
             onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
             {...rest}
           />
@@ -69,7 +74,7 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
           (
             <div className={className}>
               <Select
-                dataOptions={availableValues}
+                dataOptions={getSelectOptionsWithPlaceholder(availableValues)}
                 onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
                 {...rest}
               />
@@ -78,7 +83,6 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
     case DATA_TYPES.DateType:
       return (
         <Datepicker
-          usePortal
           onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
           {...rest}
         />

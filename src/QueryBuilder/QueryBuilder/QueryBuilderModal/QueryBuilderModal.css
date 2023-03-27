@@ -31,10 +31,6 @@
     border-left: 1px solid var(--color-border-p2);
 }
 
-.control {
-    background-color: var(--bg);
-}
-
 .queryArea {
     width: 100%;
     min-height: var(--control-min-size-desktop);
@@ -47,4 +43,8 @@
     box-shadow: none;
     resize: vertical;
     overflow-y: auto;
+}
+
+.modalClass {
+    min-height: 500px;
 }

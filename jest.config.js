@@ -3,6 +3,7 @@ const path = require('path');
 
 module.exports = {
   ...commonCofig,
+  testEnvironment: 'jsdom',
   setupFiles: [
     path.join(__dirname, './test/jest/setupTests.js'),
     'jest-canvas-mock',

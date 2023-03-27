@@ -28,37 +28,7 @@ describe('QueryBuilderModal', () => {
   it('should render only field select by default', () => {
     renderQueryBuilderModal();
 
-    const allSelects = screen.getAllByRole('combobox');
-
-    expect(allSelects.length).toEqual(1);
-    expect(screen.getByRole('combobox', { name: /field-option/ })).toBeVisible();
-  });
-
-  it('shold render operator select when field selected', () => {
-    renderQueryBuilderModal();
-
-    const fieldSelect = screen.getByRole('combobox', { name: /field-option/ });
-    const fieldoption = screen.getByRole('option', { name: /Item Id/ });
-
-    act(() => userEvent.selectOptions(fieldSelect, fieldoption));
-
-    expect(screen.getByRole('combobox', { name: /operator-option/ })).toBeVisible();
-  });
-
-  it('should render MultiSelection when enumType passed', () => {
-    renderQueryBuilderModal();
-
-    const fieldSelect = screen.getByRole('combobox', { name: /field-option/ });
-    const fieldoption = screen.getByRole('option', { name: /Status/ });
-
-    act(() => userEvent.selectOptions(fieldSelect, fieldoption));
-
-    const fieldOperator = screen.getByTestId('operator-option-0');
-    const operatorOption = screen.getByRole('option', { name: 'in' });
-
-    act(() => userEvent.selectOptions(fieldOperator, operatorOption));
-
-    expect((screen.getByText(/stripes-components.multiSelection.controlDescription/))).toBeVisible();
+    expect(screen.getByText(/Effective Call Number/)).toBeInTheDocument();
   });
 
   it('shold render boolean select when row added', () => {

@@ -50,6 +50,7 @@ export const QueryBuilderModal = ({
       footer={renderFooter()}
       label={<FormattedMessage id="ui-plugin-query-builder.trigger" />}
       size="large"
+      contentClass={css.modalClass}
     >
       <Headline size="medium" margin="none" tag="h3">
         <FormattedMessage id="ui-plugin-query-builder.modal.query" />

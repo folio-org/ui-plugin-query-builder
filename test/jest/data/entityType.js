@@ -93,7 +93,7 @@ export const entityType = {
       'dataType': {
         'dataType': 'stringType',
       },
-      'labelAlias': 'holdingsrecord_electronicAccess_relationship',
+      'labelAlias': 'Relationship',
       'visibleByDefault': false,
       'values': null,
     },
