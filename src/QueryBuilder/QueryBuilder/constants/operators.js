@@ -12,6 +12,5 @@ export const OPERATORS = {
   NOT_CONTAIN: 'does not contain',
   STARTS_WITH: 'starts with',
 
-  OR: 'OR',
   AND: 'AND',
 };

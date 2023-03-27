@@ -3,11 +3,13 @@ import {
   IconButton,
   RepeatableField,
   Select,
+  Selection,
   Col,
   Row,
 } from '@folio/stripes/components';
 
 import PropTypes from 'prop-types';
+import { useIntl } from 'react-intl';
 import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import css from '../QueryBuilderModal.css';
 import { COLUMN_KEYS } from '../../constants/columnKeys';
@@ -16,6 +18,7 @@ import { OPERATORS } from '../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 
 export const RepeatableFields = ({ rows, setRows }) => {
+  const intl = useIntl();
   const handleAdd = () => {
     setRows(res => ([
       ...res,
@@ -95,6 +98,7 @@ export const RepeatableFields = ({ rows, setRows }) => {
         renderField={(row, index) => {
           return (
             <Row
+              key={index}
               data-testid={`row-${index}`}
               className={`${css.row} ${index % 2 === 0 ? css.even : ''}`}
             >
@@ -102,7 +106,6 @@ export const RepeatableFields = ({ rows, setRows }) => {
                 <Col sm={1} className={css.rowCell}>
                   {index > 0 && (
                     <Select
-                      selectClass={css.control}
                       dataOptions={row.boolean.options}
                       value={row.boolean.current}
                       onChange={(e) => handleChange(e.target.value, index, COLUMN_KEYS.BOOLEAN)}
@@ -113,20 +116,18 @@ export const RepeatableFields = ({ rows, setRows }) => {
                 </Col>
               )}
               <Col sm={4} className={css.rowCell}>
-                <Select
-                  selectClass={css.control}
+                <Selection
+                  id={`field-option-${index}`}
+                  placeholder={intl.formatMessage({ id: 'ui-plugin-query-builder.control.selection.placeholder' })}
                   dataOptions={row.field.options}
                   value={row.field.current}
-                  onChange={(e) => handleChange(e.target.value, index, COLUMN_KEYS.FIELD)}
-                  data-testid={`field-option-${index}`}
-                  aria-label={`field-option-${index}`}
+                  onChange={(value) => handleChange(value, index, COLUMN_KEYS.FIELD)}
                 />
               </Col>
 
               <Col sm={2} className={css.rowCell}>
                 {(row.field.current) && (
                   <Select
-                    selectClass={css.control}
                     dataOptions={row.operator.options}
                     value={row.operator.current}
                     onChange={(e) => handleChange(e.target.value, index, COLUMN_KEYS.OPERATOR)}
@@ -139,7 +140,6 @@ export const RepeatableFields = ({ rows, setRows }) => {
               <Col sm={4} className={css.rowCell}>
                 {(row.operator.current) && (
                   <DataTypeInput
-                    className={css.control}
                     value={row.value.current}
                     dataType={row.field.dataType}
                     index={index}

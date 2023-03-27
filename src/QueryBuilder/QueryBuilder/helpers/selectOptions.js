@@ -61,15 +61,15 @@ export const getOperatorOptions = (dataType) => {
   ];
 };
 
-export const fieldOptions = [
-  { value: '', label: 'Select field', disabled: true },
-  ...entityType.columns.map(et => ({
-    label: et.labelAlias,
-    value: et.name,
-    dataType: et.dataType.dataType,
-    values: et.values,
-  })),
-];
+export const fieldOptions = entityType.columns.map(et => ({
+  label: et.labelAlias,
+  value: et.name,
+  dataType: et.dataType.dataType,
+  values: et.values ? [
+    { value: '', label: 'Select value', disabled: true },
+    ...et.values,
+  ] : null,
+}));
 
 export const booleanOptions = [
   { label: 'AND', value: 'AND' },
