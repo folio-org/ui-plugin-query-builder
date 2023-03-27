@@ -16,7 +16,7 @@ export const getQueryStr = (rows) => {
     }
 
     if (bool) {
-      str += `${bool || ''} ${baseQuery}`;
+      str += ` ${bool || ''} ${baseQuery}`;
     } else {
       str += baseQuery;
     }
