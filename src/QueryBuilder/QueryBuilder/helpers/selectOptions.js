@@ -65,10 +65,7 @@ export const fieldOptions = entityType.columns.map(et => ({
   label: et.labelAlias,
   value: et.name,
   dataType: et.dataType.dataType,
-  values: et.values ? [
-    { value: '', label: 'Select value', disabled: true },
-    ...et.values,
-  ] : null,
+  values: et.values,
 }));
 
 export const booleanOptions = [
