@@ -10,5 +10,6 @@
     "columns.operator": "Operator",
     "columns.value": "Значение",
     "columns.action": "Действия",
-    "control.info.separateValues": "Separate multiple values with a comma."
+    "control.info.separateValues": "Separate multiple values with a comma.",
+    "control.selection.placeholder": "Выбрать поле"
 }

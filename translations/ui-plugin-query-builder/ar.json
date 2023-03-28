@@ -10,5 +10,6 @@
     "columns.operator": "مشغل",
     "columns.value": "القيمة",
     "columns.action": "الإجراءات",
-    "control.info.separateValues": "Separate multiple values with a comma."
+    "control.info.separateValues": "Separate multiple values with a comma.",
+    "control.selection.placeholder": "اختر حقل"
 }

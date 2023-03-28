@@ -6,9 +6,10 @@
     "modal.query": "Query",
     "modal.test": "Test query",
     "columns.boolean": "Boolean",
-    "columns.field": "Field",
+    "columns.field": "分野",
     "columns.operator": "Operator",
     "columns.value": "値",
     "columns.action": "アクション",
-    "control.info.separateValues": "Separate multiple values with a comma."
+    "control.info.separateValues": "Separate multiple values with a comma.",
+    "control.selection.placeholder": "Select field"
 }

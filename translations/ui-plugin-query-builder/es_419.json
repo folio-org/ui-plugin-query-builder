@@ -10,5 +10,6 @@
     "columns.operator": "Operador",
     "columns.value": "Valor",
     "columns.action": "Acciones",
-    "control.info.separateValues": "Separate multiple values with a comma."
+    "control.info.separateValues": "Separate multiple values with a comma.",
+    "control.selection.placeholder": "Select field"
 }
