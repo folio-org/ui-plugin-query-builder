@@ -10,5 +10,6 @@
     "columns.operator": "Operátor",
     "columns.value": "Hodnota",
     "columns.action": "Akce",
-    "control.info.separateValues": "Separate multiple values with a comma."
+    "control.info.separateValues": "Separate multiple values with a comma.",
+    "control.selection.placeholder": "Vybrat pole"
 }

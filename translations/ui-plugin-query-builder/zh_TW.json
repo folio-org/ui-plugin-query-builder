@@ -10,5 +10,6 @@
     "columns.operator": "Operator",
     "columns.value": "值",
     "columns.action": "操作",
-    "control.info.separateValues": "Separate multiple values with a comma."
+    "control.info.separateValues": "Separate multiple values with a comma.",
+    "control.selection.placeholder": "Select field"
 }
