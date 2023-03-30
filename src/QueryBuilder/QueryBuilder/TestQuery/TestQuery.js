@@ -37,13 +37,8 @@ export const TestQuery = ({ isTestBtnDisabled, query, onTestQuery, onQueryRetrie
           height={200}
           headlineEnd={(
             <Dropdown
-              focusHandlers={{
-                close: () => {},
-                open: () => {},
-              }}
               label={<FormattedMessage id="ui-plugin-query-builder.control.dropdown.showColumns" />}
               mame="test-query-preview-dropdown"
-              usePortal
             >
               <DropdownMenu
                 role="menu"
@@ -54,7 +49,6 @@ export const TestQuery = ({ isTestBtnDisabled, query, onTestQuery, onQueryRetrie
                   selectedValues={visibleColumns}
                   onChange={({ values }) => setVisibleColumns(values)}
                   name="name"
-                  modifiers={{}}
                 />
               </DropdownMenu>
             </Dropdown>

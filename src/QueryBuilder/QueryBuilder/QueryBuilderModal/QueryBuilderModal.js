@@ -54,6 +54,7 @@ export const QueryBuilderModal = ({
       label={<FormattedMessage id="ui-plugin-query-builder.trigger" />}
       size="large"
       contentClass={css.modalClass}
+      enforceFocus={false}
     >
       <Headline size="medium" margin="none" tag="h3">
         <FormattedMessage id="ui-plugin-query-builder.modal.query" />
