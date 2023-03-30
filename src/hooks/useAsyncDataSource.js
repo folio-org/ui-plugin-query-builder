@@ -8,6 +8,7 @@ export const useAsyncDataSource = ({
   offset,
   limit,
   onSuccess,
+  isInProgress,
 }) => {
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
 
@@ -19,10 +20,11 @@ export const useAsyncDataSource = ({
     isFetching: isContentDataFetching,
     refetch,
   } = useQuery(
-    ['contentData', debouncedOffset, debouncedLimit],
+    ['contentData', debouncedOffset, debouncedLimit, isInProgress],
     () => contentDataSource({ offset: debouncedOffset, limit: debouncedLimit }),
     {
       ...sharedOptions,
+      enabled: !isInProgress,
       onSuccess,
     },
   );
@@ -32,9 +34,12 @@ export const useAsyncDataSource = ({
     isLoading: isEntityTypeLoading,
     isFetchedAfterMount: isContentTypeFetchedAfterMount,
   } = useQuery(
-    'entityType',
+    ['entityType', isInProgress],
     entityTypeDataSource,
-    sharedOptions,
+    {
+      enabled: !isInProgress,
+      ...sharedOptions,
+    },
   );
 
   const { content: contentData, totalRecords } = recordsData || {};

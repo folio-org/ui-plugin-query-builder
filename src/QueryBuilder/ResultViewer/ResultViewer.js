@@ -41,6 +41,7 @@ export const ResultViewer = ({
     defaultVisibleColumns,
     refetch,
   } = useAsyncDataSource({
+    isInProgress,
     entityTypeDataSource,
     contentDataSource,
     offset,
@@ -69,7 +70,7 @@ export const ResultViewer = ({
 
   const renderHeader = () => (
     <Row between="xs">
-      <Col xs={6}>
+      <Col xs={8}>
         <Headline size="large" margin="none" tag="h3">
           {headline({ totalRecords, defaultLimit })}
         </Headline>
