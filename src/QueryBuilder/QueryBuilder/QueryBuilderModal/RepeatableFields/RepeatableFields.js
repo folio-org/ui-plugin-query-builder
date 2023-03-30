@@ -9,7 +9,7 @@ import {
 } from '@folio/stripes/components';
 
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import css from '../QueryBuilderModal.css';
 import { COLUMN_KEYS } from '../../constants/columnKeys';
@@ -18,7 +18,6 @@ import { OPERATORS } from '../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 
 export const RepeatableFields = ({ rows, setRows }) => {
-  const intl = useIntl();
   const handleAdd = () => {
     setRows(res => ([
       ...res,
@@ -118,7 +117,7 @@ export const RepeatableFields = ({ rows, setRows }) => {
               <Col sm={4} className={css.rowCell}>
                 <Selection
                   id={`field-option-${index}`}
-                  placeholder={intl.formatMessage({ id: 'ui-plugin-query-builder.control.selection.placeholder' })}
+                  placeholder={<FormattedMessage id="ui-plugin-query-builder.control.selection.placeholder" />}
                   dataOptions={row.field.options}
                   value={row.field.current}
                   onChange={(value) => handleChange(value, index, COLUMN_KEYS.FIELD)}
