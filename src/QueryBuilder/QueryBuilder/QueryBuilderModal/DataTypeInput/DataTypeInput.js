@@ -103,5 +103,5 @@ DataTypeInput.propTypes = {
   operator: PropTypes.string,
   onChange: PropTypes.func,
   index: PropTypes.number,
-  availableValues: PropTypes.arrayOf(PropTypes.oneOf(PropTypes.bool, PropTypes.object)),
+  availableValues: PropTypes.arrayOf(PropTypes.oneOf([PropTypes.bool, PropTypes.object])),
 };

@@ -1,21 +1,27 @@
 import { screen, render, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
+import { QueryClient, QueryClientProvider } from 'react-query';
 import '@folio/stripes-acq-components/test/jest/__mock__';
+import '../../../../test/jest/__mock__/stripesSmartComponents.mock';
 import { QueryBuilderModal } from './QueryBuilderModal';
+import { entityType } from '../../../../test/jest/data/entityType';
 
 jest.mock('@folio/stripes/components', () => ({
   ...jest.requireActual('@folio/stripes/components'),
 }));
 
+const queryClient = new QueryClient();
+
 const renderQueryBuilderModal = (
   setIsModalShown = jest.fn(),
   isOpen = true,
 ) => render(
-  <QueryBuilderModal
-    setIsModalShown={setIsModalShown}
-    isOpen={isOpen}
-  />,
+  <QueryClientProvider client={queryClient}>
+    <QueryBuilderModal
+      setIsModalShown={setIsModalShown}
+      isOpen={isOpen}
+    />
+  </QueryClientProvider>,
 );
 
 describe('QueryBuilderModal', () => {
@@ -28,7 +34,11 @@ describe('QueryBuilderModal', () => {
   it('should render only field select by default', () => {
     renderQueryBuilderModal();
 
-    expect(screen.getByText(/Effective Call Number/)).toBeInTheDocument();
+    const cols = entityType.columns;
+
+    cols.forEach(col => {
+      expect(screen.getByText(`${col.labelAlias}`)).toBeInTheDocument();
+    });
   });
 
   it('shold render boolean select when row added', () => {

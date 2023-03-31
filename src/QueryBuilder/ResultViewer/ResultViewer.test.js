@@ -1,6 +1,7 @@
 import { screen, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { IntlProvider } from 'react-intl';
 import { ResultViewer } from './ResultViewer';
 import { entityType } from '../../../test/jest/data/entityType';
 import { content } from '../../../test/jest/data/content';
@@ -13,19 +14,21 @@ const setVisibleColumns = jest.fn();
 const setColumns = jest.fn();
 
 const renderResultViewer = (props) => (
-  <QueryClientProvider client={queryClient}>
-    <ResultViewer
-      accordionHeadline="Query: loan_status ='Open' and user_active = 'false'"
-      headline={({ totalRecords }) => `${totalRecords} records found`}
-      contentDataSource={() => delayedResponse(300, content)}
-      entityTypeDataSource={() => delayedResponse(300, entityType)}
-      visibleColumns={[]}
-      onSetDefaultVisibleColumns={setVisibleColumns}
-      onSetDefaultColumns={setColumns}
-      height={300}
-      {...props}
-    />
-  </QueryClientProvider>
+  <IntlProvider locale="en">
+    <QueryClientProvider client={queryClient}>
+      <ResultViewer
+        accordionHeadline="Query: loan_status ='Open' and user_active = 'false'"
+        headline={({ totalRecords }) => `${totalRecords} records found`}
+        contentDataSource={() => delayedResponse(300, content)}
+        entityTypeDataSource={() => delayedResponse(300, entityType)}
+        visibleColumns={[]}
+        onSetDefaultVisibleColumns={setVisibleColumns}
+        onSetDefaultColumns={setColumns}
+        height={300}
+        {...props}
+      />
+    </QueryClientProvider>
+  </IntlProvider>
 );
 
 describe('ResultViewer', () => {

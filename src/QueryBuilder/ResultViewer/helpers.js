@@ -5,7 +5,7 @@ export const getTableMetadata = (entityType) => {
     disabled: false,
     readOnly: false,
     selected: cell.visibleByDefault,
-  }));
+  })) || [];
 
   const columnMapping = defaultColumns?.reduce((acc, { value, label }) => {
     acc[value] = label;
@@ -13,7 +13,7 @@ export const getTableMetadata = (entityType) => {
     return acc;
   }, {});
 
-  const defaultVisibleColumns = defaultColumns?.filter(col => col.selected).map(col => col.value);
+  const defaultVisibleColumns = defaultColumns?.filter(col => col.selected).map(col => col.value) || [];
 
   return {
     defaultVisibleColumns,
