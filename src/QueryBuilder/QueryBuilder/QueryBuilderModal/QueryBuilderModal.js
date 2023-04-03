@@ -16,7 +16,7 @@ import { TestQuery } from '../TestQuery/TestQuery';
 export const QueryBuilderModal = ({
   setIsModalShown,
   isOpen = true,
-  saveBtnLabel = '',
+  saveBtnLabel,
 }) => {
   const [rows, setRows] = useState([rowTemplate]);
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
