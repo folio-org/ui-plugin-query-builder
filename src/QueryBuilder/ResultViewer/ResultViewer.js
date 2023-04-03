@@ -147,7 +147,7 @@ ResultViewer.propTypes = {
   defaultLimit: PropTypes.number,
   defaultOffset: PropTypes.number,
   isInProgress: PropTypes.bool,
-  inProgressTitle: PropTypes.string,
+  inProgressTitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   height: PropTypes.number,
   showPagination: PropTypes.bool,
   refreshTrigger: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),

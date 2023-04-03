@@ -9,36 +9,37 @@ import {
 } from '@folio/stripes/components';
 
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import css from '../QueryBuilderModal.css';
 import { COLUMN_KEYS } from '../../constants/columnKeys';
-import { booleanOptions, fieldOptions, getOperatorOptions, rowTemplate } from '../../helpers/selectOptions';
+import { booleanOptions, fieldOptions, getOperatorOptions, sourceTemplate } from '../../helpers/selectOptions';
 import { OPERATORS } from '../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 
-export const RepeatableFields = ({ rows, setRows }) => {
+export const RepeatableFields = ({ source, setSource }) => {
+  const intl = useIntl();
   const handleAdd = () => {
-    setRows(res => ([
+    setSource(res => ([
       ...res,
       {
-        ...rowTemplate,
+        ...sourceTemplate,
         [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: OPERATORS.AND },
       },
     ]));
   };
 
   const handleRemove = (index) => {
-    const filteredFields = rows.filter((_, i) => i !== index);
+    const filteredFields = source.filter((_, i) => i !== index);
 
-    setRows(filteredFields);
+    setSource(filteredFields);
   };
 
   const handleChange = (value, index, fieldName) => {
     const isField = fieldName === COLUMN_KEYS.FIELD;
     const isOperator = fieldName === COLUMN_KEYS.OPERATOR;
     const field = fieldOptions.find(o => o.value === value);
-    const rowField = rows[index].field.current;
+    const rowField = source[index].field.current;
     const memorizedField = fieldOptions.find(o => o.value === rowField);
 
     const modifications = (item) => {
@@ -71,7 +72,7 @@ export const RepeatableFields = ({ rows, setRows }) => {
       return {};
     };
 
-    setRows(prev => prev.map((item, i) => {
+    setSource(prev => prev.map((item, i) => {
       if (i === index) {
         return {
           ...item,
@@ -89,9 +90,9 @@ export const RepeatableFields = ({ rows, setRows }) => {
 
   return (
     <>
-      <QueryBuilderTitle results={rows} />
+      <QueryBuilderTitle results={source} />
       <RepeatableField
-        fields={rows}
+        fields={source}
         onAdd={() => {}}
         hasMargin={false}
         renderField={(row, index) => {
@@ -101,7 +102,7 @@ export const RepeatableFields = ({ rows, setRows }) => {
               data-testid={`row-${index}`}
               className={`${css.row} ${index % 2 === 0 ? css.even : ''}`}
             >
-              {rows.length > 1 && (
+              {source.length > 1 && (
                 <Col sm={1} className={css.rowCell}>
                   {index > 0 && (
                     <Select
@@ -117,7 +118,7 @@ export const RepeatableFields = ({ rows, setRows }) => {
               <Col sm={4} className={css.rowCell}>
                 <Selection
                   id={`field-option-${index}`}
-                  placeholder={<FormattedMessage id="ui-plugin-query-builder.control.selection.placeholder" />}
+                  placeholder={intl.formatMessage({ id: 'ui-plugin-query-builder.control.selection.placeholder' })}
                   dataOptions={row.field.options}
                   value={row.field.current}
                   onChange={(value) => handleChange(value, index, COLUMN_KEYS.FIELD)}
@@ -173,6 +174,6 @@ export const RepeatableFields = ({ rows, setRows }) => {
 };
 
 RepeatableFields.propTypes = {
-  rows: PropTypes.arrayOf(PropTypes.object),
-  setRows: PropTypes.func,
+  source: PropTypes.arrayOf(PropTypes.object),
+  setSource: PropTypes.func,
 };

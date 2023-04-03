@@ -45,7 +45,7 @@ export const getOperatorOptions = (dataType) => {
       { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
       { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
       { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
-      { label: OPERATORS.NOT_CONTAIN, value: OPERATORS.NOT_CONTAIN },
+      { label: OPERATORS.NOT_CONTAINS, value: OPERATORS.NOT_CONTAINS },
       { label: OPERATORS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
     ],
 
@@ -61,18 +61,20 @@ export const getOperatorOptions = (dataType) => {
   ];
 };
 
-export const fieldOptions = entityType.columns.map(et => ({
-  label: et.labelAlias,
-  value: et.name,
-  dataType: et.dataType.dataType,
-  values: et.values,
-}));
+export const fieldOptions = entityType.columns
+  .filter(item => item.visibleByDefault)
+  .map(et => ({
+    label: et.labelAlias,
+    value: et.name,
+    dataType: et.dataType.dataType,
+    values: et.values,
+  }));
 
 export const booleanOptions = [
   { label: 'AND', value: 'AND' },
 ];
 
-export const rowTemplate = {
+export const sourceTemplate = {
   [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: '' },
   [COLUMN_KEYS.FIELD]: { options: fieldOptions, current: '' },
   [COLUMN_KEYS.OPERATOR]: { options: [], current: '' },
