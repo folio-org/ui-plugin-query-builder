@@ -16,6 +16,7 @@ import { TestQuery } from '../TestQuery/TestQuery';
 export const QueryBuilderModal = ({
   setIsModalShown,
   isOpen = true,
+  saveBtnLabel = '',
 }) => {
   const [rows, setRows] = useState([rowTemplate]);
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
@@ -30,6 +31,8 @@ export const QueryBuilderModal = ({
     setIsModalShown(false);
   };
 
+  const getSaveBtnLabel = () => (saveBtnLabel || <FormattedMessage id="ui-plugin-query-builder.modal.run" />);
+
   const renderFooter = () => (
     <ModalFooter>
       <Button
@@ -37,7 +40,7 @@ export const QueryBuilderModal = ({
         disabled={!isQueryRetrieved}
         onClick={handleCancel}
       >
-        <FormattedMessage id="ui-plugin-query-builder.modal.run" />
+        {getSaveBtnLabel()}
       </Button>
       <Button
         onClick={handleCancel}
@@ -76,4 +79,5 @@ export const QueryBuilderModal = ({
 QueryBuilderModal.propTypes = {
   setIsModalShown: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
+  saveBtnLabel: PropTypes.string,
 };

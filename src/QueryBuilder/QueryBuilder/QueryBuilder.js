@@ -6,7 +6,7 @@ import { Button } from '@folio/stripes/components';
 import PropTypes from 'prop-types';
 import { QueryBuilderModal } from './QueryBuilderModal';
 
-export const QueryBuilder = ({ disabled }) => {
+export const QueryBuilder = ({ disabled, saveBtnLabel }) => {
   const [isModalShown, setIsModalShown] = useState(false);
 
   const openModal = () => {
@@ -26,6 +26,7 @@ export const QueryBuilder = ({ disabled }) => {
       <QueryBuilderModal
         setIsModalShown={setIsModalShown}
         isOpen={isModalShown}
+        saveBtnLabel={saveBtnLabel}
       />
     </>
   );
@@ -33,4 +34,5 @@ export const QueryBuilder = ({ disabled }) => {
 
 QueryBuilder.propTypes = {
   disabled: PropTypes.bool,
+  saveBtnLabel: PropTypes.string,
 };
