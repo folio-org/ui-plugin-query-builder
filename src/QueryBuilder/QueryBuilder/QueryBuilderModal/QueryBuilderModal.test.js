@@ -34,7 +34,7 @@ describe('QueryBuilderModal', () => {
   it('should render only field select by default', () => {
     renderQueryBuilderModal();
 
-    const cols = entityType.columns;
+    const cols = entityType.columns.filter(c => c.visibleByDefault);
 
     cols.forEach(col => {
       expect(screen.getByText(`${col.labelAlias}`)).toBeInTheDocument();

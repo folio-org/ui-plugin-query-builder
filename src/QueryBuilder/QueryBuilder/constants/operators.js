@@ -5,12 +5,10 @@ export const OPERATORS = {
   LESS_THAN: '<',
   GREATER_THAN_OR_EQUAL: '>=',
   LESS_THAN_OR_EQUAL: '<=',
-
   IN: 'in',
   NOT_IN: 'not in',
   CONTAINS: 'contains',
-  NOT_CONTAIN: 'does not contain',
+  NOT_CONTAINS: 'does not contain',
   STARTS_WITH: 'starts with',
-
   AND: 'AND',
 };
