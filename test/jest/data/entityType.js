@@ -17,7 +17,7 @@ export const entityType = {
         'dataType': 'stringType',
       },
       'labelAlias': 'User first name',
-      'visibleByDefault': false,
+      'visibleByDefault': true,
     },
     {
       'name': 'user_last_name',
@@ -25,7 +25,7 @@ export const entityType = {
         'dataType': 'stringType',
       },
       'labelAlias': 'User last name',
-      'visibleByDefault': false,
+      'visibleByDefault': true,
     },
     {
       'name': 'user_full_name',
@@ -41,7 +41,11 @@ export const entityType = {
         'dataType': 'booleanType',
       },
       'labelAlias': 'User active',
-      'visibleByDefault': false,
+      'visibleByDefault': true,
+      'values': [
+        { label: 'True', value: 'true' },
+        { label: 'False', value: 'false' },
+      ],
     },
     {
       'name': 'user_barcode',
@@ -49,7 +53,7 @@ export const entityType = {
         'dataType': 'stringType',
       },
       'labelAlias': 'User barcode',
-      'visibleByDefault': true,
+      'visibleByDefault': false,
     },
     {
       'name': 'user_expiration_date',
@@ -70,9 +74,33 @@ export const entityType = {
     {
       'name': 'user_patron_group',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'rangedUUIDType',
       },
       'labelAlias': 'User patron group',
+      'visibleByDefault': true,
+      'values': [
+        { label: 'UC Academic, Indefinite', value: 'Indefinite' },
+        { label: 'UC Department, Quarter', value: 'Quarter' },
+      ],
+    },
+    {
+      'name': 'status',
+      'dataType': {
+        'dataType': 'enumType',
+      },
+      'labelAlias': 'Status',
+      'visibleByDefault': true,
+      'values': [
+        { label: 'Available', value: 'available' },
+        { label: 'Checked out', value: 'checked' },
+      ],
+    },
+    {
+      'name': 'user_customfields',
+      'dataType': {
+        'dataType': 'stringType',
+      },
+      'labelAlias': 'User custom fields',
       'visibleByDefault': true,
     },
     {
@@ -166,10 +194,14 @@ export const entityType = {
     {
       'name': 'instance_id',
       'dataType': {
-        'dataType': 'stringType',
+        'dataType': 'openUUIDType',
       },
       'labelAlias': 'Instance ID',
-      'visibleByDefault': false,
+      'visibleByDefault': true,
+      'values': [
+        { label: 'InstanceId-1', value: 'instanceId-1' },
+        { label: 'InstanceId-2', value: 'instanceId-2' },
+      ],
     },
     {
       'name': 'instance_title',
@@ -226,6 +258,26 @@ export const entityType = {
       },
       'labelAlias': 'Item material type ID',
       'visibleByDefault': false,
+    },
+    {
+      'name': 'languages',
+      'dataType': {
+        'dataType': 'arrayType',
+      },
+      'labelAlias': 'Languages',
+      'visibleByDefault': true,
+      'values': [
+        { label: 'English', value: 'eng' },
+        { label: 'French', value: 'fra' },
+      ],
+    },
+    {
+      'name': 'position',
+      'dataType': {
+        'dataType': 'integerType',
+      },
+      'labelAlias': 'Position',
+      'visibleByDefault': true,
     },
     {
       'name': 'item_material_type',

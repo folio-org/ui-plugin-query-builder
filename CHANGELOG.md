@@ -11,4 +11,5 @@
 * [UIPQB-6](https://issues.folio.org/browse/UIPQB-6) Array property type - action-value component.
 * [UIPQB-14](https://issues.folio.org/browse/UIPQB-14) Build query string
 * [UIPQB-17](https://issues.folio.org/browse/UIPQB-17) Test query
+* [UIPQB-28](https://issues.folio.org/browse/UIPQB-28) Update QueryBuilder Component to work with MongoDB-Compliant JSON Query
 * [UIPQB-27](https://issues.folio.org/browse/UIPQB-27) Title: Extend QueryBuilder plugin with 'saveBtnLabel' Prop

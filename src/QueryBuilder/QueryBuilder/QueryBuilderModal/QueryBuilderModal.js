@@ -7,10 +7,9 @@ import { Modal,
   Headline } from '@folio/stripes/components';
 
 import css from './QueryBuilderModal.css';
-import { rowTemplate } from '../helpers/selectOptions';
-import { getQueryStr } from '../helpers/query';
+import { sourceTemplate } from '../helpers/selectOptions';
+import { getQueryStr, isQueryValid, sourceToMongoQuery } from '../helpers/query';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
-import { COLUMN_KEYS } from '../constants/columnKeys';
 import { TestQuery } from '../TestQuery/TestQuery';
 
 export const QueryBuilderModal = ({
@@ -18,17 +17,20 @@ export const QueryBuilderModal = ({
   setIsModalShown,
   saveBtnLabel,
 }) => {
-  const [rows, setRows] = useState([rowTemplate]);
+  const [source, setSource] = useState([sourceTemplate]);
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
 
-  const query = getQueryStr(rows);
+  const query = getQueryStr(source);
 
-  const isQueryFilled = rows.every(row => row[COLUMN_KEYS.FIELD].current
-    && row[COLUMN_KEYS.OPERATOR].current
-    && row[COLUMN_KEYS.VALUE].current?.length);
+  const isQueryFilled = isQueryValid(source);
 
   const handleCancel = () => {
     setIsModalShown(false);
+  };
+
+  const handleRun = () => {
+    console.log(sourceToMongoQuery(source));
+    handleCancel();
   };
 
   const getSaveBtnLabel = () => (saveBtnLabel || <FormattedMessage id="ui-plugin-query-builder.modal.run" />);
@@ -37,8 +39,8 @@ export const QueryBuilderModal = ({
     <ModalFooter>
       <Button
         buttonStyle="primary"
-        disabled={!isQueryRetrieved}
-        onClick={handleCancel}
+        disabled={!isQueryRetrieved && isQueryFilled}
+        onClick={handleRun}
       >
         {getSaveBtnLabel()}
       </Button>
@@ -65,7 +67,7 @@ export const QueryBuilderModal = ({
       <div className={css.queryArea}>
         {query}
       </div>
-      <RepeatableFields rows={rows} setRows={setRows} />
+      <RepeatableFields source={source} setSource={setSource} />
       <TestQuery
         isTestBtnDisabled={!isQueryFilled}
         query={query}

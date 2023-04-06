@@ -7,7 +7,7 @@
   "modal.query": "Query",
   "modal.test": "Test query",
   "modal.preview.title": "Query would return {total} records. Preview of first {limit} records.",
-  "modal.preview.queryInProgress": "Test query in progress for {query}",
+  "modal.preview.queryInProgress": "Test query in progress",
 
   "columns.boolean": "Boolean",
   "columns.field": "Field",
