@@ -14,8 +14,8 @@ import { COLUMN_KEYS } from '../constants/columnKeys';
 import { TestQuery } from '../TestQuery/TestQuery';
 
 export const QueryBuilderModal = ({
-  setIsModalShown,
   isOpen = true,
+  setIsModalShown,
   saveBtnLabel,
 }) => {
   const [rows, setRows] = useState([rowTemplate]);
@@ -79,5 +79,5 @@ export const QueryBuilderModal = ({
 QueryBuilderModal.propTypes = {
   setIsModalShown: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
-  saveBtnLabel: PropTypes.string,
+  saveBtnLabel: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 };
