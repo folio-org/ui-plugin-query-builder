@@ -13,8 +13,9 @@ import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
 
 export const QueryBuilderModal = ({
-  isOpen = true,
   setIsModalShown,
+  isOpen = true,
+  saveBtnLabel,
   initialValues,
 }) => {
   const sourceInitialValue = initialValues
@@ -40,6 +41,8 @@ export const QueryBuilderModal = ({
     handleCancel();
   };
 
+  const getSaveBtnLabel = () => (saveBtnLabel || <FormattedMessage id="ui-plugin-query-builder.modal.run" />);
+
   const renderFooter = () => (
     <ModalFooter>
       <Button
@@ -47,7 +50,7 @@ export const QueryBuilderModal = ({
         disabled={!isQueryRetrieved && isQueryFilled}
         onClick={handleRun}
       >
-        <FormattedMessage id="ui-plugin-query-builder.modal.run" />
+        {getSaveBtnLabel()}
       </Button>
       <Button
         onClick={handleCancel}
@@ -86,5 +89,6 @@ export const QueryBuilderModal = ({
 QueryBuilderModal.propTypes = {
   setIsModalShown: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
+  saveBtnLabel: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   initialValues: PropTypes.object,
 };

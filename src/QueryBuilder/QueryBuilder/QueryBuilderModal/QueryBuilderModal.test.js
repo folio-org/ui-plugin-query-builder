@@ -15,11 +15,13 @@ const queryClient = new QueryClient();
 const renderQueryBuilderModal = (
   setIsModalShown = jest.fn(),
   isOpen = true,
+  saveBtnLabel = '',
 ) => render(
   <QueryClientProvider client={queryClient}>
     <QueryBuilderModal
       setIsModalShown={setIsModalShown}
       isOpen={isOpen}
+      saveBtnLabel={saveBtnLabel}
     />
   </QueryClientProvider>,
 );
@@ -81,5 +83,11 @@ describe('QueryBuilderModal', () => {
     const rows = screen.getAllByRole('listitem');
 
     expect(rows.length).toEqual(1);
+  });
+
+  it('should render new label with saveBtnLabel', () => {
+    renderQueryBuilderModal(jest.fn(), true, 'testText');
+
+    expect(screen.getByText(/testText/)).toBeVisible();
   });
 });
