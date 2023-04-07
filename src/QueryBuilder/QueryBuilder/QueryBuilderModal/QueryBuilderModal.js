@@ -15,39 +15,7 @@ import { TestQuery } from '../TestQuery/TestQuery';
 export const QueryBuilderModal = ({
   isOpen = true,
   setIsModalShown,
-  initialValues = {
-    '$and': [
-      {
-        'user_last_name': {
-          '$eq': 'qqq',
-        },
-      },
-      {
-        'user_patron_group': {
-          '$eq': [
-            {
-              'label': 'UC Academic, Indefinite',
-              'value': 'Indefinite',
-            },
-            {
-              'label': 'UC Department, Quarter',
-              'value': 'Quarter',
-            },
-          ],
-        },
-      },
-      {
-        'instance_title': {
-          '$regex': '/^bbbb/i',
-        },
-      },
-      {
-        'user_first_name': {
-          '$regex': '/cccc/i',
-        },
-      },
-    ],
-  },
+  initialValues,
 }) => {
   const sourceInitialValue = initialValues
     ? mongoQueryToSource({
