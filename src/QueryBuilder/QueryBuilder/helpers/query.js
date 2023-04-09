@@ -92,7 +92,7 @@ export const sourceToMongoQuery = (source) => {
   return query;
 };
 
-const cleanerRegex = /^\/\^?|\/$/g;
+const cleanerRegex = /^(\/\^?)|(\/$)/g;
 const getSourceFields = (field) => ({
   $eq: (value) => ({ operator: OPERATORS.EQUAL, value }),
   $ne: (value) => ({ operator: OPERATORS.NOT_EQUAL, value }),
