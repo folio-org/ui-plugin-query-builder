@@ -1,5 +1,6 @@
 import { mongoQueryToSource, sourceToMongoQuery } from './query';
 import { booleanOptions, fieldOptions } from './selectOptions';
+import { OPERATORS } from '../constants/operators';
 
 describe('mongoQueryToSource()', () => {
   test('should return empty array for empty query', () => {
@@ -16,51 +17,63 @@ describe('mongoQueryToSource()', () => {
     {
       boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'user_first_name' },
-      operator: { options: expect.any(Array), current: '==' },
+      operator: { options: expect.any(Array), current: OPERATORS.EQUAL },
       value: { current: 'value' },
     },
     {
       boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'user_first_name' },
-      operator: { options: expect.any(Array), current: '!=' },
+      operator: { options: expect.any(Array), current: OPERATORS.NOT_EQUAL },
       value: { current: 'value' },
     },
     {
       boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'user_last_name' },
-      operator: { options: expect.any(Array), current: '>' },
+      operator: { options: expect.any(Array), current: OPERATORS.GREATER_THAN },
       value: { current: 'value' },
     },
     {
       boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'user_last_name' },
-      operator: { options: expect.any(Array), current: '<' },
+      operator: { options: expect.any(Array), current: OPERATORS.LESS_THAN },
       value: { current: 10 },
     },
     {
       boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'user_last_name' },
-      operator: { options: expect.any(Array), current: '>=' },
+      operator: { options: expect.any(Array), current: OPERATORS.GREATER_THAN_OR_EQUAL },
       value: { current: 'value' },
     },
 
     {
       boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'languages' },
-      operator: { options: expect.any(Array), current: 'in' },
+      operator: { options: expect.any(Array), current: OPERATORS.IN },
       value: { current: ['value', 'value2'] },
     },
     {
       boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'user_full_name' },
-      operator: { options: expect.any(Array), current: 'starts with' },
+      operator: { options: expect.any(Array), current: OPERATORS.STARTS_WITH },
       value: { current: 'abc' },
     },
     {
       boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'user_full_name' },
-      operator: { options: expect.any(Array), current: 'contains' },
+      operator: { options: expect.any(Array), current: OPERATORS.CONTAINS },
       value: { current: 'abc' },
+    },
+    {
+      boolean: { options: booleanOptions, current: 'AND' },
+      field: { options: fieldOptions, current: 'user_full_name' },
+      operator: { options: expect.any(Array), current: OPERATORS.NOT_CONTAINS },
+      value: { current: 'abc' },
+    },
+    {
+      boolean: { options: booleanOptions, current: 'AND' },
+      field: { options: fieldOptions, current: 'languages' },
+      operator: { options: expect.any(Array), current: OPERATORS.NOT_IN },
+      value: { current: ['value', 'value2'] },
     },
   ];
 
@@ -74,6 +87,8 @@ describe('mongoQueryToSource()', () => {
       { languages: { $in: ['value', 'value2'] } },
       { user_full_name: { $regex: '/^abc/' } },
       { user_full_name: { $regex: '/abc/' } },
+      { user_full_name: { $not: '/abc/' } },
+      { languages: { $nin: ['value', 'value2'] } },
     ],
   };
 

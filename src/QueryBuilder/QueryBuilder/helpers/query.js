@@ -92,6 +92,7 @@ export const sourceToMongoQuery = (source) => {
   return query;
 };
 
+const cleanerRegex = /^\/\^?|\/$/g;
 const getSourceFields = (field) => ({
   $eq: (value) => ({ operator: OPERATORS.EQUAL, value }),
   $ne: (value) => ({ operator: OPERATORS.NOT_EQUAL, value }),
@@ -101,9 +102,8 @@ const getSourceFields = (field) => ({
   $lte: (value) => ({ operator: OPERATORS.LESS_THAN_OR_EQUAL, value }),
   $in: (value) => ({ operator: OPERATORS.IN, value }),
   $nin: (value) => ({ operator: OPERATORS.NOT_IN, value }),
+  $not: (value) => ({ operator: OPERATORS.NOT_CONTAINS, value: value?.replace(cleanerRegex, '') }),
   $regex: (value) => {
-    const cleanerRegex = /^\/\^?|\/$/g;
-
     return value?.includes('^')
       ? { operator: OPERATORS.STARTS_WITH, value: value?.replace(cleanerRegex, '') }
       : { operator: OPERATORS.CONTAINS, value: value?.replace(cleanerRegex, '') };
