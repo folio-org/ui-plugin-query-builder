@@ -102,7 +102,7 @@ const getSourceFields = (field) => ({
   $in: (value) => ({ operator: OPERATORS.IN, value }),
   $nin: (value) => ({ operator: OPERATORS.NOT_IN, value }),
   $regex: (value) => {
-    const cleanerRegex = /^\/\^?|\/i$/g;
+    const cleanerRegex = /^\/\^?|\/$/g;
 
     return value?.includes('^')
       ? { operator: OPERATORS.STARTS_WITH, value: value?.replace(cleanerRegex, '') }

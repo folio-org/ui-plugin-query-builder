@@ -1,11 +1,5 @@
 import { mongoQueryToSource } from './query';
-
-const booleanOptions = ['AND', 'OR'];
-const fieldOptions = [
-  { label: 'Field 1', value: 'field1', dataType: 'string' },
-  { label: 'Field 2', value: 'field2', dataType: 'number' },
-  { label: 'Field 3', value: 'field3', dataType: 'array' },
-];
+import { booleanOptions, fieldOptions } from './selectOptions';
 
 describe('mongoQueryToSource()', () => {
   test('should return empty array for empty query', () => {
@@ -21,13 +15,11 @@ describe('mongoQueryToSource()', () => {
   test('should convert simple query to source format', () => {
     const mongoQuery = {
       $and: [
-        { field1: { $eq: 'value1' } },
-        { field2: { $lt: 10 } },
-        { field3: { $gt: 12 } },
-        { field4: { $ne: 20 } },
-        { field5: { $in: ['value1', 'value2'] } },
-        { field6: { $nin: ['value1', 'value2'] } },
-        { field7: { $regex: /^abc/ } },
+        { user_first_name: { $eq: 'value1' } },
+        { user_last_name: { $lt: 10 } },
+        { languages: { $in: ['value1', 'value2'] } },
+        { user_full_name: { $regex: '/^abc/' } },
+        { user_full_name: { $regex: '/abc/' } },
       ],
     };
 
@@ -40,44 +32,32 @@ describe('mongoQueryToSource()', () => {
     expect(result).toEqual([
       {
         boolean: { options: booleanOptions, current: 'AND' },
-        field: { options: fieldOptions, current: 'field1' },
+        field: { options: fieldOptions, current: 'user_first_name' },
         operator: { options: expect.any(Array), current: '==' },
         value: { current: 'value1' },
       },
       {
         boolean: { options: booleanOptions, current: 'AND' },
-        field: { options: fieldOptions, current: 'field2' },
+        field: { options: fieldOptions, current: 'user_last_name' },
         operator: { options: expect.any(Array), current: '<' },
         value: { current: 10 },
       },
       {
         boolean: { options: booleanOptions, current: 'AND' },
-        field: { options: fieldOptions, current: 'field3' },
-        operator: { options: expect.any(Array), current: '>' },
-        value: { current: 12 },
-      },
-      {
-        boolean: { options: booleanOptions, current: 'AND' },
-        field: { options: fieldOptions, current: 'field4' },
-        operator: { options: expect.any(Array), current: '!=' },
-        value: { current: 20 },
-      },
-      {
-        boolean: { options: booleanOptions, current: 'AND' },
-        field: { options: fieldOptions, current: 'field5' },
+        field: { options: fieldOptions, current: 'languages' },
         operator: { options: expect.any(Array), current: 'in' },
         value: { current: ['value1', 'value2'] },
       },
       {
         boolean: { options: booleanOptions, current: 'AND' },
-        field: { options: fieldOptions, current: 'field6' },
-        operator: { options: expect.any(Array), current: 'not in' },
-        value: { current: ['value1', 'value2'] },
+        field: { options: fieldOptions, current: 'user_full_name' },
+        operator: { options: expect.any(Array), current: 'starts with' },
+        value: { current: 'abc' },
       },
       {
         boolean: { options: booleanOptions, current: 'AND' },
-        field: { options: fieldOptions, current: 'field7' },
-        operator: { options: expect.any(Array), current: 'starts with' },
+        field: { options: fieldOptions, current: 'user_full_name' },
+        operator: { options: expect.any(Array), current: 'contains' },
         value: { current: 'abc' },
       },
     ]);
