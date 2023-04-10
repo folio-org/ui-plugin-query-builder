@@ -7,17 +7,25 @@ import { Modal,
   Headline } from '@folio/stripes/components';
 
 import css from './QueryBuilderModal.css';
-import { sourceTemplate } from '../helpers/selectOptions';
-import { getQueryStr, isQueryValid, sourceToMongoQuery } from '../helpers/query';
+import { booleanOptions, fieldOptions, sourceTemplate } from '../helpers/selectOptions';
+import { getQueryStr, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from '../helpers/query';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
 
 export const QueryBuilderModal = ({
-  isOpen = true,
   setIsModalShown,
+  isOpen = true,
   saveBtnLabel,
+  initialValues,
 }) => {
-  const [source, setSource] = useState([sourceTemplate]);
+  const sourceInitialValue = initialValues
+    ? mongoQueryToSource({
+      mongoQuery: initialValues,
+      fieldOptions,
+      booleanOptions,
+    })
+    : [sourceTemplate];
+  const [source, setSource] = useState(sourceInitialValue);
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
 
   const query = getQueryStr(source);
@@ -82,4 +90,5 @@ QueryBuilderModal.propTypes = {
   setIsModalShown: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
   saveBtnLabel: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+  initialValues: PropTypes.object,
 };
