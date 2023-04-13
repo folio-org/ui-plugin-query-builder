@@ -30,7 +30,7 @@ export const getQueryStr = (rows) => {
 export const isQueryValid = (source) => {
   return source.every(item => item[COLUMN_KEYS.FIELD].current
     && item[COLUMN_KEYS.OPERATOR].current
-    && Boolean(item[COLUMN_KEYS.VALUE].current));
+    && Boolean(item[COLUMN_KEYS.VALUE].current?.length));
 };
 
 export const sourceToMongoQuery = (source) => {

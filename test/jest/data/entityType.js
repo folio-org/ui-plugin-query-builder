@@ -236,14 +236,6 @@ export const entityType = {
       'visibleByDefault': false,
     },
     {
-      'name': 'item_status',
-      'dataType': {
-        'dataType': 'stringType',
-      },
-      'labelAlias': 'Item status',
-      'visibleByDefault': true,
-    },
-    {
       'name': 'item_call_number',
       'dataType': {
         'dataType': 'stringType',

@@ -7,38 +7,47 @@ import { Modal,
   Headline } from '@folio/stripes/components';
 
 import css from './QueryBuilderModal.css';
-import { booleanOptions, fieldOptions, sourceTemplate } from '../helpers/selectOptions';
-import { getQueryStr, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from '../helpers/query';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
+import { useRunQuery } from '../hooks/useRunQuery';
+import { useQuerySource } from '../hooks/useQuerySource';
 
 export const QueryBuilderModal = ({
   setIsModalShown,
   isOpen = true,
   saveBtnLabel,
   initialValues,
+  runQuerySource,
+  testQuerySource,
+  onQueryRun,
 }) => {
-  const sourceInitialValue = initialValues
-    ? mongoQueryToSource({
-      mongoQuery: initialValues,
-      fieldOptions,
-      booleanOptions,
-    })
-    : [sourceTemplate];
-  const [source, setSource] = useState(sourceInitialValue);
+  const { source, setSource, fqlQuery, isQueryFilled, queryStr } = useQuerySource(initialValues);
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
+  const [testedQueryId, setTestedQueryId] = useState(false);
 
-  const query = getQueryStr(source);
+  const { runQuery } = useRunQuery({
+    runQuerySource,
+    testedQueryId,
+    fqlQuery,
+    onQueryRun,
+  });
 
-  const isQueryFilled = isQueryValid(source);
+  const handleSetSource = (src) => {
+    setIsQueryRetrieved(false); // invalidate flag if form value was changed
+    setSource(src);
+  };
 
   const handleCancel = () => {
     setIsModalShown(false);
   };
 
   const handleRun = () => {
-    console.log(sourceToMongoQuery(source));
-    handleCancel();
+    runQuery().finally(handleCancel);
+  };
+
+  const handleQueryTested = ({ queryId }) => {
+    setTestedQueryId(queryId);
+    setIsQueryRetrieved(false);
   };
 
   const getSaveBtnLabel = () => (saveBtnLabel || <FormattedMessage id="ui-plugin-query-builder.modal.run" />);
@@ -47,7 +56,7 @@ export const QueryBuilderModal = ({
     <ModalFooter>
       <Button
         buttonStyle="primary"
-        disabled={!isQueryRetrieved && isQueryFilled}
+        disabled={!isQueryRetrieved || !isQueryFilled}
         onClick={handleRun}
       >
         {getSaveBtnLabel()}
@@ -73,14 +82,15 @@ export const QueryBuilderModal = ({
         <FormattedMessage id="ui-plugin-query-builder.modal.query" />
       </Headline>
       <div className={css.queryArea}>
-        {query}
+        {queryStr}
       </div>
-      <RepeatableFields source={source} setSource={setSource} />
+      <RepeatableFields source={source} setSource={handleSetSource} />
       <TestQuery
+        fqlQuery={fqlQuery}
+        testQuerySource={testQuerySource}
         isTestBtnDisabled={!isQueryFilled}
-        query={query}
         onQueryRetrieved={() => setIsQueryRetrieved(true)}
-        onTestQuery={() => setIsQueryRetrieved(false)}
+        onQueryTested={handleQueryTested}
       />
     </Modal>
   );
@@ -91,4 +101,7 @@ QueryBuilderModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   saveBtnLabel: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   initialValues: PropTypes.object,
+  runQuerySource: PropTypes.func.isRequired,
+  testQuerySource: PropTypes.func.isRequired,
+  onQueryRun: PropTypes.func,
 };

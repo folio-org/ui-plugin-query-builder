@@ -1,9 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Card, Icon, Loading, Row, Headline } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
 
-export const QueryLoader = ({ title }) => {
+import css from '../../QueryBuilder.css';
+
+export const QueryLoader = () => {
   return (
     <Card
       id="my-card"
@@ -14,8 +15,8 @@ export const QueryLoader = ({ title }) => {
           icon="edit"
           iconPosition="start"
         >
-          <Headline size="medium" margin="none" tag="span">
-            {title}
+          <Headline size="medium" margin="none" tag="p" className={css.LoaderTitle}>
+            <FormattedMessage id="ui-plugin-query-builder.modal.preview.queryInProgress" />
           </Headline>
         </Icon>
       )}
@@ -24,14 +25,10 @@ export const QueryLoader = ({ title }) => {
         <Loading size="large" />
       </Row>
       <Row>
-        <Headline size="medium" weight="regular" margin="none" tag="span">
+        <Headline size="medium" weight="regular" margin="none" tag="div">
           <FormattedMessage id="ui-plugin-query-builder.viewer.retrieving" />
         </Headline>
       </Row>
     </Card>
   );
-};
-
-QueryLoader.propTypes = {
-  title: PropTypes.string,
 };

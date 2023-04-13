@@ -5,3 +5,4 @@ import './stripesIcon.mock';
 import './stripesComponents.mock';
 import './stripesUtils.mock';
 import './acqComponents.mock';
+import './stripesSmartComponents.mock';

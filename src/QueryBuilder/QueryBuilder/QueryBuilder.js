@@ -6,7 +6,14 @@ import { Button } from '@folio/stripes/components';
 import PropTypes from 'prop-types';
 import { QueryBuilderModal } from './QueryBuilderModal';
 
-export const QueryBuilder = ({ disabled, saveBtnLabel, initialValues }) => {
+export const QueryBuilder = ({
+  disabled,
+  saveBtnLabel,
+  initialValues,
+  runQuerySource,
+  testQuerySource,
+  onQueryRun,
+}) => {
   const [isModalShown, setIsModalShown] = useState(false);
 
   const openModal = () => {
@@ -28,6 +35,9 @@ export const QueryBuilder = ({ disabled, saveBtnLabel, initialValues }) => {
         isOpen={isModalShown}
         saveBtnLabel={saveBtnLabel}
         initialValues={initialValues}
+        runQuerySource={runQuerySource}
+        testQuerySource={testQuerySource}
+        onQueryRun={onQueryRun}
       />
     </>
   );
@@ -37,4 +47,7 @@ QueryBuilder.propTypes = {
   disabled: PropTypes.bool,
   saveBtnLabel: PropTypes.string,
   initialValues: PropTypes.object,
+  onQueryRun: PropTypes.func,
+  runQuerySource: PropTypes.func,
+  testQuerySource: PropTypes.func,
 };
