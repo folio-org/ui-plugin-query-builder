@@ -91,9 +91,6 @@ describe('ResultViewer', () => {
 
       await waitFor(() => {
         expect(screen.queryByText('ui-plugin-query-builder.viewer.retrieving')).not.toBeInTheDocument();
-
-        screen.debug(undefined, 300000);
-
         expect(screen.getByRole('grid')).toBeVisible();
         expect(screen.getByText(new RegExp(`${offset + 1}`, 'i'))).toBeVisible();
         expect(screen.getByText(new RegExp(`${offset + limit}`, 'i'))).toBeVisible();

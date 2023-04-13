@@ -1,9 +1,8 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { logDOM, render } from '@testing-library/react';
-import { IntlProvider } from 'react-intl';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { QueryBuilder } from './QueryBuilder';
-
-jest.mock('@folio/stripes/components', () => jest.requireActual('@folio/stripes/components'));
+import Intl from '../../../test/jest/__mock__/intl.mock';
 
 const queryClient = new QueryClient();
 
@@ -15,7 +14,7 @@ const renderQueryBuilder = ({
   testQuerySource = jest.fn(),
   onQueryRun = jest.fn(),
 }) => render(
-  <IntlProvider locale="en">
+  <Intl>
     <QueryClientProvider client={queryClient}>
       <QueryBuilder
         disabled={disabled}
@@ -26,13 +25,29 @@ const renderQueryBuilder = ({
         onQueryRun={onQueryRun}
       />
     </QueryClientProvider>,
-  </IntlProvider>,
+  </Intl>,
 );
 
 describe('QueryBuilder', () => {
-  it('test', () => {
+  it('should show/close query builder modal by show/cancel buttons click', async () => {
     renderQueryBuilder({});
 
-    logDOM();
+    expect(screen.queryByRole('dialog')).toBeNull();
+
+    const trigger = screen.getByRole('button', { name: /ui-plugin-query-builder.trigger/ });
+
+    act(() => userEvent.click(trigger));
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).toBeVisible();
+    });
+
+    const cancel = screen.getByRole('button', { name: /ui-plugin-query-builder.modal.cancel/ });
+
+    act(() => userEvent.click(cancel));
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).toBeNull();
+    });
   });
 });

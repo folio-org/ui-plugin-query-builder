@@ -6,14 +6,15 @@ import { Select,
   TextArea,
   Datepicker } from '@folio/stripes/components';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { DATA_TYPES } from '../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../constants/columnKeys';
 import { OPERATORS } from '../../constants/operators';
 
 export const DataTypeInput = ({ onChange, dataType, availableValues, className, index, operator, ...rest }) => {
+  const intl = useIntl();
   const getSelectOptionsWithPlaceholder = (options) => [
-    { value: '', label: 'Select field', disabled: true },
+    { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
     ...options,
   ];
 
@@ -22,6 +23,7 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
       return (
         <div className={className}>
           <Select
+            data-testid="data-input-select-bool"
             dataOptions={getSelectOptionsWithPlaceholder(availableValues)}
             onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
             {...rest}
@@ -43,6 +45,7 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
         operator === OPERATORS.IN || operator === OPERATORS.NOT_IN ? (
           <>
             <TextArea
+              data-testid="data-input-textarea"
               rows={1}
               onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
             />
@@ -51,6 +54,7 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
         ) : (
           <div className={className}>
             <TextField
+              data-testid="data-input-textField"
               onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
               {...rest}
             />
@@ -74,6 +78,7 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
           (
             <div className={className}>
               <Select
+                data-testid="data-input-select-array"
                 dataOptions={getSelectOptionsWithPlaceholder(availableValues)}
                 onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
                 {...rest}
@@ -83,6 +88,7 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
     case DATA_TYPES.DateType:
       return (
         <Datepicker
+          data-testid="data-input-datepicker"
           onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
           {...rest}
         />
@@ -90,6 +96,7 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
     default:
       return (
         <TextField
+          data-testid="data-input-default-textField"
           onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
           {...rest}
         />

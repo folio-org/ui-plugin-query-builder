@@ -1,4 +1,4 @@
-import { screen, render, act } from '@testing-library/react';
+import { screen, render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { QueryBuilderModal } from './QueryBuilderModal';
@@ -90,5 +90,33 @@ describe('QueryBuilderModal', () => {
     });
 
     expect(screen.getByText(/testText/)).toBeVisible();
+  });
+
+  it('should show progress table when form valid and testQuery button clicked', async () => {
+    renderQueryBuilderModal({});
+
+    const runQuery = screen.getByRole('button', { name: /ui-plugin-query-builder.modal.run/ });
+    const testQuery = screen.getByRole('button', { name: /ui-plugin-query-builder.modal.test/ });
+    const userFirstNameOption = screen.getByText(/User first name/);
+
+    expect(runQuery).toBeDisabled();
+    expect(testQuery).toBeDisabled();
+
+    userEvent.click(userFirstNameOption);
+
+    fireEvent.change(screen.getByTestId('operator-option-0'), { target: { value: '==' } });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('input-value-0')).toBeVisible();
+      expect(testQuery).toBeDisabled();
+    });
+
+    userEvent.type(screen.getByTestId('input-value-0'), '123');
+
+    await waitFor(() => {
+      expect(testQuery).toBeEnabled();
+    });
+
+    userEvent.click(testQuery);
   });
 });
