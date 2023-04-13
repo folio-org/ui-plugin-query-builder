@@ -5,7 +5,7 @@ import { IntlProvider } from 'react-intl';
 import { ResultViewer } from './ResultViewer';
 import { entityType } from '../../../test/jest/data/entityType';
 import { content } from '../../../test/jest/data/content';
-import { delayedResponse } from '../../../test/jest/helpers';
+import { delayedResponse } from '../../../test/jest/data/helpers';
 import * as pagination from '../../hooks/usePagination';
 
 const queryClient = new QueryClient();
@@ -106,15 +106,12 @@ describe('ResultViewer', () => {
   });
 
   describe('In progress state', () => {
-    it('Should render in progress when ', async () => {
-      const inProgressTitle = 'title';
-
+    it('Should render in progress when isInProgress: true', async () => {
       render(renderResultViewer({
         isInProgress: true,
-        inProgressTitle,
       }));
 
-      expect(screen.getByText(inProgressTitle)).toBeVisible();
+      expect(screen.getByText('ui-plugin-query-builder.modal.preview.queryInProgress')).toBeVisible();
     });
   });
 

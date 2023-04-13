@@ -1,18 +1,26 @@
-const commonCofig = require('@folio/stripes-acq-components/jest.config');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const path = require('path');
 
+const esModules = ['@folio', 'ky'].join('|');
+
 module.exports = {
-  ...commonCofig,
-  testEnvironment: 'jsdom',
-  setupFiles: [
-    path.join(__dirname, './test/jest/setupTests.js'),
-    'jest-canvas-mock',
+  collectCoverageFrom: [
+    '**/(lib|src)/**/*.{js,jsx}',
+    '!**/node_modules/**',
+    '!**/test/**',
   ],
-  setupFilesAfterEnv: [path.join(__dirname, './test/jest/jest.setup.js')],
+  coverageDirectory: './artifacts/coverage-jest/',
+  coverageReporters: ['lcov'],
+  reporters: ['jest-junit', 'default'],
+  transform: { '^.+\\.(js|jsx)$': path.join(__dirname, './test/jest/jest-transformer.js') },
+  transformIgnorePatterns: [`/node_modules/(?!${esModules})`],
   moduleNameMapper: {
-    '^.+\\.(css|svg)$': 'identity-obj-proxy',
+    '^.+\\.(css)$': 'identity-obj-proxy',
+    '^.+\\.(svg)$': 'identity-obj-proxy',
   },
-  moduleDirectories: ['node_modules', '<rootDir>'],
+  testEnvironment: 'jsdom',
   testMatch: ['**/(lib|src)/**/?(*.)test.{js,jsx}'],
   testPathIgnorePatterns: ['/node_modules/'],
+  setupFiles: [path.join(__dirname, './test/jest/setupTests.js')],
+  setupFilesAfterEnv: [path.join(__dirname, './test/jest/jest.setup.js')],
 };

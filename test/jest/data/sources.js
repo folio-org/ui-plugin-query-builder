@@ -1,6 +1,6 @@
 import { delayedResponse } from './helpers';
-import { content } from './data/content';
-import { entityType } from './data/entityType';
+import { content } from './content';
+import { entityType } from './entityType';
 
 export const testQueryDataSource = () => {
   const testQueryId = 'query-id-1';

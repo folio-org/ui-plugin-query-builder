@@ -1,40 +1,39 @@
 import { screen, render, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import '@folio/stripes-acq-components/test/jest/__mock__';
-import '../../../../test/jest/__mock__/stripesSmartComponents.mock';
 import { QueryBuilderModal } from './QueryBuilderModal';
 import { entityType } from '../../../../test/jest/data/entityType';
-
-jest.mock('@folio/stripes/components', () => ({
-  ...jest.requireActual('@folio/stripes/components'),
-}));
+import { runQueryDataSource, testQueryDataSource } from '../../../../test/jest/data/sources';
 
 const queryClient = new QueryClient();
 
-const renderQueryBuilderModal = (
+const renderQueryBuilderModal = ({
   setIsModalShown = jest.fn(),
+  onQueryRun = jest.fn(),
   isOpen = true,
   saveBtnLabel = '',
-) => render(
+}) => render(
   <QueryClientProvider client={queryClient}>
     <QueryBuilderModal
       setIsModalShown={setIsModalShown}
       isOpen={isOpen}
       saveBtnLabel={saveBtnLabel}
+      runQuerySource={runQueryDataSource}
+      testQuerySource={testQueryDataSource}
+      onQueryRun={onQueryRun}
     />
   </QueryClientProvider>,
 );
 
 describe('QueryBuilderModal', () => {
   it('should render modal', async () => {
-    renderQueryBuilderModal();
+    renderQueryBuilderModal({});
 
     expect(screen.getByRole('dialog')).toBeVisible();
   });
 
   it('should render only field select by default', () => {
-    renderQueryBuilderModal();
+    renderQueryBuilderModal({});
 
     const cols = entityType.columns.filter(c => c.visibleByDefault);
 
@@ -44,7 +43,7 @@ describe('QueryBuilderModal', () => {
   });
 
   it('shold render boolean select when row added', () => {
-    renderQueryBuilderModal();
+    renderQueryBuilderModal({});
 
     const addButton = screen.getByRole('button', { name: /plus-sign/ });
 
@@ -57,7 +56,7 @@ describe('QueryBuilderModal', () => {
   });
 
   it('shold render boolean select when row added', () => {
-    renderQueryBuilderModal();
+    renderQueryBuilderModal({});
 
     const addButton = screen.getByRole('button', { name: /plus-sign/ });
 
@@ -70,7 +69,7 @@ describe('QueryBuilderModal', () => {
   });
 
   it('shold remove row when remove button clicked', () => {
-    renderQueryBuilderModal();
+    renderQueryBuilderModal({});
 
     const addButton = screen.getByRole('button', { name: /plus-sign/ });
 
@@ -86,7 +85,9 @@ describe('QueryBuilderModal', () => {
   });
 
   it('should render new label with saveBtnLabel', () => {
-    renderQueryBuilderModal(jest.fn(), true, 'testText');
+    renderQueryBuilderModal({
+      saveBtnLabel: 'testText',
+    });
 
     expect(screen.getByText(/testText/)).toBeVisible();
   });
