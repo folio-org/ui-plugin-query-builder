@@ -123,7 +123,6 @@ export const ResultViewer = ({
   const renderWithAccordion = () => (
     <Accordion
       id="results-viewer-accordion"
-      data-testid="results-viewer-accordion"
       label={accordionHeadline}
     >
       {renderContent()}
