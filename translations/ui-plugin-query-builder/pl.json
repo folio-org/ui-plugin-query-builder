@@ -11,5 +11,10 @@
     "columns.value": "Wartość",
     "columns.action": "Akcje",
     "control.info.separateValues": "Separate multiple values with a comma.",
-    "control.selection.placeholder": "Wybierz pole"
+    "control.selection.placeholder": "Wybierz pole",
+    "modal.preview.title": "Query would return {total} records. Preview of first {limit} records.",
+    "modal.preview.queryInProgress": "Test query in progress",
+    "control.dropdown.showColumns": "Pokaż kolumny",
+    "viewer.retrieving": "Retrieving...",
+    "control.value.placeholder": "Select value"
 }

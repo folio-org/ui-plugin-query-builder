@@ -11,5 +11,10 @@
     "columns.value": "القيمة",
     "columns.action": "الإجراءات",
     "control.info.separateValues": "Separate multiple values with a comma.",
-    "control.selection.placeholder": "اختر حقل"
+    "control.selection.placeholder": "اختر حقل",
+    "modal.preview.title": "Query would return {total} records. Preview of first {limit} records.",
+    "modal.preview.queryInProgress": "Test query in progress",
+    "control.dropdown.showColumns": "عرض الأعمدة",
+    "viewer.retrieving": "Retrieving...",
+    "control.value.placeholder": "Select value"
 }

@@ -11,5 +11,10 @@
     "columns.value": "值",
     "columns.action": "操作",
     "control.info.separateValues": "用逗号分隔多个值。",
-    "control.selection.placeholder": "选择字段"
+    "control.selection.placeholder": "选择字段",
+    "modal.preview.title": "Query would return {total} records. Preview of first {limit} records.",
+    "modal.preview.queryInProgress": "Test query in progress",
+    "control.dropdown.showColumns": "显示列",
+    "viewer.retrieving": "Retrieving...",
+    "control.value.placeholder": "Select value"
 }

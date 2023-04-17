@@ -10,6 +10,11 @@
     "columns.operator": "Operador",
     "columns.value": "Valor",
     "columns.action": "Ações",
-    "control.info.separateValues": "Separate multiple values with a comma.",
-    "control.selection.placeholder": "Selecionar campo"
+    "control.info.separateValues": "Separar valores múltiplos com uma vírgula.",
+    "control.selection.placeholder": "Selecionar campo",
+    "modal.preview.title": "A consulta retornaria {total} registros. Visualização dos primeiros {limit} registros.",
+    "modal.preview.queryInProgress": "Consulta de teste em andamento",
+    "control.dropdown.showColumns": "Mostrar colunas",
+    "viewer.retrieving": "Recuperando...",
+    "control.value.placeholder": "Select value"
 }
