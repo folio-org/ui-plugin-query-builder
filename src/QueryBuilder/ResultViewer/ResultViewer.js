@@ -134,7 +134,10 @@ export const ResultViewer = ({
   return accordionHeadline ? renderWithAccordion() : renderContent();
 };
 ResultViewer.propTypes = {
-  accordionHeadline: PropTypes.string,
+  accordionHeadline: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]),
   headline: PropTypes.func,
   headlineEnd: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   contentDataSource: PropTypes.func,
