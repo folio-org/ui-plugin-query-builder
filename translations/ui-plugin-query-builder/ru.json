@@ -11,5 +11,10 @@
     "columns.value": "Значение",
     "columns.action": "Действия",
     "control.info.separateValues": "Separate multiple values with a comma.",
-    "control.selection.placeholder": "Выбрать поле"
+    "control.selection.placeholder": "Выбрать поле",
+    "modal.preview.title": "Query would return {total} records. Preview of first {limit} records.",
+    "modal.preview.queryInProgress": "Test query in progress",
+    "control.dropdown.showColumns": "Show columns",
+    "viewer.retrieving": "Retrieving...",
+    "control.value.placeholder": "Select value"
 }

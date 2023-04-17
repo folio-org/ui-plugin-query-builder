@@ -10,6 +10,11 @@
     "columns.operator": "Operátor",
     "columns.value": "Hodnota",
     "columns.action": "Akce",
-    "control.info.separateValues": "Separate multiple values with a comma.",
-    "control.selection.placeholder": "Vybrat pole"
+    "control.info.separateValues": "Oddělit více hodnot čárkou.",
+    "control.selection.placeholder": "Vybrat pole",
+    "modal.preview.title": "Dotaz by vrátil {total} záznamů. Náhled prvních {limit} záznamů.",
+    "modal.preview.queryInProgress": "Probíhá testovací dotaz",
+    "control.dropdown.showColumns": "Zobrazit sloupce",
+    "viewer.retrieving": "Získávání...",
+    "control.value.placeholder": "Select value"
 }

@@ -11,5 +11,10 @@
     "columns.value": "Value",
     "columns.action": "Actions",
     "control.info.separateValues": "Separate multiple values with a comma.",
-    "control.selection.placeholder": "Select field"
+    "control.selection.placeholder": "Select field",
+    "modal.preview.title": "Query would return {total} records. Preview of first {limit} records.",
+    "modal.preview.queryInProgress": "Test query in progress",
+    "control.dropdown.showColumns": "Afficher les colonnes",
+    "viewer.retrieving": "Retrieving...",
+    "control.value.placeholder": "Select value"
 }
