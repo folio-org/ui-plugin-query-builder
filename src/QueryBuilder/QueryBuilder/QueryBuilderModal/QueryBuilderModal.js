@@ -26,10 +26,10 @@ export const QueryBuilderModal = ({
   const [testedQueryId, setTestedQueryId] = useState(false);
 
   const { runQuery } = useRunQuery({
+    onQueryRun: (result) => onQueryRun({ result, queryStr, fqlQuery }),
     runQuerySource,
     testedQueryId,
     fqlQuery,
-    onQueryRun,
   });
 
   const handleSetSource = (src) => {
