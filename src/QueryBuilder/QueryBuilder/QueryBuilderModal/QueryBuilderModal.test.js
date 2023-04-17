@@ -42,7 +42,7 @@ describe('QueryBuilderModal', () => {
     });
   });
 
-  it('shold render boolean select when row added', () => {
+  it('should render boolean select when row added', () => {
     renderQueryBuilderModal({});
 
     const addButton = screen.getByRole('button', { name: /plus-sign/ });
@@ -55,20 +55,7 @@ describe('QueryBuilderModal', () => {
     expect(screen.getByRole('combobox', { name: /boolean-option/ })).toBeVisible();
   });
 
-  it('shold render boolean select when row added', () => {
-    renderQueryBuilderModal({});
-
-    const addButton = screen.getByRole('button', { name: /plus-sign/ });
-
-    act(() => userEvent.click(addButton));
-
-    const rows = screen.getAllByRole('listitem');
-
-    expect(rows.length).toEqual(2);
-    expect(screen.getByRole('combobox', { name: /boolean-option/ })).toBeVisible();
-  });
-
-  it('shold remove row when remove button clicked', () => {
+  it('should remove row when remove button clicked', () => {
     renderQueryBuilderModal({});
 
     const addButton = screen.getByRole('button', { name: /plus-sign/ });
@@ -117,6 +104,12 @@ describe('QueryBuilderModal', () => {
       expect(testQuery).toBeEnabled();
     });
 
-    userEvent.click(testQuery);
+    act(() => userEvent.click(testQuery));
+
+    await waitFor(() => {
+      expect(runQuery).toBeEnabled();
+    });
+
+    act(() => userEvent.click(runQuery));
   });
 });
