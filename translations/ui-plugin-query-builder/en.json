@@ -17,6 +17,7 @@
 
   "control.info.separateValues": "Separate multiple values with a comma.",
   "control.selection.placeholder": "Select field",
+  "control.value.placeholder": "Select value",
   "control.dropdown.showColumns": "Show columns",
 
   "viewer.retrieving": "Retrieving..."

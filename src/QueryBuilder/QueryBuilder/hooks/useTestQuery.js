@@ -1,14 +1,12 @@
 import { useQuery } from 'react-query';
-import { delayedResponse } from '../../../../test/jest/helpers';
-import { content } from '../../../../test/jest/data/content';
-import { entityType } from '../../../../test/jest/data/entityType';
 
-export const useTestQuery = () => {
+export const useTestQuery = ({ testQuerySource, fqlQuery, onQueryTested }) => {
   const { data, isFetching, refetch, isFetched } = useQuery(
     {
-      queryKey: ['testQueryPreview'],
+      queryKey: ['testQueryPreview', fqlQuery],
       enabled: false,
-      queryFn: () => delayedResponse(3000, { content, entityType }),
+      queryFn: () => testQuerySource(fqlQuery),
+      onSuccess: onQueryTested,
     },
   );
 

@@ -6,14 +6,23 @@ import PropTypes from 'prop-types';
 import { ResultViewer } from '../../ResultViewer';
 import { useTestQuery } from '../hooks/useTestQuery';
 
-export const TestQuery = ({ isTestBtnDisabled, onTestQuery, onQueryRetrieved }) => {
+export const TestQuery = ({
+  isTestBtnDisabled,
+  onQueryTested,
+  onQueryRetrieved,
+  testQuerySource,
+  fqlQuery,
+}) => {
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [columns, setColumns] = useState([]);
-  const { data, isFetched, isTestQueryFetching, testQuery } = useTestQuery();
+  const { data, isFetched, isTestQueryFetching, testQuery } = useTestQuery({
+    testQuerySource,
+    fqlQuery,
+    onQueryTested,
+  });
 
-  const handleTestQuery = () => {
-    onTestQuery();
-    testQuery();
+  const handleTestQuery = async () => {
+    await testQuery();
   };
   const contentDataSource = async () => data?.content;
   const entityTypeDataSource = async () => data?.entityType;
@@ -57,7 +66,6 @@ export const TestQuery = ({ isTestBtnDisabled, onTestQuery, onQueryRetrieved }) 
           visibleColumns={visibleColumns}
           onSetDefaultVisibleColumns={setVisibleColumns}
           onSetDefaultColumns={setColumns}
-          inProgressTitle={<FormattedMessage id="ui-plugin-query-builder.modal.preview.queryInProgress" />}
           isInProgress={isTestQueryFetching}
           showPagination={false}
           height={200}
@@ -73,5 +81,7 @@ export const TestQuery = ({ isTestBtnDisabled, onTestQuery, onQueryRetrieved }) 
 TestQuery.propTypes = {
   isTestBtnDisabled: PropTypes.bool,
   onQueryRetrieved: PropTypes.func,
-  onTestQuery: PropTypes.func,
+  onQueryTested: PropTypes.func,
+  testQuerySource: PropTypes.func,
+  fqlQuery: PropTypes.object,
 };

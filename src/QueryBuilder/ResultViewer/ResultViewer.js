@@ -19,7 +19,6 @@ export const ResultViewer = ({
   onSetDefaultColumns,
   accordionHeadline,
   isInProgress,
-  inProgressTitle,
   height,
   refreshTrigger,
   onSuccess,
@@ -124,19 +123,21 @@ export const ResultViewer = ({
   const renderWithAccordion = () => (
     <Accordion
       id="results-viewer-accordion"
-      data-testid="results-viewer-accordion"
       label={accordionHeadline}
     >
       {renderContent()}
     </Accordion>
   );
 
-  if (isInProgress) return <QueryLoader title={inProgressTitle} />;
+  if (isInProgress) return <QueryLoader />;
 
   return accordionHeadline ? renderWithAccordion() : renderContent();
 };
 ResultViewer.propTypes = {
-  accordionHeadline: PropTypes.string,
+  accordionHeadline: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]),
   headline: PropTypes.func,
   headlineEnd: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   contentDataSource: PropTypes.func,
@@ -147,7 +148,6 @@ ResultViewer.propTypes = {
   defaultLimit: PropTypes.number,
   defaultOffset: PropTypes.number,
   isInProgress: PropTypes.bool,
-  inProgressTitle: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   height: PropTypes.number,
   showPagination: PropTypes.bool,
   refreshTrigger: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
