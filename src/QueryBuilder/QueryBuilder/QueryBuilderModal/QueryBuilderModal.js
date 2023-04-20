@@ -11,7 +11,7 @@ import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
 import { useRunQuery } from '../hooks/useRunQuery';
 import { useQuerySource } from '../hooks/useQuerySource';
-import { useEntityType } from '../../../hooks/useEntityType';
+import { useAsyncDataSource } from '../../../hooks/useAsyncDataSource';
 
 export const QueryBuilderModal = ({
   setIsModalShown,
@@ -24,7 +24,7 @@ export const QueryBuilderModal = ({
   entityTypeDataSource = () => {},
   getParamsSource,
 }) => {
-  const { entityType } = useEntityType(entityTypeDataSource);
+  const { entityType } = useAsyncDataSource({ entityTypeDataSource });
   const { source,
     setSource,
     fqlQuery,
