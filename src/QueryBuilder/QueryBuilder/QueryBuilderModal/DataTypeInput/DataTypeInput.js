@@ -10,8 +10,18 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { DATA_TYPES } from '../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../constants/columnKeys';
 import { OPERATORS } from '../../constants/operators';
+import { SelectionContainer } from '../SelectionContainer/SelectionContainer';
 
-export const DataTypeInput = ({ onChange, dataType, availableValues, className, index, operator, ...rest }) => {
+export const DataTypeInput = (
+  { onChange,
+    dataType,
+    availableValues,
+    className,
+    index,
+    operator,
+    getParamsSource,
+    ...rest },
+) => {
   const intl = useIntl();
   const getSelectOptionsWithPlaceholder = (options) => [
     { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
@@ -22,7 +32,9 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
     case DATA_TYPES.BooleanType:
       return (
         <div className={className}>
-          <Select
+          <SelectionContainer
+            Selection={Select}
+            getParamsSource={getParamsSource}
             data-testid="data-input-select-bool"
             dataOptions={getSelectOptionsWithPlaceholder(availableValues)}
             onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
@@ -33,7 +45,9 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
     case DATA_TYPES.RangedUUIDType:
       return (
         <div className={className}>
-          <MultiSelection
+          <SelectionContainer
+            Selection={MultiSelection}
+            getParamsSource={getParamsSource}
             dataOptions={availableValues}
             onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
             {...rest}
@@ -67,8 +81,10 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
         (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN) ?
           (
             <div className={className}>
-              <MultiSelection
+              <SelectionContainer
+                Selection={MultiSelection}
                 dataOptions={availableValues}
+                getParamsSource={getParamsSource}
                 onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
                 {...rest}
               />
@@ -77,8 +93,10 @@ export const DataTypeInput = ({ onChange, dataType, availableValues, className, 
           :
           (
             <div className={className}>
-              <Select
+              <SelectionContainer
+                Selection={Select}
                 data-testid="data-input-select-array"
+                getParamsSource={getParamsSource}
                 dataOptions={getSelectOptionsWithPlaceholder(availableValues)}
                 onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
                 {...rest}
@@ -110,5 +128,6 @@ DataTypeInput.propTypes = {
   operator: PropTypes.string,
   onChange: PropTypes.func,
   index: PropTypes.number,
+  getParamsSource: PropTypes.func,
   availableValues: PropTypes.arrayOf(PropTypes.oneOf([PropTypes.bool, PropTypes.object])),
 };

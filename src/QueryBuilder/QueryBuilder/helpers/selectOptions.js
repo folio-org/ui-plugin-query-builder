@@ -70,6 +70,19 @@ export const fieldOptions = entityType.columns
     values: et.values,
   }));
 
+export const getFieldOptions = (initialValue) => {
+  return initialValue.column
+    .filter(item => item.visibleByDefault)
+    .map(
+      et => ({
+        label: et.labelAlias,
+        value: et.name,
+        dataType: et.dataType.dataType,
+        values: et.values,
+      }),
+    );
+};
+
 export const booleanOptions = [
   { label: 'AND', value: 'AND' },
 ];

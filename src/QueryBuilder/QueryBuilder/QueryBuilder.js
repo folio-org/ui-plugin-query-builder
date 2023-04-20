@@ -13,6 +13,7 @@ export const QueryBuilder = ({
   runQuerySource,
   testQuerySource,
   onQueryRun,
+  entityTypeDataSource,
 }) => {
   const [isModalShown, setIsModalShown] = useState(false);
 
@@ -38,6 +39,7 @@ export const QueryBuilder = ({
         runQuerySource={runQuerySource}
         testQuerySource={testQuerySource}
         onQueryRun={onQueryRun}
+        entityTypeDataSource={entityTypeDataSource}
       />
     </>
   );
@@ -50,4 +52,5 @@ QueryBuilder.propTypes = {
   onQueryRun: PropTypes.func,
   runQuerySource: PropTypes.func,
   testQuerySource: PropTypes.func,
+  entityTypeDataSource: PropTypes.func,
 };
