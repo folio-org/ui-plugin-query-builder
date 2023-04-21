@@ -79,6 +79,7 @@ export const getFieldOptions = (initialValue) => {
         value: et.name,
         dataType: et.dataType.dataType,
         values: et.values,
+        source: et.source,
       }),
     );
 };

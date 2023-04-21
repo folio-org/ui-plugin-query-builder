@@ -20,6 +20,7 @@ export const DataTypeInput = (
     index,
     operator,
     getParamsSource,
+    source,
     ...rest },
 ) => {
   const intl = useIntl();
@@ -82,6 +83,7 @@ export const DataTypeInput = (
           (
             <div className={className}>
               <SelectionContainer
+                source={source}
                 Selection={MultiSelection}
                 dataOptions={availableValues}
                 getParamsSource={getParamsSource}
@@ -129,6 +131,7 @@ DataTypeInput.propTypes = {
   operator: PropTypes.string,
   onChange: PropTypes.func,
   index: PropTypes.number,
+  source: PropTypes.object,
   getParamsSource: PropTypes.func,
   availableValues: PropTypes.arrayOf(PropTypes.oneOf([PropTypes.bool, PropTypes.object])),
 };

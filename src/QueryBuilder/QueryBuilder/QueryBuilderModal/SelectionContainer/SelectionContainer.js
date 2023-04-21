@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 
-export const SelectionContainer = ({ Selection, availableValues, onChange, getParamsSource, ...rest }) => {
+export const SelectionContainer = ({ Selection, availableValues, onChange, getParamsSource, source, ...rest }) => {
   if (availableValues === undefined) {
     return (
       <Selection
         availableValues={availableValues}
         onChange={onChange}
-        filter={getParamsSource}
+        filter={(search) => getParamsSource({ entityTypeId: source.entityTypeId, source: source.columnName, search })}
         asyncFiltering
         {...rest}
       />);
@@ -25,6 +25,7 @@ SelectionContainer.propTypes = {
   Selection: PropTypes.node,
   onChange: PropTypes.func,
   index: PropTypes.number,
+  source: PropTypes.object,
   getParamsSource: PropTypes.func,
   availableValues: PropTypes.arrayOf(PropTypes.oneOf([PropTypes.bool, PropTypes.object])),
 };
