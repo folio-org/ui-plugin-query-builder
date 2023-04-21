@@ -85,6 +85,7 @@ export const DataTypeInput = (
                 Selection={MultiSelection}
                 dataOptions={availableValues}
                 getParamsSource={getParamsSource}
+                data-testid={`data-input-multiselect-${dataType}`}
                 onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
                 {...rest}
               />

@@ -5,14 +5,17 @@ import { DATA_TYPES } from '../../constants/dataTypes';
 import { OPERATORS } from '../../constants/operators';
 
 const renderDataTypeInput = ({
-  onChange, dataType, operator,
+  onChange,
+  dataType,
+  operator,
+  availableValues = [],
 }) => render(
   <Intl>
     <DataTypeInput
       onChange={onChange}
       dataType={dataType}
       operator={operator}
-      availableValues={[]}
+      availableValues={availableValues}
     />
   </Intl>,
 );
@@ -29,6 +32,14 @@ describe('DataTypeInput', () => {
     { dataType: DATA_TYPES.OpenUUIDType, operator: OPERATORS.EQUAL, componentTestId: 'data-input-textField', onChange: jest.fn() },
     { dataType: DATA_TYPES.ArrayType, operator: OPERATORS.IN, text: 'stripes-components.multiSelection.defaultEmptyMessage' },
     { dataType: DATA_TYPES.ArrayType, operator: OPERATORS.EQUAL, componentTestId: 'data-input-select-array', onChange: jest.fn() },
+    { dataType: DATA_TYPES.EnumType,
+      operator: OPERATORS.EQUAL,
+      componentTestId: 'data-input-select-array',
+      onChange: jest.fn(),
+      availableValues: [
+        { label: 'Available', value: 'available' },
+        { label: 'Checked out', value: 'checked' },
+      ] },
     { dataType: DATA_TYPES.DateType, operator: OPERATORS.GREATER_THAN, componentTestId: 'data-input-datepicker', onChange: jest.fn() },
     { dataType: 'DEFAULT', operator: OPERATORS.GREATER_THAN, componentTestId: 'data-input-default-textField', onChange: jest.fn() },
   ];

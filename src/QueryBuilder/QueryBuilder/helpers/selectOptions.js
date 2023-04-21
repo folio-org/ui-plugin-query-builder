@@ -71,8 +71,8 @@ export const fieldOptions = entityType.columns
   }));
 
 export const getFieldOptions = (initialValue) => {
-  return initialValue.column
-    .filter(item => item.visibleByDefault)
+  return initialValue.columns
+    .filter(item => item?.visibleByDefault)
     .map(
       et => ({
         label: et.labelAlias,
