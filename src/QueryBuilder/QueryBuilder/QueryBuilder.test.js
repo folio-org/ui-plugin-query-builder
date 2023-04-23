@@ -10,7 +10,7 @@ const renderQueryBuilder = ({
   disabled,
   saveBtnLabel,
   initialValues,
-  runQuerySource = jest.fn(),
+  runQueryDataSource = jest.fn(),
   testQuerySource = jest.fn(),
   onQueryRun = jest.fn(),
 }) => render(
@@ -20,7 +20,7 @@ const renderQueryBuilder = ({
         disabled={disabled}
         saveBtnLabel={saveBtnLabel}
         initialValues={initialValues}
-        runQuerySource={runQuerySource}
+        runQuerySource={runQueryDataSource}
         testQuerySource={testQuerySource}
         onQueryRun={onQueryRun}
       />

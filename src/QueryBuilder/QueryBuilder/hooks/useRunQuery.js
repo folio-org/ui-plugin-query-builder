@@ -1,11 +1,11 @@
 import { useQuery } from 'react-query';
 
-export const useRunQuery = ({ runQuerySource, testedQueryId, fqlQuery, onQueryRun }) => {
+export const useRunQuery = ({ runQueryDataSource, testedQueryId, fqlQuery, onQueryRun }) => {
   const { data, refetch, isFetched } = useQuery(
     {
       queryKey: ['runQuery', testedQueryId, fqlQuery],
       enabled: false,
-      queryFn: () => runQuerySource(testedQueryId, fqlQuery),
+      queryFn: () => runQueryDataSource(testedQueryId, fqlQuery),
       onSuccess: onQueryRun,
     },
   );

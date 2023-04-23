@@ -1,19 +1,15 @@
-import { useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 
-export const useTestQuery = ({ testQuerySource, fqlQuery, onQueryTested }) => {
-  const { data, isFetching, refetch, isFetched } = useQuery(
-    {
-      queryKey: ['testQueryPreview', fqlQuery],
-      enabled: false,
-      queryFn: () => testQuerySource(fqlQuery),
-      onSuccess: onQueryTested,
-    },
-  );
+export const useTestQuery = ({ testQueryDataSource, onQueryTestSuccess, onQueryTestFail }) => {
+  const { data: testQueryData, mutateAsync: testQuery, isLoading: isTestQueryLoading } = useMutation({
+    mutationFn: ({ entityTypeId, fqlQuery }) => testQueryDataSource(entityTypeId, fqlQuery),
+    onSuccess: onQueryTestSuccess,
+    onError: onQueryTestFail,
+  });
 
   return {
-    data,
-    isFetched,
-    isTestQueryFetching: isFetching,
-    testQuery: refetch,
+    testQuery,
+    testQueryData,
+    isTestQueryLoading,
   };
 };

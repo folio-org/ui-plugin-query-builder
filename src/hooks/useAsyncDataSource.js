@@ -7,8 +7,9 @@ export const useAsyncDataSource = ({
   entityTypeDataSource,
   offset,
   limit,
+  queryParams,
   onSuccess,
-  isInProgress,
+  refetchInterval,
 }) => {
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
 
@@ -20,12 +21,16 @@ export const useAsyncDataSource = ({
     isFetching: isContentDataFetching,
     refetch,
   } = useQuery(
-    ['contentData', debouncedOffset, debouncedLimit, isInProgress],
-    () => contentDataSource({ offset: debouncedOffset, limit: debouncedLimit }),
+    ['contentData', debouncedOffset, debouncedLimit, queryParams],
+    () => contentDataSource({
+      offset: debouncedOffset,
+      limit: debouncedLimit,
+      ...queryParams,
+    }),
     {
       ...sharedOptions,
-      enabled: !isInProgress,
       onSuccess,
+      refetchInterval,
     },
   );
 
@@ -34,15 +39,14 @@ export const useAsyncDataSource = ({
     isLoading: isEntityTypeLoading,
     isFetchedAfterMount: isContentTypeFetchedAfterMount,
   } = useQuery(
-    ['entityType', isInProgress],
+    ['entityType'],
     entityTypeDataSource,
     {
-      enabled: !isInProgress,
       ...sharedOptions,
     },
   );
 
-  const { content: contentData, totalRecords } = recordsData || {};
+  const { content: contentData, totalRecords, status } = recordsData || {};
 
   const { columnMapping, defaultColumns, defaultVisibleColumns } = getTableMetadata(entityType);
 
@@ -56,6 +60,7 @@ export const useAsyncDataSource = ({
     defaultColumns,
     defaultVisibleColumns,
     totalRecords,
+    status,
     refetch,
   };
 };

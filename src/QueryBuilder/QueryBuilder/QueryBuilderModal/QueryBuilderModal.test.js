@@ -18,7 +18,7 @@ const renderQueryBuilderModal = ({
       setIsModalShown={setIsModalShown}
       isOpen={isOpen}
       saveBtnLabel={saveBtnLabel}
-      runQuerySource={runQueryDataSource}
+      runQueryDataSource={runQueryDataSource}
       testQuerySource={testQueryDataSource}
       onQueryRun={onQueryRun}
     />
