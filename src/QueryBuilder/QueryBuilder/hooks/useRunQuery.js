@@ -5,7 +5,7 @@ export const useRunQuery = ({ runQueryDataSource, testedQueryId, fqlQuery, onQue
     {
       queryKey: ['runQuery', testedQueryId, fqlQuery],
       enabled: false,
-      queryFn: () => runQueryDataSource(testedQueryId, fqlQuery),
+      queryFn: () => runQueryDataSource({ testedQueryId, fqlQuery }),
       onSuccess: onQueryRun,
     },
   );
