@@ -29,9 +29,10 @@ export const DataTypeInput = (
         <div className={className}>
           <SelectionContainer
             Selection={Select}
+            nameOfComponent="Select"
             getParamsSource={getParamsSource}
             data-testid="data-input-select-bool"
-            dataOptions={availableValues}
+            availableValues={availableValues}
             onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
             {...rest}
           />
@@ -42,9 +43,10 @@ export const DataTypeInput = (
         <div className={className}>
           <SelectionContainer
             source={source}
+            nameOfComponent="MultiSelection"
             Selection={MultiSelection}
             getParamsSource={getParamsSource}
-            dataOptions={availableValues}
+            availableValues={availableValues}
             onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
             {...rest}
           />
@@ -80,7 +82,8 @@ export const DataTypeInput = (
               <SelectionContainer
                 source={source}
                 Selection={MultiSelection}
-                dataOptions={availableValues}
+                availableValues={availableValues}
+                nameOfComponent="MultiSelection"
                 getParamsSource={getParamsSource}
                 data-testid={`data-input-multiselect-${dataType}`}
                 onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
@@ -93,10 +96,11 @@ export const DataTypeInput = (
             <div className={className}>
               <SelectionContainer
                 Selection={Select}
+                nameOfComponent="Select"
                 data-testid="data-input-select-array"
                 source={source}
                 getParamsSource={getParamsSource}
-                dataOptions={availableValues}
+                availableValues={availableValues}
                 onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
                 {...rest}
               />

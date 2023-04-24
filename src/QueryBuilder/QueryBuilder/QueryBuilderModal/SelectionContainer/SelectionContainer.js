@@ -1,32 +1,41 @@
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useIntl } from 'react-intl';
 
-// eslint-disable-next-line consistent-return
-export const SelectionContainer = ({ Selection,
-  availableValues,
-  onChange,
-  getParamsSource,
-  source = {},
-  ...rest }) => {
+export const SelectionContainer = (
+  {
+    Selection,
+    availableValues,
+    nameOfComponent,
+    onChange,
+    getParamsSource,
+    source,
+    ...rest
+  },
+) => {
   const intl = useIntl();
   const [searchValue, setSearchValue] = useState('');
-  const getSelectOptionsWithPlaceholder = (options) => [
-    { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
-    ...options,
-  ];
+  const getSelectOptionsWithPlaceholder = (options) => {
+    if (nameOfComponent === 'Select' && Array.isArray(options)) {
+      return [
+        { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
+        ...options,
+      ];
+    } else return options;
+  };
 
   const { data } = useQuery({
-    queryKey: [source?.source.entityTypeId],
+    queryKey: [source?.source?.entityTypeId],
     queryFn: () => getParamsSource(
       { entityTypeId: source?.source.entityTypeId,
         source: source?.source.columnName,
         search: searchValue },
     ),
+    enabled: source && !availableValues,
   });
 
-  const filterOptions = useCallback((filterText, list) => {
+  const filterOptions = (filterText, list) => {
     // escape special characters in filter text, so they won't be interpreted by RegExp
     const escapedFilterText = filterText?.replace(/[#-.]|[[-^]|[?|{}]/g, '\\$&');
 
@@ -39,25 +48,24 @@ export const SelectionContainer = ({ Selection,
     const exactMatch = filterText ? (renderedItems.filter(item => item.label === filterText).length === 1) : false;
 
     return { renderedItems, exactMatch };
-  }, [searchValue]);
+  };
 
-  if (!data) {
+  if (!data && !availableValues) {
     return null;
-  }
-
-  if (data?.values) {
+  } else {
     return (
       <Selection
         {...rest}
         onChange={onChange}
         filter={filterOptions}
-        dataOptions={data.values}
+        dataOptions={getSelectOptionsWithPlaceholder(availableValues) || getSelectOptionsWithPlaceholder(data?.values)}
       />);
   }
 };
 
 SelectionContainer.propTypes = {
   Selection: PropTypes.node,
+  nameOfComponent: PropTypes.string,
   onChange: PropTypes.func,
   index: PropTypes.number,
   source: PropTypes.object,
