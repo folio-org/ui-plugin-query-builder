@@ -24,6 +24,7 @@ export const ResultViewer = ({
   onSuccess,
   onPreviewShown,
   refetchInterval,
+  loading,
 }) => {
   const { changePage, limit, offset } = usePagination({
     defaultLimit,
@@ -52,7 +53,7 @@ export const ResultViewer = ({
     queryParams,
   });
 
-  const recordsCount = contentData?.length || 0;
+  const currentRecordsCount = contentData?.length || 0;
 
   // set visible by default columns once
   useEffect(() => {
@@ -74,14 +75,14 @@ export const ResultViewer = ({
   }, [refreshTrigger]);
 
   useEffect(() => {
-    if (recordsCount >= limit) onPreviewShown?.();
-  }, [recordsCount]);
+    if (currentRecordsCount >= limit) onPreviewShown?.();
+  }, [currentRecordsCount]);
 
   const renderHeader = () => (
     <Row between="xs">
       <Col xs={10}>
         <Headline size="large" margin="none" tag="h3">
-          {headline({ totalRecords, defaultLimit, status })}
+          {headline({ totalRecords, defaultLimit, status, currentRecordsCount })}
         </Headline>
       </Col>
       {headlineEnd}
@@ -100,7 +101,7 @@ export const ResultViewer = ({
             pagingType={null}
             onNeedMoreData={changePage}
             height={height}
-            loading={isContentDataFetching || isContentDataLoading || isEntityTypeLoading}
+            loading={isContentDataFetching || isContentDataLoading || isEntityTypeLoading || loading}
           />
           {showPagination && (
             <PrevNextPagination
@@ -133,7 +134,7 @@ export const ResultViewer = ({
     </Accordion>
   );
 
-  if (recordsCount < limit) return <QueryLoader />;
+  if (isContentDataLoading) return <QueryLoader />;
 
   return accordionHeadline ? renderWithAccordion() : renderContent();
 };
@@ -157,5 +158,6 @@ ResultViewer.propTypes = {
   onSuccess: PropTypes.func,
   onPreviewShown: PropTypes.func,
   queryParams: PropTypes.object,
+  loading: PropTypes.object,
   refetchInterval: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 };

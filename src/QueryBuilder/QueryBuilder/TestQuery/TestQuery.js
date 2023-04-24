@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Dropdown, DropdownMenu } from '@folio/stripes/components';
+import { Button, Dropdown, DropdownMenu, Loading } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
 import { CheckboxFilter } from '@folio/stripes/smart-components';
 import PropTypes from 'prop-types';
 import { ResultViewer } from '../../ResultViewer';
 import { useTestQuery } from '../hooks/useTestQuery';
 import { QUERY_DETAILS_STATUSES } from '../constants/query';
+import css from '../../QueryBuilder.css';
 
 export const TestQuery = ({
   isQueryFilled,
@@ -51,6 +52,11 @@ export const TestQuery = ({
     });
   };
 
+  const handleQueryRetrieved = (data) => {
+    setQueryDetails(data);
+    onQueryRetrieved(data);
+  };
+
   const dropdown = (
     <Dropdown
       label={<FormattedMessage id="ui-plugin-query-builder.control.dropdown.showColumns" />}
@@ -70,23 +76,26 @@ export const TestQuery = ({
     </Dropdown>
   );
 
-  const renderHeadline = ({ totalRecords, defaultLimit: limit, status }) => {
+  const renderHeadline = ({ totalRecords: total, defaultLimit, status, currentRecordsCount }) => {
     const isInProgress = status === QUERY_DETAILS_STATUSES.IN_PROGRESS;
-    const total = (
-      <>
-        {totalRecords}
-        {isInProgress && <FormattedMessage id="ui-plugin-query-builder.modal.preview.countingInProgress" />}
-      </>
-    );
 
-    return totalRecords && (
-      <FormattedMessage
-        id="ui-plugin-query-builder.modal.preview.title"
-        values={{
-          total,
-          limit,
-        }}
-      />
+    return total && (
+      <>
+        <FormattedMessage
+          id="ui-plugin-query-builder.modal.preview.title"
+          values={{
+            total,
+            limit: currentRecordsCount < defaultLimit ? currentRecordsCount : defaultLimit,
+          }}
+        />
+        {' '}
+        {isInProgress && (
+          <span className={css.AccordionHeaderLoading}>
+            <FormattedMessage id="ui-plugin-query-builder.modal.preview.countingInProgress" />
+            <Loading />
+          </span>
+        )}
+      </>
     );
   };
 
@@ -98,22 +107,20 @@ export const TestQuery = ({
 
       {queryId && (
         <ResultViewer
-          contentDataSource={queryDetailsDataSource}
-          queryParams={{ queryId, includeContent }}
-          onSuccess={(data) => {
-            setQueryDetails(data);
-            onQueryRetrieved(data);
-          }}
+          onSuccess={handleQueryRetrieved}
+          refetchInterval={isQueryCompleted}
+          headline={renderHeadline}
           onPreviewShown={() => setIncludeContent(false)}
+          contentDataSource={queryDetailsDataSource}
           entityTypeDataSource={entityTypeDataSource}
+          queryParams={{ queryId, includeContent }}
           visibleColumns={visibleColumns}
           onSetDefaultVisibleColumns={setVisibleColumns}
           onSetDefaultColumns={setColumns}
           showPagination={false}
           height={200}
           headlineEnd={dropdown}
-          headline={renderHeadline}
-          refetchInterval={isQueryCompleted}
+          loading={isQueryInProgress}
         />
       )}
     </>
