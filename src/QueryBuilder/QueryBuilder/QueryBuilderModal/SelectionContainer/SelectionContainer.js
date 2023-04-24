@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import { useQuery } from 'react-query';
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useParamsDataSource } from '../../../../hooks/useParamsDataSource';
 
 export const SelectionContainer = (
   {
@@ -25,15 +25,7 @@ export const SelectionContainer = (
     } else return options;
   };
 
-  const { data } = useQuery({
-    queryKey: [source?.source?.entityTypeId],
-    queryFn: () => getParamsSource(
-      { entityTypeId: source?.source.entityTypeId,
-        source: source?.source.columnName,
-        search: searchValue },
-    ),
-    enabled: source && !availableValues,
-  });
+  const { data } = useParamsDataSource({ source, searchValue, getParamsSource });
 
   const filterOptions = (filterText, list) => {
     // escape special characters in filter text, so they won't be interpreted by RegExp
@@ -50,17 +42,15 @@ export const SelectionContainer = (
     return { renderedItems, exactMatch };
   };
 
-  if (!data && !availableValues) {
-    return null;
-  } else {
-    return (
-      <Selection
-        {...rest}
-        onChange={onChange}
-        filter={filterOptions}
-        dataOptions={getSelectOptionsWithPlaceholder(availableValues) || getSelectOptionsWithPlaceholder(data?.values)}
-      />);
-  }
+  const dataOptions = getSelectOptionsWithPlaceholder(availableValues) || getSelectOptionsWithPlaceholder(data?.values);
+
+  return (
+    <Selection
+      {...rest}
+      onChange={onChange}
+      filter={filterOptions}
+      dataOptions={dataOptions}
+    />);
 };
 
 SelectionContainer.propTypes = {
