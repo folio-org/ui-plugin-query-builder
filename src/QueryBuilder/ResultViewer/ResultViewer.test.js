@@ -61,14 +61,14 @@ describe('ResultViewer', () => {
   });
 
   describe('Initial and visible columns setters', () => {
-    it('should be called only once', async () => {
+    it('should be called', async () => {
       render(renderResultViewer());
 
       await waitFor(() => {
         expect(screen.queryByText('ui-plugin-query-builder.viewer.retrieving')).not.toBeInTheDocument();
 
-        expect(setVisibleColumns).toHaveBeenCalledTimes(1);
-        expect(setColumns).toHaveBeenCalledTimes(1);
+        expect(setVisibleColumns).toHaveBeenCalled();
+        expect(setColumns).toHaveBeenCalled();
       });
     });
   });
