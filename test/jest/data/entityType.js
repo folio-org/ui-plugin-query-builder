@@ -96,6 +96,18 @@ export const entityType = {
       ],
     },
     {
+      'name': 'test',
+      'dataType': {
+        'dataType': 'enumType',
+      },
+      'labelAlias': 'test',
+      'visibleByDefault': true,
+      'source': {
+        entityTypeId: '1',
+        columnName: 'test',
+      },
+    },
+    {
       'name': 'user_customfields',
       'dataType': {
         'dataType': 'stringType',

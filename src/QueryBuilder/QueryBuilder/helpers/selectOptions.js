@@ -68,6 +68,7 @@ export const fieldOptions = entityType.columns
     value: et.name,
     dataType: et.dataType.dataType,
     values: et.values,
+    source: et.source,
   }));
 
 export const getFieldOptions = (initialValue) => {
@@ -90,7 +91,7 @@ export const booleanOptions = [
 
 export const sourceTemplate = {
   [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: '' },
-  [COLUMN_KEYS.FIELD]: { options: fieldOptions, current: '' },
+  [COLUMN_KEYS.FIELD]: { options: getFieldOptions(entityType), current: '' },
   [COLUMN_KEYS.OPERATOR]: { options: [], current: '' },
   [COLUMN_KEYS.VALUE]: { current: '' },
 };

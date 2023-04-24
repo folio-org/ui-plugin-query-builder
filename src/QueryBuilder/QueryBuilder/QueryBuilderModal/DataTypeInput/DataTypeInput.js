@@ -23,12 +23,6 @@ export const DataTypeInput = (
     source,
     ...rest },
 ) => {
-  const intl = useIntl();
-  const getSelectOptionsWithPlaceholder = (options) => [
-    { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
-    ...options,
-  ];
-
   switch (dataType) {
     case DATA_TYPES.BooleanType:
       return (
@@ -37,7 +31,7 @@ export const DataTypeInput = (
             Selection={Select}
             getParamsSource={getParamsSource}
             data-testid="data-input-select-bool"
-            dataOptions={getSelectOptionsWithPlaceholder(availableValues)}
+            dataOptions={availableValues}
             onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
             {...rest}
           />
@@ -47,6 +41,7 @@ export const DataTypeInput = (
       return (
         <div className={className}>
           <SelectionContainer
+            source={source}
             Selection={MultiSelection}
             getParamsSource={getParamsSource}
             dataOptions={availableValues}
@@ -99,8 +94,9 @@ export const DataTypeInput = (
               <SelectionContainer
                 Selection={Select}
                 data-testid="data-input-select-array"
+                source={source}
                 getParamsSource={getParamsSource}
-                dataOptions={getSelectOptionsWithPlaceholder(availableValues)}
+                dataOptions={availableValues}
                 onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
                 {...rest}
               />

@@ -96,6 +96,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource }) => {
         onAdd={() => {}}
         hasMargin={false}
         renderField={(row, index) => {
+
           return (
             <Row
               key={index}
@@ -145,7 +146,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource }) => {
                     dataType={row.field.dataType}
                     index={index}
                     availableValues={row.value.options}
-                    source={row.source}
+                    source={row.field?.options?.find((el) => el.value === row.field.current)}
                     operator={row.operator.current}
                     onChange={handleChange}
                     data-testid={`input-value-${index}`}
