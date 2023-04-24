@@ -31,11 +31,11 @@ export const TestQuery = ({
   });
 
   const { queryId } = testQueryData || {};
-  const isQueryCompleted = (query) => {
+  const refetchInterval = (query) => {
     const status = query?.status;
 
     if ([QUERY_DETAILS_STATUSES.SUCCESS, QUERY_DETAILS_STATUSES.FAILED].includes(status)) {
-      return false;
+      return 0;
     }
 
     return 5000;
@@ -109,7 +109,7 @@ export const TestQuery = ({
       {queryId && (
         <ResultViewer
           onSuccess={handleQueryRetrieved}
-          refetchInterval={isQueryCompleted}
+          refetchInterval={refetchInterval}
           headline={renderHeadline}
           onPreviewShown={() => setIncludeContent(false)}
           contentDataSource={queryDetailsDataSource}
