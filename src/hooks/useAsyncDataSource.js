@@ -52,6 +52,7 @@ export const useAsyncDataSource = ({
 
   return {
     contentData,
+    entityType,
     isContentDataLoading,
     isContentDataFetching,
     isEntityTypeLoading,

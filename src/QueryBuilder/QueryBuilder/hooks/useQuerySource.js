@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { getQueryStr, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from '../helpers/query';
-import { booleanOptions, fieldOptions, sourceTemplate } from '../helpers/selectOptions';
+import { booleanOptions, getFieldOptions, sourceTemplate } from '../helpers/selectOptions';
 
-export const useQuerySource = (initialValues) => {
+export const useQuerySource = (initialValues, entityType) => {
   const sourceInitialValue = initialValues
     ? mongoQueryToSource({
       mongoQuery: initialValues,
-      fieldOptions,
+      fieldOptions: getFieldOptions(entityType),
       booleanOptions,
     })
     : [sourceTemplate];

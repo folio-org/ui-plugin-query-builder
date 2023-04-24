@@ -17,7 +17,7 @@ import { booleanOptions, fieldOptions, getOperatorOptions, sourceTemplate } from
 import { OPERATORS } from '../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 
-export const RepeatableFields = ({ source, setSource }) => {
+export const RepeatableFields = ({ source, setSource, getParamsSource }) => {
   const intl = useIntl();
   const handleAdd = () => {
     setSource(res => ([
@@ -141,9 +141,11 @@ export const RepeatableFields = ({ source, setSource }) => {
                 {(row.operator.current) && (
                   <DataTypeInput
                     value={row.value.current}
+                    getParamsSource={getParamsSource}
                     dataType={row.field.dataType}
                     index={index}
                     availableValues={row.value.options}
+                    source={row.field?.options?.find((el) => el.value === row.field.current)}
                     operator={row.operator.current}
                     onChange={handleChange}
                     data-testid={`input-value-${index}`}
@@ -176,4 +178,5 @@ export const RepeatableFields = ({ source, setSource }) => {
 RepeatableFields.propTypes = {
   source: PropTypes.arrayOf(PropTypes.object),
   setSource: PropTypes.func,
+  getParamsSource: PropTypes.func,
 };
