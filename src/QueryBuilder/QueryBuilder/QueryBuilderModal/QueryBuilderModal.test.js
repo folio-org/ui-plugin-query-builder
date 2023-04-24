@@ -3,7 +3,12 @@ import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { QueryBuilderModal } from './QueryBuilderModal';
 import { entityType } from '../../../../test/jest/data/entityType';
-import { runQueryDataSource, testQueryDataSource } from '../../../../test/jest/data/sources';
+import {
+  entityTypeDataSource,
+  queryDetailsDataSource,
+  runQueryDataSource,
+  testQueryDataSource,
+} from '../../../../test/jest/data/sources';
 
 const queryClient = new QueryClient();
 
@@ -18,9 +23,13 @@ const renderQueryBuilderModal = ({
       setIsModalShown={setIsModalShown}
       isOpen={isOpen}
       saveBtnLabel={saveBtnLabel}
-      runQueryDataSource={runQueryDataSource}
-      testQuerySource={testQueryDataSource}
       onQueryRun={onQueryRun}
+      entityTypeDataSource={entityTypeDataSource}
+      runQueryDataSource={runQueryDataSource}
+      queryDetailsDataSource={queryDetailsDataSource}
+      testQueryDataSource={testQueryDataSource}
+      onQueryRunSuccess={(v) => console.log(v)}
+      onQueryRunFail={(v) => console.log(v)}
     />
   </QueryClientProvider>,
 );

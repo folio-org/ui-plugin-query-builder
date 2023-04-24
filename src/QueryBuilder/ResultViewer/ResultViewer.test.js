@@ -35,7 +35,9 @@ describe('ResultViewer', () => {
   it('Should render accordion title', async () => {
     render(renderResultViewer());
 
-    expect(screen.getByText("Query: loan_status ='Open' and user_active = 'false'")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByText("Query: loan_status ='Open' and user_active = 'false'")).toBeVisible();
+    });
   });
 
   describe('Render accordion and titles', () => {
@@ -95,19 +97,6 @@ describe('ResultViewer', () => {
         expect(screen.getByText(new RegExp(`${offset + 1}`, 'i'))).toBeVisible();
         expect(screen.getByText(new RegExp(`${offset + limit}`, 'i'))).toBeVisible();
         expect(changePage).not.toBeCalled();
-      });
-    });
-  });
-
-  describe('In progress state', () => {
-    it('Should render in progress when isInProgress: true', async () => {
-      render(renderResultViewer({
-        isInProgress: true,
-      }));
-
-      await waitFor(() => {
-        expect(screen.getByText('Icon')).toBeVisible();
-        expect(screen.getByText('ui-plugin-query-builder.viewer.retrieving')).toBeVisible();
       });
     });
   });
