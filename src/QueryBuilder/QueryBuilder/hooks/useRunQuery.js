@@ -1,18 +1,14 @@
-import { useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 
-export const useRunQuery = ({ runQuerySource, testedQueryId, fqlQuery, onQueryRun }) => {
-  const { data, refetch, isFetched } = useQuery(
-    {
-      queryKey: ['runQuery', testedQueryId, fqlQuery],
-      enabled: false,
-      queryFn: () => runQuerySource(testedQueryId, fqlQuery),
-      onSuccess: onQueryRun,
-    },
-  );
+export const useRunQuery = ({ runQueryDataSource, onQueryRunSuccess, onQueryRunFail }) => {
+  const { mutateAsync: runQuery, isLoading: isRunQueryLoading } = useMutation({
+    mutationFn: ({ entityTypeId, fqlQuery }) => runQueryDataSource({ entityTypeId, fqlQuery }),
+    onSuccess: onQueryRunSuccess,
+    onError: onQueryRunFail,
+  });
 
   return {
-    data,
-    isFetched,
-    runQuery: refetch,
+    isRunQueryLoading,
+    runQuery,
   };
 };

@@ -1,3 +1,8 @@
 .LoaderTitle {
     display: inline;
 }
+
+.AccordionHeaderLoading {
+    display: inline-flex;
+    align-items: center;
+}

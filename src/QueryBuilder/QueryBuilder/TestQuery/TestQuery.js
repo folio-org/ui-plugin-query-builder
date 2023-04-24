@@ -1,31 +1,62 @@
 import React, { useState } from 'react';
-import { Button, Dropdown, DropdownMenu } from '@folio/stripes/components';
+import { Button, Dropdown, DropdownMenu, Loading } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
 import { CheckboxFilter } from '@folio/stripes/smart-components';
 import PropTypes from 'prop-types';
 import { ResultViewer } from '../../ResultViewer';
 import { useTestQuery } from '../hooks/useTestQuery';
+import { QUERY_DETAILS_STATUSES } from '../constants/query';
+import css from '../../QueryBuilder.css';
 
 export const TestQuery = ({
-  isTestBtnDisabled,
-  onQueryTested,
+  isQueryFilled,
+  entityTypeDataSource,
+  testQueryDataSource,
+  queryDetailsDataSource,
+  onQueryTestSuccess,
+  onQueryTestFail,
   onQueryRetrieved,
-  testQuerySource,
   fqlQuery,
+  entityTypeId,
 }) => {
   const [visibleColumns, setVisibleColumns] = useState([]);
+  const [queryDetails, setQueryDetails] = useState();
+  const [includeContent, setIncludeContent] = useState(true);
   const [columns, setColumns] = useState([]);
-  const { data, isFetched, isTestQueryFetching, testQuery } = useTestQuery({
-    testQuerySource,
-    fqlQuery,
-    onQueryTested,
+
+  const { testQueryData, testQuery, isTestQueryLoading } = useTestQuery({
+    testQueryDataSource,
+    onQueryTestSuccess,
+    onQueryTestFail,
   });
 
-  const handleTestQuery = async () => {
-    await testQuery();
+  const { queryId } = testQueryData || {};
+  const refetchInterval = (query) => {
+    const status = query?.status;
+
+    if ([QUERY_DETAILS_STATUSES.SUCCESS, QUERY_DETAILS_STATUSES.FAILED].includes(status)) {
+      return 0;
+    }
+
+    return 5000;
   };
-  const contentDataSource = async () => data?.content;
-  const entityTypeDataSource = async () => data?.entityType;
+
+  const isQueryInProgress = queryDetails?.status === QUERY_DETAILS_STATUSES.IN_PROGRESS;
+  const isTestQueryBtnDisabled = isTestQueryLoading || isQueryFilled || isQueryInProgress;
+
+  const handleTestQuery = async () => {
+    setIncludeContent(true);
+
+    await testQuery({
+      entityTypeId,
+      fqlQuery,
+    });
+  };
+
+  const handleQueryRetrieved = (data) => {
+    setQueryDetails(data);
+    onQueryRetrieved(data);
+  };
 
   const dropdown = (
     <Dropdown
@@ -46,32 +77,51 @@ export const TestQuery = ({
     </Dropdown>
   );
 
-  const renderHeadline = ({ totalRecords, defaultLimit }) => totalRecords && (
-    <FormattedMessage
-      id="ui-plugin-query-builder.modal.preview.title"
-      values={{ total: totalRecords, limit: defaultLimit }}
-    />
-  );
+  const renderHeadline = ({ totalRecords: total, defaultLimit, status, currentRecordsCount }) => {
+    const isInProgress = status === QUERY_DETAILS_STATUSES.IN_PROGRESS;
+
+    return total && (
+      <>
+        <FormattedMessage
+          id="ui-plugin-query-builder.modal.preview.title"
+          values={{
+            total,
+            limit: currentRecordsCount < defaultLimit ? currentRecordsCount : defaultLimit,
+          }}
+        />
+        {' '}
+        {isInProgress && (
+          <span className={css.AccordionHeaderLoading}>
+            <FormattedMessage id="ui-plugin-query-builder.modal.preview.countingInProgress" />
+            <Loading />
+          </span>
+        )}
+      </>
+    );
+  };
 
   return (
     <>
-      <Button disabled={isTestBtnDisabled || isTestQueryFetching} onClick={handleTestQuery}>
+      <Button disabled={isTestQueryBtnDisabled} onClick={handleTestQuery}>
         <FormattedMessage id="ui-plugin-query-builder.modal.test" />
       </Button>
 
-      {(isFetched || isTestQueryFetching) && (
+      {queryId && (
         <ResultViewer
-          contentDataSource={contentDataSource}
+          onSuccess={handleQueryRetrieved}
+          refetchInterval={refetchInterval}
+          headline={renderHeadline}
+          onPreviewShown={() => setIncludeContent(false)}
+          contentDataSource={queryDetailsDataSource}
           entityTypeDataSource={entityTypeDataSource}
+          queryParams={{ queryId, includeContent }}
           visibleColumns={visibleColumns}
           onSetDefaultVisibleColumns={setVisibleColumns}
           onSetDefaultColumns={setColumns}
-          isInProgress={isTestQueryFetching}
           showPagination={false}
           height={200}
           headlineEnd={dropdown}
-          headline={renderHeadline}
-          onSuccess={onQueryRetrieved}
+          loading={isQueryInProgress}
         />
       )}
     </>
@@ -79,9 +129,13 @@ export const TestQuery = ({
 };
 
 TestQuery.propTypes = {
-  isTestBtnDisabled: PropTypes.bool,
+  fqlQuery: PropTypes.object.isRequired,
+  entityTypeDataSource: PropTypes.func.isRequired,
+  testQueryDataSource: PropTypes.func.isRequired,
+  queryDetailsDataSource: PropTypes.func.isRequired,
+  entityTypeId: PropTypes.string,
+  isQueryFilled: PropTypes.bool,
   onQueryRetrieved: PropTypes.func,
-  onQueryTested: PropTypes.func,
-  testQuerySource: PropTypes.func,
-  fqlQuery: PropTypes.object,
+  onQueryTestSuccess: PropTypes.func,
+  onQueryTestFail: PropTypes.func,
 };

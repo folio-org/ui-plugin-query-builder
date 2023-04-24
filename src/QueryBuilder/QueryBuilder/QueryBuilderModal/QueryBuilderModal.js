@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { Modal,
   ModalFooter,
@@ -12,30 +11,37 @@ import { TestQuery } from '../TestQuery/TestQuery';
 import { useRunQuery } from '../hooks/useRunQuery';
 import { useQuerySource } from '../hooks/useQuerySource';
 import { useAsyncDataSource } from '../../../hooks/useAsyncDataSource';
+import { queryBuilderModalPropTypes } from '../../propTypes';
+import { QUERY_DETAILS_STATUSES } from '../constants/query';
 
 export const QueryBuilderModal = ({
-  setIsModalShown,
   isOpen = true,
+  setIsModalShown,
   saveBtnLabel,
   initialValues,
-  runQuerySource,
-  testQuerySource,
-  onQueryRun,
-  entityTypeDataSource = () => {},
+  entityTypeDataSource,
+  runQueryDataSource,
+  testQueryDataSource,
+  queryDetailsDataSource,
+  onQueryRunSuccess,
+  onQueryRunFail,
   getParamsSource,
 }) => {
   const { entityType } = useAsyncDataSource({ entityTypeDataSource });
-  const { source,
+  const {
+    source,
     setSource,
     fqlQuery,
     isQueryFilled,
-    queryStr } = useQuerySource(initialValues, entityType);
+    queryStr,
+  } = useQuerySource(initialValues, entityType);
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
   const [testedQueryId, setTestedQueryId] = useState(false);
 
-  const { runQuery } = useRunQuery({
-    onQueryRun: (result) => onQueryRun({ result, queryStr, fqlQuery }),
-    runQuerySource,
+  const { runQuery, isRunQueryLoading } = useRunQuery({
+    runQueryDataSource,
+    onQueryRunSuccess,
+    onQueryRunFail,
     testedQueryId,
     fqlQuery,
   });
@@ -50,12 +56,21 @@ export const QueryBuilderModal = ({
   };
 
   const handleRun = () => {
-    runQuery().finally(handleCancel);
+    runQuery({
+      queryId: testedQueryId,
+      fqlQuery,
+    }).then(handleCancel);
   };
 
-  const handleQueryTested = ({ queryId }) => {
+  const handleQueryTestSuccess = ({ queryId }) => {
     setTestedQueryId(queryId);
     setIsQueryRetrieved(false);
+  };
+
+  const handleQueryRetrieved = (data) => {
+    const completed = data?.status === QUERY_DETAILS_STATUSES.SUCCESS;
+
+    setIsQueryRetrieved(completed);
   };
 
   const getSaveBtnLabel = () => (saveBtnLabel || <FormattedMessage id="ui-plugin-query-builder.modal.run" />);
@@ -64,7 +79,7 @@ export const QueryBuilderModal = ({
     <ModalFooter>
       <Button
         buttonStyle="primary"
-        disabled={!isQueryRetrieved || !isQueryFilled}
+        disabled={!isQueryRetrieved || !isQueryFilled || isRunQueryLoading}
         onClick={handleRun}
       >
         {getSaveBtnLabel()}
@@ -95,23 +110,16 @@ export const QueryBuilderModal = ({
       <RepeatableFields source={source} setSource={handleSetSource} getParamsSource={getParamsSource} />
       <TestQuery
         fqlQuery={fqlQuery}
-        testQuerySource={testQuerySource}
-        isTestBtnDisabled={!isQueryFilled}
-        onQueryRetrieved={() => setIsQueryRetrieved(true)}
-        onQueryTested={handleQueryTested}
+        testQueryDataSource={testQueryDataSource}
+        entityTypeDataSource={entityTypeDataSource}
+        queryDetailsDataSource={queryDetailsDataSource}
+        onQueryTestSuccess={handleQueryTestSuccess}
+        isQueryFilled={!isQueryFilled}
+        onQueryRetrieved={handleQueryRetrieved}
+        entityTypeId={entityType?.id}
       />
     </Modal>
   );
 };
 
-QueryBuilderModal.propTypes = {
-  setIsModalShown: PropTypes.func.isRequired,
-  isOpen: PropTypes.bool.isRequired,
-  saveBtnLabel: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
-  initialValues: PropTypes.object,
-  runQuerySource: PropTypes.func.isRequired,
-  testQuerySource: PropTypes.func.isRequired,
-  onQueryRun: PropTypes.func,
-  entityTypeDataSource: PropTypes.func,
-  getParamsSource: PropTypes.func,
-};
+QueryBuilderModal.propTypes = queryBuilderModalPropTypes;
