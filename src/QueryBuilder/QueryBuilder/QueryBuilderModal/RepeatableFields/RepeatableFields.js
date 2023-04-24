@@ -96,8 +96,6 @@ export const RepeatableFields = ({ source, setSource, getParamsSource }) => {
         onAdd={() => {}}
         hasMargin={false}
         renderField={(row, index) => {
-          console.log(row.value);
-
           return (
             <Row
               key={index}
