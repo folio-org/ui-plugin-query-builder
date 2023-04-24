@@ -6,7 +6,7 @@ import { Select,
   TextArea,
   Datepicker } from '@folio/stripes/components';
 
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { DATA_TYPES } from '../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../constants/columnKeys';
 import { OPERATORS } from '../../constants/operators';
