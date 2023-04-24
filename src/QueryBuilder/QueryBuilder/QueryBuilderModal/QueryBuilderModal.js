@@ -28,11 +28,13 @@ export const QueryBuilderModal = ({
   getParamsSource,
 }) => {
   const { entityType } = useAsyncDataSource({ entityTypeDataSource });
-  const { source,
+  const {
+    source,
     setSource,
     fqlQuery,
     isQueryFilled,
-    queryStr } = useQuerySource(initialValues, entityType);
+    queryStr,
+  } = useQuerySource(initialValues, entityType);
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
   const [testedQueryId, setTestedQueryId] = useState(false);
 
@@ -114,6 +116,7 @@ export const QueryBuilderModal = ({
         onQueryTestSuccess={handleQueryTestSuccess}
         isQueryFilled={!isQueryFilled}
         onQueryRetrieved={handleQueryRetrieved}
+        entityTypeId={entityType?.id}
       />
     </Modal>
   );

@@ -12,17 +12,17 @@ import { COLUMN_KEYS } from '../../constants/columnKeys';
 import { OPERATORS } from '../../constants/operators';
 import { SelectionContainer } from '../SelectionContainer/SelectionContainer';
 
-export const DataTypeInput = (
-  { onChange,
-    dataType,
-    availableValues,
-    className,
-    index,
-    operator,
-    getParamsSource,
-    source,
-    ...rest },
-) => {
+export const DataTypeInput = ({
+  onChange,
+  dataType,
+  availableValues,
+  className,
+  index,
+  operator,
+  getParamsSource,
+  source,
+  ...rest
+}) => {
   switch (dataType) {
     case DATA_TYPES.BooleanType:
       return (
@@ -76,8 +76,8 @@ export const DataTypeInput = (
     case DATA_TYPES.ArrayType:
     case DATA_TYPES.EnumType:
       return (
-        (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN) ?
-          (
+        (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN)
+          ? (
             <div className={className}>
               <SelectionContainer
                 source={source}
@@ -91,8 +91,7 @@ export const DataTypeInput = (
               />
             </div>
           )
-          :
-          (
+          : (
             <div className={className}>
               <SelectionContainer
                 Selection={Select}
