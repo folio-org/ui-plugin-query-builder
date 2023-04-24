@@ -2,7 +2,7 @@ import { useMutation } from 'react-query';
 
 export const useTestQuery = ({ testQueryDataSource, onQueryTestSuccess, onQueryTestFail }) => {
   const { data: testQueryData, mutateAsync: testQuery, isLoading: isTestQueryLoading } = useMutation({
-    mutationFn: ({ entityTypeId, fqlQuery }) => testQueryDataSource(entityTypeId, fqlQuery),
+    mutationFn: ({ entityTypeId, fqlQuery }) => testQueryDataSource({ entityTypeId, fqlQuery }),
     onSuccess: onQueryTestSuccess,
     onError: onQueryTestFail,
   });

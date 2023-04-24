@@ -29,7 +29,7 @@ export const QueryBuilderModal = ({
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
   const [testedQueryId, setTestedQueryId] = useState(false);
 
-  const { runQuery } = useRunQuery({
+  const { runQuery, isRunQueryLoading } = useRunQuery({
     runQueryDataSource,
     onQueryRunSuccess,
     onQueryRunFail,
@@ -47,7 +47,10 @@ export const QueryBuilderModal = ({
   };
 
   const handleRun = () => {
-    runQuery().finally(handleCancel);
+    runQuery({
+      queryId: testedQueryId,
+      fqlQuery,
+    }).then(handleCancel);
   };
 
   const handleQueryTestSuccess = ({ queryId }) => {
@@ -67,7 +70,7 @@ export const QueryBuilderModal = ({
     <ModalFooter>
       <Button
         buttonStyle="primary"
-        disabled={!isQueryRetrieved || !isQueryFilled}
+        disabled={!isQueryRetrieved || !isQueryFilled || isRunQueryLoading}
         onClick={handleRun}
       >
         {getSaveBtnLabel()}

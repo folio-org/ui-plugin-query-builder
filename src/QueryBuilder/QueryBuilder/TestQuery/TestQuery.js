@@ -17,6 +17,7 @@ export const TestQuery = ({
   onQueryTestFail,
   onQueryRetrieved,
   fqlQuery,
+  entityTypeId,
 }) => {
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [queryDetails, setQueryDetails] = useState();
@@ -47,7 +48,7 @@ export const TestQuery = ({
     setIncludeContent(true);
 
     await testQuery({
-      queryId,
+      entityTypeId,
       fqlQuery,
     });
   };
@@ -132,6 +133,7 @@ TestQuery.propTypes = {
   entityTypeDataSource: PropTypes.func.isRequired,
   testQueryDataSource: PropTypes.func.isRequired,
   queryDetailsDataSource: PropTypes.func.isRequired,
+  entityTypeId: PropTypes.string,
   isQueryFilled: PropTypes.bool,
   onQueryRetrieved: PropTypes.func,
   onQueryTestSuccess: PropTypes.func,

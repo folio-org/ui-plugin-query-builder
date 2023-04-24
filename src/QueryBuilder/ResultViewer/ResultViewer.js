@@ -158,6 +158,6 @@ ResultViewer.propTypes = {
   onSuccess: PropTypes.func,
   onPreviewShown: PropTypes.func,
   queryParams: PropTypes.object,
-  loading: PropTypes.object,
+  loading: PropTypes.bool,
   refetchInterval: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
 };
