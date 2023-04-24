@@ -11,6 +11,7 @@ import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
 import { useRunQuery } from '../hooks/useRunQuery';
 import { useQuerySource } from '../hooks/useQuerySource';
+import { useAsyncDataSource } from '../../../hooks/useAsyncDataSource';
 
 export const QueryBuilderModal = ({
   setIsModalShown,
@@ -20,8 +21,15 @@ export const QueryBuilderModal = ({
   runQuerySource,
   testQuerySource,
   onQueryRun,
+  entityTypeDataSource = () => {},
+  getParamsSource,
 }) => {
-  const { source, setSource, fqlQuery, isQueryFilled, queryStr } = useQuerySource(initialValues);
+  const { entityType } = useAsyncDataSource({ entityTypeDataSource });
+  const { source,
+    setSource,
+    fqlQuery,
+    isQueryFilled,
+    queryStr } = useQuerySource(initialValues, entityType);
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
   const [testedQueryId, setTestedQueryId] = useState(false);
 
@@ -84,7 +92,7 @@ export const QueryBuilderModal = ({
       <div className={css.queryArea}>
         {queryStr}
       </div>
-      <RepeatableFields source={source} setSource={handleSetSource} />
+      <RepeatableFields source={source} setSource={handleSetSource} getParamsSource={getParamsSource} />
       <TestQuery
         fqlQuery={fqlQuery}
         testQuerySource={testQuerySource}
@@ -104,4 +112,6 @@ QueryBuilderModal.propTypes = {
   runQuerySource: PropTypes.func.isRequired,
   testQuerySource: PropTypes.func.isRequired,
   onQueryRun: PropTypes.func,
+  entityTypeDataSource: PropTypes.func,
+  getParamsSource: PropTypes.func,
 };
