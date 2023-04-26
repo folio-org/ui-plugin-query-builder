@@ -32,7 +32,7 @@ export const QueryBuilderModal = ({
   onQueryRunFail,
   getParamsSource,
 }) => {
-  const { entityType, isEntityTypeLoading } = useEntityType({ entityTypeDataSource });
+  const { entityType } = useEntityType({ entityTypeDataSource });
   const {
     source,
     setSource,
@@ -113,7 +113,7 @@ export const QueryBuilderModal = ({
         {queryStr}
       </div>
 
-      {isEntityTypeLoading ? (
+      {!entityType ? (
         <Row center="xs">
           <Loading size="large" />
         </Row>
