@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { getQueryStr, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from '../helpers/query';
 import { booleanOptions, getFieldOptions, sourceTemplate } from '../helpers/selectOptions';
 
@@ -16,8 +16,6 @@ export const useQuerySource = (mongoQuery, entityType) => {
   }, [mongoQuery, entityType, fieldOptions]);
 
   const [source, setSource] = useState(sourceInitialValue);
-
-  useEffect(() => { setSource(sourceInitialValue); }, [sourceInitialValue]);
 
   const queryStr = getQueryStr(source, fieldOptions);
   const isQueryFilled = isQueryValid(source);
