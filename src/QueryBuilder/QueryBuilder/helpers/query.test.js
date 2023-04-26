@@ -1,6 +1,7 @@
 import { mongoQueryToSource, sourceToMongoQuery } from './query';
-import { booleanOptions, fieldOptions } from './selectOptions';
+import { booleanOptions } from './selectOptions';
 import { OPERATORS } from '../constants/operators';
+import { fieldOptions } from '../../../../test/jest/data/entityType';
 
 describe('mongoQueryToSource()', () => {
   test('should return empty array for empty query', () => {

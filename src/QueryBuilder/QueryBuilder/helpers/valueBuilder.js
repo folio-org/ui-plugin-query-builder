@@ -1,10 +1,9 @@
 import moment from 'moment';
 import { DATA_TYPES } from '../constants/dataTypes';
 import { OPERATORS } from '../constants/operators';
-import { fieldOptions } from './selectOptions';
 import { ISO_FORMAT } from './timeUtils';
 
-export const valueBuilder = (value, field, operator) => {
+export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
   const dataType = fieldOptions.find(o => o.value === field)?.dataType || DATA_TYPES.BooleanType;
   // add additional templates for dataTypes
   const valueMap = {

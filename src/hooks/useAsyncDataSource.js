@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import { getTableMetadata } from '../QueryBuilder/ResultViewer/helpers';
 import { useDebounce } from './useDebounce';
+import { useEntityType } from './useEntityType';
 
 export const useAsyncDataSource = ({
   contentDataSource,
@@ -34,17 +35,10 @@ export const useAsyncDataSource = ({
     },
   );
 
-  const {
-    data: entityType,
-    isLoading: isEntityTypeLoading,
-    isFetchedAfterMount: isContentTypeFetchedAfterMount,
-  } = useQuery(
-    ['entityType'],
+  const { entityType, isContentTypeFetchedAfterMount, isEntityTypeLoading } = useEntityType({
     entityTypeDataSource,
-    {
-      ...sharedOptions,
-    },
-  );
+    sharedOptions,
+  });
 
   const { content: contentData, totalRecords, status } = recordsData || {};
 

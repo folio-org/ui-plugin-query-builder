@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Modal,
+import {
+  Modal,
   ModalFooter,
   Button,
-  Headline } from '@folio/stripes/components';
+  Headline,
+  Loading,
+  Row,
+} from '@folio/stripes/components';
 
 import css from './QueryBuilderModal.css';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
 import { useRunQuery } from '../hooks/useRunQuery';
 import { useQuerySource } from '../hooks/useQuerySource';
-import { useAsyncDataSource } from '../../../hooks/useAsyncDataSource';
 import { queryBuilderModalPropTypes } from '../../propTypes';
 import { QUERY_DETAILS_STATUSES } from '../constants/query';
+import { useEntityType } from '../../../hooks/useEntityType';
+import { getFieldOptions } from '../helpers/selectOptions';
 
 export const QueryBuilderModal = ({
   isOpen = true,
@@ -27,7 +32,7 @@ export const QueryBuilderModal = ({
   onQueryRunFail,
   getParamsSource,
 }) => {
-  const { entityType } = useAsyncDataSource({ entityTypeDataSource });
+  const { entityType, isEntityTypeLoading } = useEntityType({ entityTypeDataSource });
   const {
     source,
     setSource,
@@ -107,17 +112,32 @@ export const QueryBuilderModal = ({
       <div className={css.queryArea}>
         {queryStr}
       </div>
-      <RepeatableFields source={source} setSource={handleSetSource} getParamsSource={getParamsSource} />
-      <TestQuery
-        fqlQuery={fqlQuery}
-        testQueryDataSource={testQueryDataSource}
-        entityTypeDataSource={entityTypeDataSource}
-        queryDetailsDataSource={queryDetailsDataSource}
-        onQueryTestSuccess={handleQueryTestSuccess}
-        isQueryFilled={!isQueryFilled}
-        onQueryRetrieved={handleQueryRetrieved}
-        entityTypeId={entityType?.id}
-      />
+
+      {isEntityTypeLoading ? (
+        <Row center="xs">
+          <Loading size="large" />
+        </Row>
+      ) : (
+        <>
+          <RepeatableFields
+            source={source}
+            setSource={handleSetSource}
+            getParamsSource={getParamsSource}
+            fieldOptions={getFieldOptions(entityType)}
+          />
+          <TestQuery
+            fqlQuery={fqlQuery}
+            testQueryDataSource={testQueryDataSource}
+            entityTypeDataSource={entityTypeDataSource}
+            queryDetailsDataSource={queryDetailsDataSource}
+            onQueryTestSuccess={handleQueryTestSuccess}
+            isQueryFilled={!isQueryFilled}
+            onQueryRetrieved={handleQueryRetrieved}
+            entityTypeId={entityType?.id}
+          />
+        </>
+      )}
+
     </Modal>
   );
 };

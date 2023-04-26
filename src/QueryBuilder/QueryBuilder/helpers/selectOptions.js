@@ -1,6 +1,5 @@
 import { DATA_TYPES } from '../constants/dataTypes';
 import { OPERATORS } from '../constants/operators';
-import { entityType } from '../../../../test/jest/data/entityType';
 import { COLUMN_KEYS } from '../constants/columnKeys';
 
 const baseLogicalOperators = [
@@ -61,18 +60,8 @@ export const getOperatorOptions = (dataType) => {
   ];
 };
 
-export const fieldOptions = entityType.columns
-  .filter(item => item.visibleByDefault)
-  .map(et => ({
-    label: et.labelAlias,
-    value: et.name,
-    dataType: et.dataType.dataType,
-    values: et.values,
-    source: et.source,
-  }));
-
-export const getFieldOptions = (initialValue = { columns: [] }) => {
-  return initialValue?.columns?.filter(item => item?.visibleByDefault)
+export const getFieldOptions = (entityType) => {
+  return entityType?.columns?.filter(item => item?.visibleByDefault)
     .map(
       et => ({
         label: et.labelAlias,
