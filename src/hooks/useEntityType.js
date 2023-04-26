@@ -5,11 +5,11 @@ export const useEntityType = ({ entityTypeDataSource, sharedOptions = {} }) => {
     data: entityType,
     isLoading: isEntityTypeLoading,
     isFetchedAfterMount: isContentTypeFetchedAfterMount,
-  } = useQuery(
-    ['entityType'],
-    () => entityTypeDataSource(),
+  } = useQuery({
+    queryKey: ['entityType'],
+    queryFn: entityTypeDataSource,
     ...sharedOptions,
-  );
+  });
 
   return {
     entityType,

@@ -16,29 +16,29 @@ export const useAsyncDataSource = ({
 
   const sharedOptions = { refetchOnWindowFocus: false, keepPreviousData: true };
 
+  const { entityType, isContentTypeFetchedAfterMount, isEntityTypeLoading } = useEntityType({
+    entityTypeDataSource,
+    sharedOptions,
+  });
+
   const {
     data: recordsData,
     isLoading: isContentDataLoading,
     isFetching: isContentDataFetching,
     refetch,
   } = useQuery(
-    ['contentData', debouncedOffset, debouncedLimit, queryParams],
-    () => contentDataSource({
-      offset: debouncedOffset,
-      limit: debouncedLimit,
-      ...queryParams,
-    }),
     {
+      queryKey: ['contentData', debouncedOffset, debouncedLimit, queryParams],
+      queryFn: () => contentDataSource({
+        offset: debouncedOffset,
+        limit: debouncedLimit,
+        ...queryParams,
+      }),
       ...sharedOptions,
       onSuccess,
       refetchInterval,
     },
   );
-
-  const { entityType, isContentTypeFetchedAfterMount, isEntityTypeLoading } = useEntityType({
-    entityTypeDataSource,
-    sharedOptions,
-  });
 
   const { content: contentData, totalRecords, status } = recordsData || {};
 
