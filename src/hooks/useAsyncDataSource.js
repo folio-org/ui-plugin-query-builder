@@ -37,6 +37,7 @@ export const useAsyncDataSource = ({
       ...sharedOptions,
       onSuccess,
       refetchInterval,
+      keepPreviousData: false,
       structuralSharing: (oldData, newData) => {
         console.log('OLD DATA', oldData);
         console.log('NEW DATA', newData);
