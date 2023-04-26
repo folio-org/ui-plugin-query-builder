@@ -28,7 +28,7 @@ export const useAsyncDataSource = ({
     refetch,
   } = useQuery(
     {
-      queryKey: ['contentData', debouncedOffset, debouncedLimit, queryParams],
+      queryKey: ['queryPluginContentData', debouncedOffset, debouncedLimit, queryParams],
       queryFn: () => contentDataSource({
         offset: debouncedOffset,
         limit: debouncedLimit,
@@ -37,6 +37,11 @@ export const useAsyncDataSource = ({
       ...sharedOptions,
       onSuccess,
       refetchInterval,
+      structuralSharing: (oldData, newData) => {
+        console.log('OLD DATA', oldData);
+        console.log('NEW DATA', newData);
+        console.log('---------------------------------------------------------------');
+      },
     },
   );
 

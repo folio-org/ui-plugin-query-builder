@@ -15,6 +15,8 @@ export const TestQuery = ({
   queryDetailsDataSource,
   onQueryTestSuccess,
   onQueryTestFail,
+  onQueryExecutionSuccess,
+  onQueryExecutionFail,
   onQueryRetrieved,
   fqlQuery,
   entityTypeId,
@@ -32,13 +34,20 @@ export const TestQuery = ({
 
   const { queryId } = testQueryData || {};
   const refetchInterval = (query) => {
+    const defaultInterval = 5000;
     const status = query?.status;
 
-    if ([QUERY_DETAILS_STATUSES.SUCCESS, QUERY_DETAILS_STATUSES.FAILED].includes(status)) {
-      return 0;
-    }
+    if (status === QUERY_DETAILS_STATUSES.SUCCESS) {
+      onQueryExecutionSuccess?.();
 
-    return 5000;
+      return 0;
+    } else if (status === QUERY_DETAILS_STATUSES.FAILED) {
+      onQueryExecutionFail?.();
+
+      return 0;
+    } else {
+      return defaultInterval;
+    }
   };
 
   const isQueryInProgress = queryDetails?.status === QUERY_DETAILS_STATUSES.IN_PROGRESS;
@@ -138,4 +147,6 @@ TestQuery.propTypes = {
   onQueryRetrieved: PropTypes.func,
   onQueryTestSuccess: PropTypes.func,
   onQueryTestFail: PropTypes.func,
+  onQueryExecutionSuccess: PropTypes.func,
+  onQueryExecutionFail: PropTypes.func,
 };
