@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ResultViewer } from './ResultViewer';
 import { QueryBuilder } from './QueryBuilder';
 

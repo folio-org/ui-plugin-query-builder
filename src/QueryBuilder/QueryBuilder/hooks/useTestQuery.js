@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 export const useTestQuery = ({ testQueryDataSource, onQueryTestSuccess, onQueryTestFail }) => {
   const { data: testQueryData, mutateAsync: testQuery, isLoading: isTestQueryLoading } = useMutation({

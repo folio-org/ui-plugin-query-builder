@@ -1,5 +1,5 @@
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Intl from '../../../../../test/jest/__mock__/intl.mock';
 import { DataTypeInput } from './DataTypeInput';
 import { DATA_TYPES } from '../../constants/dataTypes';
