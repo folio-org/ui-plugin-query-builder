@@ -42,10 +42,6 @@ export const useAsyncDataSource = ({
         console.log('NEW DATA', newData);
         console.log('---------------------------------------------------------------');
 
-        if (newData.fqlQuery && !newData.content) {
-          return oldData;
-        }
-
         return newData;
       },
     },
