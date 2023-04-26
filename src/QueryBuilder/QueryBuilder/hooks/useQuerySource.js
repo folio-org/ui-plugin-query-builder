@@ -9,7 +9,7 @@ export const useQuerySource = (initialValues, entityType) => {
       fieldOptions: getFieldOptions(entityType),
       booleanOptions,
     })
-    : [sourceTemplate];
+    : [sourceTemplate(entityType)];
 
   const [source, setSource] = useState(sourceInitialValue);
 

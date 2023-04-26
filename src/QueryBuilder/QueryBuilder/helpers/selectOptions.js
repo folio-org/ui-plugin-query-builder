@@ -71,9 +71,8 @@ export const fieldOptions = entityType.columns
     source: et.source,
   }));
 
-export const getFieldOptions = (initialValue) => {
-  return initialValue.columns
-    .filter(item => item?.visibleByDefault)
+export const getFieldOptions = (initialValue = { columns: [] }) => {
+  return initialValue?.columns?.filter(item => item?.visibleByDefault)
     .map(
       et => ({
         label: et.labelAlias,
@@ -89,9 +88,9 @@ export const booleanOptions = [
   { label: 'AND', value: 'AND' },
 ];
 
-export const sourceTemplate = {
+export const sourceTemplate = (type) => ({
   [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: '' },
-  [COLUMN_KEYS.FIELD]: { options: getFieldOptions(entityType), current: '' },
+  [COLUMN_KEYS.FIELD]: { options: getFieldOptions(type), current: '' },
   [COLUMN_KEYS.OPERATOR]: { options: [], current: '' },
   [COLUMN_KEYS.VALUE]: { current: '' },
-};
+});
