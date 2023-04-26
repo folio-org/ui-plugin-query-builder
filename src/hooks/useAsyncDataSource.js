@@ -37,10 +37,19 @@ export const useAsyncDataSource = ({
       ...sharedOptions,
       onSuccess,
       refetchInterval,
+      isDataEqual: (oldData, newData) => {
+        console.log('OLD DATA', oldData);
+        console.log('NEW DATA', newData);
+        console.log('*********************************************************************');
+
+        return newData;
+      },
       structuralSharing: (oldData, newData) => {
         console.log('OLD DATA', oldData);
         console.log('NEW DATA', newData);
         console.log('---------------------------------------------------------------');
+
+        return newData;
       },
     },
   );
