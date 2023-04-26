@@ -17,7 +17,7 @@ export const useQuerySource = (mongoQuery, entityType) => {
   const [source, setSource] = useState(getSourceValue(mongoQuery, entityType, fieldOptions));
 
   useEffect(() => {
-    if (mongoQuery && entityType) {
+    if (entityType) {
       setSource(getSourceValue(mongoQuery, entityType, fieldOptions));
     }
   }, [mongoQuery, entityType]);
