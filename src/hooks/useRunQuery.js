@@ -1,8 +1,8 @@
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 export const useRunQuery = ({ runQueryDataSource, onQueryRunSuccess, onQueryRunFail }) => {
   const { mutateAsync: runQuery, isLoading: isRunQueryLoading } = useMutation({
-    mutationFn: ({ entityTypeId, fqlQuery }) => runQueryDataSource({ entityTypeId, fqlQuery }),
+    mutationFn: ({ queryId, fqlQuery, entityTypeId }) => runQueryDataSource({ entityTypeId, fqlQuery, queryId }),
     onSuccess: onQueryRunSuccess,
     onError: onQueryRunFail,
   });

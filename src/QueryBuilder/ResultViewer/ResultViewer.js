@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row, Accordion, MultiColumnList, Headline } from '@folio/stripes/components';
 import { PrevNextPagination } from '@folio/stripes-acq-components';
 import { QueryLoader } from './QueryLoader';
 import { useAsyncDataSource } from '../../hooks/useAsyncDataSource';
 import { usePagination } from '../../hooks/usePagination';
+import { useViewerRefresh } from '../../hooks/useViewerRefresh';
+import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
 
 export const ResultViewer = ({
   showPagination = true,
   defaultLimit = 100,
   defaultOffset = 0,
   queryParams = {},
+  contentQueryOptions = {},
+  contentQueryKeys = [],
   contentDataSource,
   entityTypeDataSource,
   headline,
@@ -23,8 +27,7 @@ export const ResultViewer = ({
   refreshTrigger,
   onSuccess,
   onPreviewShown,
-  refetchInterval,
-  loading,
+  isPreviewLoading,
 }) => {
   const { changePage, limit, offset } = usePagination({
     defaultLimit,
@@ -49,43 +52,44 @@ export const ResultViewer = ({
     offset,
     limit,
     onSuccess,
-    refetchInterval,
     queryParams,
+    contentQueryOptions,
+    contentQueryKeys,
   });
 
+  const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading;
   const currentRecordsCount = contentData?.length || 0;
 
   // set visible by default columns once
-  useEffect(() => {
-    if (isContentTypeFetchedAfterMount) {
-      onSetDefaultColumns?.(defaultColumns);
-      onSetDefaultVisibleColumns?.(defaultVisibleColumns);
-    }
-  }, [isContentTypeFetchedAfterMount]);
+  useViewerCallbacks({
+    isContentTypeFetchedAfterMount,
+    onSetDefaultColumns,
+    defaultColumns,
+    onSetDefaultVisibleColumns,
+    defaultVisibleColumns,
+    currentRecordsCount,
+    onPreviewShown,
+    defaultLimit,
+  });
 
   // refresh functionality
-  useEffect(() => {
-    if (refreshTrigger) {
-      if (offset === defaultOffset) {
-        refetch();
-      } else {
-        changePage({ offset: defaultOffset, limit: defaultLimit });
-      }
-    }
-  }, [refreshTrigger]);
-
-  useEffect(() => {
-    if (currentRecordsCount >= limit) onPreviewShown?.();
-  }, [currentRecordsCount]);
+  useViewerRefresh({
+    refetch,
+    refreshTrigger,
+    changePage,
+    defaultLimit,
+    defaultOffset,
+    offset,
+  });
 
   const renderHeader = () => (
     <Row between="xs">
       <Col xs={10}>
         <Headline size="large" margin="none" tag="h3">
-          {headline({ totalRecords, defaultLimit, status, currentRecordsCount })}
+          {headline?.({ totalRecords, defaultLimit, status, currentRecordsCount })}
         </Headline>
       </Col>
-      {headlineEnd}
+      {headlineEnd?.({ currentRecordsCount, status })}
     </Row>
   );
 
@@ -101,7 +105,7 @@ export const ResultViewer = ({
             pagingType={null}
             onNeedMoreData={changePage}
             height={height}
-            loading={isContentDataFetching || isContentDataLoading || isEntityTypeLoading || loading}
+            loading={isListLoading}
           />
           {showPagination && (
             <PrevNextPagination
@@ -134,7 +138,7 @@ export const ResultViewer = ({
     </Accordion>
   );
 
-  if (isContentDataLoading) return <QueryLoader />;
+  if (isPreviewLoading) return <QueryLoader />;
 
   return accordionHeadline ? renderWithAccordion() : renderContent();
 };
@@ -158,6 +162,7 @@ ResultViewer.propTypes = {
   onSuccess: PropTypes.func,
   onPreviewShown: PropTypes.func,
   queryParams: PropTypes.object,
-  loading: PropTypes.bool,
-  refetchInterval: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  isPreviewLoading: PropTypes.bool,
+  contentQueryOptions: PropTypes.object,
+  contentQueryKeys: PropTypes.arrayOf(PropTypes.string),
 };

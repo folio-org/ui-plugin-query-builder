@@ -1,5 +1,5 @@
 import { delayedResponse } from './helpers';
-import { QUERY_DETAILS_STATUSES } from '../../../src/QueryBuilder/QueryBuilder/constants/query';
+import { QUERY_DETAILS_STATUSES } from '../../../src/constants/query';
 import { content } from './content';
 import { entityType } from './entityType';
 

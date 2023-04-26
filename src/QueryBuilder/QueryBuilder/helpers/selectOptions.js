@@ -1,7 +1,6 @@
-import { DATA_TYPES } from '../constants/dataTypes';
-import { OPERATORS } from '../constants/operators';
-import { entityType } from '../../../../test/jest/data/entityType';
-import { COLUMN_KEYS } from '../constants/columnKeys';
+import { DATA_TYPES } from '../../../constants/dataTypes';
+import { OPERATORS } from '../../../constants/operators';
+import { COLUMN_KEYS } from '../../../constants/columnKeys';
 
 const baseLogicalOperators = [
   { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
@@ -61,19 +60,8 @@ export const getOperatorOptions = (dataType) => {
   ];
 };
 
-export const fieldOptions = entityType.columns
-  .filter(item => item.visibleByDefault)
-  .map(et => ({
-    label: et.labelAlias,
-    value: et.name,
-    dataType: et.dataType.dataType,
-    values: et.values,
-    source: et.source,
-  }));
-
-export const getFieldOptions = (initialValue) => {
-  return initialValue.columns
-    .filter(item => item?.visibleByDefault)
+export const getFieldOptions = (entityType) => {
+  return entityType?.columns?.filter(item => item?.visibleByDefault)
     .map(
       et => ({
         label: et.labelAlias,
@@ -89,9 +77,9 @@ export const booleanOptions = [
   { label: 'AND', value: 'AND' },
 ];
 
-export const sourceTemplate = {
+export const sourceTemplate = (fieldOptions) => ({
   [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: '' },
-  [COLUMN_KEYS.FIELD]: { options: getFieldOptions(entityType), current: '' },
+  [COLUMN_KEYS.FIELD]: { options: fieldOptions, current: '' },
   [COLUMN_KEYS.OPERATOR]: { options: [], current: '' },
   [COLUMN_KEYS.VALUE]: { current: '' },
-};
+});

@@ -308,3 +308,13 @@ export const entityType = {
     },
   ],
 };
+
+export const fieldOptions = entityType.columns
+  .filter(item => item.visibleByDefault)
+  .map(et => ({
+    label: et.labelAlias,
+    value: et.name,
+    dataType: et.dataType.dataType,
+    values: et.values,
+    source: et.source,
+  }));

@@ -7,9 +7,9 @@ import { Select,
   Datepicker } from '@folio/stripes/components';
 
 import { FormattedMessage } from 'react-intl';
-import { DATA_TYPES } from '../../constants/dataTypes';
-import { COLUMN_KEYS } from '../../constants/columnKeys';
-import { OPERATORS } from '../../constants/operators';
+import { DATA_TYPES } from '../../../../constants/dataTypes';
+import { COLUMN_KEYS } from '../../../../constants/columnKeys';
+import { OPERATORS } from '../../../../constants/operators';
 import { SelectionContainer } from '../SelectionContainer/SelectionContainer';
 
 export const DataTypeInput = ({
