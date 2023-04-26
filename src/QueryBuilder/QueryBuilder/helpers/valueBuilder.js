@@ -4,7 +4,7 @@ import { OPERATORS } from '../constants/operators';
 import { ISO_FORMAT } from './timeUtils';
 
 export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
-  const dataType = fieldOptions.find(o => o.value === field)?.dataType || DATA_TYPES.BooleanType;
+  const dataType = fieldOptions?.find(o => o.value === field)?.dataType || DATA_TYPES.BooleanType;
   // add additional templates for dataTypes
   const valueMap = {
     [DATA_TYPES.StringType]: () => `"${value}"`,
