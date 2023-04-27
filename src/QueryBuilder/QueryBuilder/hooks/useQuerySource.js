@@ -9,7 +9,7 @@ const getSourceValue = (mongoQuery, entityType, fieldOptions) => {
       fieldOptions,
       booleanOptions,
     })
-    : [sourceTemplate(entityType)];
+    : [sourceTemplate(fieldOptions)];
 };
 
 export const useQuerySource = (mongoQuery, entityType) => {

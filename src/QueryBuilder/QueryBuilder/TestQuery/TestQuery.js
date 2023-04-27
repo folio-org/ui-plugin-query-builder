@@ -22,7 +22,7 @@ export const TestQuery = ({
   entityTypeId,
 }) => {
   const [visibleColumns, setVisibleColumns] = useState([]);
-  const [queryDetails, setQueryDetails] = useState();
+  const [isPreviewLoading, setIsPreviewLoading] = useState(false);
   const [columns, setColumns] = useState([]);
 
   const { testQueryData, testQuery, isTestQueryLoading } = useTestQuery({
@@ -49,10 +49,11 @@ export const TestQuery = ({
     }
   };
 
-  const isQueryInProgress = queryDetails?.status === QUERY_DETAILS_STATUSES.IN_PROGRESS;
-  const isTestQueryBtnDisabled = isTestQueryLoading || isQueryFilled || isQueryInProgress;
+  const isTestQueryBtnDisabled = isTestQueryLoading || isQueryFilled || isPreviewLoading;
 
   const handleTestQuery = async () => {
+    setIsPreviewLoading(true);
+
     await testQuery({
       entityTypeId,
       fqlQuery,
@@ -60,7 +61,6 @@ export const TestQuery = ({
   };
 
   const handleQueryRetrieved = (data) => {
-    setQueryDetails(data);
     onQueryRetrieved(data);
   };
 
@@ -126,7 +126,8 @@ export const TestQuery = ({
           showPagination={false}
           height={200}
           headlineEnd={dropdown}
-          loading={isQueryInProgress}
+          loading={isPreviewLoading}
+          onPreviewShown={() => setIsPreviewLoading(false)}
         />
       )}
     </>

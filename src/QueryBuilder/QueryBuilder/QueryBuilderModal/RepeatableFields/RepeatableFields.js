@@ -23,7 +23,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, fieldOpti
     setSource(res => ([
       ...res,
       {
-        ...sourceTemplate,
+        ...sourceTemplate(fieldOptions),
         [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: OPERATORS.AND },
       },
     ]));

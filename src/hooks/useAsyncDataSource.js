@@ -26,6 +26,8 @@ export const useAsyncDataSource = ({
     isLoading: isContentDataLoading,
     isFetching: isContentDataFetching,
     refetch,
+    isRefetching,
+    fetchStatus,
   } = useQuery(
     {
       queryKey: ['queryPluginContentData', debouncedOffset, debouncedLimit, queryParams],
@@ -53,6 +55,13 @@ export const useAsyncDataSource = ({
       },
     },
   );
+
+  console.log('***************************************************');
+  console.log('isRefetching', isRefetching);
+  console.log('isContentDataFetching', isContentDataFetching);
+  console.log('isContentDataLoading', isContentDataLoading);
+  console.log('fetchStatus', fetchStatus);
+  console.log('***************************************************');
 
   const { content: contentData, totalRecords, status } = recordsData || {};
 

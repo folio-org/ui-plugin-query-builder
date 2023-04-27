@@ -77,9 +77,9 @@ export const booleanOptions = [
   { label: 'AND', value: 'AND' },
 ];
 
-export const sourceTemplate = (type) => ({
+export const sourceTemplate = (fieldOptions) => ({
   [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: '' },
-  [COLUMN_KEYS.FIELD]: { options: getFieldOptions(type), current: '' },
+  [COLUMN_KEYS.FIELD]: { options: fieldOptions, current: '' },
   [COLUMN_KEYS.OPERATOR]: { options: [], current: '' },
   [COLUMN_KEYS.VALUE]: { current: '' },
 });

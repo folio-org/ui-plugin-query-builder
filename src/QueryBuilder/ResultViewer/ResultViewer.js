@@ -101,7 +101,7 @@ export const ResultViewer = ({
             pagingType={null}
             onNeedMoreData={changePage}
             height={height}
-            loading={isContentDataFetching || isContentDataLoading || isEntityTypeLoading || loading}
+            loading={isContentDataFetching || isContentDataLoading || isEntityTypeLoading}
           />
           {showPagination && (
             <PrevNextPagination
@@ -134,7 +134,7 @@ export const ResultViewer = ({
     </Accordion>
   );
 
-  if (isContentDataLoading) return <QueryLoader />;
+  if (loading) return <QueryLoader />;
 
   return accordionHeadline ? renderWithAccordion() : renderContent();
 };
