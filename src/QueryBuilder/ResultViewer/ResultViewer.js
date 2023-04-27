@@ -53,6 +53,7 @@ export const ResultViewer = ({
     contentQueryOptions,
   });
 
+  const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading;
   const currentRecordsCount = contentData?.length || 0;
 
   // set visible by default columns once
@@ -101,7 +102,7 @@ export const ResultViewer = ({
             pagingType={null}
             onNeedMoreData={changePage}
             height={height}
-            loading={isContentDataFetching || isContentDataLoading || isEntityTypeLoading}
+            loading={isListLoading}
           />
           {showPagination && (
             <PrevNextPagination
