@@ -131,7 +131,7 @@ export const QueryBuilderModal = ({
             entityTypeDataSource={entityTypeDataSource}
             queryDetailsDataSource={queryDetailsDataSource}
             onQueryTestSuccess={handleQueryTestSuccess}
-            isQueryFilled={!isQueryFilled}
+            isQueryFilled={isQueryFilled}
             onQueryRetrieved={handleQueryRetrieved}
             entityTypeId={entityType?.id}
           />

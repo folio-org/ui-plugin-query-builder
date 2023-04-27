@@ -23,6 +23,7 @@ export const TestQuery = ({
 }) => {
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
+  const [isTestQueryInProgress, setIsTestQueryInProgress] = useState(false);
   const [columns, setColumns] = useState([]);
 
   const { testQueryData, testQuery, isTestQueryLoading } = useTestQuery({
@@ -32,30 +33,33 @@ export const TestQuery = ({
   });
 
   const { queryId } = testQueryData || {};
+  const isTestQueryBtnDisabled = isTestQueryLoading || !isQueryFilled || isTestQueryInProgress;
+
   const refetchInterval = (query) => {
     const defaultInterval = 5000;
     const status = query?.status;
 
+    const completeExecution = () => {
+      setIsPreviewLoading(false);
+      setIsTestQueryInProgress(false);
+
+      return 0;
+    };
+
     if (status === QUERY_DETAILS_STATUSES.SUCCESS) {
       onQueryExecutionSuccess?.();
-      setIsPreviewLoading(false);
 
-      return 0;
+      return completeExecution();
     } else if (status === QUERY_DETAILS_STATUSES.FAILED) {
       onQueryExecutionFail?.();
-      setIsPreviewLoading(false);
 
-      return 0;
+      return completeExecution();
     } else {
       return defaultInterval;
     }
   };
 
   const structuralSharing = (oldData, newData) => {
-    console.log('OLD DATA', oldData);
-    console.log('NEW DATA', newData);
-    console.log('---------------------------------------------------------------');
-
     if (oldData?.status && oldData?.content && !newData?.content) {
       return {
         ...newData,
@@ -66,22 +70,25 @@ export const TestQuery = ({
     return newData;
   };
 
-  const isTestQueryBtnDisabled = isTestQueryLoading || isQueryFilled || isPreviewLoading;
-
   const handleTestQuery = async () => {
+    setIsTestQueryInProgress(true);
     setIsPreviewLoading(true);
 
     await testQuery({
       entityTypeId,
       fqlQuery,
-    });
+    }).catch(() => setIsPreviewLoading(false));
   };
 
   const handleQueryRetrieved = (data) => {
     onQueryRetrieved(data);
   };
 
-  const dropdown = (
+  const handlePreviewShown = () => {
+    setIsPreviewLoading(false);
+  };
+
+  const renderDropdown = () => (
     <Dropdown
       label={<FormattedMessage id="ui-plugin-query-builder.control.dropdown.showColumns" />}
       mame="test-query-preview-dropdown"
@@ -134,19 +141,19 @@ export const TestQuery = ({
       {queryId && (
         <ResultViewer
           onSuccess={handleQueryRetrieved}
+          onPreviewShown={handlePreviewShown}
+          onSetDefaultColumns={setColumns}
+          onSetDefaultVisibleColumns={setVisibleColumns}
           contentQueryOptions={{ refetchInterval, structuralSharing }}
-          headline={renderHeadline}
           contentDataSource={queryDetailsDataSource}
           entityTypeDataSource={entityTypeDataSource}
+          headline={renderHeadline}
+          headlineEnd={renderDropdown()}
           queryParams={{ queryId, includeContent: true }}
           visibleColumns={visibleColumns}
-          onSetDefaultVisibleColumns={setVisibleColumns}
-          onSetDefaultColumns={setColumns}
           showPagination={false}
           height={200}
-          headlineEnd={dropdown}
           isPreviewLoading={isPreviewLoading}
-          onPreviewShown={() => setIsPreviewLoading(false)}
         />
       )}
     </>
