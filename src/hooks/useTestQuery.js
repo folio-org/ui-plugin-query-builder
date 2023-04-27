@@ -1,6 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
 
 export const useTestQuery = ({ testQueryDataSource, onQueryTestSuccess, onQueryTestFail }) => {
+  const [isPreviewLoading, setIsPreviewLoading] = useState(false);
+  const [isTestQueryInProgress, setIsTestQueryInProgress] = useState(false);
+
   const {
     data: testQueryData,
     mutateAsync: testQuery,
@@ -19,5 +23,9 @@ export const useTestQuery = ({ testQueryDataSource, onQueryTestSuccess, onQueryT
     testQuery,
     resetTestQuery,
     isTestQueryLoading,
+    isPreviewLoading,
+    setIsPreviewLoading,
+    isTestQueryInProgress,
+    setIsTestQueryInProgress,
   };
 };

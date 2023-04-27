@@ -56,9 +56,17 @@ export const QueryBuilderModal = ({
   });
 
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
-  const [queryResetTrigger, setQueryResetTrigger] = useState(0);
 
-  const { queryId, testQuery, resetTestQuery, isTestQueryLoading } = useTestQuery({
+  const {
+    queryId,
+    testQuery,
+    resetTestQuery,
+    isTestQueryLoading,
+    isPreviewLoading,
+    setIsPreviewLoading,
+    isTestQueryInProgress,
+    setIsTestQueryInProgress,
+  } = useTestQuery({
     testQueryDataSource,
     onQueryTestSuccess: () => setIsQueryRetrieved(false),
   });
@@ -78,13 +86,19 @@ export const QueryBuilderModal = ({
 
   const handleCancelQuery = () => {
     if (queryId) {
+      setIsTestQueryInProgress(false);
+      setIsPreviewLoading(false);
+
       queryClient.removeQueries({ queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA] });
+
       resetTestQuery();
+
       cancelQuery({ queryId });
     }
   };
   const handleCloseModal = () => {
-    setQueryResetTrigger(prev => prev + 1);
+    handleCancelQuery();
+
     setIsModalShown(false);
   };
 
@@ -106,8 +120,10 @@ export const QueryBuilderModal = ({
   const getSaveBtnLabel = () => (saveBtnLabel || <FormattedMessage id="ui-plugin-query-builder.modal.run" />);
 
   useEffect(() => {
-    handleCancelQuery();
-  }, [queryResetTrigger, source]);
+    if (isTestQueryInProgress) {
+      handleCancelQuery();
+    }
+  }, [source, isTestQueryInProgress]);
 
   const renderFooter = () => (
     <ModalFooter>
@@ -157,7 +173,6 @@ export const QueryBuilderModal = ({
           <TestQuery
             queryId={queryId}
             testQuery={testQuery}
-            queryResetTrigger={queryResetTrigger}
             isTestQueryLoading={isTestQueryLoading}
             fqlQuery={fqlQuery}
             testQueryDataSource={testQueryDataSource}
@@ -168,6 +183,10 @@ export const QueryBuilderModal = ({
             entityTypeId={entityType?.id}
             onQueryExecutionFail={onQueryExecutionFail}
             onQueryExecutionSuccess={onQueryExecutionSuccess}
+            isPreviewLoading={isPreviewLoading}
+            setIsPreviewLoading={setIsPreviewLoading}
+            isTestQueryInProgress={isTestQueryInProgress}
+            setIsTestQueryInProgress={setIsTestQueryInProgress}
           />
         </>
       )}

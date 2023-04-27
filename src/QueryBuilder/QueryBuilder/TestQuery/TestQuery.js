@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -11,7 +11,6 @@ import { ColumnsDropdown } from './ColumnsDropdown/ColumnsDropdown';
 export const TestQuery = ({
   queryId,
   testQuery,
-  queryResetTrigger,
   isTestQueryLoading,
   isQueryFilled,
   entityTypeDataSource,
@@ -21,14 +20,16 @@ export const TestQuery = ({
   onQueryRetrieved,
   fqlQuery,
   entityTypeId,
+  isPreviewLoading,
+  setIsPreviewLoading,
+  isTestQueryInProgress,
+  setIsTestQueryInProgress,
 }) => {
   const queryClient = useQueryClient();
 
   const [columns, setColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [includeContent, setIncludeContent] = useState(true);
-  const [isPreviewLoading, setIsPreviewLoading] = useState(false);
-  const [isTestQueryInProgress, setIsTestQueryInProgress] = useState(false);
 
   const isTestQueryBtnDisabled = isTestQueryLoading || !isQueryFilled || isTestQueryInProgress;
 
@@ -98,11 +99,6 @@ export const TestQuery = ({
 
   const handleColumnChange = ({ values }) => setVisibleColumns(values);
 
-  useEffect(() => {
-    setIsPreviewLoading(false);
-    setIsTestQueryInProgress(false);
-  }, [queryResetTrigger]);
-
   const renderDropdown = ({ currentRecordsCount }) => !!currentRecordsCount && (
     <ColumnsDropdown
       columns={columns}
@@ -164,11 +160,14 @@ TestQuery.propTypes = {
   entityTypeDataSource: PropTypes.func.isRequired,
   queryDetailsDataSource: PropTypes.func.isRequired,
   entityTypeId: PropTypes.string,
-  queryResetTrigger: PropTypes.string,
   isQueryFilled: PropTypes.bool,
   onQueryRetrieved: PropTypes.func,
   onQueryExecutionSuccess: PropTypes.func,
   onQueryExecutionFail: PropTypes.func,
   testQuery: PropTypes.func,
   isTestQueryLoading: PropTypes.bool,
+  isPreviewLoading: PropTypes.bool,
+  setIsPreviewLoading: PropTypes.func,
+  isTestQueryInProgress: PropTypes.bool,
+  setIsTestQueryInProgress: PropTypes.func,
 };
