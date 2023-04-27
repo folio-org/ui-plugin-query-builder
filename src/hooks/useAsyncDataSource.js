@@ -28,7 +28,7 @@ export const useAsyncDataSource = ({
     refetch,
   } = useQuery(
     {
-      queryKey: ['queryPluginContentData', debouncedOffset, debouncedLimit, queryParams],
+      queryKey: ['queryPluginContentData', debouncedOffset, debouncedLimit],
       queryFn: () => contentDataSource({
         offset: debouncedOffset,
         limit: debouncedLimit,
