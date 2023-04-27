@@ -1,6 +1,6 @@
-import { COLUMN_KEYS } from '../constants/columnKeys';
+import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { valueBuilder } from './valueBuilder';
-import { OPERATORS } from '../constants/operators';
+import { OPERATORS } from '../../../constants/operators';
 import { getOperatorOptions } from './selectOptions';
 
 export const getQueryStr = (rows, fieldOptions) => {

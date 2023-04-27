@@ -1,6 +1,6 @@
-import { DATA_TYPES } from '../constants/dataTypes';
-import { OPERATORS } from '../constants/operators';
-import { COLUMN_KEYS } from '../constants/columnKeys';
+import { DATA_TYPES } from '../../../constants/dataTypes';
+import { OPERATORS } from '../../../constants/operators';
+import { COLUMN_KEYS } from '../../../constants/columnKeys';
 
 const baseLogicalOperators = [
   { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },

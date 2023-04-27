@@ -3,9 +3,10 @@ import { Button, Dropdown, DropdownMenu, Loading } from '@folio/stripes/componen
 import { FormattedMessage } from 'react-intl';
 import { CheckboxFilter } from '@folio/stripes/smart-components';
 import PropTypes from 'prop-types';
+import { useQueryClient } from '@tanstack/react-query';
 import { ResultViewer } from '../../ResultViewer';
-import { useTestQuery } from '../hooks/useTestQuery';
-import { QUERY_DETAILS_STATUSES } from '../constants/query';
+import { useTestQuery } from '../../../hooks/useTestQuery';
+import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
 import css from '../../QueryBuilder.css';
 
 export const TestQuery = ({
@@ -21,6 +22,8 @@ export const TestQuery = ({
   fqlQuery,
   entityTypeId,
 }) => {
+  const queryClient = useQueryClient();
+
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
   const [isTestQueryInProgress, setIsTestQueryInProgress] = useState(false);
@@ -72,6 +75,8 @@ export const TestQuery = ({
   };
 
   const handleTestQuery = async () => {
+    queryClient.removeQueries({ queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA] });
+
     setIncludeContent(true);
     setIsPreviewLoading(true);
     setIsTestQueryInProgress(true);
@@ -154,7 +159,11 @@ export const TestQuery = ({
           entityTypeDataSource={entityTypeDataSource}
           headline={renderHeadline}
           headlineEnd={renderDropdown}
-          contentQueryOptions={{ refetchInterval, structuralSharing }}
+          contentQueryOptions={{
+            refetchInterval,
+            structuralSharing,
+            keepPreviousData: false,
+          }}
           contentQueryKeys={[queryId]}
           queryParams={{ queryId, includeContent }}
           visibleColumns={visibleColumns}

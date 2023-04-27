@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getQueryStr, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from '../helpers/query';
-import { booleanOptions, getFieldOptions, sourceTemplate } from '../helpers/selectOptions';
+import { getQueryStr, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from '../QueryBuilder/QueryBuilder/helpers/query';
+import { booleanOptions, getFieldOptions, sourceTemplate } from '../QueryBuilder/QueryBuilder/helpers/selectOptions';
 
 const getSourceValue = (mongoQuery, entityType, fieldOptions) => {
   return mongoQuery

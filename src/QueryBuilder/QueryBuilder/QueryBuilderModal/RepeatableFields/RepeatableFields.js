@@ -12,9 +12,9 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import css from '../QueryBuilderModal.css';
-import { COLUMN_KEYS } from '../../constants/columnKeys';
+import { COLUMN_KEYS } from '../../../../constants/columnKeys';
 import { booleanOptions, getOperatorOptions, sourceTemplate } from '../../helpers/selectOptions';
-import { OPERATORS } from '../../constants/operators';
+import { OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 
 export const RepeatableFields = ({ source, setSource, getParamsSource, fieldOptions }) => {

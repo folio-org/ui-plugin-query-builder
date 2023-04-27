@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEYS } from '../constants/query';
 
 export const useEntityType = ({ entityTypeDataSource, sharedOptions = {} }) => {
   const {
@@ -6,7 +7,7 @@ export const useEntityType = ({ entityTypeDataSource, sharedOptions = {} }) => {
     isLoading: isEntityTypeLoading,
     isFetchedAfterMount: isContentTypeFetchedAfterMount,
   } = useQuery({
-    queryKey: ['queryPluginEntityType'],
+    queryKey: [QUERY_KEYS.QUERY_PLUGIN_ENTITY_TYPE],
     queryFn: entityTypeDataSource,
     ...sharedOptions,
   });

@@ -12,10 +12,10 @@ import {
 import css from './QueryBuilderModal.css';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
-import { useRunQuery } from '../hooks/useRunQuery';
-import { useQuerySource } from '../hooks/useQuerySource';
+import { useRunQuery } from '../../../hooks/useRunQuery';
+import { useQuerySource } from '../../../hooks/useQuerySource';
 import { queryBuilderModalPropTypes } from '../../propTypes';
-import { QUERY_DETAILS_STATUSES } from '../constants/query';
+import { QUERY_DETAILS_STATUSES } from '../../../constants/query';
 import { useEntityType } from '../../../hooks/useEntityType';
 import { getFieldOptions } from '../helpers/selectOptions';
 

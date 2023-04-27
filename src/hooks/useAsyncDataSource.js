@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getTableMetadata } from '../QueryBuilder/ResultViewer/helpers';
 import { useDebounce } from './useDebounce';
 import { useEntityType } from './useEntityType';
+import { QUERY_KEYS } from '../constants/query';
 
 export const useAsyncDataSource = ({
   contentDataSource,
@@ -29,7 +30,7 @@ export const useAsyncDataSource = ({
     refetch,
   } = useQuery(
     {
-      queryKey: ['queryPluginContentData', debouncedOffset, debouncedLimit, ...contentQueryKeys],
+      queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA, debouncedOffset, debouncedLimit, ...contentQueryKeys],
       queryFn: () => contentDataSource({
         offset: debouncedOffset,
         limit: debouncedLimit,

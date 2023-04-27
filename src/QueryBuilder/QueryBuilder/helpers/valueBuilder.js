@@ -1,6 +1,6 @@
 import moment from 'moment';
-import { DATA_TYPES } from '../constants/dataTypes';
-import { OPERATORS } from '../constants/operators';
+import { DATA_TYPES } from '../../../constants/dataTypes';
+import { OPERATORS } from '../../../constants/operators';
 import { ISO_FORMAT } from './timeUtils';
 
 export const valueBuilder = ({ value, field, operator, fieldOptions }) => {

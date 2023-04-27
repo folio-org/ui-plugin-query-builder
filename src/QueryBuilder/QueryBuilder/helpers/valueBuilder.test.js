@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { valueBuilder } from './valueBuilder';
-import { OPERATORS } from '../constants/operators';
+import { OPERATORS } from '../../../constants/operators';
 import { ISO_FORMAT } from './timeUtils';
 
 describe('valueBuilder', () => {
