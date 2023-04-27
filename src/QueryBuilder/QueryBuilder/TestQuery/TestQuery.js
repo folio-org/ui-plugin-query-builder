@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Button, Dropdown, DropdownMenu, Loading } from '@folio/stripes/components';
+import { Button } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
-import { CheckboxFilter } from '@folio/stripes/smart-components';
 import PropTypes from 'prop-types';
 import { useQueryClient } from '@tanstack/react-query';
 import { ResultViewer } from '../../ResultViewer';
 import { useTestQuery } from '../../../hooks/useTestQuery';
 import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
-import css from '../../QueryBuilder.css';
+import { ViewerHeadline } from './ViewerHeadline/ViewerHeadline';
+import { ColumnsDropdown } from './ColumnsDropdown/ColumnsDropdown';
 
 export const TestQuery = ({
   isQueryFilled,
@@ -24,11 +24,11 @@ export const TestQuery = ({
 }) => {
   const queryClient = useQueryClient();
 
+  const [columns, setColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
   const [isTestQueryInProgress, setIsTestQueryInProgress] = useState(false);
   const [includeContent, setIncludeContent] = useState(true);
-  const [columns, setColumns] = useState([]);
 
   const { testQueryData, testQuery, isTestQueryLoading } = useTestQuery({
     testQueryDataSource,
@@ -99,23 +99,14 @@ export const TestQuery = ({
     setIsPreviewLoading(false);
   };
 
+  const handleColumnChange = ({ values }) => setVisibleColumns(values);
+
   const renderDropdown = ({ currentRecordsCount }) => !!currentRecordsCount && (
-    <Dropdown
-      label={<FormattedMessage id="ui-plugin-query-builder.control.dropdown.showColumns" />}
-      mame="test-query-preview-dropdown"
-    >
-      <DropdownMenu
-        role="menu"
-        overrideStyle={{ maxHeight: 400 }}
-      >
-        <CheckboxFilter
-          dataOptions={columns}
-          selectedValues={visibleColumns}
-          onChange={({ values }) => setVisibleColumns(values)}
-          name="name"
-        />
-      </DropdownMenu>
-    </Dropdown>
+    <ColumnsDropdown
+      columns={columns}
+      visibleColumns={visibleColumns}
+      onColumnChange={handleColumnChange}
+    />
   );
 
   // eslint-disable-next-line react/prop-types
@@ -124,22 +115,11 @@ export const TestQuery = ({
     const limit = currentRecordsCount < defaultLimit ? currentRecordsCount : defaultLimit;
 
     return (
-      <>
-        <FormattedMessage
-          id="ui-plugin-query-builder.modal.preview.title"
-          values={{
-            total,
-            limit,
-          }}
-        />
-        {' '}
-        {isInProgress && (
-          <span className={css.AccordionHeaderLoading}>
-            <FormattedMessage id="ui-plugin-query-builder.modal.preview.countingInProgress" />
-            <Loading />
-          </span>
-        )}
-      </>
+      <ViewerHeadline
+        total={total}
+        limit={limit}
+        isInProgress={isInProgress}
+      />
     );
   };
 

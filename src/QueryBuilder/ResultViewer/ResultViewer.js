@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row, Accordion, MultiColumnList, Headline } from '@folio/stripes/components';
 import { PrevNextPagination } from '@folio/stripes-acq-components';
 import { QueryLoader } from './QueryLoader';
 import { useAsyncDataSource } from '../../hooks/useAsyncDataSource';
 import { usePagination } from '../../hooks/usePagination';
+import { useViewerRefresh } from '../../hooks/useViewerRefresh';
+import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
 
 export const ResultViewer = ({
   showPagination = true,
@@ -59,36 +61,35 @@ export const ResultViewer = ({
   const currentRecordsCount = contentData?.length || 0;
 
   // set visible by default columns once
-  useEffect(() => {
-    if (isContentTypeFetchedAfterMount) {
-      onSetDefaultColumns?.(defaultColumns);
-      onSetDefaultVisibleColumns?.(defaultVisibleColumns);
-    }
-  }, [isContentTypeFetchedAfterMount]);
+  useViewerCallbacks({
+    isContentTypeFetchedAfterMount,
+    onSetDefaultColumns,
+    defaultColumns,
+    onSetDefaultVisibleColumns,
+    defaultVisibleColumns,
+    currentRecordsCount,
+    onPreviewShown,
+    defaultLimit,
+  });
 
   // refresh functionality
-  useEffect(() => {
-    if (refreshTrigger) {
-      if (offset === defaultOffset) {
-        refetch();
-      } else {
-        changePage({ offset: defaultOffset, limit: defaultLimit });
-      }
-    }
-  }, [refreshTrigger]);
-
-  useEffect(() => {
-    if (currentRecordsCount) onPreviewShown?.({ currentRecordsCount, defaultLimit });
-  }, [currentRecordsCount]);
+  useViewerRefresh({
+    refetch,
+    refreshTrigger,
+    changePage,
+    defaultLimit,
+    defaultOffset,
+    offset,
+  });
 
   const renderHeader = () => (
     <Row between="xs">
       <Col xs={10}>
         <Headline size="large" margin="none" tag="h3">
-          {headline({ totalRecords, defaultLimit, status, currentRecordsCount })}
+          {headline?.({ totalRecords, defaultLimit, status, currentRecordsCount })}
         </Headline>
       </Col>
-      {headlineEnd({ currentRecordsCount, status })}
+      {headlineEnd?.({ currentRecordsCount, status })}
     </Row>
   );
 

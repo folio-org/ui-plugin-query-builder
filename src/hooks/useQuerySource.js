@@ -12,7 +12,7 @@ const getSourceValue = (mongoQuery, entityType, fieldOptions) => {
     : [sourceTemplate(fieldOptions)];
 };
 
-export const useQuerySource = (mongoQuery, entityType) => {
+export const useQuerySource = ({ mongoQuery, entityType }) => {
   const fieldOptions = getFieldOptions(entityType);
   const [source, setSource] = useState(getSourceValue(mongoQuery, entityType, fieldOptions));
 

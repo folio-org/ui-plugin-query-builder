@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
   Modal,
@@ -9,15 +9,17 @@ import {
   Row,
 } from '@folio/stripes/components';
 
+import { useQueryClient } from '@tanstack/react-query';
 import css from './QueryBuilderModal.css';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
 import { useRunQuery } from '../../../hooks/useRunQuery';
 import { useQuerySource } from '../../../hooks/useQuerySource';
 import { queryBuilderModalPropTypes } from '../../propTypes';
-import { QUERY_DETAILS_STATUSES } from '../../../constants/query';
+import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
 import { useEntityType } from '../../../hooks/useEntityType';
 import { getFieldOptions } from '../helpers/selectOptions';
+import { useCancelQuery } from '../../../hooks/useCancelQuery';
 
 export const QueryBuilderModal = ({
   isOpen = true,
@@ -27,27 +29,38 @@ export const QueryBuilderModal = ({
   entityTypeDataSource,
   runQueryDataSource,
   testQueryDataSource,
+  cancelQueryDataSource,
   queryDetailsDataSource,
   onQueryRunSuccess,
   onQueryRunFail,
+  onQueryExecutionSuccess,
+  onQueryExecutionFail,
   getParamsSource,
 }) => {
+  const queryClient = useQueryClient();
+
+  const [testedQueryId, setTestedQueryId] = useState(null);
   const { entityType } = useEntityType({ entityTypeDataSource });
+  const { cancelQuery } = useCancelQuery({ cancelQueryDataSource });
+
   const {
     source,
     setSource,
     fqlQuery,
     isQueryFilled,
     queryStr,
-  } = useQuerySource(initialValues, entityType);
+  } = useQuerySource({
+    mongoQuery: initialValues,
+    entityType,
+  });
+
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
-  const [testedQueryId, setTestedQueryId] = useState(false);
 
   const { runQuery, isRunQueryLoading } = useRunQuery({
+    queryId: testedQueryId,
     runQueryDataSource,
     onQueryRunSuccess,
     onQueryRunFail,
-    testedQueryId,
     fqlQuery,
   });
 
@@ -56,15 +69,28 @@ export const QueryBuilderModal = ({
     setSource(src);
   };
 
-  const handleCancel = () => {
+  const handleCancelQuery = async () => {
+    if (testedQueryId) {
+      await cancelQuery({ queryId: testedQueryId });
+
+      queryClient.removeQueries({ queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA] });
+
+      setTestedQueryId(null);
+    }
+  };
+  const handleCancelModal = async () => {
+    await handleCancelQuery();
+
     setIsModalShown(false);
   };
 
-  const handleRun = () => {
-    runQuery({
+  const handleRun = async () => {
+    await runQuery({
       queryId: testedQueryId,
       fqlQuery,
-    }).then(handleCancel);
+    });
+
+    await handleCancelModal();
   };
 
   const handleQueryTestSuccess = ({ queryId }) => {
@@ -80,6 +106,10 @@ export const QueryBuilderModal = ({
 
   const getSaveBtnLabel = () => (saveBtnLabel || <FormattedMessage id="ui-plugin-query-builder.modal.run" />);
 
+  useEffect(() => {
+    handleCancelQuery();
+  }, [source]);
+
   const renderFooter = () => (
     <ModalFooter>
       <Button
@@ -90,7 +120,7 @@ export const QueryBuilderModal = ({
         {getSaveBtnLabel()}
       </Button>
       <Button
-        onClick={handleCancel}
+        onClick={handleCancelModal}
       >
         <FormattedMessage id="ui-plugin-query-builder.modal.cancel" />
       </Button>
@@ -134,6 +164,8 @@ export const QueryBuilderModal = ({
             isQueryFilled={isQueryFilled}
             onQueryRetrieved={handleQueryRetrieved}
             entityTypeId={entityType?.id}
+            onQueryExecutionFail={onQueryExecutionFail}
+            onQueryExecutionSuccess={onQueryExecutionSuccess}
           />
         </>
       )}
