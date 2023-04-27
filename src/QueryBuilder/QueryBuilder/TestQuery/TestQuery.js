@@ -61,10 +61,6 @@ export const TestQuery = ({
   };
 
   const structuralSharing = (oldData, newData) => {
-    console.log('OLD DATA', oldData);
-    console.log('NEW DATA', newData);
-    console.log('---------------------------------------------------------------');
-
     if (oldData?.status && oldData?.content && !newData?.content) {
       return {
         ...newData,
@@ -76,8 +72,9 @@ export const TestQuery = ({
   };
 
   const handleTestQuery = async () => {
-    setIsTestQueryInProgress(true);
+    setIncludeContent(true);
     setIsPreviewLoading(true);
+    setIsTestQueryInProgress(true);
 
     await testQuery({
       entityTypeId,
@@ -89,7 +86,11 @@ export const TestQuery = ({
     onQueryRetrieved(data);
   };
 
-  const handlePreviewShown = () => {
+  const handlePreviewShown = ({ currentRecordsCount, defaultLimit }) => {
+    if (currentRecordsCount >= defaultLimit) {
+      setIncludeContent(false);
+    }
+
     setIsPreviewLoading(false);
   };
 
@@ -139,7 +140,6 @@ export const TestQuery = ({
 
   return (
     <>
-      <Button onClick={() => setIncludeContent(false)}>Set false</Button>
       <Button disabled={isTestQueryBtnDisabled} onClick={handleTestQuery}>
         <FormattedMessage id="ui-plugin-query-builder.modal.test" />
       </Button>
