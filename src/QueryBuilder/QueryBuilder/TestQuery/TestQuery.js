@@ -143,7 +143,7 @@ export const TestQuery = ({
           showPagination={false}
           height={200}
           headlineEnd={dropdown}
-          loading={isPreviewLoading}
+          isPreviewLoading={isPreviewLoading}
           onPreviewShown={() => setIsPreviewLoading(false)}
         />
       )}
