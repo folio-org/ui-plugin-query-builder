@@ -24,6 +24,7 @@ export const TestQuery = ({
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
   const [isTestQueryInProgress, setIsTestQueryInProgress] = useState(false);
+  const [includeContent, setIncludeContent] = useState(true);
   const [columns, setColumns] = useState([]);
 
   const { testQueryData, testQuery, isTestQueryLoading } = useTestQuery({
@@ -60,6 +61,10 @@ export const TestQuery = ({
   };
 
   const structuralSharing = (oldData, newData) => {
+    console.log('OLD DATA', oldData);
+    console.log('NEW DATA', newData);
+    console.log('---------------------------------------------------------------');
+
     if (oldData?.status && oldData?.content && !newData?.content) {
       return {
         ...newData,
@@ -88,7 +93,7 @@ export const TestQuery = ({
     setIsPreviewLoading(false);
   };
 
-  const renderDropdown = () => (
+  const renderDropdown = ({ currentRecordsCount }) => !!currentRecordsCount && (
     <Dropdown
       label={<FormattedMessage id="ui-plugin-query-builder.control.dropdown.showColumns" />}
       mame="test-query-preview-dropdown"
@@ -134,6 +139,7 @@ export const TestQuery = ({
 
   return (
     <>
+      <Button onClick={() => setIncludeContent(false)}>Set false</Button>
       <Button disabled={isTestQueryBtnDisabled} onClick={handleTestQuery}>
         <FormattedMessage id="ui-plugin-query-builder.modal.test" />
       </Button>
@@ -148,8 +154,8 @@ export const TestQuery = ({
           contentDataSource={queryDetailsDataSource}
           entityTypeDataSource={entityTypeDataSource}
           headline={renderHeadline}
-          headlineEnd={renderDropdown()}
-          queryParams={{ queryId, includeContent: true }}
+          headlineEnd={renderDropdown}
+          queryParams={{ queryId, includeContent }}
           visibleColumns={visibleColumns}
           showPagination={false}
           height={200}

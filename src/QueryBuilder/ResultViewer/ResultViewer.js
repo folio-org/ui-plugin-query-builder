@@ -76,7 +76,7 @@ export const ResultViewer = ({
   }, [refreshTrigger]);
 
   useEffect(() => {
-    if (currentRecordsCount) onPreviewShown?.();
+    if (currentRecordsCount) onPreviewShown?.({ currentRecordsCount, defaultLimit });
   }, [currentRecordsCount]);
 
   const renderHeader = () => (
@@ -86,7 +86,7 @@ export const ResultViewer = ({
           {headline({ totalRecords, defaultLimit, status, currentRecordsCount })}
         </Headline>
       </Col>
-      {headlineEnd}
+      {headlineEnd({ currentRecordsCount, status })}
     </Row>
   );
 
