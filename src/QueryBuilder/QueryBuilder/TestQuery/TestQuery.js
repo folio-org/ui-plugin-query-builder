@@ -49,6 +49,21 @@ export const TestQuery = ({
     }
   };
 
+  const structuralSharing = (oldData, newData) => {
+    console.log('OLD DATA', oldData);
+    console.log('NEW DATA', newData);
+    console.log('---------------------------------------------------------------');
+
+    if (oldData?.status && oldData?.content && !newData?.content) {
+      return {
+        ...newData,
+        content: oldData.content,
+      };
+    }
+
+    return newData;
+  };
+
   const isTestQueryBtnDisabled = isTestQueryLoading || isQueryFilled || isPreviewLoading;
 
   const handleTestQuery = async () => {
@@ -117,7 +132,7 @@ export const TestQuery = ({
       {queryId && (
         <ResultViewer
           onSuccess={handleQueryRetrieved}
-          refetchInterval={refetchInterval}
+          contentQueryOptions={{ refetchInterval, structuralSharing }}
           headline={renderHeadline}
           contentDataSource={queryDetailsDataSource}
           entityTypeDataSource={entityTypeDataSource}

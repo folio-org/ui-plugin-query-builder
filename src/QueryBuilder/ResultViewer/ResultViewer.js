@@ -11,6 +11,7 @@ export const ResultViewer = ({
   defaultLimit = 100,
   defaultOffset = 0,
   queryParams = {},
+  contentQueryOptions = {},
   contentDataSource,
   entityTypeDataSource,
   headline,
@@ -23,8 +24,7 @@ export const ResultViewer = ({
   refreshTrigger,
   onSuccess,
   onPreviewShown,
-  refetchInterval,
-  loading,
+  isPreviewLoading,
 }) => {
   const { changePage, limit, offset } = usePagination({
     defaultLimit,
@@ -49,8 +49,8 @@ export const ResultViewer = ({
     offset,
     limit,
     onSuccess,
-    refetchInterval,
     queryParams,
+    contentQueryOptions,
   });
 
   const currentRecordsCount = contentData?.length || 0;
@@ -75,7 +75,7 @@ export const ResultViewer = ({
   }, [refreshTrigger]);
 
   useEffect(() => {
-    if (currentRecordsCount >= limit) onPreviewShown?.();
+    if (currentRecordsCount) onPreviewShown?.();
   }, [currentRecordsCount]);
 
   const renderHeader = () => (
@@ -134,7 +134,7 @@ export const ResultViewer = ({
     </Accordion>
   );
 
-  if (loading) return <QueryLoader />;
+  if (isPreviewLoading) return <QueryLoader />;
 
   return accordionHeadline ? renderWithAccordion() : renderContent();
 };
@@ -158,6 +158,6 @@ ResultViewer.propTypes = {
   onSuccess: PropTypes.func,
   onPreviewShown: PropTypes.func,
   queryParams: PropTypes.object,
-  loading: PropTypes.bool,
-  refetchInterval: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+  isPreviewLoading: PropTypes.bool,
+  contentQueryOptions: PropTypes.object,
 };

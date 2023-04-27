@@ -10,7 +10,7 @@ export const useAsyncDataSource = ({
   limit,
   queryParams,
   onSuccess,
-  refetchInterval,
+  contentQueryOptions,
 }) => {
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
 
@@ -26,8 +26,6 @@ export const useAsyncDataSource = ({
     isLoading: isContentDataLoading,
     isFetching: isContentDataFetching,
     refetch,
-    isRefetching,
-    fetchStatus,
   } = useQuery(
     {
       queryKey: ['queryPluginContentData', debouncedOffset, debouncedLimit, queryParams],
@@ -36,32 +34,11 @@ export const useAsyncDataSource = ({
         limit: debouncedLimit,
         ...queryParams,
       }),
-      ...sharedOptions,
       onSuccess,
-      refetchInterval,
-      structuralSharing: (oldData, newData) => {
-        console.log('OLD DATA', oldData);
-        console.log('NEW DATA', newData);
-        console.log('---------------------------------------------------------------');
-
-        if (oldData?.status && oldData?.content && !newData?.content) {
-          return {
-            ...newData,
-            content: oldData.content,
-          };
-        }
-
-        return newData;
-      },
+      ...sharedOptions,
+      ...contentQueryOptions,
     },
   );
-
-  console.log('***************************************************');
-  console.log('isRefetching', isRefetching);
-  console.log('isContentDataFetching', isContentDataFetching);
-  console.log('isContentDataLoading', isContentDataLoading);
-  console.log('fetchStatus', fetchStatus);
-  console.log('***************************************************');
 
   const { content: contentData, totalRecords, status } = recordsData || {};
 
