@@ -38,10 +38,12 @@ export const TestQuery = ({
 
     if (status === QUERY_DETAILS_STATUSES.SUCCESS) {
       onQueryExecutionSuccess?.();
+      setIsPreviewLoading(false);
 
       return 0;
     } else if (status === QUERY_DETAILS_STATUSES.FAILED) {
       onQueryExecutionFail?.();
+      setIsPreviewLoading(false);
 
       return 0;
     } else {
