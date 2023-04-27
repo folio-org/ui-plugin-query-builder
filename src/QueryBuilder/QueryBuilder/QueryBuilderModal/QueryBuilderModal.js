@@ -20,6 +20,7 @@ import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
 import { useEntityType } from '../../../hooks/useEntityType';
 import { getFieldOptions } from '../helpers/selectOptions';
 import { useCancelQuery } from '../../../hooks/useCancelQuery';
+import { useTestQuery } from '../../../hooks/useTestQuery';
 
 export const QueryBuilderModal = ({
   isOpen = true,
@@ -39,8 +40,8 @@ export const QueryBuilderModal = ({
 }) => {
   const queryClient = useQueryClient();
 
-  const [testedQueryId, setTestedQueryId] = useState(null);
   const { entityType } = useEntityType({ entityTypeDataSource });
+
   const { cancelQuery } = useCancelQuery({ cancelQueryDataSource });
 
   const {
@@ -56,8 +57,13 @@ export const QueryBuilderModal = ({
 
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
 
+  const { queryId, testQuery, resetTestQuery, isTestQueryLoading } = useTestQuery({
+    testQueryDataSource,
+    onQueryTestSuccess: () => setIsQueryRetrieved(false),
+  });
+
   const { runQuery, isRunQueryLoading } = useRunQuery({
-    queryId: testedQueryId,
+    queryId,
     runQueryDataSource,
     onQueryRunSuccess,
     onQueryRunFail,
@@ -70,12 +76,12 @@ export const QueryBuilderModal = ({
   };
 
   const handleCancelQuery = async () => {
-    if (testedQueryId) {
-      await cancelQuery({ queryId: testedQueryId });
+    if (queryId) {
+      await cancelQuery({ queryId });
 
       queryClient.removeQueries({ queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA] });
 
-      setTestedQueryId(null);
+      resetTestQuery();
     }
   };
   const handleCancelModal = async () => {
@@ -86,16 +92,11 @@ export const QueryBuilderModal = ({
 
   const handleRun = async () => {
     await runQuery({
-      queryId: testedQueryId,
+      queryId,
       fqlQuery,
     });
 
     await handleCancelModal();
-  };
-
-  const handleQueryTestSuccess = ({ queryId }) => {
-    setTestedQueryId(queryId);
-    setIsQueryRetrieved(false);
   };
 
   const handleQueryRetrieved = (data) => {
@@ -156,11 +157,13 @@ export const QueryBuilderModal = ({
             fieldOptions={getFieldOptions(entityType)}
           />
           <TestQuery
+            queryId={queryId}
+            testQuery={testQuery}
+            isTestQueryLoading={isTestQueryLoading}
             fqlQuery={fqlQuery}
             testQueryDataSource={testQueryDataSource}
             entityTypeDataSource={entityTypeDataSource}
             queryDetailsDataSource={queryDetailsDataSource}
-            onQueryTestSuccess={handleQueryTestSuccess}
             isQueryFilled={isQueryFilled}
             onQueryRetrieved={handleQueryRetrieved}
             entityTypeId={entityType?.id}

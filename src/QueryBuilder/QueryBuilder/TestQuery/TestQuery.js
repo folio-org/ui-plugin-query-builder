@@ -4,18 +4,17 @@ import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { useQueryClient } from '@tanstack/react-query';
 import { ResultViewer } from '../../ResultViewer';
-import { useTestQuery } from '../../../hooks/useTestQuery';
 import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
 import { ViewerHeadline } from './ViewerHeadline/ViewerHeadline';
 import { ColumnsDropdown } from './ColumnsDropdown/ColumnsDropdown';
 
 export const TestQuery = ({
+  queryId,
+  testQuery,
+  isTestQueryLoading,
   isQueryFilled,
   entityTypeDataSource,
-  testQueryDataSource,
   queryDetailsDataSource,
-  onQueryTestSuccess,
-  onQueryTestFail,
   onQueryExecutionSuccess,
   onQueryExecutionFail,
   onQueryRetrieved,
@@ -30,13 +29,6 @@ export const TestQuery = ({
   const [isTestQueryInProgress, setIsTestQueryInProgress] = useState(false);
   const [includeContent, setIncludeContent] = useState(true);
 
-  const { testQueryData, testQuery, isTestQueryLoading } = useTestQuery({
-    testQueryDataSource,
-    onQueryTestSuccess,
-    onQueryTestFail,
-  });
-
-  const { queryId } = testQueryData || {};
   const isTestQueryBtnDisabled = isTestQueryLoading || !isQueryFilled || isTestQueryInProgress;
 
   const refetchInterval = (query) => {
@@ -157,15 +149,15 @@ export const TestQuery = ({
 };
 
 TestQuery.propTypes = {
+  queryId: PropTypes.object.isRequired,
   fqlQuery: PropTypes.object.isRequired,
   entityTypeDataSource: PropTypes.func.isRequired,
-  testQueryDataSource: PropTypes.func.isRequired,
   queryDetailsDataSource: PropTypes.func.isRequired,
   entityTypeId: PropTypes.string,
   isQueryFilled: PropTypes.bool,
   onQueryRetrieved: PropTypes.func,
-  onQueryTestSuccess: PropTypes.func,
-  onQueryTestFail: PropTypes.func,
   onQueryExecutionSuccess: PropTypes.func,
   onQueryExecutionFail: PropTypes.func,
+  testQuery: PropTypes.func,
+  isTestQueryLoading: PropTypes.bool,
 };
