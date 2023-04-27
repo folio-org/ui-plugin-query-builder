@@ -12,6 +12,7 @@ export const ResultViewer = ({
   defaultOffset = 0,
   queryParams = {},
   contentQueryOptions = {},
+  contentQueryKeys = [],
   contentDataSource,
   entityTypeDataSource,
   headline,
@@ -51,6 +52,7 @@ export const ResultViewer = ({
     onSuccess,
     queryParams,
     contentQueryOptions,
+    contentQueryKeys,
   });
 
   const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading;
@@ -161,4 +163,5 @@ ResultViewer.propTypes = {
   queryParams: PropTypes.object,
   isPreviewLoading: PropTypes.bool,
   contentQueryOptions: PropTypes.object,
+  contentQueryKeys: PropTypes.arrayOf(PropTypes.string),
 };

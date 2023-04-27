@@ -11,6 +11,7 @@ export const useAsyncDataSource = ({
   queryParams,
   onSuccess,
   contentQueryOptions,
+  contentQueryKeys,
 }) => {
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
 
@@ -28,7 +29,7 @@ export const useAsyncDataSource = ({
     refetch,
   } = useQuery(
     {
-      queryKey: ['queryPluginContentData', debouncedOffset, debouncedLimit],
+      queryKey: ['queryPluginContentData', debouncedOffset, debouncedLimit, ...contentQueryKeys],
       queryFn: () => contentDataSource({
         offset: debouncedOffset,
         limit: debouncedLimit,
