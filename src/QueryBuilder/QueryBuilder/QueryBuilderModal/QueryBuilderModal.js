@@ -56,6 +56,7 @@ export const QueryBuilderModal = ({
   });
 
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
+  const [queryResetTrigger, setQueryResetTrigger] = useState(0);
 
   const { queryId, testQuery, resetTestQuery, isTestQueryLoading } = useTestQuery({
     testQueryDataSource,
@@ -75,18 +76,15 @@ export const QueryBuilderModal = ({
     setSource(src);
   };
 
-  const handleCancelQuery = async () => {
+  const handleCancelQuery = () => {
     if (queryId) {
-      await cancelQuery({ queryId });
-
       queryClient.removeQueries({ queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA] });
-
       resetTestQuery();
+      cancelQuery({ queryId });
     }
   };
-  const handleCancelModal = async () => {
-    await handleCancelQuery();
-
+  const handleCloseModal = () => {
+    setQueryResetTrigger(prev => prev + 1);
     setIsModalShown(false);
   };
 
@@ -96,7 +94,7 @@ export const QueryBuilderModal = ({
       fqlQuery,
     });
 
-    await handleCancelModal();
+    await handleCloseModal();
   };
 
   const handleQueryRetrieved = (data) => {
@@ -109,7 +107,7 @@ export const QueryBuilderModal = ({
 
   useEffect(() => {
     handleCancelQuery();
-  }, [source]);
+  }, [queryResetTrigger, source]);
 
   const renderFooter = () => (
     <ModalFooter>
@@ -121,7 +119,7 @@ export const QueryBuilderModal = ({
         {getSaveBtnLabel()}
       </Button>
       <Button
-        onClick={handleCancelModal}
+        onClick={handleCloseModal}
       >
         <FormattedMessage id="ui-plugin-query-builder.modal.cancel" />
       </Button>
@@ -159,6 +157,7 @@ export const QueryBuilderModal = ({
           <TestQuery
             queryId={queryId}
             testQuery={testQuery}
+            queryResetTrigger={queryResetTrigger}
             isTestQueryLoading={isTestQueryLoading}
             fqlQuery={fqlQuery}
             testQueryDataSource={testQueryDataSource}

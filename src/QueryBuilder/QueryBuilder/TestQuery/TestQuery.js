@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
@@ -11,6 +11,7 @@ import { ColumnsDropdown } from './ColumnsDropdown/ColumnsDropdown';
 export const TestQuery = ({
   queryId,
   testQuery,
+  queryResetTrigger,
   isTestQueryLoading,
   isQueryFilled,
   entityTypeDataSource,
@@ -25,9 +26,9 @@ export const TestQuery = ({
 
   const [columns, setColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
+  const [includeContent, setIncludeContent] = useState(true);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
   const [isTestQueryInProgress, setIsTestQueryInProgress] = useState(false);
-  const [includeContent, setIncludeContent] = useState(true);
 
   const isTestQueryBtnDisabled = isTestQueryLoading || !isQueryFilled || isTestQueryInProgress;
 
@@ -73,10 +74,14 @@ export const TestQuery = ({
     setIsPreviewLoading(true);
     setIsTestQueryInProgress(true);
 
-    await testQuery({
-      entityTypeId,
-      fqlQuery,
-    }).catch(() => setIsPreviewLoading(false));
+    try {
+      await testQuery({
+        entityTypeId,
+        fqlQuery,
+      });
+    } catch {
+      setIsPreviewLoading(false);
+    }
   };
 
   const handleQueryRetrieved = (data) => {
@@ -92,6 +97,11 @@ export const TestQuery = ({
   };
 
   const handleColumnChange = ({ values }) => setVisibleColumns(values);
+
+  useEffect(() => {
+    setIsPreviewLoading(false);
+    setIsTestQueryInProgress(false);
+  }, [queryResetTrigger]);
 
   const renderDropdown = ({ currentRecordsCount }) => !!currentRecordsCount && (
     <ColumnsDropdown
@@ -154,6 +164,7 @@ TestQuery.propTypes = {
   entityTypeDataSource: PropTypes.func.isRequired,
   queryDetailsDataSource: PropTypes.func.isRequired,
   entityTypeId: PropTypes.string,
+  queryResetTrigger: PropTypes.string,
   isQueryFilled: PropTypes.bool,
   onQueryRetrieved: PropTypes.func,
   onQueryExecutionSuccess: PropTypes.func,
