@@ -23,7 +23,6 @@ export const TestQuery = ({
 }) => {
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [queryDetails, setQueryDetails] = useState();
-  const [includeContent, setIncludeContent] = useState(true);
   const [columns, setColumns] = useState([]);
 
   const { testQueryData, testQuery, isTestQueryLoading } = useTestQuery({
@@ -54,8 +53,6 @@ export const TestQuery = ({
   const isTestQueryBtnDisabled = isTestQueryLoading || isQueryFilled || isQueryInProgress;
 
   const handleTestQuery = async () => {
-    setIncludeContent(true);
-
     await testQuery({
       entityTypeId,
       fqlQuery,
@@ -120,10 +117,9 @@ export const TestQuery = ({
           onSuccess={handleQueryRetrieved}
           refetchInterval={refetchInterval}
           headline={renderHeadline}
-          onPreviewShown={() => setIncludeContent(false)}
           contentDataSource={queryDetailsDataSource}
           entityTypeDataSource={entityTypeDataSource}
-          queryParams={{ queryId, includeContent }}
+          queryParams={{ queryId, includeContent: true }}
           visibleColumns={visibleColumns}
           onSetDefaultVisibleColumns={setVisibleColumns}
           onSetDefaultColumns={setColumns}

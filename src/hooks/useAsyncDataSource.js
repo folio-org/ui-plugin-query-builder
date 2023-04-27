@@ -42,6 +42,13 @@ export const useAsyncDataSource = ({
         console.log('NEW DATA', newData);
         console.log('---------------------------------------------------------------');
 
+        if (oldData?.status && oldData?.content && !newData?.content) {
+          return {
+            ...newData,
+            content: oldData.content,
+          };
+        }
+
         return newData;
       },
     },
