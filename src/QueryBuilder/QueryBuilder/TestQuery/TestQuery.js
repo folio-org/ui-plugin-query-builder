@@ -83,16 +83,18 @@ export const TestQuery = ({
     </Dropdown>
   );
 
-  const renderHeadline = ({ totalRecords: total, defaultLimit, status, currentRecordsCount }) => {
+  // eslint-disable-next-line react/prop-types
+  const renderHeadline = ({ totalRecords: total = 0, currentRecordsCount = 0, defaultLimit, status }) => {
     const isInProgress = status === QUERY_DETAILS_STATUSES.IN_PROGRESS;
+    const limit = currentRecordsCount < defaultLimit ? currentRecordsCount : defaultLimit;
 
-    return total && (
+    return (
       <>
         <FormattedMessage
           id="ui-plugin-query-builder.modal.preview.title"
           values={{
             total,
-            limit: currentRecordsCount < defaultLimit ? currentRecordsCount : defaultLimit,
+            limit,
           }}
         />
         {' '}
