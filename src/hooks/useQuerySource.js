@@ -13,12 +13,15 @@ const getSourceValue = (mongoQuery, entityType, fieldOptions) => {
 };
 
 export const useQuerySource = ({ mongoQuery, entityType }) => {
+  const [isSourceInit, setIsSourceInit] = useState(false);
   const fieldOptions = getFieldOptions(entityType);
   const [source, setSource] = useState(getSourceValue(mongoQuery, entityType, fieldOptions));
 
   useEffect(() => {
     if (entityType) {
       setSource(getSourceValue(mongoQuery, entityType, fieldOptions));
+
+      setIsSourceInit(true);
     }
   }, [mongoQuery, entityType]);
 
@@ -28,6 +31,7 @@ export const useQuerySource = ({ mongoQuery, entityType }) => {
 
   return {
     source,
+    isSourceInit,
     setSource,
     queryStr,
     isQueryFilled,

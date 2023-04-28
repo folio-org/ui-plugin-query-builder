@@ -50,6 +50,7 @@ export const QueryBuilderModal = ({
     fqlQuery,
     isQueryFilled,
     queryStr,
+    isSourceInit,
   } = useQuerySource({
     mongoQuery: initialValues,
     entityType,
@@ -158,7 +159,7 @@ export const QueryBuilderModal = ({
         {queryStr}
       </div>
 
-      {!entityType ? (
+      {!entityType && isSourceInit ? (
         <Row center="xs">
           <Loading size="large" />
         </Row>

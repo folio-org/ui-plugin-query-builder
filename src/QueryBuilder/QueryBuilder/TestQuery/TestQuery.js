@@ -155,10 +155,10 @@ export const TestQuery = ({
 };
 
 TestQuery.propTypes = {
-  queryId: PropTypes.object.isRequired,
-  fqlQuery: PropTypes.object.isRequired,
-  entityTypeDataSource: PropTypes.func.isRequired,
-  queryDetailsDataSource: PropTypes.func.isRequired,
+  queryId: PropTypes.object,
+  fqlQuery: PropTypes.object,
+  entityTypeDataSource: PropTypes.func,
+  queryDetailsDataSource: PropTypes.func,
   entityTypeId: PropTypes.string,
   isQueryFilled: PropTypes.bool,
   onQueryRetrieved: PropTypes.func,
