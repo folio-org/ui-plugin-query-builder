@@ -12,9 +12,10 @@
     "columns.action": "操作",
     "control.info.separateValues": "用逗号分隔多个值。",
     "control.selection.placeholder": "选择字段",
-    "modal.preview.title": "Query would return {total} records. Preview of first {limit} records.",
-    "modal.preview.queryInProgress": "Test query in progress",
+    "modal.preview.title": "查询将返回{total}条记录。第{limit}个记录的预览。",
+    "modal.preview.queryInProgress": "正在进行测试查询",
     "control.dropdown.showColumns": "显示列",
-    "viewer.retrieving": "Retrieving...",
-    "control.value.placeholder": "Select value"
+    "viewer.retrieving": "检索中...",
+    "control.value.placeholder": "选择值",
+    "modal.preview.countingInProgress": "计数中"
 }
