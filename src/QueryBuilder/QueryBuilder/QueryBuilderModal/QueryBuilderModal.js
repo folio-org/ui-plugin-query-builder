@@ -109,7 +109,7 @@ export const QueryBuilderModal = ({
       fqlQuery,
     });
 
-    await handleCloseModal();
+    handleCloseModal();
   };
 
   const handleQueryRetrieved = (data) => {
