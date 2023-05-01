@@ -12,18 +12,18 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import css from '../QueryBuilderModal.css';
-import { COLUMN_KEYS } from '../../constants/columnKeys';
-import { booleanOptions, fieldOptions, getOperatorOptions, sourceTemplate } from '../../helpers/selectOptions';
-import { OPERATORS } from '../../constants/operators';
+import { COLUMN_KEYS } from '../../../../constants/columnKeys';
+import { booleanOptions, getOperatorOptions, sourceTemplate } from '../../helpers/selectOptions';
+import { OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 
-export const RepeatableFields = ({ source, setSource, getParamsSource }) => {
+export const RepeatableFields = ({ source, setSource, getParamsSource, fieldOptions }) => {
   const intl = useIntl();
   const handleAdd = () => {
     setSource(res => ([
       ...res,
       {
-        ...sourceTemplate,
+        ...sourceTemplate(fieldOptions),
         [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: OPERATORS.AND },
       },
     ]));
@@ -177,6 +177,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource }) => {
 
 RepeatableFields.propTypes = {
   source: PropTypes.arrayOf(PropTypes.object),
+  fieldOptions: PropTypes.arrayOf(PropTypes.object),
   setSource: PropTypes.func,
   getParamsSource: PropTypes.func,
 };

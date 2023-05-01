@@ -1,15 +1,17 @@
-import { COLUMN_KEYS } from '../constants/columnKeys';
+import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { valueBuilder } from './valueBuilder';
-import { OPERATORS } from '../constants/operators';
+import { OPERATORS } from '../../../constants/operators';
 import { getOperatorOptions } from './selectOptions';
 
-export const getQueryStr = (rows) => {
+export const DEFAULT_PREVIEW_INTERVAL = 5000;
+
+export const getQueryStr = (rows, fieldOptions) => {
   return rows.reduce((str, row) => {
     const bool = row[COLUMN_KEYS.BOOLEAN].current;
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
-    const builtValue = valueBuilder(value, field, operator);
+    const builtValue = valueBuilder({ value, field, operator, fieldOptions });
     const baseQuery = `(${field} ${operator} ${builtValue})`;
 
     // if there aren't values yet - return empty string

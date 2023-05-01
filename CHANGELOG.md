@@ -14,3 +14,4 @@
 * [UIPQB-28](https://issues.folio.org/browse/UIPQB-28) Update QueryBuilder Component to work with MongoDB-Compliant JSON Query
 * [UIPQB-27](https://issues.folio.org/browse/UIPQB-27) Title: Extend QueryBuilder plugin with 'saveBtnLabel' Prop
 * [UIPQB-30](https://issues.folio.org/browse/UIPQB-30) Create pulling mechanism for query-builder-plugin
+* [UIPQB-33](https://issues.folio.org/browse/UIPQB-33) Aborting long running query

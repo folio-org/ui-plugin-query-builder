@@ -42,7 +42,9 @@ export const SelectionContainer = (
     return { renderedItems, exactMatch };
   };
 
-  const dataOptions = getSelectOptionsWithPlaceholder(availableValues) || getSelectOptionsWithPlaceholder(data?.values);
+  const dataOptions = getSelectOptionsWithPlaceholder(availableValues)
+    || getSelectOptionsWithPlaceholder(data?.values)
+    || [];
 
   return (
     <Selection

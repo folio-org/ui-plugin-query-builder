@@ -1,6 +1,8 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getTableMetadata } from '../QueryBuilder/ResultViewer/helpers';
 import { useDebounce } from './useDebounce';
+import { useEntityType } from './useEntityType';
+import { QUERY_KEYS } from '../constants/query';
 
 export const useAsyncDataSource = ({
   contentDataSource,
@@ -9,11 +11,17 @@ export const useAsyncDataSource = ({
   limit,
   queryParams,
   onSuccess,
-  refetchInterval,
+  contentQueryOptions,
+  contentQueryKeys,
 }) => {
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
 
   const sharedOptions = { refetchOnWindowFocus: false, keepPreviousData: true };
+
+  const { entityType, isContentTypeFetchedAfterMount, isEntityTypeLoading } = useEntityType({
+    entityTypeDataSource,
+    sharedOptions,
+  });
 
   const {
     data: recordsData,
@@ -21,28 +29,16 @@ export const useAsyncDataSource = ({
     isFetching: isContentDataFetching,
     refetch,
   } = useQuery(
-    ['contentData', debouncedOffset, debouncedLimit, queryParams],
-    () => contentDataSource({
-      offset: debouncedOffset,
-      limit: debouncedLimit,
-      ...queryParams,
-    }),
     {
-      ...sharedOptions,
+      queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA, debouncedOffset, debouncedLimit, ...contentQueryKeys],
+      queryFn: () => contentDataSource({
+        offset: debouncedOffset,
+        limit: debouncedLimit,
+        ...queryParams,
+      }),
       onSuccess,
-      refetchInterval,
-    },
-  );
-
-  const {
-    data: entityType,
-    isLoading: isEntityTypeLoading,
-    isFetchedAfterMount: isContentTypeFetchedAfterMount,
-  } = useQuery(
-    ['entityType'],
-    entityTypeDataSource,
-    {
       ...sharedOptions,
+      ...contentQueryOptions,
     },
   );
 
