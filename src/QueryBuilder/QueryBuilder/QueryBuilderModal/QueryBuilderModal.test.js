@@ -21,6 +21,8 @@ jest.mock('@folio/stripes/components', () => ({
 const renderQueryBuilderModal = ({
   setIsModalShown = jest.fn(),
   onQueryRun = jest.fn(),
+  onQueryRunSuccess = jest.fn(),
+  onQueryRunFail = jest.fn(),
   isOpen = true,
   saveBtnLabel = '',
 }) => render(
@@ -36,8 +38,8 @@ const renderQueryBuilderModal = ({
       queryDetailsDataSource={queryDetailsDataSource}
       testQueryDataSource={testQueryDataSource}
       cancelQueryDataSource={cancelQueryDataSource}
-      onQueryRunSuccess={(v) => console.log(v)}
-      onQueryRunFail={(v) => console.log(v)}
+      onQueryRunSuccess={onQueryRunSuccess}
+      onQueryRunFail={onQueryRunFail}
     />
   </QueryClientProvider>,
 );
@@ -45,7 +47,6 @@ const renderQueryBuilderModal = ({
 describe('QueryBuilderModal', () => {
   it('should render modal', async () => {
     renderQueryBuilderModal({});
-
     expect(screen.getByRole('dialog')).toBeVisible();
   });
 
@@ -147,6 +148,15 @@ describe('QueryBuilderModal', () => {
     });
 
     act(() => userEvent.click(testQuery));
+
+    await waitFor(() => {
+      expect(screen.queryByText('ui-plugin-query-builder.viewer.retrieving')).not.toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(runQuery).toBeEnabled();
+    });
+
     act(() => userEvent.click(runQuery));
   });
 });

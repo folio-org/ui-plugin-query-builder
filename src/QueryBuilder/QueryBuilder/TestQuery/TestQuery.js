@@ -7,6 +7,7 @@ import { ResultViewer } from '../../ResultViewer';
 import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
 import { ViewerHeadline } from './ViewerHeadline/ViewerHeadline';
 import { ColumnsDropdown } from './ColumnsDropdown/ColumnsDropdown';
+import { DEFAULT_PREVIEW_INTERVAL } from '../helpers/query';
 
 export const TestQuery = ({
   queryId,
@@ -34,7 +35,6 @@ export const TestQuery = ({
   const isTestQueryBtnDisabled = isTestQueryLoading || !isQueryFilled || isTestQueryInProgress;
 
   const refetchInterval = (query) => {
-    const defaultInterval = 5000;
     const status = query?.status;
 
     const completeExecution = () => {
@@ -53,7 +53,7 @@ export const TestQuery = ({
 
       return completeExecution();
     } else {
-      return defaultInterval;
+      return DEFAULT_PREVIEW_INTERVAL;
     }
   };
 
