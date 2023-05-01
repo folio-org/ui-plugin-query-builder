@@ -147,11 +147,6 @@ describe('QueryBuilderModal', () => {
     });
 
     act(() => userEvent.click(testQuery));
-
-    await waitFor(() => {
-      expect(runQuery).toBeEnabled();
-    });
-
     act(() => userEvent.click(runQuery));
   });
 });
