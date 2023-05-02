@@ -148,7 +148,7 @@ ResultViewer.propTypes = {
     PropTypes.string,
   ]),
   headline: PropTypes.func,
-  headlineEnd: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  headlineEnd: PropTypes.func,
   contentDataSource: PropTypes.func,
   entityTypeDataSource: PropTypes.func,
   visibleColumns: PropTypes.arrayOf(PropTypes.string),

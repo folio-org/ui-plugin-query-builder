@@ -155,7 +155,7 @@ export const TestQuery = ({
 };
 
 TestQuery.propTypes = {
-  queryId: PropTypes.object,
+  queryId: PropTypes.string,
   fqlQuery: PropTypes.object,
   entityTypeDataSource: PropTypes.func,
   queryDetailsDataSource: PropTypes.func,

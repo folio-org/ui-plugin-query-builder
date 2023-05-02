@@ -18,20 +18,20 @@ jest.mock('@folio/stripes/components', () => ({
   Loading: () => <div>LOADING</div>,
 }));
 
+const onRunSuccessMock = jest.fn();
+
 const renderQueryBuilderModal = ({
   setIsModalShown = jest.fn(),
-  onQueryRun = jest.fn(),
-  onQueryRunSuccess = jest.fn(),
   onQueryRunFail = jest.fn(),
   isOpen = true,
   saveBtnLabel = '',
+  onQueryRunSuccess = onRunSuccessMock,
 }) => render(
   <QueryClientProvider client={queryClient}>
     <QueryBuilderModal
       setIsModalShown={setIsModalShown}
       isOpen={isOpen}
       saveBtnLabel={saveBtnLabel}
-      onQueryRun={onQueryRun}
       getParamsSource={getParamsSource}
       entityTypeDataSource={entityTypeDataSource}
       runQueryDataSource={runQueryDataSource}
@@ -155,8 +155,12 @@ describe('QueryBuilderModal', () => {
 
     await waitFor(() => {
       expect(runQuery).toBeEnabled();
-    });
+    }, { timeout: 5500 });
 
     act(() => userEvent.click(runQuery));
+
+    await waitFor(() => {
+      expect(onRunSuccessMock).toHaveBeenCalled();
+    });
   });
 });
