@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryBuilder } from './QueryBuilder';
-import Intl from '../../../test/jest/__mock__/intl.mock';
+import Intl from '../../../test/jest/__mock__/intlProvider.mock';
 
 const queryClient = new QueryClient();
 

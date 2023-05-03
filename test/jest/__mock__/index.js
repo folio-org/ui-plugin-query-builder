@@ -1,3 +1,4 @@
-import '@folio/stripes-acq-components/test/jest/__mock__';
+import '@folio/stripes-acq-components/test/jest/__mock__/';
 
-import './intl.mock';
+import './reactItl.mock';
+import './intlProvider.mock';

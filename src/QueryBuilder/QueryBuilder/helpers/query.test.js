@@ -9,6 +9,7 @@ describe('mongoQueryToSource()', () => {
       mongoQuery: {},
       booleanOptions,
       fieldOptions,
+      intl: { formatMessage: jest.fn() },
     });
 
     expect(result).toEqual([]);
@@ -66,12 +67,6 @@ describe('mongoQueryToSource()', () => {
     },
     {
       boolean: { options: booleanOptions, current: 'AND' },
-      field: { options: fieldOptions, current: 'user_full_name' },
-      operator: { options: expect.any(Array), current: OPERATORS.NOT_CONTAINS },
-      value: { current: 'abc' },
-    },
-    {
-      boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'languages' },
       operator: { options: expect.any(Array), current: OPERATORS.NOT_IN },
       value: { current: ['value', 'value2'] },
@@ -88,7 +83,6 @@ describe('mongoQueryToSource()', () => {
       { languages: { $in: ['value', 'value2'] } },
       { user_full_name: { $regex: '/^abc/' } },
       { user_full_name: { $regex: '/abc/' } },
-      { user_full_name: { $not: '/abc/' } },
       { languages: { $nin: ['value', 'value2'] } },
     ],
   };
@@ -98,6 +92,7 @@ describe('mongoQueryToSource()', () => {
       mongoQuery,
       booleanOptions,
       fieldOptions,
+      intl: { formatMessage: jest.fn() },
     });
 
     expect(result).toEqual(source);

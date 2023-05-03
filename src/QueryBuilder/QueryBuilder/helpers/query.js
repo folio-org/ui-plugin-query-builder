@@ -76,9 +76,6 @@ export const sourceToMongoQuery = (source) => {
       case OPERATORS.CONTAINS:
         queryItem = { [field]: { $regex: new RegExp(value).toString() } };
         break;
-      case OPERATORS.NOT_CONTAINS:
-        queryItem = { [field]: { $not: new RegExp(value).toString() } };
-        break;
       default:
         break;
     }
@@ -104,7 +101,6 @@ const getSourceFields = (field) => ({
   $lte: (value) => ({ operator: OPERATORS.LESS_THAN_OR_EQUAL, value }),
   $in: (value) => ({ operator: OPERATORS.IN, value }),
   $nin: (value) => ({ operator: OPERATORS.NOT_IN, value }),
-  $not: (value) => ({ operator: OPERATORS.NOT_CONTAINS, value: value?.replace(cleanerRegex, '') }),
   $regex: (value) => {
     return value?.includes('^')
       ? { operator: OPERATORS.STARTS_WITH, value: value?.replace(cleanerRegex, '') }
@@ -116,6 +112,7 @@ export const mongoQueryToSource = ({
   mongoQuery,
   booleanOptions = [],
   fieldOptions = [],
+  intl,
 }) => {
   const target = [];
   const andQuery = mongoQuery.$and;
@@ -137,7 +134,7 @@ export const mongoQueryToSource = ({
         const item = {
           boolean: { options: booleanOptions, current: boolean },
           field: { options: fieldOptions, current: field },
-          operator: { options: getOperatorOptions(type), current: operator },
+          operator: { options: getOperatorOptions(type, intl), current: operator },
           value: { current: value },
         };
 

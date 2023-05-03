@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row, Accordion, MultiColumnList, Headline } from '@folio/stripes/components';
 import { PrevNextPagination } from '@folio/stripes-acq-components';
+import { useIntl } from 'react-intl';
 import { QueryLoader } from './QueryLoader';
 import { useAsyncDataSource } from '../../hooks/useAsyncDataSource';
 import { usePagination } from '../../hooks/usePagination';
@@ -29,6 +30,8 @@ export const ResultViewer = ({
   onPreviewShown,
   isPreviewLoading,
 }) => {
+  const intl = useIntl();
+
   const { changePage, limit, offset } = usePagination({
     defaultLimit,
     defaultOffset,
@@ -82,16 +85,29 @@ export const ResultViewer = ({
     offset,
   });
 
-  const renderHeader = () => (
-    <Row between="xs">
-      <Col xs={10}>
-        <Headline size="large" margin="none" tag="h3">
-          {headline?.({ totalRecords, defaultLimit, status, currentRecordsCount })}
-        </Headline>
-      </Col>
-      {headlineEnd?.({ currentRecordsCount, status })}
-    </Row>
-  );
+  const renderHeader = () => {
+    const localizedTotalRecords = intl.formatNumber(totalRecords);
+    const localizedCurrentRecordsCount = intl.formatNumber(currentRecordsCount);
+
+    return (
+      <Row between="xs">
+        <Col xs={10}>
+          <Headline size="large" margin="none" tag="h3">
+            {headline?.({
+              totalRecords: localizedTotalRecords,
+              currentRecordsCount: localizedCurrentRecordsCount,
+              defaultLimit,
+              status,
+            })}
+          </Headline>
+        </Col>
+        {headlineEnd?.({
+          currentRecordsCount: localizedCurrentRecordsCount,
+          status,
+        })}
+      </Row>
+    );
+  };
 
   const renderTable = () => {
     return (

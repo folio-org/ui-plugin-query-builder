@@ -51,7 +51,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, fieldOpti
             dataType: field.dataType,
           },
           [COLUMN_KEYS.OPERATOR]: {
-            options: getOperatorOptions(field.dataType),
+            options: getOperatorOptions(field.dataType, intl),
             current: '',
           },
           [COLUMN_KEYS.VALUE]: {
