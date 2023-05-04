@@ -71,10 +71,10 @@ export const sourceToMongoQuery = (source) => {
         queryItem = { [field]: { $nin: value } };
         break;
       case OPERATORS.STARTS_WITH:
-        queryItem = { [field]: { $regex: new RegExp(`^${value}`).toString() } };
+        queryItem = { [field]: { $regex: new RegExp(`^${value}`).source } };
         break;
       case OPERATORS.CONTAINS:
-        queryItem = { [field]: { $regex: new RegExp(value).toString() } };
+        queryItem = { [field]: { $regex: new RegExp(value).source } };
         break;
       default:
         break;
