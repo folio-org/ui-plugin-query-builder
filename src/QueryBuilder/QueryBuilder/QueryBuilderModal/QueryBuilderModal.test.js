@@ -62,9 +62,7 @@ describe('QueryBuilderModal', () => {
     act(() => userEvent.click(selectFieldPlaceholder));
 
     await waitFor(() => {
-      const cols = entityType.columns.filter(c => c.visibleByDefault);
-
-      cols.forEach(col => {
+      entityType.columns.forEach(col => {
         expect(screen.getByText(`${col.labelAlias}`)).toBeInTheDocument();
       });
     });

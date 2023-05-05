@@ -8,7 +8,6 @@ export const OPERATORS = {
   IN: 'in',
   NOT_IN: 'not in',
   CONTAINS: 'contains',
-  NOT_CONTAINS: 'does not contain',
   STARTS_WITH: 'starts with',
   AND: 'AND',
 };

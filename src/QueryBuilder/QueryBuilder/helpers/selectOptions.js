@@ -22,7 +22,7 @@ const rangedUUIDOperators = [
   { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
 ];
 
-export const getOperatorOptions = (dataType) => {
+export const getOperatorOptions = (dataType, intl) => {
   const options = {
     [DATA_TYPES.RangedUUIDType]: rangedUUIDOperators,
 
@@ -44,7 +44,6 @@ export const getOperatorOptions = (dataType) => {
       { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
       { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
       { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
-      { label: OPERATORS.NOT_CONTAINS, value: OPERATORS.NOT_CONTAINS },
       { label: OPERATORS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
     ],
 
@@ -55,22 +54,19 @@ export const getOperatorOptions = (dataType) => {
   };
 
   return [
-    { value: '', label: 'Select operator', disabled: true },
+    { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.operator.placeholder' }), disabled: true },
     ...options[dataType],
   ];
 };
 
 export const getFieldOptions = (entityType) => {
-  return entityType?.columns?.filter(item => item?.visibleByDefault)
-    .map(
-      et => ({
-        label: et.labelAlias,
-        value: et.name,
-        dataType: et.dataType.dataType,
-        values: et.values,
-        source: et.source,
-      }),
-    );
+  return entityType?.columns?.map(et => ({
+    label: et.labelAlias,
+    value: et.name,
+    dataType: et.dataType.dataType,
+    values: et.values,
+    source: et.source,
+  }));
 };
 
 export const booleanOptions = [

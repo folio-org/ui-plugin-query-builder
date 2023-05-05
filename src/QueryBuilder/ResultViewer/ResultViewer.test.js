@@ -6,7 +6,7 @@ import { entityType } from '../../../test/jest/data/entityType';
 import { content } from '../../../test/jest/data/content';
 import { delayedResponse } from '../../../test/jest/data/helpers';
 import * as pagination from '../../hooks/usePagination';
-import Intl from '../../../test/jest/__mock__/intl.mock';
+import Intl from '../../../test/jest/__mock__/intlProvider.mock';
 
 const queryClient = new QueryClient();
 

@@ -69,15 +69,16 @@ export const QueryBuilderModal = ({
     setIsTestQueryInProgress,
   } = useTestQuery({
     testQueryDataSource,
-    onQueryTestSuccess: () => setIsQueryRetrieved(false),
+    onQueryTestSuccess: () => {
+      setIsQueryRetrieved(false);
+    },
   });
 
   const { runQuery, isRunQueryLoading } = useRunQuery({
+    onQueryRunSuccess,
     queryId,
     runQueryDataSource,
-    onQueryRunSuccess,
     onQueryRunFail,
-    fqlQuery,
   });
 
   const handleSetSource = (src) => {
@@ -85,7 +86,7 @@ export const QueryBuilderModal = ({
     setSource(src);
   };
 
-  const handleCancelQuery = () => {
+  const handleCancelQuery = async () => {
     if (queryId) {
       setIsTestQueryInProgress(false);
       setIsPreviewLoading(false);
@@ -94,11 +95,11 @@ export const QueryBuilderModal = ({
 
       resetTestQuery();
 
-      cancelQuery({ queryId });
+      await cancelQuery({ queryId });
     }
   };
-  const handleCloseModal = () => {
-    handleCancelQuery();
+  const handleCloseModal = async () => {
+    await handleCancelQuery();
 
     setIsModalShown(false);
   };
@@ -109,7 +110,7 @@ export const QueryBuilderModal = ({
       fqlQuery,
     });
 
-    handleCloseModal();
+    await handleCloseModal();
   };
 
   const handleQueryRetrieved = (data) => {
@@ -122,7 +123,7 @@ export const QueryBuilderModal = ({
 
   useEffect(() => {
     if (isTestQueryInProgress) {
-      handleCancelQuery();
+      handleCancelQuery().catch(console.error);
     }
   }, [source, isTestQueryInProgress]);
 

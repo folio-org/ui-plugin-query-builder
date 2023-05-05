@@ -71,13 +71,10 @@ export const sourceToMongoQuery = (source) => {
         queryItem = { [field]: { $nin: value } };
         break;
       case OPERATORS.STARTS_WITH:
-        queryItem = { [field]: { $regex: new RegExp(`^${value}`).toString() } };
+        queryItem = { [field]: { $regex: new RegExp(`^${value}`).source } };
         break;
       case OPERATORS.CONTAINS:
-        queryItem = { [field]: { $regex: new RegExp(value).toString() } };
-        break;
-      case OPERATORS.NOT_CONTAINS:
-        queryItem = { [field]: { $not: new RegExp(value).toString() } };
+        queryItem = { [field]: { $regex: new RegExp(value).source } };
         break;
       default:
         break;
@@ -94,7 +91,7 @@ export const sourceToMongoQuery = (source) => {
   return query;
 };
 
-const cleanerRegex = /((^\/\^?)|(\/$))/g;
+const cleanerRegex = /((^\^?)|(\/$))/g;
 const getSourceFields = (field) => ({
   $eq: (value) => ({ operator: OPERATORS.EQUAL, value }),
   $ne: (value) => ({ operator: OPERATORS.NOT_EQUAL, value }),
@@ -104,7 +101,6 @@ const getSourceFields = (field) => ({
   $lte: (value) => ({ operator: OPERATORS.LESS_THAN_OR_EQUAL, value }),
   $in: (value) => ({ operator: OPERATORS.IN, value }),
   $nin: (value) => ({ operator: OPERATORS.NOT_IN, value }),
-  $not: (value) => ({ operator: OPERATORS.NOT_CONTAINS, value: value?.replace(cleanerRegex, '') }),
   $regex: (value) => {
     return value?.includes('^')
       ? { operator: OPERATORS.STARTS_WITH, value: value?.replace(cleanerRegex, '') }
@@ -116,6 +112,7 @@ export const mongoQueryToSource = ({
   mongoQuery,
   booleanOptions = [],
   fieldOptions = [],
+  intl,
 }) => {
   const target = [];
   const andQuery = mongoQuery.$and;
@@ -137,7 +134,7 @@ export const mongoQueryToSource = ({
         const item = {
           boolean: { options: booleanOptions, current: boolean },
           field: { options: fieldOptions, current: field },
-          operator: { options: getOperatorOptions(type), current: operator },
+          operator: { options: getOperatorOptions(type, intl), current: operator },
           value: { current: value },
         };
 
