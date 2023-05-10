@@ -17,5 +17,6 @@
     "control.dropdown.showColumns": "Pokaż kolumny",
     "viewer.retrieving": "Retrieving...",
     "control.value.placeholder": "Select value",
-    "modal.preview.countingInProgress": "Counting in progress"
+    "modal.preview.countingInProgress": "Counting in progress",
+    "control.operator.placeholder": "Select operator"
 }
