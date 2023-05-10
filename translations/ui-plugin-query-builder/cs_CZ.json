@@ -17,5 +17,6 @@
     "control.dropdown.showColumns": "Zobrazit sloupce",
     "viewer.retrieving": "Získávání...",
     "control.value.placeholder": "Zvolit hodnotu",
-    "modal.preview.countingInProgress": "Probíhá počítání"
+    "modal.preview.countingInProgress": "Probíhá počítání",
+    "control.operator.placeholder": "Select operator"
 }

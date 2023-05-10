@@ -17,5 +17,6 @@
     "control.dropdown.showColumns": "Mostrar colunas",
     "viewer.retrieving": "Recuperando...",
     "control.value.placeholder": "Selecione o valor",
-    "modal.preview.countingInProgress": "Contagem em andamento"
+    "modal.preview.countingInProgress": "Contagem em andamento",
+    "control.operator.placeholder": "Selecionar operador"
 }
