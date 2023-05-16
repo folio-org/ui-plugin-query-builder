@@ -6,8 +6,8 @@ export const useParamsDataSource = ({ source, searchValue, getParamsSource }) =>
     queryKey: [QUERY_KEYS.QUERY_PLUGIN_PARAMS_SOURCE, source, searchValue],
     queryFn: () => getParamsSource({
       entityTypeId: source?.source.entityTypeId,
-      source: source?.source.columnName,
-      search: searchValue,
+      columnName: source?.source.columnName,
+      searchValue,
     }),
     enabled: !!source,
   });
