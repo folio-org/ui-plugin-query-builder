@@ -56,6 +56,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, fieldOpti
           },
           [COLUMN_KEYS.VALUE]: {
             options: field.values,
+            source: field.source,
             current: '',
           },
         };
@@ -64,6 +65,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, fieldOpti
         return {
           [COLUMN_KEYS.VALUE]: {
             options: memorizedField.values,
+            source: memorizedField.source,
             current: '',
           },
         };
@@ -145,7 +147,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, fieldOpti
                     dataType={row.field.dataType}
                     index={index}
                     availableValues={row.value.options}
-                    source={row.field?.options?.find((el) => el.value === row.field.current)}
+                    source={row.value.source}
                     operator={row.operator.current}
                     onChange={handleChange}
                     data-testid={`input-value-${index}`}

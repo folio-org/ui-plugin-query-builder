@@ -59,8 +59,8 @@ export const getOperatorOptions = (dataType, intl) => {
   ];
 };
 
-export const getFieldOptions = (entityType) => {
-  return entityType?.columns?.map(et => ({
+export const getFieldOptions = (options) => {
+  return options?.map(et => ({
     label: et.labelAlias,
     value: et.name,
     dataType: et.dataType.dataType,
@@ -69,27 +69,13 @@ export const getFieldOptions = (entityType) => {
   }));
 };
 
-export const getFieldOptions = (initialValue) => {
-  return initialValue.columns
-    .filter(item => item?.visibleByDefault)
-    .map(
-      et => ({
-        label: et.labelAlias,
-        value: et.name,
-        dataType: et.dataType.dataType,
-        values: et.values,
-        source: et.source,
-      }),
-    );
-};
-
 export const booleanOptions = [
   { label: 'AND', value: 'AND' },
 ];
 
-export const sourceTemplate = (fieldOptions = []) => ({
+export const sourceTemplate = (fieldOptions) => ({
   [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: '' },
-  [COLUMN_KEYS.FIELD]: { options: getFieldOptions(entityType), current: '' },
+  [COLUMN_KEYS.FIELD]: { options: fieldOptions || [], current: '' },
   [COLUMN_KEYS.OPERATOR]: { options: [], current: '' },
   [COLUMN_KEYS.VALUE]: { current: '' },
 });
