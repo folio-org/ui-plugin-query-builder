@@ -48,7 +48,7 @@ export const QueryBuilderTitle = ({ results }) => {
         className={css.headerCell}
         sm={1}
       >
-        <FormattedMessage id="ui-bulk-edit.layer.column.actions" />
+        <FormattedMessage id="ui-plugin-query-builder.columns.action" />
       </Col>
     </Row>
   );

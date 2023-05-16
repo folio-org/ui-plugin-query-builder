@@ -1,15 +1,17 @@
-import { COLUMN_KEYS } from '../constants/columnKeys';
+import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { valueBuilder } from './valueBuilder';
-import { OPERATORS } from '../constants/operators';
+import { OPERATORS } from '../../../constants/operators';
 import { getOperatorOptions } from './selectOptions';
 
-export const getQueryStr = (rows) => {
+export const DEFAULT_PREVIEW_INTERVAL = 5000;
+
+export const getQueryStr = (rows, fieldOptions) => {
   return rows.reduce((str, row) => {
     const bool = row[COLUMN_KEYS.BOOLEAN].current;
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
-    const builtValue = valueBuilder(value, field, operator);
+    const builtValue = valueBuilder({ value, field, operator, fieldOptions });
     const baseQuery = `(${field} ${operator} ${builtValue})`;
 
     // if there aren't values yet - return empty string
@@ -69,13 +71,10 @@ export const sourceToMongoQuery = (source) => {
         queryItem = { [field]: { $nin: value } };
         break;
       case OPERATORS.STARTS_WITH:
-        queryItem = { [field]: { $regex: new RegExp(`^${value}`).toString() } };
+        queryItem = { [field]: { $regex: new RegExp(`^${value}`).source } };
         break;
       case OPERATORS.CONTAINS:
-        queryItem = { [field]: { $regex: new RegExp(value).toString() } };
-        break;
-      case OPERATORS.NOT_CONTAINS:
-        queryItem = { [field]: { $not: new RegExp(value).toString() } };
+        queryItem = { [field]: { $regex: new RegExp(value).source } };
         break;
       default:
         break;
@@ -92,7 +91,7 @@ export const sourceToMongoQuery = (source) => {
   return query;
 };
 
-const cleanerRegex = /((^\/\^?)|(\/$))/g;
+const cleanerRegex = /((^\^?)|(\/$))/g;
 const getSourceFields = (field) => ({
   $eq: (value) => ({ operator: OPERATORS.EQUAL, value }),
   $ne: (value) => ({ operator: OPERATORS.NOT_EQUAL, value }),
@@ -102,7 +101,6 @@ const getSourceFields = (field) => ({
   $lte: (value) => ({ operator: OPERATORS.LESS_THAN_OR_EQUAL, value }),
   $in: (value) => ({ operator: OPERATORS.IN, value }),
   $nin: (value) => ({ operator: OPERATORS.NOT_IN, value }),
-  $not: (value) => ({ operator: OPERATORS.NOT_CONTAINS, value: value?.replace(cleanerRegex, '') }),
   $regex: (value) => {
     return value?.includes('^')
       ? { operator: OPERATORS.STARTS_WITH, value: value?.replace(cleanerRegex, '') }
@@ -114,6 +112,7 @@ export const mongoQueryToSource = ({
   mongoQuery,
   booleanOptions = [],
   fieldOptions = [],
+  intl,
 }) => {
   const target = [];
   const andQuery = mongoQuery.$and;
@@ -135,7 +134,7 @@ export const mongoQueryToSource = ({
         const item = {
           boolean: { options: booleanOptions, current: boolean },
           field: { options: fieldOptions, current: field },
-          operator: { options: getOperatorOptions(type), current: operator },
+          operator: { options: getOperatorOptions(type, intl), current: operator },
           value: { current: value },
         };
 

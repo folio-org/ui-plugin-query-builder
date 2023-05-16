@@ -16,5 +16,7 @@
     "modal.preview.queryInProgress": "Test query in progress",
     "control.dropdown.showColumns": "열 표시",
     "viewer.retrieving": "Retrieving...",
-    "control.value.placeholder": "Select value"
+    "control.value.placeholder": "Select value",
+    "modal.preview.countingInProgress": "Counting in progress",
+    "control.operator.placeholder": "Select operator"
 }

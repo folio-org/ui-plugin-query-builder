@@ -1,8 +1,8 @@
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryBuilder } from './QueryBuilder';
-import Intl from '../../../test/jest/__mock__/intl.mock';
+import Intl from '../../../test/jest/__mock__/intlProvider.mock';
 
 const queryClient = new QueryClient();
 
@@ -10,7 +10,7 @@ const renderQueryBuilder = ({
   disabled,
   saveBtnLabel,
   initialValues,
-  runQuerySource = jest.fn(),
+  runQueryDataSource = jest.fn(),
   testQuerySource = jest.fn(),
   onQueryRun = jest.fn(),
 }) => render(
@@ -20,7 +20,7 @@ const renderQueryBuilder = ({
         disabled={disabled}
         saveBtnLabel={saveBtnLabel}
         initialValues={initialValues}
-        runQuerySource={runQuerySource}
+        runQuerySource={runQueryDataSource}
         testQuerySource={testQuerySource}
         onQueryRun={onQueryRun}
       />

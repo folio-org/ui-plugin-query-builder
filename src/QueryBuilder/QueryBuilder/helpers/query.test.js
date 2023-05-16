@@ -1,6 +1,7 @@
 import { mongoQueryToSource, sourceToMongoQuery } from './query';
-import { booleanOptions, fieldOptions } from './selectOptions';
-import { OPERATORS } from '../constants/operators';
+import { booleanOptions } from './selectOptions';
+import { OPERATORS } from '../../../constants/operators';
+import { fieldOptions } from '../../../../test/jest/data/entityType';
 
 describe('mongoQueryToSource()', () => {
   test('should return empty array for empty query', () => {
@@ -8,6 +9,7 @@ describe('mongoQueryToSource()', () => {
       mongoQuery: {},
       booleanOptions,
       fieldOptions,
+      intl: { formatMessage: jest.fn() },
     });
 
     expect(result).toEqual([]);
@@ -65,12 +67,6 @@ describe('mongoQueryToSource()', () => {
     },
     {
       boolean: { options: booleanOptions, current: 'AND' },
-      field: { options: fieldOptions, current: 'user_full_name' },
-      operator: { options: expect.any(Array), current: OPERATORS.NOT_CONTAINS },
-      value: { current: 'abc' },
-    },
-    {
-      boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'languages' },
       operator: { options: expect.any(Array), current: OPERATORS.NOT_IN },
       value: { current: ['value', 'value2'] },
@@ -85,9 +81,8 @@ describe('mongoQueryToSource()', () => {
       { user_last_name: { $lt: 10 } },
       { user_last_name: { $gte: 'value' } },
       { languages: { $in: ['value', 'value2'] } },
-      { user_full_name: { $regex: '/^abc/' } },
-      { user_full_name: { $regex: '/abc/' } },
-      { user_full_name: { $not: '/abc/' } },
+      { user_full_name: { $regex: '^abc' } },
+      { user_full_name: { $regex: 'abc' } },
       { languages: { $nin: ['value', 'value2'] } },
     ],
   };
@@ -97,6 +92,7 @@ describe('mongoQueryToSource()', () => {
       mongoQuery,
       booleanOptions,
       fieldOptions,
+      intl: { formatMessage: jest.fn() },
     });
 
     expect(result).toEqual(source);

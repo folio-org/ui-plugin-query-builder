@@ -1,12 +1,12 @@
 import { screen, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ResultViewer } from './ResultViewer';
 import { entityType } from '../../../test/jest/data/entityType';
 import { content } from '../../../test/jest/data/content';
 import { delayedResponse } from '../../../test/jest/data/helpers';
 import * as pagination from '../../hooks/usePagination';
-import Intl from '../../../test/jest/__mock__/intl.mock';
+import Intl from '../../../test/jest/__mock__/intlProvider.mock';
 
 const queryClient = new QueryClient();
 
@@ -35,7 +35,9 @@ describe('ResultViewer', () => {
   it('Should render accordion title', async () => {
     render(renderResultViewer());
 
-    expect(screen.getByText("Query: loan_status ='Open' and user_active = 'false'")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByText("Query: loan_status ='Open' and user_active = 'false'")).toBeVisible();
+    });
   });
 
   describe('Render accordion and titles', () => {
@@ -59,14 +61,14 @@ describe('ResultViewer', () => {
   });
 
   describe('Initial and visible columns setters', () => {
-    it('should be called only once', async () => {
+    it('should be called', async () => {
       render(renderResultViewer());
 
       await waitFor(() => {
         expect(screen.queryByText('ui-plugin-query-builder.viewer.retrieving')).not.toBeInTheDocument();
 
-        expect(setVisibleColumns).toHaveBeenCalledTimes(1);
-        expect(setColumns).toHaveBeenCalledTimes(1);
+        expect(setVisibleColumns).toHaveBeenCalled();
+        expect(setColumns).toHaveBeenCalled();
       });
     });
   });
@@ -95,19 +97,6 @@ describe('ResultViewer', () => {
         expect(screen.getByText(new RegExp(`${offset + 1}`, 'i'))).toBeVisible();
         expect(screen.getByText(new RegExp(`${offset + limit}`, 'i'))).toBeVisible();
         expect(changePage).not.toBeCalled();
-      });
-    });
-  });
-
-  describe('In progress state', () => {
-    it('Should render in progress when isInProgress: true', async () => {
-      render(renderResultViewer({
-        isInProgress: true,
-      }));
-
-      await waitFor(() => {
-        expect(screen.getByText('Icon')).toBeVisible();
-        expect(screen.getByText('ui-plugin-query-builder.viewer.retrieving')).toBeVisible();
       });
     });
   });

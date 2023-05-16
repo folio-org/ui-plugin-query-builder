@@ -5,16 +5,11 @@ import { FormattedMessage } from 'react-intl';
 import { Button } from '@folio/stripes/components';
 import PropTypes from 'prop-types';
 import { QueryBuilderModal } from './QueryBuilderModal';
+import { queryBuilderModalPropTypes } from '../propTypes';
 
 export const QueryBuilder = ({
   disabled,
-  saveBtnLabel,
-  initialValues,
-  runQuerySource,
-  testQuerySource,
-  onQueryRun,
-  entityTypeDataSource,
-  getParamsSource,
+  ...modalProps
 }) => {
   const [isModalShown, setIsModalShown] = useState(false);
 
@@ -33,15 +28,9 @@ export const QueryBuilder = ({
         <FormattedMessage id="ui-plugin-query-builder.trigger" />
       </Button>
       <QueryBuilderModal
-        setIsModalShown={setIsModalShown}
         isOpen={isModalShown}
-        saveBtnLabel={saveBtnLabel}
-        initialValues={initialValues}
-        runQuerySource={runQuerySource}
-        testQuerySource={testQuerySource}
-        onQueryRun={onQueryRun}
-        getParamsSource={getParamsSource}
-        entityTypeDataSource={entityTypeDataSource}
+        setIsModalShown={setIsModalShown}
+        {...modalProps}
       />
     </>
   );
@@ -49,11 +38,5 @@ export const QueryBuilder = ({
 
 QueryBuilder.propTypes = {
   disabled: PropTypes.bool,
-  saveBtnLabel: PropTypes.string,
-  initialValues: PropTypes.object,
-  onQueryRun: PropTypes.func,
-  runQuerySource: PropTypes.func,
-  testQuerySource: PropTypes.func,
-  getParamsSource: PropTypes.func,
-  entityTypeDataSource: PropTypes.func,
+  ...queryBuilderModalPropTypes,
 };

@@ -16,5 +16,7 @@
     "modal.preview.queryInProgress": "Consulta de teste em andamento",
     "control.dropdown.showColumns": "Mostrar colunas",
     "viewer.retrieving": "Recuperando...",
-    "control.value.placeholder": "Select value"
+    "control.value.placeholder": "Selecione o valor",
+    "modal.preview.countingInProgress": "Contagem em andamento",
+    "control.operator.placeholder": "Selecionar operador"
 }

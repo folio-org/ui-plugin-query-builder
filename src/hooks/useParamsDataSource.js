@@ -1,13 +1,14 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEYS } from '../constants/query';
 
 export const useParamsDataSource = ({ source, searchValue, getParamsSource }) => {
   const { data, isLoading } = useQuery({
-    queryKey: [source?.source?.entityTypeId, searchValue],
-    queryFn: () => getParamsSource(
-      { entityTypeId: source?.source.entityTypeId,
-        source: source?.source.columnName,
-        search: searchValue },
-    ),
+    queryKey: [QUERY_KEYS.QUERY_PLUGIN_PARAMS_SOURCE, source, searchValue],
+    queryFn: () => getParamsSource({
+      entityTypeId: source?.source.entityTypeId,
+      columnName: source?.source.columnName,
+      searchValue,
+    }),
     enabled: !!source,
   });
 

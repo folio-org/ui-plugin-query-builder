@@ -1,43 +1,84 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Modal,
+import {
+  Modal,
   ModalFooter,
   Button,
-  Headline } from '@folio/stripes/components';
+  Headline,
+  Loading,
+  Row,
+} from '@folio/stripes/components';
 
+import { useQueryClient } from '@tanstack/react-query';
 import css from './QueryBuilderModal.css';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
-import { useRunQuery } from '../hooks/useRunQuery';
-import { useQuerySource } from '../hooks/useQuerySource';
-import { useAsyncDataSource } from '../../../hooks/useAsyncDataSource';
+import { useRunQuery } from '../../../hooks/useRunQuery';
+import { useQuerySource } from '../../../hooks/useQuerySource';
+import { queryBuilderModalPropTypes } from '../../propTypes';
+import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
+import { useEntityType } from '../../../hooks/useEntityType';
+import { getFieldOptions } from '../helpers/selectOptions';
+import { useCancelQuery } from '../../../hooks/useCancelQuery';
+import { useTestQuery } from '../../../hooks/useTestQuery';
 
 export const QueryBuilderModal = ({
-  setIsModalShown,
   isOpen = true,
+  setIsModalShown,
   saveBtnLabel,
   initialValues,
-  runQuerySource,
-  testQuerySource,
-  onQueryRun,
-  entityTypeDataSource = () => {},
+  entityTypeDataSource,
+  runQueryDataSource,
+  testQueryDataSource,
+  cancelQueryDataSource,
+  queryDetailsDataSource,
+  onQueryRunSuccess,
+  onQueryRunFail,
+  onQueryExecutionSuccess,
+  onQueryExecutionFail,
   getParamsSource,
 }) => {
-  const { entityType } = useAsyncDataSource({ entityTypeDataSource });
-  const { source,
+  const queryClient = useQueryClient();
+
+  const { entityType } = useEntityType({ entityTypeDataSource });
+
+  const { cancelQuery } = useCancelQuery({ cancelQueryDataSource });
+
+  const {
+    source,
     setSource,
     fqlQuery,
     isQueryFilled,
-    queryStr } = useQuerySource(initialValues, entityType);
-  const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
-  const [testedQueryId, setTestedQueryId] = useState(false);
+    queryStr,
+    isSourceInit,
+  } = useQuerySource({
+    mongoQuery: initialValues,
+    entityType,
+  });
 
-  const { runQuery } = useRunQuery({
-    onQueryRun: (result) => onQueryRun({ result, queryStr, fqlQuery }),
-    runQuerySource,
-    testedQueryId,
-    fqlQuery,
+  const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
+
+  const {
+    queryId,
+    testQuery,
+    resetTestQuery,
+    isTestQueryLoading,
+    isPreviewLoading,
+    setIsPreviewLoading,
+    isTestQueryInProgress,
+    setIsTestQueryInProgress,
+  } = useTestQuery({
+    testQueryDataSource,
+    onQueryTestSuccess: () => {
+      setIsQueryRetrieved(false);
+    },
+  });
+
+  const { runQuery, isRunQueryLoading } = useRunQuery({
+    onQueryRunSuccess,
+    queryId,
+    runQueryDataSource,
+    onQueryRunFail,
   });
 
   const handleSetSource = (src) => {
@@ -45,32 +86,58 @@ export const QueryBuilderModal = ({
     setSource(src);
   };
 
-  const handleCancel = () => {
+  const handleCancelQuery = async () => {
+    if (queryId) {
+      setIsTestQueryInProgress(false);
+      setIsPreviewLoading(false);
+
+      queryClient.removeQueries({ queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA] });
+
+      resetTestQuery();
+
+      await cancelQuery({ queryId });
+    }
+  };
+  const handleCloseModal = async () => {
+    await handleCancelQuery();
+
     setIsModalShown(false);
   };
 
-  const handleRun = () => {
-    runQuery().finally(handleCancel);
+  const handleRun = async () => {
+    await runQuery({
+      queryId,
+      fqlQuery,
+    });
+
+    await handleCloseModal();
   };
 
-  const handleQueryTested = ({ queryId }) => {
-    setTestedQueryId(queryId);
-    setIsQueryRetrieved(false);
+  const handleQueryRetrieved = (data) => {
+    const completed = data?.status === QUERY_DETAILS_STATUSES.SUCCESS;
+
+    setIsQueryRetrieved(completed);
   };
 
   const getSaveBtnLabel = () => (saveBtnLabel || <FormattedMessage id="ui-plugin-query-builder.modal.run" />);
+
+  useEffect(() => {
+    if (isTestQueryInProgress) {
+      handleCancelQuery().catch(console.error);
+    }
+  }, [source, isTestQueryInProgress]);
 
   const renderFooter = () => (
     <ModalFooter>
       <Button
         buttonStyle="primary"
-        disabled={!isQueryRetrieved || !isQueryFilled}
+        disabled={!isQueryRetrieved || !isQueryFilled || isRunQueryLoading}
         onClick={handleRun}
       >
         {getSaveBtnLabel()}
       </Button>
       <Button
-        onClick={handleCancel}
+        onClick={handleCloseModal}
       >
         <FormattedMessage id="ui-plugin-query-builder.modal.cancel" />
       </Button>
@@ -92,26 +159,42 @@ export const QueryBuilderModal = ({
       <div className={css.queryArea}>
         {queryStr}
       </div>
-      <RepeatableFields source={source} setSource={handleSetSource} getParamsSource={getParamsSource} />
-      <TestQuery
-        fqlQuery={fqlQuery}
-        testQuerySource={testQuerySource}
-        isTestBtnDisabled={!isQueryFilled}
-        onQueryRetrieved={() => setIsQueryRetrieved(true)}
-        onQueryTested={handleQueryTested}
-      />
+
+      {!entityType && isSourceInit ? (
+        <Row center="xs">
+          <Loading size="large" />
+        </Row>
+      ) : (
+        <>
+          <RepeatableFields
+            source={source}
+            setSource={handleSetSource}
+            getParamsSource={getParamsSource}
+            fieldOptions={getFieldOptions(entityType)}
+          />
+          <TestQuery
+            queryId={queryId}
+            testQuery={testQuery}
+            isTestQueryLoading={isTestQueryLoading}
+            fqlQuery={fqlQuery}
+            testQueryDataSource={testQueryDataSource}
+            entityTypeDataSource={entityTypeDataSource}
+            queryDetailsDataSource={queryDetailsDataSource}
+            isQueryFilled={isQueryFilled}
+            onQueryRetrieved={handleQueryRetrieved}
+            entityTypeId={entityType?.id}
+            onQueryExecutionFail={onQueryExecutionFail}
+            onQueryExecutionSuccess={onQueryExecutionSuccess}
+            isPreviewLoading={isPreviewLoading}
+            setIsPreviewLoading={setIsPreviewLoading}
+            isTestQueryInProgress={isTestQueryInProgress}
+            setIsTestQueryInProgress={setIsTestQueryInProgress}
+          />
+        </>
+      )}
+
     </Modal>
   );
 };
 
-QueryBuilderModal.propTypes = {
-  setIsModalShown: PropTypes.func.isRequired,
-  isOpen: PropTypes.bool.isRequired,
-  saveBtnLabel: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
-  initialValues: PropTypes.object,
-  runQuerySource: PropTypes.func.isRequired,
-  testQuerySource: PropTypes.func.isRequired,
-  onQueryRun: PropTypes.func,
-  entityTypeDataSource: PropTypes.func,
-  getParamsSource: PropTypes.func,
-};
+QueryBuilderModal.propTypes = queryBuilderModalPropTypes;

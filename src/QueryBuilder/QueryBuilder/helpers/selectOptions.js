@@ -1,7 +1,6 @@
-import { DATA_TYPES } from '../constants/dataTypes';
-import { OPERATORS } from '../constants/operators';
-import { entityType } from '../../../../test/jest/data/entityType';
-import { COLUMN_KEYS } from '../constants/columnKeys';
+import { DATA_TYPES } from '../../../constants/dataTypes';
+import { OPERATORS } from '../../../constants/operators';
+import { COLUMN_KEYS } from '../../../constants/columnKeys';
 
 const baseLogicalOperators = [
   { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
@@ -23,7 +22,7 @@ const rangedUUIDOperators = [
   { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
 ];
 
-export const getOperatorOptions = (dataType) => {
+export const getOperatorOptions = (dataType, intl) => {
   const options = {
     [DATA_TYPES.RangedUUIDType]: rangedUUIDOperators,
 
@@ -45,7 +44,6 @@ export const getOperatorOptions = (dataType) => {
       { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
       { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
       { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
-      { label: OPERATORS.NOT_CONTAINS, value: OPERATORS.NOT_CONTAINS },
       { label: OPERATORS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
     ],
 
@@ -56,20 +54,20 @@ export const getOperatorOptions = (dataType) => {
   };
 
   return [
-    { value: '', label: 'Select operator', disabled: true },
+    { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.operator.placeholder' }), disabled: true },
     ...options[dataType],
   ];
 };
 
-export const fieldOptions = entityType.columns
-  .filter(item => item.visibleByDefault)
-  .map(et => ({
+export const getFieldOptions = (entityType) => {
+  return entityType?.columns?.map(et => ({
     label: et.labelAlias,
     value: et.name,
     dataType: et.dataType.dataType,
     values: et.values,
     source: et.source,
   }));
+};
 
 export const getFieldOptions = (initialValue) => {
   return initialValue.columns
@@ -89,9 +87,9 @@ export const booleanOptions = [
   { label: 'AND', value: 'AND' },
 ];
 
-export const sourceTemplate = {
+export const sourceTemplate = (fieldOptions = []) => ({
   [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: '' },
   [COLUMN_KEYS.FIELD]: { options: getFieldOptions(entityType), current: '' },
   [COLUMN_KEYS.OPERATOR]: { options: [], current: '' },
   [COLUMN_KEYS.VALUE]: { current: '' },
-};
+});

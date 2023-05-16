@@ -1,77 +1,153 @@
 import React, { useState } from 'react';
-import { Button, Dropdown, DropdownMenu } from '@folio/stripes/components';
+import { Button } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
-import { CheckboxFilter } from '@folio/stripes/smart-components';
 import PropTypes from 'prop-types';
+import { useQueryClient } from '@tanstack/react-query';
 import { ResultViewer } from '../../ResultViewer';
-import { useTestQuery } from '../hooks/useTestQuery';
+import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
+import { ViewerHeadline } from './ViewerHeadline/ViewerHeadline';
+import { ColumnsDropdown } from './ColumnsDropdown/ColumnsDropdown';
+import { DEFAULT_PREVIEW_INTERVAL } from '../helpers/query';
 
 export const TestQuery = ({
-  isTestBtnDisabled,
-  onQueryTested,
+  queryId,
+  testQuery,
+  isTestQueryLoading,
+  isQueryFilled,
+  entityTypeDataSource,
+  queryDetailsDataSource,
+  onQueryExecutionSuccess,
+  onQueryExecutionFail,
   onQueryRetrieved,
-  testQuerySource,
   fqlQuery,
+  entityTypeId,
+  isPreviewLoading,
+  setIsPreviewLoading,
+  isTestQueryInProgress,
+  setIsTestQueryInProgress,
 }) => {
-  const [visibleColumns, setVisibleColumns] = useState([]);
+  const queryClient = useQueryClient();
+
   const [columns, setColumns] = useState([]);
-  const { data, isFetched, isTestQueryFetching, testQuery } = useTestQuery({
-    testQuerySource,
-    fqlQuery,
-    onQueryTested,
-  });
+  const [visibleColumns, setVisibleColumns] = useState([]);
+  const [includeContent, setIncludeContent] = useState(true);
+
+  const isTestQueryBtnDisabled = isTestQueryLoading || !isQueryFilled || isTestQueryInProgress;
+
+  const refetchInterval = (query) => {
+    const status = query?.status;
+
+    const completeExecution = () => {
+      setIsPreviewLoading(false);
+      setIsTestQueryInProgress(false);
+
+      return 0;
+    };
+
+    if (status === QUERY_DETAILS_STATUSES.SUCCESS) {
+      onQueryExecutionSuccess?.();
+
+      return completeExecution();
+    } else if (status === QUERY_DETAILS_STATUSES.FAILED) {
+      onQueryExecutionFail?.();
+
+      return completeExecution();
+    } else {
+      return DEFAULT_PREVIEW_INTERVAL;
+    }
+  };
+
+  const structuralSharing = (oldData, newData) => {
+    if (oldData?.status && oldData?.content && !newData?.content) {
+      return {
+        ...newData,
+        content: oldData.content,
+      };
+    }
+
+    return newData;
+  };
 
   const handleTestQuery = async () => {
-    await testQuery();
+    queryClient.removeQueries({ queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA] });
+
+    setIncludeContent(true);
+    setIsPreviewLoading(true);
+    setIsTestQueryInProgress(true);
+
+    try {
+      await testQuery({
+        entityTypeId,
+        fqlQuery,
+      });
+    } catch {
+      setIsPreviewLoading(false);
+    }
   };
-  const contentDataSource = async () => data?.content;
-  const entityTypeDataSource = async () => data?.entityType;
 
-  const dropdown = (
-    <Dropdown
-      label={<FormattedMessage id="ui-plugin-query-builder.control.dropdown.showColumns" />}
-      mame="test-query-preview-dropdown"
-    >
-      <DropdownMenu
-        role="menu"
-        overrideStyle={{ maxHeight: 400 }}
-      >
-        <CheckboxFilter
-          dataOptions={columns}
-          selectedValues={visibleColumns}
-          onChange={({ values }) => setVisibleColumns(values)}
-          name="name"
-        />
-      </DropdownMenu>
-    </Dropdown>
-  );
+  const handleQueryRetrieved = (data) => {
+    onQueryRetrieved(data);
+  };
 
-  const renderHeadline = ({ totalRecords, defaultLimit }) => totalRecords && (
-    <FormattedMessage
-      id="ui-plugin-query-builder.modal.preview.title"
-      values={{ total: totalRecords, limit: defaultLimit }}
+  const handlePreviewShown = ({ currentRecordsCount, defaultLimit }) => {
+    if (currentRecordsCount >= defaultLimit) {
+      setIncludeContent(false);
+    }
+
+    setIsPreviewLoading(false);
+  };
+
+  const handleColumnChange = ({ values }) => setVisibleColumns(values);
+
+  const renderDropdown = ({ currentRecordsCount }) => !!currentRecordsCount && (
+    <ColumnsDropdown
+      columns={columns}
+      visibleColumns={visibleColumns}
+      onColumnChange={handleColumnChange}
     />
   );
 
+  // eslint-disable-next-line react/prop-types
+  const renderHeadline = ({ totalRecords: total = 0, currentRecordsCount = 0, defaultLimit, status }) => {
+    const isInProgress = status === QUERY_DETAILS_STATUSES.IN_PROGRESS;
+    const limit = currentRecordsCount < defaultLimit ? currentRecordsCount : defaultLimit;
+
+    return (
+      <ViewerHeadline
+        total={total}
+        limit={limit}
+        isInProgress={isInProgress}
+      />
+    );
+  };
+
   return (
     <>
-      <Button disabled={isTestBtnDisabled || isTestQueryFetching} onClick={handleTestQuery}>
+      <Button disabled={isTestQueryBtnDisabled} onClick={handleTestQuery}>
         <FormattedMessage id="ui-plugin-query-builder.modal.test" />
       </Button>
 
-      {(isFetched || isTestQueryFetching) && (
+      {queryId && (
         <ResultViewer
-          contentDataSource={contentDataSource}
-          entityTypeDataSource={entityTypeDataSource}
-          visibleColumns={visibleColumns}
-          onSetDefaultVisibleColumns={setVisibleColumns}
+          onSuccess={handleQueryRetrieved}
+          onPreviewShown={handlePreviewShown}
           onSetDefaultColumns={setColumns}
-          isInProgress={isTestQueryFetching}
+          onSetDefaultVisibleColumns={setVisibleColumns}
+          contentDataSource={queryDetailsDataSource}
+          entityTypeDataSource={entityTypeDataSource}
+          headline={renderHeadline}
+          headlineEnd={renderDropdown}
+          contentQueryOptions={{
+            refetchInterval,
+            structuralSharing,
+            keepPreviousData: false,
+          }}
+          contentQueryKeys={[queryId]}
+          queryParams={{ queryId, includeContent }}
+          visibleColumns={visibleColumns}
           showPagination={false}
           height={200}
-          headlineEnd={dropdown}
-          headline={renderHeadline}
-          onSuccess={onQueryRetrieved}
+          isPreviewLoading={isPreviewLoading}
         />
       )}
     </>
@@ -79,9 +155,19 @@ export const TestQuery = ({
 };
 
 TestQuery.propTypes = {
-  isTestBtnDisabled: PropTypes.bool,
-  onQueryRetrieved: PropTypes.func,
-  onQueryTested: PropTypes.func,
-  testQuerySource: PropTypes.func,
+  queryId: PropTypes.string,
   fqlQuery: PropTypes.object,
+  entityTypeDataSource: PropTypes.func,
+  queryDetailsDataSource: PropTypes.func,
+  entityTypeId: PropTypes.string,
+  isQueryFilled: PropTypes.bool,
+  onQueryRetrieved: PropTypes.func,
+  onQueryExecutionSuccess: PropTypes.func,
+  onQueryExecutionFail: PropTypes.func,
+  testQuery: PropTypes.func,
+  isTestQueryLoading: PropTypes.bool,
+  isPreviewLoading: PropTypes.bool,
+  setIsPreviewLoading: PropTypes.func,
+  isTestQueryInProgress: PropTypes.bool,
+  setIsTestQueryInProgress: PropTypes.func,
 };

@@ -8,6 +8,7 @@
   "modal.test": "Test query",
   "modal.preview.title": "Query would return {total} records. Preview of first {limit} records.",
   "modal.preview.queryInProgress": "Test query in progress",
+  "modal.preview.countingInProgress": "Counting in progress",
 
   "columns.boolean": "Boolean",
   "columns.field": "Field",
@@ -18,6 +19,7 @@
   "control.info.separateValues": "Separate multiple values with a comma.",
   "control.selection.placeholder": "Select field",
   "control.value.placeholder": "Select value",
+  "control.operator.placeholder": "Select operator",
   "control.dropdown.showColumns": "Show columns",
 
   "viewer.retrieving": "Retrieving..."

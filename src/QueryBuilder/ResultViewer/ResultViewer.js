@@ -1,15 +1,21 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Col, Row, Accordion, MultiColumnList, Headline, Loading } from '@folio/stripes/components';
+import { Col, Row, Accordion, MultiColumnList, Headline } from '@folio/stripes/components';
 import { PrevNextPagination } from '@folio/stripes-acq-components';
+import { useIntl } from 'react-intl';
 import { QueryLoader } from './QueryLoader';
 import { useAsyncDataSource } from '../../hooks/useAsyncDataSource';
 import { usePagination } from '../../hooks/usePagination';
+import { useViewerRefresh } from '../../hooks/useViewerRefresh';
+import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
 
 export const ResultViewer = ({
   showPagination = true,
   defaultLimit = 100,
   defaultOffset = 0,
+  queryParams = {},
+  contentQueryOptions = {},
+  contentQueryKeys = [],
   contentDataSource,
   entityTypeDataSource,
   headline,
@@ -18,11 +24,14 @@ export const ResultViewer = ({
   onSetDefaultVisibleColumns,
   onSetDefaultColumns,
   accordionHeadline,
-  isInProgress,
   height,
   refreshTrigger,
   onSuccess,
+  onPreviewShown,
+  isPreviewLoading,
 }) => {
+  const intl = useIntl();
+
   const { changePage, limit, offset } = usePagination({
     defaultLimit,
     defaultOffset,
@@ -39,79 +48,95 @@ export const ResultViewer = ({
     defaultColumns,
     defaultVisibleColumns,
     refetch,
+    status,
   } = useAsyncDataSource({
-    isInProgress,
     entityTypeDataSource,
     contentDataSource,
     offset,
     limit,
     onSuccess,
+    queryParams,
+    contentQueryOptions,
+    contentQueryKeys,
   });
 
+  const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading;
+  const currentRecordsCount = contentData?.length || 0;
+
   // set visible by default columns once
-  useEffect(() => {
-    if (isContentTypeFetchedAfterMount) {
-      onSetDefaultColumns?.(defaultColumns);
-      onSetDefaultVisibleColumns?.(defaultVisibleColumns);
-    }
-  }, [isContentTypeFetchedAfterMount]);
+  useViewerCallbacks({
+    isContentTypeFetchedAfterMount,
+    onSetDefaultColumns,
+    defaultColumns,
+    onSetDefaultVisibleColumns,
+    defaultVisibleColumns,
+    currentRecordsCount,
+    onPreviewShown,
+    defaultLimit,
+  });
 
   // refresh functionality
-  useEffect(() => {
-    if (refreshTrigger) {
-      if (offset === defaultOffset) {
-        refetch();
-      } else {
-        changePage({ offset: defaultOffset, limit: defaultLimit });
-      }
-    }
-  }, [refreshTrigger]);
+  useViewerRefresh({
+    refetch,
+    refreshTrigger,
+    changePage,
+    defaultLimit,
+    defaultOffset,
+    offset,
+  });
 
-  const renderHeader = () => (
-    <Row between="xs">
-      <Col xs={8}>
-        <Headline size="large" margin="none" tag="h3">
-          {headline({ totalRecords, defaultLimit })}
-        </Headline>
-      </Col>
-      {headlineEnd}
-    </Row>
-  );
+  const renderHeader = () => {
+    const localizedTotalRecords = intl.formatNumber(totalRecords);
+    const localizedCurrentRecordsCount = intl.formatNumber(currentRecordsCount);
 
-  const renderTable = () => (
-    <Row center="xs">
-      <Col xs={12}>
-        <MultiColumnList
-          data-testid="results-viewer-table"
-          contentData={contentData}
-          columnMapping={columnMapping}
-          visibleColumns={visibleColumns}
-          pagingType={null}
-          onNeedMoreData={changePage}
-          height={height}
-          loading={isContentDataFetching}
-        />
-        {showPagination && (
-          <PrevNextPagination
-            limit={limit}
-            offset={offset}
-            totalCount={totalRecords}
-            onChange={changePage}
+    return (
+      <Row between="xs">
+        <Col xs={10}>
+          <Headline size="large" margin="none" tag="h3">
+            {headline?.({
+              totalRecords: localizedTotalRecords,
+              currentRecordsCount: localizedCurrentRecordsCount,
+              defaultLimit,
+              status,
+            })}
+          </Headline>
+        </Col>
+        {headlineEnd?.({
+          currentRecordsCount: localizedCurrentRecordsCount,
+          status,
+        })}
+      </Row>
+    );
+  };
+
+  const renderTable = () => {
+    return (
+      <Row center="xs">
+        <Col xs={12}>
+          <MultiColumnList
+            data-testid="results-viewer-table"
+            contentData={contentData}
+            columnMapping={columnMapping}
+            visibleColumns={visibleColumns}
+            pagingType={null}
+            onNeedMoreData={changePage}
+            height={height}
+            loading={isListLoading}
           />
-        )}
-      </Col>
-    </Row>
-  );
+          {showPagination && (
+            <PrevNextPagination
+              limit={limit}
+              offset={offset}
+              totalCount={totalRecords}
+              onChange={changePage}
+            />
+          )}
+        </Col>
+      </Row>
+    );
+  };
 
   const renderContent = () => {
-    if (isContentDataLoading || isEntityTypeLoading) {
-      return (
-        <Row center="xs">
-          <Loading size="large" />
-        </Row>
-      );
-    }
-
     return (
       <>
         {renderHeader()}
@@ -129,7 +154,7 @@ export const ResultViewer = ({
     </Accordion>
   );
 
-  if (isInProgress) return <QueryLoader />;
+  if (isPreviewLoading) return <QueryLoader />;
 
   return accordionHeadline ? renderWithAccordion() : renderContent();
 };
@@ -139,7 +164,7 @@ ResultViewer.propTypes = {
     PropTypes.string,
   ]),
   headline: PropTypes.func,
-  headlineEnd: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  headlineEnd: PropTypes.func,
   contentDataSource: PropTypes.func,
   entityTypeDataSource: PropTypes.func,
   visibleColumns: PropTypes.arrayOf(PropTypes.string),
@@ -147,9 +172,13 @@ ResultViewer.propTypes = {
   onSetDefaultColumns: PropTypes.func,
   defaultLimit: PropTypes.number,
   defaultOffset: PropTypes.number,
-  isInProgress: PropTypes.bool,
   height: PropTypes.number,
   showPagination: PropTypes.bool,
   refreshTrigger: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   onSuccess: PropTypes.func,
+  onPreviewShown: PropTypes.func,
+  queryParams: PropTypes.object,
+  isPreviewLoading: PropTypes.bool,
+  contentQueryOptions: PropTypes.object,
+  contentQueryKeys: PropTypes.arrayOf(PropTypes.string),
 };
