@@ -42,6 +42,6 @@ const result = [
 
 describe('mongoQueryToSource()', () => {
   test('should return empty array for empty query', () => {
-    expect(getFieldOptions(entityType)).toEqual(result);
+    expect(getFieldOptions(entityType?.columns)).toEqual(result);
   });
 });

@@ -43,7 +43,7 @@ export const SelectionContainer = (
   };
 
   const dataOptions = getSelectOptionsWithPlaceholder(availableValues)
-    || getSelectOptionsWithPlaceholder(data?.values)
+    || getSelectOptionsWithPlaceholder(data?.content)
     || [];
 
   return (

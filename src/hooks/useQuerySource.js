@@ -17,7 +17,7 @@ const getSourceValue = (mongoQuery, entityType, fieldOptions, intl) => {
 export const useQuerySource = ({ mongoQuery, entityType }) => {
   const intl = useIntl();
   const [isSourceInit, setIsSourceInit] = useState(false);
-  const fieldOptions = getFieldOptions(entityType);
+  const fieldOptions = getFieldOptions(entityType?.columns);
   const [source, setSource] = useState(getSourceValue(mongoQuery, entityType, fieldOptions));
 
   useEffect(() => {

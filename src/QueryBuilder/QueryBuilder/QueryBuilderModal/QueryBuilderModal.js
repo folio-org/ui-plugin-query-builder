@@ -170,7 +170,7 @@ export const QueryBuilderModal = ({
             source={source}
             setSource={handleSetSource}
             getParamsSource={getParamsSource}
-            fieldOptions={getFieldOptions(entityType)}
+            fieldOptions={getFieldOptions(entityType?.columns)}
           />
           <TestQuery
             queryId={queryId}
