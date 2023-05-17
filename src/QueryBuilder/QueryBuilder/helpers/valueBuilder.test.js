@@ -89,7 +89,7 @@ describe('valueBuilder', () => {
     const field = 'languages';
     const operator = OPERATORS.IN;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`(${value?.map(el => el.value).join('","')})`);
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`(${value?.map(el => `"${el.value}"`).join(',')})`);
   });
 
   test('should return a string enclosed in double quotes for OpenUUIDType if operator is not IN or NOT_IN', () => {
