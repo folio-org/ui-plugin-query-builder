@@ -29,7 +29,7 @@ export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
 
     [DATA_TYPES.ArrayType]: () => (Array.isArray(value) &&
     (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN) ?
-      `(${value?.map(el => el.value).join('","')})` : `"${value}"`),
+      `(${value?.map(el => `"${el.value}"`).join(',')})` : `"${value}"`),
 
     [DATA_TYPES.OpenUUIDType]: () => (
       (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN)
