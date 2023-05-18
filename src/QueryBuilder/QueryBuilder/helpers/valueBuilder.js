@@ -3,8 +3,13 @@ import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS } from '../../../constants/operators';
 import { ISO_FORMAT } from './timeUtils';
 
+export const getCommaSeparatedStr = (arr) => {
+  return arr?.map(el => `"${el.value}"`).join(',');
+};
+
 export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
   const dataType = fieldOptions?.find(o => o.value === field)?.dataType || DATA_TYPES.BooleanType;
+  const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
   // add additional templates for dataTypes
   const valueMap = {
     [DATA_TYPES.StringType]: () => `"${value}"`,
@@ -15,9 +20,13 @@ export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
 
     [DATA_TYPES.ObjectType]: () => `"${value}"`,
 
-    [DATA_TYPES.RangedUUIDType]: () => (Array.isArray(value)
-      ? `(${value?.map(el => `"${el.value}"`).join(',')})`
-      : value),
+    [DATA_TYPES.RangedUUIDType]: () => {
+      if (Array.isArray(value)) {
+        return `(${getCommaSeparatedStr(value)})`;
+      }
+
+      return `"${value}"`;
+    },
 
     [DATA_TYPES.DateType]: () => {
       const date = moment(value);
@@ -27,19 +36,27 @@ export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
       return (value ? `"${date.format(ISO_FORMAT)}"` : '');
     },
 
-    [DATA_TYPES.ArrayType]: () => (Array.isArray(value) &&
-    (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN) ?
-      `(${value?.map(el => `"${el.value}"`).join(',')})` : `"${value}"`),
+    [DATA_TYPES.ArrayType]: () => {
+      if (Array.isArray(value) && isInRelatedOperator) {
+        return `(${getCommaSeparatedStr(value)})`;
+      }
+
+      return `"${value}"`;
+    },
 
     [DATA_TYPES.OpenUUIDType]: () => (
-      (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN)
+      isInRelatedOperator
         ? `"${value.replace(/,\s?/g, '","')}"`
         : `"${value}"`
     ),
 
-    [DATA_TYPES.EnumType]: () => (Array.isArray(value) &&
-    (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN) ?
-      `(${value?.map(el => `"${el.value}"`).join(',')})` : `"${value}"`),
+    [DATA_TYPES.EnumType]: () => {
+      if (Array.isArray(value) && isInRelatedOperator) {
+        return `(${getCommaSeparatedStr(value)})`;
+      }
+
+      return `"${value}"`;
+    },
   };
 
   return valueMap[dataType]?.();

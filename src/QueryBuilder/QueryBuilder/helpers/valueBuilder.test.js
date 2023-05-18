@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { valueBuilder } from './valueBuilder';
+import { getCommaSeparatedStr, valueBuilder } from './valueBuilder';
 import { OPERATORS } from '../../../constants/operators';
 import { ISO_FORMAT } from './timeUtils';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
@@ -38,11 +38,11 @@ describe('valueBuilder', () => {
   });
 
   test('should return a string enclosed in double quotes for RangedUUIDType if value is not an array', () => {
-    const value = { label: 'UC Academic, Indefinite', value: 'Indefinite' };
+    const value = 'id1, id2';
     const field = 'user_patron_group';
     const operator = OPERATORS.EQUAL;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toEqual({ label: 'UC Academic, Indefinite', value: 'Indefinite' });
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toEqual('"id1, id2"');
   });
 
   test('should return a string enclosed in parentheses for RangedUUIDType if value is an array', () => {
@@ -50,7 +50,7 @@ describe('valueBuilder', () => {
     const field = 'user_patron_group';
     const operator = OPERATORS.IN;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`(${value.map(el => `"${el.value}"`).join(',')})`);
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`(${getCommaSeparatedStr(value)})`);
   });
 
   test('should return an empty string if value is falsy for DateType', () => {
@@ -89,7 +89,7 @@ describe('valueBuilder', () => {
     const field = 'languages';
     const operator = OPERATORS.IN;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`(${value?.map(el => `"${el.value}"`).join(',')})`);
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`(${getCommaSeparatedStr(value)})`);
   });
 
   test('should return a string enclosed in double quotes for OpenUUIDType if operator is not IN or NOT_IN', () => {
