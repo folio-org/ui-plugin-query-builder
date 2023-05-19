@@ -46,8 +46,10 @@ export const DataTypeInput = ({
 
   const selectControl = ({ testId }) => (
     <SelectionContainer
-      component={Select}
       nameOfComponent="Select"
+      component={Select}
+      source={source}
+      values={values}
       data-testid={testId}
       getParamsSource={getParamsSource}
       availableValues={availableValues}
@@ -66,9 +68,10 @@ export const DataTypeInput = ({
 
   const multiSelectControl = () => (
     <SelectionContainer
+      nameOfComponent="MultiSelection"
       component={MultiSelection}
       source={source}
-      nameOfComponent="MultiSelection"
+      values={values}
       getParamsSource={getParamsSource}
       availableValues={availableValues}
       onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
