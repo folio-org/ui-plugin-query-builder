@@ -148,7 +148,6 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, fieldOpti
                     index={index}
                     availableValues={row.value.options}
                     source={row.value.source}
-                    values={row.value.values}
                     operator={row.operator.current}
                     onChange={handleChange}
                     data-testid={`input-value-${index}`}

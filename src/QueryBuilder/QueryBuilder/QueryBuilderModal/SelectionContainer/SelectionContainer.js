@@ -3,26 +3,29 @@ import { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useParamsDataSource } from '../../../../hooks/useParamsDataSource';
 
-export const SelectionContainer = (
-  {
-    component: Component,
-    availableValues,
-    nameOfComponent,
-    onChange,
-    getParamsSource,
-    source,
-    ...rest
-  },
-) => {
+export const SelectionContainer = ({
+  component: Component,
+  availableValues,
+  getParamsSource,
+  isMulti,
+  onChange,
+  source,
+  ...rest
+}) => {
   const intl = useIntl();
   const [searchValue, setSearchValue] = useState('');
   const getSelectOptionsWithPlaceholder = (options) => {
-    if (nameOfComponent === 'Select' && Array.isArray(options)) {
-      return [
-        { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
-        ...options,
-      ];
-    } else return options;
+    return isMulti ? options : [
+      { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
+      ...options,
+    ];
+  };
+
+  const getOptions = (staticValues, sourceValues) => {
+    if (staticValues) return getSelectOptionsWithPlaceholder(staticValues);
+    if (sourceValues) return getSelectOptionsWithPlaceholder(sourceValues);
+
+    return [];
   };
 
   const { data } = useParamsDataSource({ source, searchValue, getParamsSource });
@@ -42,9 +45,7 @@ export const SelectionContainer = (
     return { renderedItems, exactMatch };
   };
 
-  const dataOptions = getSelectOptionsWithPlaceholder(availableValues)
-    || getSelectOptionsWithPlaceholder(data?.content)
-    || [];
+  const dataOptions = getOptions(availableValues, data?.content);
 
   return (
     <Component
@@ -57,10 +58,10 @@ export const SelectionContainer = (
 
 SelectionContainer.propTypes = {
   component: PropTypes.node,
-  nameOfComponent: PropTypes.string,
+  isMulti: PropTypes.bool,
   onChange: PropTypes.func,
   index: PropTypes.number,
   source: PropTypes.object,
   getParamsSource: PropTypes.func,
-  availableValues: PropTypes.arrayOf(PropTypes.oneOf([PropTypes.bool, PropTypes.object])),
+  availableValues: PropTypes.arrayOf(PropTypes.object),
 };

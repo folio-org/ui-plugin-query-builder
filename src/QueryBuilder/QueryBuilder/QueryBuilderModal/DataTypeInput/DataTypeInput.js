@@ -13,20 +13,19 @@ import { OPERATORS } from '../../../../constants/operators';
 import { SelectionContainer } from '../SelectionContainer/SelectionContainer';
 
 export const DataTypeInput = ({
+  availableValues,
   onChange,
   dataType,
-  availableValues,
   className,
   index,
   operator,
   getParamsSource,
   source,
-  values,
   ...rest
 }) => {
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
   const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
-  const hasSourceOrValues = source || values;
+  const hasSourceOrValues = source || availableValues;
 
   const textControl = () => (
     <TextField
@@ -46,10 +45,8 @@ export const DataTypeInput = ({
 
   const selectControl = ({ testId }) => (
     <SelectionContainer
-      nameOfComponent="Select"
       component={Select}
       source={source}
-      values={values}
       data-testid={testId}
       getParamsSource={getParamsSource}
       availableValues={availableValues}
@@ -58,23 +55,22 @@ export const DataTypeInput = ({
     />
   );
 
-  const datePickerControl = () => (
-    <Datepicker
-      data-testid="data-input-datepicker"
-      onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+  const multiSelectControl = () => (
+    <SelectionContainer
+      component={MultiSelection}
+      source={source}
+      getParamsSource={getParamsSource}
+      availableValues={availableValues}
+      onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
+      isMulti
       {...rest}
     />
   );
 
-  const multiSelectControl = () => (
-    <SelectionContainer
-      nameOfComponent="MultiSelection"
-      component={MultiSelection}
-      source={source}
-      values={values}
-      getParamsSource={getParamsSource}
-      availableValues={availableValues}
-      onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
+  const datePickerControl = () => (
+    <Datepicker
+      data-testid="data-input-datepicker"
+      onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
       {...rest}
     />
   );
@@ -163,7 +159,6 @@ DataTypeInput.propTypes = {
   onChange: PropTypes.func,
   index: PropTypes.number,
   source: PropTypes.object,
-  values: PropTypes.arrayOf(PropTypes.object),
   getParamsSource: PropTypes.func,
   availableValues: PropTypes.arrayOf(PropTypes.oneOf([PropTypes.bool, PropTypes.object])),
 };
