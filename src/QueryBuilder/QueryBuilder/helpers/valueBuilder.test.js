@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { getCommaSeparatedStr, valueBuilder } from './valueBuilder';
+import { getCommaSeparatedStr, getQuotedStr, valueBuilder } from './valueBuilder';
 import { OPERATORS } from '../../../constants/operators';
 import { ISO_FORMAT } from './timeUtils';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
@@ -10,7 +10,7 @@ describe('valueBuilder', () => {
     const field = 'user_first_name';
     const operator = OPERATORS.EQUAL;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`"${value}"`);
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
   test('should return the same value for IntegerType', () => {
@@ -26,7 +26,7 @@ describe('valueBuilder', () => {
     const field = 'user_active';
     const operator = OPERATORS.EQUAL;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`"${value}"`);
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
   test('should return a string enclosed in double quotes for ObjectType', () => {
@@ -34,7 +34,7 @@ describe('valueBuilder', () => {
     const field = 'address';
     const operator = OPERATORS.EQUAL;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`"${value}"`);
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
   test('should return a string enclosed in double quotes for RangedUUIDType if value is not an array', () => {
@@ -46,11 +46,11 @@ describe('valueBuilder', () => {
   });
 
   test('should return a string enclosed in parentheses for RangedUUIDType if value is an array', () => {
-    const value = [{ label: 'UC Academic, Indefinite', value: 'Indefinite' }];
+    const value = 'id';
     const field = 'user_patron_group';
     const operator = OPERATORS.IN;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`(${getCommaSeparatedStr(value)})`);
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
   test('should return an empty string if value is falsy for DateType', () => {
@@ -78,7 +78,7 @@ describe('valueBuilder', () => {
     const field = 'languages';
     const operator = OPERATORS.EQUAL;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`"${value}"`);
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
   test('should return a string enclosed in parentheses for ArrayType if value is an array and operator is IN', () => {
@@ -89,7 +89,7 @@ describe('valueBuilder', () => {
     const field = 'languages';
     const operator = OPERATORS.IN;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`(${getCommaSeparatedStr(value)})`);
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getCommaSeparatedStr(value));
   });
 
   test('should return a string enclosed in double quotes for OpenUUIDType if operator is not IN or NOT_IN', () => {
@@ -97,7 +97,7 @@ describe('valueBuilder', () => {
     const field = 'instance_id';
     const operator = OPERATORS.EQUAL;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`"${value}"`);
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
   test('should return a string enclosed in double quotes for EnumType if value is a string', () => {
@@ -105,6 +105,6 @@ describe('valueBuilder', () => {
     const field = 'status';
     const operator = OPERATORS.EQUAL;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`"${value}"`);
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 });

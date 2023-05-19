@@ -10,6 +10,7 @@ export const SelectionContainer = ({
   isMulti,
   onChange,
   source,
+  testId,
   ...rest
 }) => {
   const intl = useIntl();
@@ -50,6 +51,7 @@ export const SelectionContainer = ({
   return (
     <Component
       {...rest}
+      data-testid={testId}
       onChange={onChange}
       filter={filterOptions}
       dataOptions={dataOptions}
@@ -58,6 +60,7 @@ export const SelectionContainer = ({
 
 SelectionContainer.propTypes = {
   component: PropTypes.node,
+  testId: PropTypes.string,
   isMulti: PropTypes.bool,
   onChange: PropTypes.func,
   index: PropTypes.number,

@@ -27,9 +27,9 @@ export const DataTypeInput = ({
   const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
   const hasSourceOrValues = source || availableValues;
 
-  const textControl = () => (
+  const textControl = ({ testId }) => (
     <TextField
-      data-testid="data-input-default-textField"
+      data-testid={testId}
       onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
       {...rest}
     />
@@ -47,7 +47,7 @@ export const DataTypeInput = ({
     <SelectionContainer
       component={Select}
       source={source}
-      data-testid={testId}
+      testId={testId}
       getParamsSource={getParamsSource}
       availableValues={availableValues}
       onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
@@ -55,8 +55,9 @@ export const DataTypeInput = ({
     />
   );
 
-  const multiSelectControl = () => (
+  const multiSelectControl = ({ testId } = {}) => (
     <SelectionContainer
+      testId={testId}
       component={MultiSelection}
       source={source}
       getParamsSource={getParamsSource}
@@ -69,7 +70,7 @@ export const DataTypeInput = ({
 
   const datePickerControl = () => (
     <Datepicker
-      data-testid="data-input-datepicker"
+      data-testid="data-input-dateType"
       onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
       {...rest}
     />
@@ -80,7 +81,7 @@ export const DataTypeInput = ({
 
     if (isInRelatedWithOptions) {
       return (
-        <div className={className}>
+        <div className={className} data-testid="data-input-select-multi-stringType">
           {multiSelectControl()}
         </div>
       );
@@ -89,12 +90,12 @@ export const DataTypeInput = ({
     if (isEqualRelatedWithOptions) {
       return (
         <div className={className}>
-          {selectControl({ testId: 'data-input-select-generic' })}
+          {selectControl({ testId: 'data-input-select-single-stringType' })}
         </div>
       );
     }
 
-    return textControl();
+    return textControl({ testId: 'data-input-text-stringType' });
   };
 
   const numericTypeControls = () => {
@@ -103,7 +104,7 @@ export const DataTypeInput = ({
 
   const booleanTypeControls = () => (
     <div className={className}>
-      {selectControl({ testId: 'data-input-select-bool' })}
+      {selectControl({ testId: 'data-input-select-boolType' })}
     </div>
   );
 
@@ -115,13 +116,15 @@ export const DataTypeInput = ({
       </>
     ) : (
       <div className={className}>
-        {textControl()}
+        {textControl({ testId: 'data-input-text-openUUIDType' })}
       </div>
     );
   };
 
   const arrayLikeTypeControls = () => {
-    return isInRelatedOperator ? multiSelectControl() : selectControl({ testId: 'data-input-select-array' });
+    return isInRelatedOperator
+      ? multiSelectControl({ testId: 'data-input-select-multi-arrayType' })
+      : selectControl({ testId: 'data-input-select-arrayType' });
   };
 
   switch (dataType) {
@@ -136,7 +139,7 @@ export const DataTypeInput = ({
       return booleanTypeControls();
 
     case DATA_TYPES.RangedUUIDType:
-      return textControl();
+      return textControl({ testId: 'data-input-text-rangedUUIDType' });
 
     case DATA_TYPES.DateType:
       return datePickerControl();
@@ -148,7 +151,7 @@ export const DataTypeInput = ({
     case DATA_TYPES.EnumType:
       return arrayLikeTypeControls();
     default:
-      return textControl();
+      return textControl({ testId: 'data-input-text-default' });
   }
 };
 

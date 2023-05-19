@@ -17,7 +17,7 @@ const renderDataTypeInput = ({
   dataType,
   operator,
   source,
-  availableValues = [],
+  availableValues,
 }) => render(
   <Intl>
     <QueryClientProvider client={queryClient}>
@@ -32,42 +32,109 @@ const renderDataTypeInput = ({
   </Intl>,
 );
 
+const arr = [
+  {
+    dataType: DATA_TYPES.StringType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-select-single-stringType',
+    onChange: jest.fn(),
+    availableValues: [],
+  },
+  {
+    dataType: DATA_TYPES.StringType,
+    operator: OPERATORS.NOT_IN,
+    componentTestId: 'data-input-select-multi-stringType',
+    availableValues: [],
+  },
+  {
+    dataType: DATA_TYPES.StringType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-text-stringType',
+    onChange: jest.fn(),
+  },
+
+  {
+    dataType: DATA_TYPES.BooleanType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-select-boolType',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: DATA_TYPES.RangedUUIDType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-text-rangedUUIDType',
+  },
+  {
+    dataType: DATA_TYPES.OpenUUIDType,
+    operator: OPERATORS.IN,
+    componentTestId: 'data-input-textarea',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: DATA_TYPES.OpenUUIDType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-text-openUUIDType',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.IN,
+    text: 'stripes-components.multiSelection.defaultEmptyMessage',
+  },
+  {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-select-arrayType',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: DATA_TYPES.EnumType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-select-arrayType',
+    onChange: jest.fn(),
+    availableValues: [
+      { label: 'Available', value: 'available' },
+      { label: 'Checked out', value: 'checked' },
+    ],
+  },
+  {
+    dataType: DATA_TYPES.EnumType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-select-arrayType',
+    onChange: jest.fn(),
+    source: mockSource,
+  },
+  {
+    dataType: DATA_TYPES.DateType,
+    operator: OPERATORS.GREATER_THAN,
+    componentTestId: 'data-input-dateType',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: 'DEFAULT',
+    operator: OPERATORS.GREATER_THAN,
+    componentTestId: 'data-input-text-default',
+    onChange: jest.fn(),
+  },
+];
+
 describe('DataTypeInput', () => {
   afterEach(() => {
     cleanup();
   });
 
-  const arr = [
-    { dataType: DATA_TYPES.BooleanType, operator: OPERATORS.EQUAL, componentTestId: 'data-input-select-bool', onChange: jest.fn() },
-    { dataType: DATA_TYPES.RangedUUIDType, operator: OPERATORS.IN, text: 'stripes-components.multiSelection.defaultEmptyMessage' },
-    { dataType: DATA_TYPES.OpenUUIDType, operator: OPERATORS.IN, componentTestId: 'data-input-textarea', onChange: jest.fn() },
-    { dataType: DATA_TYPES.OpenUUIDType, operator: OPERATORS.EQUAL, componentTestId: 'data-input-textField', onChange: jest.fn() },
-    { dataType: DATA_TYPES.ArrayType, operator: OPERATORS.IN, text: 'stripes-components.multiSelection.defaultEmptyMessage' },
-    { dataType: DATA_TYPES.ArrayType, operator: OPERATORS.EQUAL, componentTestId: 'data-input-select-array', onChange: jest.fn() },
-    { dataType: DATA_TYPES.EnumType,
-      operator: OPERATORS.EQUAL,
-      componentTestId: 'data-input-select-array',
-      onChange: jest.fn(),
-      availableValues: [
-        { label: 'Available', value: 'available' },
-        { label: 'Checked out', value: 'checked' },
-      ] },
-    {
-      dataType: DATA_TYPES.EnumType,
-      operator: OPERATORS.EQUAL,
-      componentTestId: 'data-input-select-array',
-      onChange: jest.fn(),
-      source: mockSource,
-    },
-    { dataType: DATA_TYPES.DateType, operator: OPERATORS.GREATER_THAN, componentTestId: 'data-input-datepicker', onChange: jest.fn() },
-    { dataType: 'DEFAULT', operator: OPERATORS.GREATER_THAN, componentTestId: 'data-input-default-textField', onChange: jest.fn() },
-  ];
-
-  for (const { dataType, operator, componentTestId, text, onChange, source } of arr) {
+  for (const { dataType, operator, componentTestId, text, onChange, source, availableValues } of arr) {
     it(`should render correct component based on ${dataType} and ${operator}`, () => {
-      const wrapper = renderDataTypeInput({ dataType, operator, onChange, source });
+      renderDataTypeInput({ dataType, operator, onChange, source, availableValues });
+      let el;
 
-      const el = wrapper.queryByTestId(componentTestId || '') || screen.queryByText(text || '');
+      if (componentTestId) {
+        el = screen.queryByTestId(componentTestId || '');
+      }
+
+      if (text) {
+        el = screen.queryByText(text || '');
+      }
 
       expect(el).toBeInTheDocument();
 
