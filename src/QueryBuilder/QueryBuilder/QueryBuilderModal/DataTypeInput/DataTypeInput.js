@@ -21,106 +21,135 @@ export const DataTypeInput = ({
   operator,
   getParamsSource,
   source,
+  values,
   ...rest
 }) => {
+  const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
+  const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
+  const hasSourceOrValues = source || values;
+
+  const textControl = () => (
+    <TextField
+      data-testid="data-input-default-textField"
+      onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+      {...rest}
+    />
+  );
+
+  const textAreaControl = () => (
+    <TextArea
+      data-testid="data-input-textarea"
+      rows={1}
+      onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+    />
+  );
+
+  const selectControl = ({ testId }) => (
+    <SelectionContainer
+      component={Select}
+      nameOfComponent="Select"
+      data-testid={testId}
+      getParamsSource={getParamsSource}
+      availableValues={availableValues}
+      onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+      {...rest}
+    />
+  );
+
+  const datePickerControl = () => (
+    <Datepicker
+      data-testid="data-input-datepicker"
+      onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+      {...rest}
+    />
+  );
+
+  const multiSelectControl = () => (
+    <SelectionContainer
+      component={MultiSelection}
+      source={source}
+      nameOfComponent="MultiSelection"
+      getParamsSource={getParamsSource}
+      availableValues={availableValues}
+      onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
+      {...rest}
+    />
+  );
+  const stringTypeControls = () => {
+    const isInRelatedWithOptions = isInRelatedOperator && hasSourceOrValues;
+    const isEqualRelatedWithOptions = isEqualRelatedOperator && hasSourceOrValues;
+
+    if (isInRelatedWithOptions) {
+      return (
+        <div className={className}>
+          {multiSelectControl()}
+        </div>
+      );
+    }
+
+    if (isEqualRelatedWithOptions) {
+      return (
+        <div className={className}>
+          {selectControl({ testId: 'data-input-select-generic' })}
+        </div>
+      );
+    }
+
+    return textControl();
+  };
+
+  const numericTypeControls = () => {
+    return hasSourceOrValues ? selectControl({ testId: 'data-input-select-numeric' }) : textControl();
+  };
+
+  const booleanTypeControls = () => (
+    <div className={className}>
+      {selectControl({ testId: 'data-input-select-bool' })}
+    </div>
+  );
+
+  const openUUIDTypeControls = () => {
+    return isInRelatedOperator ? (
+      <>
+        {textAreaControl()}
+        <FormattedMessage id="ui-plugin-query-builder.control.info.separateValues" />
+      </>
+    ) : (
+      <div className={className}>
+        {textControl()}
+      </div>
+    );
+  };
+
+  const arrayLikeTypeControls = () => {
+    return isInRelatedOperator ? multiSelectControl() : selectControl({ testId: 'data-input-select-array' });
+  };
+
   switch (dataType) {
+    case DATA_TYPES.StringType:
+      return stringTypeControls();
+
+    case DATA_TYPES.IntegerType:
+    case DATA_TYPES.NumberType:
+      return numericTypeControls();
+
     case DATA_TYPES.BooleanType:
-      return (
-        <div className={className}>
-          <SelectionContainer
-            Selection={Select}
-            nameOfComponent="Select"
-            getParamsSource={getParamsSource}
-            data-testid="data-input-select-bool"
-            availableValues={availableValues}
-            onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
-            {...rest}
-          />
-        </div>
-      );
+      return booleanTypeControls();
+
     case DATA_TYPES.RangedUUIDType:
-      return (
-        <div className={className}>
-          <SelectionContainer
-            source={source}
-            nameOfComponent="MultiSelection"
-            Selection={MultiSelection}
-            getParamsSource={getParamsSource}
-            availableValues={availableValues}
-            onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
-            {...rest}
-          />
-        </div>
-      );
+      return textControl();
+
+    case DATA_TYPES.DateType:
+      return datePickerControl();
+
     case DATA_TYPES.OpenUUIDType:
-      return (
-        operator === OPERATORS.IN || operator === OPERATORS.NOT_IN ? (
-          <>
-            <TextArea
-              data-testid="data-input-textarea"
-              rows={1}
-              onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
-            />
-            <FormattedMessage id="ui-plugin-query-builder.control.info.separateValues" />
-          </>
-        ) : (
-          <div className={className}>
-            <TextField
-              data-testid="data-input-textField"
-              onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
-              {...rest}
-            />
-          </div>
-        )
-      );
+      return openUUIDTypeControls();
+
     case DATA_TYPES.ArrayType:
     case DATA_TYPES.EnumType:
-      return (
-        (operator === OPERATORS.IN || operator === OPERATORS.NOT_IN)
-          ? (
-            <div className={className}>
-              <SelectionContainer
-                source={source}
-                Selection={MultiSelection}
-                availableValues={availableValues}
-                nameOfComponent="MultiSelection"
-                getParamsSource={getParamsSource}
-                data-testid={`data-input-multiselect-${dataType}`}
-                onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
-                {...rest}
-              />
-            </div>
-          )
-          : (
-            <div className={className}>
-              <SelectionContainer
-                Selection={Select}
-                nameOfComponent="Select"
-                data-testid="data-input-select-array"
-                source={source}
-                getParamsSource={getParamsSource}
-                availableValues={availableValues}
-                onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
-                {...rest}
-              />
-            </div>
-          ));
-    case DATA_TYPES.DateType:
-      return (
-        <Datepicker
-          data-testid="data-input-datepicker"
-          onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
-          {...rest}
-        />
-      );
+      return arrayLikeTypeControls();
     default:
-      return (
-        <TextField
-          data-testid="data-input-default-textField"
-          onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
-          {...rest}
-        />
-      );
+      return textControl();
   }
 };
 
@@ -131,6 +160,7 @@ DataTypeInput.propTypes = {
   onChange: PropTypes.func,
   index: PropTypes.number,
   source: PropTypes.object,
+  values: PropTypes.arrayOf(PropTypes.object),
   getParamsSource: PropTypes.func,
   availableValues: PropTypes.arrayOf(PropTypes.oneOf([PropTypes.bool, PropTypes.object])),
 };

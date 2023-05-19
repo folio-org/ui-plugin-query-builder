@@ -5,7 +5,7 @@ import { useParamsDataSource } from '../../../../hooks/useParamsDataSource';
 
 export const SelectionContainer = (
   {
-    Selection,
+    component: Component,
     availableValues,
     nameOfComponent,
     onChange,
@@ -47,7 +47,7 @@ export const SelectionContainer = (
     || [];
 
   return (
-    <Selection
+    <Component
       {...rest}
       onChange={onChange}
       filter={filterOptions}
@@ -56,7 +56,7 @@ export const SelectionContainer = (
 };
 
 SelectionContainer.propTypes = {
-  Selection: PropTypes.node,
+  component: PropTypes.node,
   nameOfComponent: PropTypes.string,
   onChange: PropTypes.func,
   index: PropTypes.number,
