@@ -126,15 +126,7 @@ describe('DataTypeInput', () => {
   for (const { dataType, operator, componentTestId, text, onChange, source, availableValues } of arr) {
     it(`should render correct component based on ${dataType} and ${operator}`, () => {
       renderDataTypeInput({ dataType, operator, onChange, source, availableValues });
-      let el;
-
-      if (componentTestId) {
-        el = screen.queryByTestId(componentTestId || '');
-      }
-
-      if (text) {
-        el = screen.queryByText(text || '');
-      }
+      const el = screen.queryByTestId(componentTestId || '') || screen.queryByText(text || '');
 
       expect(el).toBeInTheDocument();
 
