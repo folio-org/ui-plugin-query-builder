@@ -16,3 +16,4 @@
 * [UIPQB-30](https://issues.folio.org/browse/UIPQB-30) Create pulling mechanism for query-builder-plugin
 * [UIPQB-33](https://issues.folio.org/browse/UIPQB-33) Aborting long running query
 * [UIPQB-35](https://issues.folio.org/browse/UIPQB-35) Incorrect parsing for multiselect values
+* [UIPQB-36](https://issues.folio.org/browse/UIPQB-36) Add X button for closing the form
