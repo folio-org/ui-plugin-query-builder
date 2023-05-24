@@ -92,7 +92,7 @@ export const getOperatorOptions = ({
 export const getFieldOptions = (options) => {
   return options?.map(et => ({
     label: et.labelAlias,
-    value: et.idColumnName || et.name,
+    value: et.name,
     dataType: et.dataType.dataType,
     values: et.values,
     source: et.source,
