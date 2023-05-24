@@ -134,7 +134,14 @@ export const mongoQueryToSource = ({
         const item = {
           boolean: { options: booleanOptions, current: boolean },
           field: { options: fieldOptions, current: field },
-          operator: { options: getOperatorOptions(type, intl), current: operator },
+          operator: {
+            options: getOperatorOptions({
+              dataType: type,
+              hasSourceOrValues: fieldItem?.values || fieldItem?.source,
+              intl,
+            }),
+            current: operator,
+          },
           value: { current: value },
         };
 
