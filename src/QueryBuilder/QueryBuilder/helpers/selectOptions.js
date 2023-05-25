@@ -21,7 +21,7 @@ const baseLogicalOperators = () => [
 ];
 
 const extendedLogicalOperators = () => [
-  ...baseLogicalOperators,
+  ...baseLogicalOperators(),
   { label: OPERATORS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
   { label: OPERATORS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
 ];
