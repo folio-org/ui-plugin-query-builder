@@ -22,6 +22,10 @@ const rangedUUIDOperators = [
   { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
 ];
 
+export const getFilledValues = (options) => {
+  return options?.map(({ value, label }) => ({ value, label: label || value }));
+};
+
 export const getOperatorOptions = (dataType, intl) => {
   const options = {
     [DATA_TYPES.RangedUUIDType]: rangedUUIDOperators,
@@ -60,12 +64,14 @@ export const getOperatorOptions = (dataType, intl) => {
 };
 
 export const getFieldOptions = (options) => {
-  return options?.map(et => ({
-    label: et.labelAlias,
-    value: et.name,
-    dataType: et.dataType.dataType,
-    values: et.values,
-    source: et.source,
+  const ids = options?.filter(o => Boolean(o.idColumnName)).map(o => o.idColumnName);
+
+  return options?.filter(o => !ids.includes(o.name)).map(o => ({
+    label: o.labelAlias,
+    value: o.name,
+    dataType: o.dataType.dataType,
+    source: o.source,
+    values: getFilledValues(o.values),
   }));
 };
 
