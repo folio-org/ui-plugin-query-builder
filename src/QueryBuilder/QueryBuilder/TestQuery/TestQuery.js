@@ -25,6 +25,8 @@ export const TestQuery = ({
   setIsPreviewLoading,
   isTestQueryInProgress,
   setIsTestQueryInProgress,
+  recordsLimit,
+  onRecordsLimitExceeded,
 }) => {
   const queryClient = useQueryClient();
 
@@ -36,6 +38,7 @@ export const TestQuery = ({
 
   const refetchInterval = (query) => {
     const status = query?.status;
+    const totalRecords = query?.totalRecords || 0;
 
     const completeExecution = () => {
       setIsPreviewLoading(false);
@@ -44,7 +47,11 @@ export const TestQuery = ({
       return 0;
     };
 
-    if (status === QUERY_DETAILS_STATUSES.SUCCESS) {
+    if (recordsLimit && totalRecords > recordsLimit) {
+      onRecordsLimitExceeded?.({ recordsLimit, query });
+
+      return completeExecution();
+    } else if (status === QUERY_DETAILS_STATUSES.SUCCESS) {
       onQueryExecutionSuccess?.();
 
       return completeExecution();
@@ -170,4 +177,6 @@ TestQuery.propTypes = {
   setIsPreviewLoading: PropTypes.func,
   isTestQueryInProgress: PropTypes.bool,
   setIsTestQueryInProgress: PropTypes.func,
+  recordsLimit: PropTypes.number,
+  onRecordsLimitExceeded: PropTypes.func,
 };
