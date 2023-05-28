@@ -64,7 +64,7 @@ export const getOperatorOptions = (dataType, intl) => {
 };
 
 export const getFieldOptions = (options) => {
-  const ids = options?.filter(o => Boolean(o.idColumnName)).map(o => o.idColumnName);
+  const ids = options?.filter(o => Boolean(o.idColumnName)).map(o => o.idColumnName) || [];
 
   return options?.filter(o => !ids.includes(o.name)).map(o => ({
     label: o.labelAlias,

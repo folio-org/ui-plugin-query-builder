@@ -10,6 +10,7 @@ import {
   runQueryDataSource,
   testQueryDataSource,
 } from '../../../../test/jest/data/sources';
+import { getFieldOptions } from '../helpers/selectOptions';
 
 const queryClient = new QueryClient();
 
@@ -62,8 +63,8 @@ describe('QueryBuilderModal', () => {
     act(() => userEvent.click(selectFieldPlaceholder));
 
     await waitFor(() => {
-      entityType.columns.forEach(col => {
-        expect(screen.getByText(`${col.labelAlias}`)).toBeInTheDocument();
+      getFieldOptions(entityType.columns).forEach(col => {
+        expect(screen.getByText(`${col.label}`)).toBeInTheDocument();
       });
     });
   });

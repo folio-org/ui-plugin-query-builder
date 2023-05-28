@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { getQueryStr, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from '../QueryBuilder/QueryBuilder/helpers/query';
 import { booleanOptions, getFieldOptions, sourceTemplate } from '../QueryBuilder/QueryBuilder/helpers/selectOptions';
 
-const getSourceValue = (mongoQuery, entityType, fieldOptions, intl) => {
+const getSourceValue = (mongoQuery, fieldOptions, intl) => {
   return mongoQuery
     ? mongoQueryToSource({
       mongoQuery,
@@ -17,12 +17,13 @@ const getSourceValue = (mongoQuery, entityType, fieldOptions, intl) => {
 export const useQuerySource = ({ mongoQuery, entityType }) => {
   const intl = useIntl();
   const [isSourceInit, setIsSourceInit] = useState(false);
-  const fieldOptions = getFieldOptions(entityType?.columns);
-  const [source, setSource] = useState(getSourceValue(mongoQuery, entityType, fieldOptions));
+  const columns = entityType?.columns;
+  const fieldOptions = getFieldOptions(columns);
+  const [source, setSource] = useState(getSourceValue(mongoQuery, fieldOptions, intl));
 
   useEffect(() => {
     if (entityType) {
-      setSource(getSourceValue(mongoQuery, entityType, fieldOptions, intl));
+      setSource(getSourceValue(mongoQuery, fieldOptions, intl));
 
       setIsSourceInit(true);
     }
