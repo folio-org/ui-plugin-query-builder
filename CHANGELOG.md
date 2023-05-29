@@ -16,3 +16,4 @@
 * [UIPQB-30](https://issues.folio.org/browse/UIPQB-30) Create pulling mechanism for query-builder-plugin
 * [UIPQB-33](https://issues.folio.org/browse/UIPQB-33) Aborting long running query
 * [UIPQB-35](https://issues.folio.org/browse/UIPQB-35) Incorrect parsing for multiselect values
+* [UIPQB-40](https://issues.folio.org/browse/UIPQB-40) Change rendering behavior with IN operator
