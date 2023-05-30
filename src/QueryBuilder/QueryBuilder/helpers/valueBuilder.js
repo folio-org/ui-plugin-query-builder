@@ -1,7 +1,6 @@
 import moment from 'moment';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS } from '../../../constants/operators';
-import { ISO_FORMAT } from './timeUtils';
 
 export const getCommaSeparatedStr = (arr) => {
   const str = arr?.map(el => `"${el.value}"`).join(',');
@@ -14,11 +13,9 @@ export const getQuotedStr = (value) => {
 };
 
 export const getFormattedDate = (value) => {
-  const date = moment(value);
+  const date = moment(value).toISOString();
 
-  date.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-
-  return (value ? `"${date.format(ISO_FORMAT)}"` : '');
+  return value ? `"${date}"` : '';
 };
 
 export const getFormattedUUID = (value, isInRelatedOperator) => {
