@@ -149,6 +149,8 @@ export const QueryBuilderModal = ({
     <Modal
       open={isOpen}
       footer={renderFooter()}
+      onClose={handleCloseModal}
+      dismissible
       label={<FormattedMessage id="ui-plugin-query-builder.trigger" />}
       size="large"
       contentClass={css.modalClass}
