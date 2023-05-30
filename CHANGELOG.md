@@ -17,3 +17,4 @@
 * [UIPQB-33](https://issues.folio.org/browse/UIPQB-33) Aborting long running query
 * [UIPQB-35](https://issues.folio.org/browse/UIPQB-35) Incorrect parsing for multiselect values
 * [UIPQB-40](https://issues.folio.org/browse/UIPQB-40) Change rendering behavior with IN operator
+* [UIPQB-37](https://issues.folio.org/browse/UIPQB-37) Reset form to original state after user cancel out
