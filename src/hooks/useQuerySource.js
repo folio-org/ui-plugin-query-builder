@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { getQueryStr, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from '../QueryBuilder/QueryBuilder/helpers/query';
 import { booleanOptions, getFieldOptions, sourceTemplate } from '../QueryBuilder/QueryBuilder/helpers/selectOptions';
 
-const getSourceValue = (mongoQuery, fieldOptions, intl) => {
+export const getSourceValue = (mongoQuery, fieldOptions, intl) => {
   return mongoQuery
     ? mongoQueryToSource({
       mongoQuery,

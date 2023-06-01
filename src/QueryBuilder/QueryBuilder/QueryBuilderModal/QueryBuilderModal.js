@@ -14,7 +14,7 @@ import css from './QueryBuilderModal.css';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
 import { useRunQuery } from '../../../hooks/useRunQuery';
-import { useQuerySource } from '../../../hooks/useQuerySource';
+import { getSourceValue, useQuerySource } from '../../../hooks/useQuerySource';
 import { queryBuilderModalPropTypes } from '../../propTypes';
 import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
 import { useEntityType } from '../../../hooks/useEntityType';
@@ -103,6 +103,7 @@ export const QueryBuilderModal = ({
   const handleCloseModal = async () => {
     await handleCancelQuery();
 
+    setSource(getSourceValue(initialValues, entityType, getFieldOptions(entityType?.columns)))
     setIsModalShown(false);
   };
 
@@ -150,6 +151,8 @@ export const QueryBuilderModal = ({
     <Modal
       open={isOpen}
       footer={renderFooter()}
+      onClose={handleCloseModal}
+      dismissible
       label={<FormattedMessage id="ui-plugin-query-builder.trigger" />}
       size="large"
       contentClass={css.modalClass}
