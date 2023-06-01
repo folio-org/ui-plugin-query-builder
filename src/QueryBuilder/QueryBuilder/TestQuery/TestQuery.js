@@ -25,17 +25,21 @@ export const TestQuery = ({
   setIsPreviewLoading,
   isTestQueryInProgress,
   setIsTestQueryInProgress,
+  recordsLimit,
+  onRecordsLimitExceeded,
 }) => {
   const queryClient = useQueryClient();
 
   const [columns, setColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [includeContent, setIncludeContent] = useState(true);
+  const [recordsLimitExceeded, setRecordsLimitExceeded] = useState(false);
 
   const isTestQueryBtnDisabled = isTestQueryLoading || !isQueryFilled || isTestQueryInProgress;
 
   const refetchInterval = (query) => {
     const status = query?.status;
+    const totalRecords = query?.totalRecords || 0;
 
     const completeExecution = () => {
       setIsPreviewLoading(false);
@@ -44,7 +48,12 @@ export const TestQuery = ({
       return 0;
     };
 
-    if (status === QUERY_DETAILS_STATUSES.SUCCESS) {
+    if (recordsLimit && totalRecords > recordsLimit) {
+      onRecordsLimitExceeded?.({ recordsLimit, query });
+      setRecordsLimitExceeded(true);
+
+      return completeExecution();
+    } else if (status === QUERY_DETAILS_STATUSES.SUCCESS) {
       onQueryExecutionSuccess?.();
 
       return completeExecution();
@@ -74,6 +83,7 @@ export const TestQuery = ({
     setIncludeContent(true);
     setIsPreviewLoading(true);
     setIsTestQueryInProgress(true);
+    setRecordsLimitExceeded(false);
 
     try {
       await testQuery({
@@ -109,7 +119,7 @@ export const TestQuery = ({
 
   // eslint-disable-next-line react/prop-types
   const renderHeadline = ({ totalRecords: total = 0, currentRecordsCount = 0, defaultLimit, status }) => {
-    const isInProgress = status === QUERY_DETAILS_STATUSES.IN_PROGRESS;
+    const isInProgress = status === QUERY_DETAILS_STATUSES.IN_PROGRESS && !recordsLimitExceeded;
     const limit = currentRecordsCount < defaultLimit ? currentRecordsCount : defaultLimit;
 
     return (
@@ -170,4 +180,6 @@ TestQuery.propTypes = {
   setIsPreviewLoading: PropTypes.func,
   isTestQueryInProgress: PropTypes.bool,
   setIsTestQueryInProgress: PropTypes.func,
+  recordsLimit: PropTypes.number,
+  onRecordsLimitExceeded: PropTypes.func,
 };

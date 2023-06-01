@@ -33,6 +33,10 @@ const UUIDOperators = () => [
   { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
 ];
 
+export const getFilledValues = (options) => {
+  return options?.map(({ value, label }) => ({ value, label: label || value }));
+};
+
 const stringOperators = (hasSourceOrValues) => {
   return [
     { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
@@ -65,7 +69,6 @@ export const getOperatorOptions = ({
 
     case DATA_TYPES.OpenUUIDType:
       return getOperatorsWithPlaceholder(UUIDOperators(), intl);
-
     case DATA_TYPES.IntegerType:
       return getOperatorsWithPlaceholder(baseLogicalOperators(), intl);
 
@@ -90,12 +93,14 @@ export const getOperatorOptions = ({
 };
 
 export const getFieldOptions = (options) => {
-  return options?.map(et => ({
-    label: et.labelAlias,
-    value: et.name,
-    dataType: et.dataType.dataType,
-    values: et.values,
-    source: et.source,
+  const ids = options?.filter(o => Boolean(o.idColumnName)).map(o => o.idColumnName) || [];
+
+  return options?.filter(o => !ids.includes(o.name)).map(o => ({
+    label: o.labelAlias,
+    value: o.idColumnName || o.name,
+    dataType: o.dataType.dataType,
+    source: o.source,
+    values: getFilledValues(o.values),
   }));
 };
 
@@ -103,9 +108,9 @@ export const booleanOptions = [
   { label: 'AND', value: 'AND' },
 ];
 
-export const sourceTemplate = (fieldOptions) => ({
+export const sourceTemplate = (fieldOptions = []) => ({
   [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: '' },
-  [COLUMN_KEYS.FIELD]: { options: fieldOptions || [], current: '' },
+  [COLUMN_KEYS.FIELD]: { options: fieldOptions, current: '' },
   [COLUMN_KEYS.OPERATOR]: { options: [], current: '' },
   [COLUMN_KEYS.VALUE]: { current: '' },
 });

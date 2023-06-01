@@ -35,6 +35,10 @@ export const isQueryValid = (source) => {
     && Boolean(item[COLUMN_KEYS.VALUE].current?.length));
 };
 
+export const getTransformedValue = (val) => {
+  return Array.isArray(val) ? val.map(({ value }) => value) : val;
+};
+
 export const sourceToMongoQuery = (source) => {
   const query = {};
   const andQuery = [];
@@ -65,10 +69,10 @@ export const sourceToMongoQuery = (source) => {
         queryItem = { [field]: { $lte: value } };
         break;
       case OPERATORS.IN:
-        queryItem = { [field]: { $in: value } };
+        queryItem = { [field]: { $in: getTransformedValue(value) } };
         break;
       case OPERATORS.NOT_IN:
-        queryItem = { [field]: { $nin: value } };
+        queryItem = { [field]: { $nin: getTransformedValue(value) } };
         break;
       case OPERATORS.STARTS_WITH:
         queryItem = { [field]: { $regex: new RegExp(`^${value}`).source } };

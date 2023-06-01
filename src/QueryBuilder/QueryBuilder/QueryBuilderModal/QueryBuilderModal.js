@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Modal,
   ModalFooter,
@@ -37,7 +37,10 @@ export const QueryBuilderModal = ({
   onQueryExecutionSuccess,
   onQueryExecutionFail,
   getParamsSource,
+  recordsLimit,
+  onRecordsLimitExceeded,
 }) => {
+  const intl = useIntl();
   const queryClient = useQueryClient();
 
   const { entityType } = useEntityType({ entityTypeDataSource });
@@ -101,7 +104,7 @@ export const QueryBuilderModal = ({
   const handleCloseModal = async () => {
     await handleCancelQuery();
 
-    setSource(getSourceValue(initialValues, entityType, getFieldOptions(entityType?.columns)))
+    setSource(getSourceValue(initialValues, getFieldOptions(entityType?.columns), intl));
     setIsModalShown(false);
   };
 
@@ -173,7 +176,7 @@ export const QueryBuilderModal = ({
             source={source}
             setSource={handleSetSource}
             getParamsSource={getParamsSource}
-            fieldOptions={getFieldOptions(entityType?.columns)}
+            columns={entityType?.columns}
           />
           <TestQuery
             queryId={queryId}
@@ -192,6 +195,8 @@ export const QueryBuilderModal = ({
             setIsPreviewLoading={setIsPreviewLoading}
             isTestQueryInProgress={isTestQueryInProgress}
             setIsTestQueryInProgress={setIsTestQueryInProgress}
+            recordsLimit={recordsLimit}
+            onRecordsLimitExceeded={onRecordsLimitExceeded}
           />
         </>
       )}
