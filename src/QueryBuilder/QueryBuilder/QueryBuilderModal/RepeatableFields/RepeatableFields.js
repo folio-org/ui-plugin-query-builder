@@ -16,6 +16,7 @@ import { COLUMN_KEYS } from '../../../../constants/columnKeys';
 import { booleanOptions, getFieldOptions, getOperatorOptions, sourceTemplate } from '../../helpers/selectOptions';
 import { OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
+import { isValueValid } from '../../helpers/valueBuilder';
 
 export const RepeatableFields = ({ source, setSource, getParamsSource, columns }) => {
   const intl = useIntl();
@@ -39,11 +40,13 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
   };
 
   const handleChange = (value, index, fieldName) => {
+    const field = fieldOptions.find(o => o.value === value);
     const isField = fieldName === COLUMN_KEYS.FIELD;
     const isOperator = fieldName === COLUMN_KEYS.OPERATOR;
-    const field = fieldOptions.find(o => o.value === value);
     const rowField = source[index].field.current;
     const memorizedField = fieldOptions.find(o => o.value === rowField);
+
+    if (fieldName === COLUMN_KEYS.VALUE && !isValueValid(value, field?.dataType)) return;
 
     const modifications = (item) => {
       if (isField) {

@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS } from '../../../constants/operators';
+import { ISO_FORMAT } from './timeUtils';
 
 export const getCommaSeparatedStr = (arr) => {
   const str = arr?.map(el => `"${el.value}"`).join(',');
@@ -13,7 +14,7 @@ export const getQuotedStr = (value) => {
 };
 
 export const getFormattedDate = (value) => {
-  const date = moment(value).toISOString();
+  const date = moment(value).format(ISO_FORMAT);
 
   return value ? `"${date}"` : '';
 };
@@ -50,4 +51,16 @@ export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
   };
 
   return valueMap[dataType]?.();
+};
+
+export const isValueValid = (value, dataType) => {
+  if (dataType === DATA_TYPES.NumberType) {
+    const exp = /^[0-9\b]+$/;
+
+    if (exp.test(value)) {
+      return true;
+    }
+  }
+
+  return true;
 };
