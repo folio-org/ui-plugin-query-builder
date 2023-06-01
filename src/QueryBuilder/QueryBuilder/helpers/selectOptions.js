@@ -97,7 +97,7 @@ export const getFieldOptions = (options) => {
 
   return options?.filter(o => !ids.includes(o.name)).map(o => ({
     label: o.labelAlias,
-    value: o.name,
+    value: o.idColumnName || o.name,
     dataType: o.dataType.dataType,
     source: o.source,
     values: getFilledValues(o.values),
@@ -108,9 +108,9 @@ export const booleanOptions = [
   { label: 'AND', value: 'AND' },
 ];
 
-export const sourceTemplate = (fieldOptions) => ({
+export const sourceTemplate = (fieldOptions = []) => ({
   [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: '' },
-  [COLUMN_KEYS.FIELD]: { options: fieldOptions || [], current: '' },
+  [COLUMN_KEYS.FIELD]: { options: fieldOptions, current: '' },
   [COLUMN_KEYS.OPERATOR]: { options: [], current: '' },
   [COLUMN_KEYS.VALUE]: { current: '' },
 });

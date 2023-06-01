@@ -33,6 +33,7 @@ export const TestQuery = ({
   const [columns, setColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [includeContent, setIncludeContent] = useState(true);
+  const [recordsLimitExceeded, setRecordsLimitExceeded] = useState(false);
 
   const isTestQueryBtnDisabled = isTestQueryLoading || !isQueryFilled || isTestQueryInProgress;
 
@@ -49,6 +50,7 @@ export const TestQuery = ({
 
     if (recordsLimit && totalRecords > recordsLimit) {
       onRecordsLimitExceeded?.({ recordsLimit, query });
+      setRecordsLimitExceeded(true);
 
       return completeExecution();
     } else if (status === QUERY_DETAILS_STATUSES.SUCCESS) {
@@ -81,6 +83,7 @@ export const TestQuery = ({
     setIncludeContent(true);
     setIsPreviewLoading(true);
     setIsTestQueryInProgress(true);
+    setRecordsLimitExceeded(false);
 
     try {
       await testQuery({
@@ -116,7 +119,7 @@ export const TestQuery = ({
 
   // eslint-disable-next-line react/prop-types
   const renderHeadline = ({ totalRecords: total = 0, currentRecordsCount = 0, defaultLimit, status }) => {
-    const isInProgress = status === QUERY_DETAILS_STATUSES.IN_PROGRESS;
+    const isInProgress = status === QUERY_DETAILS_STATUSES.IN_PROGRESS && !recordsLimitExceeded;
     const limit = currentRecordsCount < defaultLimit ? currentRecordsCount : defaultLimit;
 
     return (

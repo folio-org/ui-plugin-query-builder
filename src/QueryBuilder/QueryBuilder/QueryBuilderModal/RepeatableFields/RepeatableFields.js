@@ -13,12 +13,15 @@ import { useIntl } from 'react-intl';
 import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import css from '../QueryBuilderModal.css';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
-import { booleanOptions, getOperatorOptions, sourceTemplate } from '../../helpers/selectOptions';
+import { booleanOptions, getFieldOptions, getOperatorOptions, sourceTemplate } from '../../helpers/selectOptions';
 import { OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 
-export const RepeatableFields = ({ source, setSource, getParamsSource, fieldOptions }) => {
+export const RepeatableFields = ({ source, setSource, getParamsSource, columns }) => {
   const intl = useIntl();
+
+  const fieldOptions = getFieldOptions(columns);
+
   const handleAdd = () => {
     setSource(res => ([
       ...res,
@@ -183,7 +186,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, fieldOpti
 
 RepeatableFields.propTypes = {
   source: PropTypes.arrayOf(PropTypes.object),
-  fieldOptions: PropTypes.arrayOf(PropTypes.object),
+  columns: PropTypes.arrayOf(PropTypes.object),
   setSource: PropTypes.func,
   getParamsSource: PropTypes.func,
 };

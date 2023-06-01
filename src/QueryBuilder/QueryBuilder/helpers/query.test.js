@@ -51,7 +51,7 @@ describe('mongoQueryToSource()', () => {
       boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'languages' },
       operator: { options: expect.any(Array), current: OPERATORS.IN },
-      value: { current: ['value', 'value2'] },
+      value: { current: [{ label: 'value', value: 'value' }, { label: 'value2', value: 'value2' }] },
     },
     {
       boolean: { options: booleanOptions, current: 'AND' },
@@ -69,7 +69,7 @@ describe('mongoQueryToSource()', () => {
       boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'languages' },
       operator: { options: expect.any(Array), current: OPERATORS.NOT_IN },
-      value: { current: ['value', 'value2'] },
+      value: { current: [{ label: 'value', value: 'value' }, { label: 'value2', value: 'value2' }] },
     },
   ];
 
@@ -95,7 +95,12 @@ describe('mongoQueryToSource()', () => {
       intl: { formatMessage: jest.fn() },
     });
 
-    expect(result).toEqual(source);
+    expect(result).toEqual(source.map(v => ({
+      ...v,
+      value: {
+        current: Array.isArray(v.value.current) ? v.value.current.map(({ value }) => value) : v.value.current,
+      },
+    })));
   });
 
   it('should convert from source to simple query format', () => {
