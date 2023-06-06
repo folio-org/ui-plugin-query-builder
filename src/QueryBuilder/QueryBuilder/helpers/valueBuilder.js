@@ -1,7 +1,5 @@
-import moment from 'moment';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS } from '../../../constants/operators';
-import { ISO_FORMAT } from './timeUtils';
 
 export const getCommaSeparatedStr = (arr) => {
   const str = arr?.map(el => `"${el.value}"`).join(',');
@@ -10,13 +8,7 @@ export const getCommaSeparatedStr = (arr) => {
 };
 
 export const getQuotedStr = (value) => {
-  return `"${value}"`;
-};
-
-export const getFormattedDate = (value) => {
-  const date = moment(value).format(ISO_FORMAT);
-
-  return value ? `"${date}"` : '';
+  return value ? `"${value}"` : '';
 };
 
 export const getFormattedUUID = (value, isInRelatedOperator) => {
@@ -45,7 +37,7 @@ export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
 
     [DATA_TYPES.ObjectType]: () => getQuotedStr(value),
 
-    [DATA_TYPES.DateType]: () => getFormattedDate(value),
+    [DATA_TYPES.DateType]: () => getQuotedStr(value),
 
     [DATA_TYPES.OpenUUIDType]: () => getFormattedUUID(value, isInRelatedOperator),
   };
