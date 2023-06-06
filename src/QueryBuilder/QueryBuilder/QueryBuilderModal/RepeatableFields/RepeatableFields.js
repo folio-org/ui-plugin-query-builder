@@ -46,7 +46,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
     const rowField = source[index].field.current;
     const memorizedField = fieldOptions.find(o => o.value === rowField);
 
-    if (fieldName === COLUMN_KEYS.VALUE && !isValueValid(value, field?.dataType)) return;
+    if (fieldName === COLUMN_KEYS.VALUE && !isValueValid(value, memorizedField?.dataType)) return;
 
     const modifications = (item) => {
       if (isField) {
