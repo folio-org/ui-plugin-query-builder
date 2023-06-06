@@ -11,7 +11,7 @@ import { DATA_TYPES } from '../../../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
 import { OPERATORS } from '../../../../constants/operators';
 import { SelectionContainer } from '../SelectionContainer/SelectionContainer';
-import { ISO_FORMAT } from '../../helpers/timeUtils';
+import { getFormattedDate } from '../../helpers/valueBuilder';
 
 export const DataTypeInput = ({
   availableValues,
@@ -72,7 +72,7 @@ export const DataTypeInput = ({
   const datePickerControl = () => (
     <Datepicker
       data-testid="data-input-dateType"
-      backendDateStandard={ISO_FORMAT}
+      outputFormatter={getFormattedDate}
       onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
       {...rest}
     />
