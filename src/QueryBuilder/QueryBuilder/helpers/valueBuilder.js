@@ -49,9 +49,7 @@ export const isValueValid = (value, dataType) => {
   if (dataType === DATA_TYPES.NumberType) {
     const exp = /^[0-9\b]+$/;
 
-    if (exp.test(value)) {
-      return true;
-    }
+    return exp.test(value);
   }
 
   return true;
