@@ -66,11 +66,9 @@ describe('valueBuilder', () => {
     const field = 'user_expiration_date';
     const operator = OPERATORS.EQUAL;
 
-    const date = moment(value);
+    const date = moment(value).format(ISO_FORMAT);
 
-    date.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(`"${date.format(ISO_FORMAT)}"`);
+    expect(valueBuilder({ value: date, field, operator, fieldOptions })).toBe(`"${date}"`);
   });
 
   test('should return a string enclosed in double quotes for ArrayType if value is a string', () => {

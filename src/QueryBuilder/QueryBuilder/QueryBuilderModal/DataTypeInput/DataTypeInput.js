@@ -11,6 +11,7 @@ import { DATA_TYPES } from '../../../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
 import { OPERATORS } from '../../../../constants/operators';
 import { SelectionContainer } from '../SelectionContainer/SelectionContainer';
+import { ISO_FORMAT } from '../../helpers/timeUtils';
 
 export const DataTypeInput = ({
   availableValues,
@@ -27,10 +28,11 @@ export const DataTypeInput = ({
   const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
   const hasSourceOrValues = source || availableValues;
 
-  const textControl = ({ testId }) => (
+  const textControl = ({ testId, type = 'text' }) => (
     <TextField
       data-testid={testId}
       onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+      type={type}
       {...rest}
     />
   );
@@ -71,7 +73,10 @@ export const DataTypeInput = ({
   const datePickerControl = () => (
     <Datepicker
       data-testid="data-input-dateType"
-      onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+      backendDateStandard={ISO_FORMAT}
+      onChange={(e, value, formattedValue) => {
+        onChange(formattedValue, index, COLUMN_KEYS.VALUE);
+      }}
       {...rest}
     />
   );
@@ -99,7 +104,7 @@ export const DataTypeInput = ({
   };
 
   const numericTypeControls = () => {
-    return hasSourceOrValues ? selectControl({ testId: 'data-input-select-numeric' }) : textControl();
+    return hasSourceOrValues ? selectControl({ testId: 'data-input-select-numeric' }) : textControl({ type: 'number' });
   };
 
   const booleanTypeControls = () => (

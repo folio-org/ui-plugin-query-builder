@@ -90,9 +90,7 @@ describe('select options', () => {
         options,
         operators: [
           { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-          { label: OPERATORS.IN, value: OPERATORS.IN },
           { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
-          { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
           { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
           { label: OPERATORS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
         ],
