@@ -44,13 +44,3 @@ export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
 
   return valueMap[dataType]?.();
 };
-
-export const isValueValid = (value, dataType) => {
-  if (dataType === DATA_TYPES.NumberType) {
-    const exp = /^[0-9\b]+$/;
-
-    return exp.test(value);
-  }
-
-  return true;
-};

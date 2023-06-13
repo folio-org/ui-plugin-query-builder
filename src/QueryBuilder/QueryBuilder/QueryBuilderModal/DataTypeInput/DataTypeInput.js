@@ -28,10 +28,11 @@ export const DataTypeInput = ({
   const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
   const hasSourceOrValues = source || availableValues;
 
-  const textControl = ({ testId }) => (
+  const textControl = ({ testId, type = 'text' }) => (
     <TextField
       data-testid={testId}
       onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+      type={type}
       {...rest}
     />
   );
@@ -103,7 +104,7 @@ export const DataTypeInput = ({
   };
 
   const numericTypeControls = () => {
-    return hasSourceOrValues ? selectControl({ testId: 'data-input-select-numeric' }) : textControl();
+    return hasSourceOrValues ? selectControl({ testId: 'data-input-select-numeric' }) : textControl({ type: 'number' });
   };
 
   const booleanTypeControls = () => (
