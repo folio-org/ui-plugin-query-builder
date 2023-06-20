@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Button, MessageBanner } from '@folio/stripes/components';
+import { Button, MessageBanner, Layout } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { useQueryClient } from '@tanstack/react-query';
@@ -137,9 +137,11 @@ export const TestQuery = ({
       </Button>
 
       {recordsLimitExceeded && (
-        <MessageBanner type="warning">
-          <FormattedMessage id="ui-plugin-query-builder.modal.banner.limit" />
-        </MessageBanner>
+        <Layout className="padding-bottom-gutter">
+          <MessageBanner type="warning">
+            <FormattedMessage id="ui-plugin-query-builder.modal.banner.limit" />
+          </MessageBanner>
+        </Layout>
       )}
 
       {queryId && (

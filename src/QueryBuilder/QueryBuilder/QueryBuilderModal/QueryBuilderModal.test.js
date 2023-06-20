@@ -27,6 +27,7 @@ const renderQueryBuilderModal = ({
   isOpen = true,
   saveBtnLabel = '',
   onQueryRunSuccess = onRunSuccessMock,
+  ...rest
 }) => render(
   <QueryClientProvider client={queryClient}>
     <QueryBuilderModal
@@ -41,9 +42,43 @@ const renderQueryBuilderModal = ({
       cancelQueryDataSource={cancelQueryDataSource}
       onQueryRunSuccess={onQueryRunSuccess}
       onQueryRunFail={onQueryRunFail}
+      {...rest}
     />
   </QueryClientProvider>,
 );
+
+const fillFormAndClickTestQuery = async () => {
+  const testQuery = screen.getByRole('button', { name: /ui-plugin-query-builder.modal.test/ });
+
+  const selectFieldPlaceholder = screen.getByText('ui-plugin-query-builder.control.selection.placeholder');
+
+  act(() => userEvent.click(selectFieldPlaceholder));
+
+  let userFirstNameOption;
+
+  await waitFor(() => {
+    userFirstNameOption = screen.getByText(/User first name/);
+
+    expect(userFirstNameOption).toBeVisible();
+  });
+
+  userEvent.click(userFirstNameOption);
+
+  fireEvent.change(screen.getByTestId('operator-option-0'), { target: { value: '==' } });
+
+  await waitFor(() => {
+    expect(screen.getByTestId('input-value-0')).toBeVisible();
+    expect(testQuery).toBeDisabled();
+  });
+
+  userEvent.type(screen.getByTestId('input-value-0'), '123');
+
+  await waitFor(() => {
+    expect(testQuery).toBeEnabled();
+  });
+
+  act(() => userEvent.click(testQuery));
+};
 
 describe('QueryBuilderModal', () => {
   it('should render modal', async () => {
@@ -114,39 +149,8 @@ describe('QueryBuilderModal', () => {
     });
 
     const runQuery = screen.getByRole('button', { name: /ui-plugin-query-builder.modal.run/ });
-    const testQuery = screen.getByRole('button', { name: /ui-plugin-query-builder.modal.test/ });
 
-    expect(runQuery).toBeDisabled();
-    expect(testQuery).toBeDisabled();
-
-    const selectFieldPlaceholder = screen.getByText('ui-plugin-query-builder.control.selection.placeholder');
-
-    act(() => userEvent.click(selectFieldPlaceholder));
-
-    let userFirstNameOption;
-
-    await waitFor(() => {
-      userFirstNameOption = screen.getByText(/User first name/);
-
-      expect(userFirstNameOption).toBeVisible();
-    });
-
-    userEvent.click(userFirstNameOption);
-
-    fireEvent.change(screen.getByTestId('operator-option-0'), { target: { value: '==' } });
-
-    await waitFor(() => {
-      expect(screen.getByTestId('input-value-0')).toBeVisible();
-      expect(testQuery).toBeDisabled();
-    });
-
-    userEvent.type(screen.getByTestId('input-value-0'), '123');
-
-    await waitFor(() => {
-      expect(testQuery).toBeEnabled();
-    });
-
-    act(() => userEvent.click(testQuery));
+    await fillFormAndClickTestQuery();
 
     await waitFor(() => {
       expect(screen.queryByText('ui-plugin-query-builder.viewer.retrieving')).not.toBeInTheDocument();
@@ -160,6 +164,22 @@ describe('QueryBuilderModal', () => {
 
     await waitFor(() => {
       expect(onRunSuccessMock).toHaveBeenCalled();
+    });
+  });
+
+  it('should show banner if limit is exceeded', async () => {
+    renderQueryBuilderModal({
+      recordsLimit: 1,
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByText('LOADING')).not.toBeInTheDocument();
+    });
+
+    await fillFormAndClickTestQuery();
+
+    await waitFor(() => {
+      expect(screen.queryByText('ui-plugin-query-builder.modal.banner.limit')).toBeVisible();
     });
   });
 });
