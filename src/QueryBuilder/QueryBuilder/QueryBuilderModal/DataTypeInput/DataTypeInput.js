@@ -30,6 +30,7 @@ export const DataTypeInput = ({
 
   const textControl = ({ testId, type = 'text' }) => {
     const onKeyDown = (event) => {
+      // prevent typing e, +, - in number type
       if (type === 'number' && (event.keyCode === 69 || event.keyCode === 187 || event.keyCode === 189)) {
         event.preventDefault();
       }
