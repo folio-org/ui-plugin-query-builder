@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from '@folio/stripes/components';
+
+import { Button, MessageBanner, Layout } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { useQueryClient } from '@tanstack/react-query';
@@ -26,7 +27,6 @@ export const TestQuery = ({
   isTestQueryInProgress,
   setIsTestQueryInProgress,
   recordsLimit,
-  onRecordsLimitExceeded,
 }) => {
   const queryClient = useQueryClient();
 
@@ -49,7 +49,6 @@ export const TestQuery = ({
     };
 
     if (recordsLimit && totalRecords > recordsLimit) {
-      onRecordsLimitExceeded?.({ recordsLimit, query });
       setRecordsLimitExceeded(true);
 
       return completeExecution();
@@ -137,6 +136,14 @@ export const TestQuery = ({
         <FormattedMessage id="ui-plugin-query-builder.modal.test" />
       </Button>
 
+      {recordsLimitExceeded && (
+        <Layout className="padding-bottom-gutter">
+          <MessageBanner type="warning">
+            <FormattedMessage id="ui-plugin-query-builder.modal.banner.limit" />
+          </MessageBanner>
+        </Layout>
+      )}
+
       {queryId && (
         <ResultViewer
           onSuccess={handleQueryRetrieved}
@@ -181,5 +188,4 @@ TestQuery.propTypes = {
   isTestQueryInProgress: PropTypes.bool,
   setIsTestQueryInProgress: PropTypes.func,
   recordsLimit: PropTypes.number,
-  onRecordsLimitExceeded: PropTypes.func,
 };

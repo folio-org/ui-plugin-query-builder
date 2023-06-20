@@ -38,7 +38,6 @@ export const QueryBuilderModal = ({
   onQueryExecutionFail,
   getParamsSource,
   recordsLimit,
-  onRecordsLimitExceeded,
 }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
@@ -196,7 +195,6 @@ export const QueryBuilderModal = ({
             isTestQueryInProgress={isTestQueryInProgress}
             setIsTestQueryInProgress={setIsTestQueryInProgress}
             recordsLimit={recordsLimit}
-            onRecordsLimitExceeded={onRecordsLimitExceeded}
           />
         </>
       )}

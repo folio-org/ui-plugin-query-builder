@@ -16,5 +16,4 @@ export const queryBuilderModalPropTypes = {
   onQueryExecutionSuccess: PropTypes.func,
   onQueryExecutionFail: PropTypes.func,
   recordsLimit: PropTypes.number,
-  onRecordsLimitExceeded: PropTypes.func,
 };
