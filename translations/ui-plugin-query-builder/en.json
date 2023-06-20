@@ -9,6 +9,7 @@
   "modal.preview.title": "Query would return {total} records. Preview of first {limit} records.",
   "modal.preview.queryInProgress": "Test query in progress",
   "modal.preview.countingInProgress": "Counting in progress",
+  "modal.banner.limit": "Warning: this query returns more records than the maximum allowed. Modify the query to limit your results.",
 
   "columns.boolean": "Boolean",
   "columns.field": "Field",

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from '@folio/stripes/components';
+
+import { Button, MessageBanner } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { useQueryClient } from '@tanstack/react-query';
@@ -26,7 +27,6 @@ export const TestQuery = ({
   isTestQueryInProgress,
   setIsTestQueryInProgress,
   recordsLimit,
-  onRecordsLimitExceeded,
 }) => {
   const queryClient = useQueryClient();
 
@@ -34,6 +34,7 @@ export const TestQuery = ({
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [includeContent, setIncludeContent] = useState(true);
   const [recordsLimitExceeded, setRecordsLimitExceeded] = useState(false);
+  const [isLimitExceededBannerShown, setIsLimitExceededBannerShown] = useState(false);
 
   const isTestQueryBtnDisabled = isTestQueryLoading || !isQueryFilled || isTestQueryInProgress;
 
@@ -49,7 +50,7 @@ export const TestQuery = ({
     };
 
     if (recordsLimit && totalRecords > recordsLimit) {
-      onRecordsLimitExceeded?.({ recordsLimit, query });
+      setRecordsLimitExceeded(true);
       setRecordsLimitExceeded(true);
 
       return completeExecution();
@@ -84,6 +85,7 @@ export const TestQuery = ({
     setIsPreviewLoading(true);
     setIsTestQueryInProgress(true);
     setRecordsLimitExceeded(false);
+    setIsLimitExceededBannerShown(false);
 
     try {
       await testQuery({
@@ -137,6 +139,12 @@ export const TestQuery = ({
         <FormattedMessage id="ui-plugin-query-builder.modal.test" />
       </Button>
 
+      {isLimitExceededBannerShown && (
+        <MessageBanner type="warning">
+          <FormattedMessage id="ui-plugin-query-builder.modal.banner.limit" />
+        </MessageBanner>
+      )}
+
       {queryId && (
         <ResultViewer
           onSuccess={handleQueryRetrieved}
@@ -181,5 +189,4 @@ TestQuery.propTypes = {
   isTestQueryInProgress: PropTypes.bool,
   setIsTestQueryInProgress: PropTypes.func,
   recordsLimit: PropTypes.number,
-  onRecordsLimitExceeded: PropTypes.func,
 };
