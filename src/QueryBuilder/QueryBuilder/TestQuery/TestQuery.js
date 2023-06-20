@@ -34,7 +34,6 @@ export const TestQuery = ({
   const [visibleColumns, setVisibleColumns] = useState([]);
   const [includeContent, setIncludeContent] = useState(true);
   const [recordsLimitExceeded, setRecordsLimitExceeded] = useState(false);
-  const [isLimitExceededBannerShown, setIsLimitExceededBannerShown] = useState(false);
 
   const isTestQueryBtnDisabled = isTestQueryLoading || !isQueryFilled || isTestQueryInProgress;
 
@@ -50,7 +49,6 @@ export const TestQuery = ({
     };
 
     if (recordsLimit && totalRecords > recordsLimit) {
-      setRecordsLimitExceeded(true);
       setRecordsLimitExceeded(true);
 
       return completeExecution();
@@ -85,7 +83,6 @@ export const TestQuery = ({
     setIsPreviewLoading(true);
     setIsTestQueryInProgress(true);
     setRecordsLimitExceeded(false);
-    setIsLimitExceededBannerShown(false);
 
     try {
       await testQuery({
@@ -139,7 +136,7 @@ export const TestQuery = ({
         <FormattedMessage id="ui-plugin-query-builder.modal.test" />
       </Button>
 
-      {isLimitExceededBannerShown && (
+      {recordsLimitExceeded && (
         <MessageBanner type="warning">
           <FormattedMessage id="ui-plugin-query-builder.modal.banner.limit" />
         </MessageBanner>
