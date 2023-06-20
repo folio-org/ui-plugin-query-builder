@@ -28,14 +28,23 @@ export const DataTypeInput = ({
   const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
   const hasSourceOrValues = source || availableValues;
 
-  const textControl = ({ testId, type = 'text' }) => (
-    <TextField
-      data-testid={testId}
-      onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
-      type={type}
-      {...rest}
-    />
-  );
+  const textControl = ({ testId, type = 'text' }) => {
+    const onKeyDown = (event) => {
+      if (type === 'number' && (event.keyCode === 69 || event.keyCode === 187 || event.keyCode === 189)) {
+        event.preventDefault();
+      }
+    };
+
+    return (
+      <TextField
+        data-testid={testId}
+        onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+        onKeyDown={onKeyDown}
+        type={type}
+        {...rest}
+      />
+    );
+  };
 
   const textAreaControl = () => (
     <TextArea
