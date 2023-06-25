@@ -18,5 +18,6 @@
     "viewer.retrieving": "Recuperando...",
     "control.value.placeholder": "Seleccionar valor",
     "modal.preview.countingInProgress": "Recuento en curso",
-    "control.operator.placeholder": "Seleccionar operador"
+    "control.operator.placeholder": "Seleccionar operador",
+    "modal.banner.limit": "Advertencia: esta consulta devuelve más registros que el máximo permitido. Modifique la consulta para limitar los resultados."
 }

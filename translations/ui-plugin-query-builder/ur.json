@@ -18,5 +18,6 @@
     "viewer.retrieving": "Retrieving...",
     "control.value.placeholder": "Select value",
     "modal.preview.countingInProgress": "Counting in progress",
-    "control.operator.placeholder": "Select operator"
+    "control.operator.placeholder": "Select operator",
+    "modal.banner.limit": "Warning: this query returns more records than the maximum allowed. Modify the query to limit your results."
 }
