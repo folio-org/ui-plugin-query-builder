@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
+import { Loading } from '@folio/stripes/components';
 import { useParamsDataSource } from '../../../../hooks/useParamsDataSource';
 
 export const SelectionContainer = ({
@@ -29,7 +30,7 @@ export const SelectionContainer = ({
     return [];
   };
 
-  const { data } = useParamsDataSource({ source, searchValue, getParamsSource });
+  const { data, isLoading } = useParamsDataSource({ source, searchValue, getParamsSource });
 
   const filterOptions = (filterText, list) => {
     // escape special characters in filter text, so they won't be interpreted by RegExp
@@ -48,6 +49,8 @@ export const SelectionContainer = ({
 
   const dataOptions = getOptions(availableValues, data?.content);
 
+  if (isLoading) return <Loading size="small" />;
+
   return (
     <Component
       {...rest}
@@ -59,7 +62,7 @@ export const SelectionContainer = ({
 };
 
 SelectionContainer.propTypes = {
-  component: PropTypes.node,
+  component: PropTypes.elementType,
   testId: PropTypes.string,
   isMulti: PropTypes.bool,
   onChange: PropTypes.func,

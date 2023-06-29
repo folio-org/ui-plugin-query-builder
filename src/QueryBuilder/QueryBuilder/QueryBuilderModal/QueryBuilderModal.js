@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import {
   Modal,
   ModalFooter,
@@ -14,16 +14,15 @@ import css from './QueryBuilderModal.css';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
 import { useRunQuery } from '../../../hooks/useRunQuery';
-import { getSourceValue, useQuerySource } from '../../../hooks/useQuerySource';
+import { useQuerySource } from '../../../hooks/useQuerySource';
 import { queryBuilderModalPropTypes } from '../../propTypes';
 import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
 import { useEntityType } from '../../../hooks/useEntityType';
-import { getFieldOptions } from '../helpers/selectOptions';
 import { useCancelQuery } from '../../../hooks/useCancelQuery';
 import { useTestQuery } from '../../../hooks/useTestQuery';
 
 export const QueryBuilderModal = ({
-  isOpen = true,
+  isOpen,
   setIsModalShown,
   saveBtnLabel,
   initialValues,
@@ -38,8 +37,8 @@ export const QueryBuilderModal = ({
   onQueryExecutionFail,
   getParamsSource,
   recordsLimit,
+  additionalControls,
 }) => {
-  const intl = useIntl();
   const queryClient = useQueryClient();
 
   const { entityType } = useEntityType({ entityTypeDataSource });
@@ -54,6 +53,7 @@ export const QueryBuilderModal = ({
     queryStr,
     isSourceInit,
   } = useQuerySource({
+    getParamsSource,
     mongoQuery: initialValues,
     entityType,
   });
@@ -103,7 +103,7 @@ export const QueryBuilderModal = ({
   const handleCloseModal = async () => {
     await handleCancelQuery();
 
-    setSource(getSourceValue(initialValues, getFieldOptions(entityType?.columns), intl));
+    setSource([]);
     setIsModalShown(false);
   };
 
@@ -126,7 +126,7 @@ export const QueryBuilderModal = ({
 
   useEffect(() => {
     if (isTestQueryInProgress) {
-      handleCancelQuery().catch(console.error);
+      handleCancelQuery();
     }
   }, [source, isTestQueryInProgress]);
 
@@ -195,6 +195,7 @@ export const QueryBuilderModal = ({
             isTestQueryInProgress={isTestQueryInProgress}
             setIsTestQueryInProgress={setIsTestQueryInProgress}
             recordsLimit={recordsLimit}
+            additionalControls={additionalControls}
           />
         </>
       )}
