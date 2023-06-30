@@ -19,5 +19,5 @@
     "control.value.placeholder": "选择值",
     "modal.preview.countingInProgress": "计数中",
     "control.operator.placeholder": "选择运营商",
-    "modal.banner.limit": "Warning: this query returns more records than the maximum allowed. Modify the query to limit your results."
+    "modal.banner.limit": "警告：此查询返回的记录数超过允许的最大值。修改查询以限制结果。"
 }
