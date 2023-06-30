@@ -3,11 +3,11 @@ import { useIntl } from 'react-intl';
 import { getQueryStr, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from '../QueryBuilder/QueryBuilder/helpers/query';
 import { booleanOptions, getFieldOptions, sourceTemplate } from '../QueryBuilder/QueryBuilder/helpers/selectOptions';
 
-export const getSourceValue = ({ mongoQuery, fieldOptions, intl, getParamsSource }) => {
+export const getSourceValue = ({ initialValues, fieldOptions, intl, getParamsSource }) => {
   // if initial value provided, fill the source with it
-  if (mongoQuery) {
+  if (initialValues) {
     return mongoQueryToSource({
-      mongoQuery,
+      initialValues,
       fieldOptions,
       booleanOptions,
       intl,
@@ -18,7 +18,7 @@ export const getSourceValue = ({ mongoQuery, fieldOptions, intl, getParamsSource
   return [sourceTemplate(fieldOptions)];
 };
 
-export const useQuerySource = ({ mongoQuery, entityType, getParamsSource }) => {
+export const useQuerySource = ({ initialValues, entityType, getParamsSource }) => {
   const intl = useIntl();
   const [isSourceInit, setIsSourceInit] = useState(false);
   const columns = entityType?.columns;
@@ -27,27 +27,15 @@ export const useQuerySource = ({ mongoQuery, entityType, getParamsSource }) => {
 
   useEffect(() => {
     const setInitialValue = async () => {
-      const value = await getSourceValue({ mongoQuery, fieldOptions, intl, getParamsSource });
+      const value = await getSourceValue({ initialValues, fieldOptions, intl, getParamsSource });
 
       setSource(value);
     };
 
-    setInitialValue();
-  }, []);
-
-  useEffect(() => {
-    const setValue = async () => {
-      if (entityType) {
-        const value = await getSourceValue({ mongoQuery, fieldOptions, intl, getParamsSource });
-
-        setSource(value);
-
-        setIsSourceInit(true);
-      }
-    };
-
-    setValue();
-  }, [mongoQuery, entityType]);
+    if (fieldOptions && !isSourceInit) {
+      setInitialValue().then(() => setIsSourceInit(true));
+    }
+  }, [initialValues, fieldOptions, isSourceInit]);
 
   const queryStr = getQueryStr(source, fieldOptions);
   const isQueryFilled = isQueryValid(source);

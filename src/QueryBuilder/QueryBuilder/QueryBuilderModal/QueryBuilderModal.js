@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Modal,
   ModalFooter,
@@ -14,12 +14,13 @@ import css from './QueryBuilderModal.css';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
 import { useRunQuery } from '../../../hooks/useRunQuery';
-import { useQuerySource } from '../../../hooks/useQuerySource';
+import { getSourceValue, useQuerySource } from '../../../hooks/useQuerySource';
 import { queryBuilderModalPropTypes } from '../../propTypes';
 import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
 import { useEntityType } from '../../../hooks/useEntityType';
 import { useCancelQuery } from '../../../hooks/useCancelQuery';
 import { useTestQuery } from '../../../hooks/useTestQuery';
+import { getFieldOptions } from '../helpers/selectOptions';
 
 export const QueryBuilderModal = ({
   isOpen,
@@ -39,6 +40,7 @@ export const QueryBuilderModal = ({
   recordsLimit,
   additionalControls,
 }) => {
+  const intl = useIntl();
   const queryClient = useQueryClient();
 
   const { entityType } = useEntityType({ entityTypeDataSource });
@@ -54,7 +56,7 @@ export const QueryBuilderModal = ({
     isSourceInit,
   } = useQuerySource({
     getParamsSource,
-    mongoQuery: initialValues,
+    initialValues,
     entityType,
   });
 
@@ -103,7 +105,15 @@ export const QueryBuilderModal = ({
   const handleCloseModal = async () => {
     await handleCancelQuery();
 
-    setSource([]);
+    const src = await getSourceValue({
+      initialValues,
+      fieldOptions: getFieldOptions(entityType?.columns),
+      intl,
+      getParamsSource,
+    });
+
+    setSource(src);
+
     setIsModalShown(false);
   };
 

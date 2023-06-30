@@ -113,7 +113,7 @@ const getSourceFields = (field) => ({
 }[field]);
 
 export const mongoQueryToSource = async ({
-  mongoQuery,
+  initialValues,
   booleanOptions = [],
   fieldOptions,
   intl,
@@ -122,7 +122,7 @@ export const mongoQueryToSource = async ({
   if (!fieldOptions?.length) return [];
 
   const target = [];
-  const andQuery = mongoQuery.$and || [];
+  const andQuery = initialValues.$and || [];
 
   for (const queryObj of andQuery) {
     const [field, query] = Object.entries(queryObj)[0];

@@ -1,4 +1,4 @@
-import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+import { render, cleanup, fireEvent, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Intl from '../../../../../test/jest/__mock__/intlProvider.mock';
 import { DataTypeInput } from './DataTypeInput';
@@ -12,6 +12,14 @@ const mockSource = {
     columnName: 'test',
   },
 };
+
+const mockGetParamsSource = async () => ({
+  content: [
+    { label: 'Available', value: 'available' },
+    { label: 'Checked out', value: 'checked' },
+  ],
+});
+
 const renderDataTypeInput = ({
   onChange,
   dataType,
@@ -27,6 +35,7 @@ const renderDataTypeInput = ({
         operator={operator}
         source={source}
         availableValues={availableValues}
+        getParamsSource={mockGetParamsSource}
       />
     </QueryClientProvider>,
   </Intl>,
@@ -79,7 +88,7 @@ const arr = [
   {
     dataType: DATA_TYPES.ArrayType,
     operator: OPERATORS.IN,
-    text: 'stripes-components.multiSelection.defaultEmptyMessage',
+    text: 'stripes-components.multiSelection.controlDescription',
   },
   {
     dataType: DATA_TYPES.ArrayType,
@@ -92,10 +101,7 @@ const arr = [
     operator: OPERATORS.EQUAL,
     componentTestId: 'data-input-select-arrayType',
     onChange: jest.fn(),
-    availableValues: [
-      { label: 'Available', value: 'available' },
-      { label: 'Checked out', value: 'checked' },
-    ],
+    availableValues: ['available', 'checked'],
   },
   {
     dataType: DATA_TYPES.EnumType,
@@ -124,17 +130,22 @@ describe('DataTypeInput', () => {
   });
 
   for (const { dataType, operator, componentTestId, text, onChange, source, availableValues } of arr) {
-    it(`should render correct component based on ${dataType} and ${operator}`, () => {
-      renderDataTypeInput({ dataType, operator, onChange, source, availableValues });
-      const el = screen.queryByTestId(componentTestId || '') || screen.queryByText(text || '');
+    it(`should render correct component based on ${dataType} and ${operator}`, async () => {
+      const {
+        queryByTestId,
+        queryByText,
+      } = renderDataTypeInput({ dataType, operator, onChange, source, availableValues });
+      const el = queryByTestId(componentTestId || '') || queryByText(text || '');
 
-      expect(el).toBeInTheDocument();
+      await waitFor(() => {
+        expect(el).toBeVisible();
 
-      if (onChange) {
-        fireEvent.change(el, { target: { value: 2 } });
+        if (onChange) {
+          fireEvent.change(el, { target: { value: 2 } });
 
-        expect(onChange).toHaveBeenCalled();
-      }
+          expect(onChange).toHaveBeenCalled();
+        }
+      });
     });
   }
 });
