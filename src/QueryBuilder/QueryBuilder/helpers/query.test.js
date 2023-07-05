@@ -4,9 +4,9 @@ import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
 
 describe('mongoQueryToSource()', () => {
-  test('should return empty array for empty query', () => {
-    const result = mongoQueryToSource({
-      mongoQuery: {},
+  test('should return empty array for empty query', async () => {
+    const result = await mongoQueryToSource({
+      initialValues: {},
       booleanOptions,
       fieldOptions,
       intl: { formatMessage: jest.fn() },
@@ -73,7 +73,7 @@ describe('mongoQueryToSource()', () => {
     },
   ];
 
-  const mongoQuery = {
+  const initialValues = {
     $and: [
       { user_first_name: { $eq: 'value' } },
       { user_first_name: { $ne: 'value' } },
@@ -87,9 +87,9 @@ describe('mongoQueryToSource()', () => {
     ],
   };
 
-  it('should convert simple query to source format', () => {
-    const result = mongoQueryToSource({
-      mongoQuery,
+  it('should convert simple query to source format', async () => {
+    const result = await mongoQueryToSource({
+      initialValues,
       booleanOptions,
       fieldOptions,
       intl: { formatMessage: jest.fn() },
@@ -97,8 +97,18 @@ describe('mongoQueryToSource()', () => {
 
     expect(result).toEqual(source.map(v => ({
       ...v,
+      field: {
+        ...v.field,
+        dataType: fieldOptions.find(({ value }) => value === v.field.current).dataType,
+      },
+      operator: {
+        ...v.operator,
+        dataType: fieldOptions.find(({ value }) => value === v.field.current).dataType,
+      },
       value: {
         current: Array.isArray(v.value.current) ? v.value.current.map(({ value }) => value) : v.value.current,
+        source: undefined,
+        options: fieldOptions.find(({ value }) => value === v.field.current).values,
       },
     })));
   });
@@ -106,6 +116,6 @@ describe('mongoQueryToSource()', () => {
   it('should convert from source to simple query format', () => {
     const result = sourceToMongoQuery(source);
 
-    expect(result).toEqual(mongoQuery);
+    expect(result).toEqual(initialValues);
   });
 });

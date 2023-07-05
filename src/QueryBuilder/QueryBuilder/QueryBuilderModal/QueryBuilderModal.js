@@ -18,12 +18,12 @@ import { getSourceValue, useQuerySource } from '../../../hooks/useQuerySource';
 import { queryBuilderModalPropTypes } from '../../propTypes';
 import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
 import { useEntityType } from '../../../hooks/useEntityType';
-import { getFieldOptions } from '../helpers/selectOptions';
 import { useCancelQuery } from '../../../hooks/useCancelQuery';
 import { useTestQuery } from '../../../hooks/useTestQuery';
+import { getFieldOptions } from '../helpers/selectOptions';
 
 export const QueryBuilderModal = ({
-  isOpen = true,
+  isOpen,
   setIsModalShown,
   saveBtnLabel,
   initialValues,
@@ -38,6 +38,7 @@ export const QueryBuilderModal = ({
   onQueryExecutionFail,
   getParamsSource,
   recordsLimit,
+  additionalControls,
 }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
@@ -54,7 +55,8 @@ export const QueryBuilderModal = ({
     queryStr,
     isSourceInit,
   } = useQuerySource({
-    mongoQuery: initialValues,
+    getParamsSource,
+    initialValues,
     entityType,
   });
 
@@ -103,7 +105,15 @@ export const QueryBuilderModal = ({
   const handleCloseModal = async () => {
     await handleCancelQuery();
 
-    setSource(getSourceValue(initialValues, getFieldOptions(entityType?.columns), intl));
+    const src = await getSourceValue({
+      initialValues,
+      fieldOptions: getFieldOptions(entityType?.columns),
+      intl,
+      getParamsSource,
+    });
+
+    setSource(src);
+
     setIsModalShown(false);
   };
 
@@ -126,7 +136,7 @@ export const QueryBuilderModal = ({
 
   useEffect(() => {
     if (isTestQueryInProgress) {
-      handleCancelQuery().catch(console.error);
+      handleCancelQuery();
     }
   }, [source, isTestQueryInProgress]);
 
@@ -195,6 +205,7 @@ export const QueryBuilderModal = ({
             isTestQueryInProgress={isTestQueryInProgress}
             setIsTestQueryInProgress={setIsTestQueryInProgress}
             recordsLimit={recordsLimit}
+            additionalControls={additionalControls}
           />
         </>
       )}

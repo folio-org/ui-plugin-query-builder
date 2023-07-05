@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useParamsDataSource } from '../../../../hooks/useParamsDataSource';
 
@@ -59,7 +59,7 @@ export const SelectionContainer = ({
 };
 
 SelectionContainer.propTypes = {
-  component: PropTypes.node,
+  component: PropTypes.elementType,
   testId: PropTypes.string,
   isMulti: PropTypes.bool,
   onChange: PropTypes.func,

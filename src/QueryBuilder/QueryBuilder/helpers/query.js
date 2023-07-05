@@ -112,46 +112,59 @@ const getSourceFields = (field) => ({
   },
 }[field]);
 
-export const mongoQueryToSource = ({
-  mongoQuery,
+export const mongoQueryToSource = async ({
+  initialValues,
   booleanOptions = [],
-  fieldOptions = [],
+  fieldOptions,
   intl,
+  getParamsSource,
 }) => {
+  if (!fieldOptions?.length) return [];
+
   const target = [];
-  const andQuery = mongoQuery.$and;
+  const andQuery = initialValues.$and || [];
 
-  if (andQuery) {
-    andQuery.forEach((queryObj) => {
-      const [field, query] = Object.entries(queryObj)[0];
-      const mongoOperator = Object.keys(query)[0];
-      const mongoValue = query[mongoOperator];
+  for (const queryObj of andQuery) {
+    const [field, query] = Object.entries(queryObj)[0];
+    const mongoOperator = Object.keys(query)[0];
+    const mongoValue = query[mongoOperator];
 
-      const { operator, value } = getSourceFields(mongoOperator)(mongoValue);
+    const { operator, value } = getSourceFields(mongoOperator)(mongoValue);
 
-      if (operator && value) {
-        const boolean = OPERATORS.AND;
+    if (operator && value) {
+      const boolean = OPERATORS.AND;
+      const fieldItem = fieldOptions.find(f => f.value === field);
+      const { dataType, values, source } = fieldItem;
+      const hasSourceOrValues = values || source;
+      let formattedValue;
 
-        const fieldItem = fieldOptions.find(f => f.value === field);
-        const type = fieldItem?.dataType;
+      if (Array.isArray(value) && source) {
+        const params = await getParamsSource?.({
+          entityTypeId: source?.entityTypeId,
+          columnName: source?.columnName,
+          searchValue: '',
+        });
 
-        const item = {
-          boolean: { options: booleanOptions, current: boolean },
-          field: { options: fieldOptions, current: field },
-          operator: {
-            options: getOperatorOptions({
-              dataType: type,
-              hasSourceOrValues: fieldItem?.values || fieldItem?.source,
-              intl,
-            }),
-            current: operator,
-          },
-          value: { current: value },
-        };
-
-        target.push(item);
+        formattedValue = value.map(item => params?.content?.find(param => param.value === item));
       }
-    });
+
+      const item = {
+        boolean: { options: booleanOptions, current: boolean },
+        field: { options: fieldOptions, current: field, dataType },
+        operator: {
+          dataType,
+          options: getOperatorOptions({
+            dataType,
+            hasSourceOrValues,
+            intl,
+          }),
+          current: operator,
+        },
+        value: { current: formattedValue || value, source, options: values },
+      };
+
+      target.push(item);
+    }
   }
 
   return target;

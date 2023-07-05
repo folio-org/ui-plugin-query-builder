@@ -93,7 +93,11 @@ describe('QueryBuilderModal', () => {
       expect(screen.queryByText('LOADING')).not.toBeInTheDocument();
     });
 
-    const selectFieldPlaceholder = screen.getByText('ui-plugin-query-builder.control.selection.placeholder');
+    let selectFieldPlaceholder;
+
+    await waitFor(() => {
+      selectFieldPlaceholder = screen.getByText('ui-plugin-query-builder.control.selection.placeholder');
+    });
 
     act(() => userEvent.click(selectFieldPlaceholder));
 
@@ -104,10 +108,16 @@ describe('QueryBuilderModal', () => {
     });
   });
 
-  it('should render boolean select when row added', () => {
+  it('should render boolean select when row added', async () => {
     renderQueryBuilderModal({});
 
-    const addButton = screen.getByRole('button', { name: /plus-sign/ });
+    let addButton;
+
+    await waitFor(() => {
+      addButton = screen.getByRole('button', { name: /plus-sign/ });
+
+      expect(addButton).toBeInTheDocument();
+    });
 
     act(() => userEvent.click(addButton));
 
@@ -117,10 +127,16 @@ describe('QueryBuilderModal', () => {
     expect(screen.getByRole('combobox', { name: /boolean-option/ })).toBeVisible();
   });
 
-  it('should remove row when remove button clicked', () => {
+  it('should remove row when remove button clicked', async () => {
     renderQueryBuilderModal({});
 
-    const addButton = screen.getByRole('button', { name: /plus-sign/ });
+    let addButton;
+
+    await waitFor(() => {
+      addButton = screen.getByRole('button', { name: /plus-sign/ });
+
+      expect(addButton).toBeInTheDocument();
+    });
 
     act(() => userEvent.click(addButton));
 

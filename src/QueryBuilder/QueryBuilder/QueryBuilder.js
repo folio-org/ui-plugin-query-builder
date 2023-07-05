@@ -9,6 +9,7 @@ import { queryBuilderModalPropTypes } from '../propTypes';
 
 export const QueryBuilder = ({
   disabled,
+  triggerButtonLabel,
   ...modalProps
 }) => {
   const [isModalShown, setIsModalShown] = useState(false);
@@ -25,7 +26,7 @@ export const QueryBuilder = ({
         onClick={openModal}
         disabled={disabled}
       >
-        <FormattedMessage id="ui-plugin-query-builder.trigger" />
+        {triggerButtonLabel || <FormattedMessage id="ui-plugin-query-builder.trigger" />}
       </Button>
       <QueryBuilderModal
         isOpen={isModalShown}
@@ -38,5 +39,6 @@ export const QueryBuilder = ({
 
 QueryBuilder.propTypes = {
   disabled: PropTypes.bool,
+  triggerButtonLabel: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   ...queryBuilderModalPropTypes,
 };

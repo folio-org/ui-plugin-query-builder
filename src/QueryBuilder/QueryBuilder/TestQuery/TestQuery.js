@@ -116,7 +116,6 @@ export const TestQuery = ({
     />
   );
 
-  // eslint-disable-next-line react/prop-types
   const renderHeadline = ({ totalRecords: total = 0, currentRecordsCount = 0, defaultLimit, status }) => {
     const isInProgress = status === QUERY_DETAILS_STATUSES.IN_PROGRESS && !recordsLimitExceeded;
     const limit = currentRecordsCount < defaultLimit ? currentRecordsCount : defaultLimit;
@@ -130,19 +129,25 @@ export const TestQuery = ({
     );
   };
 
+  const renderMessageBanner = () => recordsLimitExceeded && (
+    <Layout className="padding-bottom-gutter">
+      <MessageBanner type="warning">
+        <FormattedMessage id="ui-plugin-query-builder.modal.banner.limit" />
+      </MessageBanner>
+    </Layout>
+  );
+
+  const renderTestButton = () => (
+    <Button disabled={isTestQueryBtnDisabled} onClick={handleTestQuery}>
+      <FormattedMessage id="ui-plugin-query-builder.modal.test" />
+    </Button>
+  );
+
   return (
     <>
-      <Button disabled={isTestQueryBtnDisabled} onClick={handleTestQuery}>
-        <FormattedMessage id="ui-plugin-query-builder.modal.test" />
-      </Button>
+      {renderTestButton()}
 
-      {recordsLimitExceeded && (
-        <Layout className="padding-bottom-gutter">
-          <MessageBanner type="warning">
-            <FormattedMessage id="ui-plugin-query-builder.modal.banner.limit" />
-          </MessageBanner>
-        </Layout>
-      )}
+      {renderMessageBanner()}
 
       {queryId && (
         <ResultViewer

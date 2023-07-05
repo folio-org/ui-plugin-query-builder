@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Col, Row, Accordion, MultiColumnList, Headline } from '@folio/stripes/components';
+import { Col, Row, Accordion, MultiColumnList, Headline, Layout } from '@folio/stripes/components';
 import { PrevNextPagination } from '@folio/stripes-acq-components';
 import { useIntl } from 'react-intl';
 import { QueryLoader } from './QueryLoader';
@@ -29,6 +29,7 @@ export const ResultViewer = ({
   onSuccess,
   onPreviewShown,
   isPreviewLoading,
+  additionalControls,
 }) => {
   const intl = useIntl();
 
@@ -136,10 +137,17 @@ export const ResultViewer = ({
     );
   };
 
+  const renderAdditionalControls = () => additionalControls && (
+    <Layout className="padding-bottom-gutter padding-top-gutter">
+      {additionalControls}
+    </Layout>
+  );
+
   const renderContent = () => {
     return (
       <>
         {renderHeader()}
+        {renderAdditionalControls()}
         {renderTable()}
       </>
     );
@@ -181,4 +189,5 @@ ResultViewer.propTypes = {
   isPreviewLoading: PropTypes.bool,
   contentQueryOptions: PropTypes.object,
   contentQueryKeys: PropTypes.arrayOf(PropTypes.string),
+  additionalControls: PropTypes.element,
 };
