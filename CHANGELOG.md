@@ -22,3 +22,4 @@
 * [UIPQB-26](https://issues.folio.org/browse/UIPQB-26) Validate value entered for integer property type
 * [UIPQB-43](https://issues.folio.org/browse/UIPQB-43) upgrade React to v18.
 * [UIPQB-44](https://issues.folio.org/browse/UIPQB-44) Update Node.js to v18 in GitHub Actions.
+* [UIPQB-49](https://issues.folio.org/browse/UIPQB-49) Jest-related deps are used in development only.
