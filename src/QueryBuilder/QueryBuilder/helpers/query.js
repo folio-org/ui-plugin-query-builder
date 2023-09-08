@@ -44,6 +44,12 @@ export const sourceToMongoQuery = (source) => {
   const andQuery = [];
   let queryItem = {};
 
+  const escapeRegex = (value) => {
+    const escapedValue = value.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+
+    return `^${escapedValue}`;
+  };
+
   source.forEach((item) => {
     const field = item.field.current;
     const operator = item.operator.current;
@@ -75,10 +81,10 @@ export const sourceToMongoQuery = (source) => {
         queryItem = { [field]: { $nin: getTransformedValue(value) } };
         break;
       case OPERATORS.STARTS_WITH:
-        queryItem = { [field]: { $regex: new RegExp(`^${value}`).source } };
+        queryItem = { [field]: { $regex: new RegExp(`^${escapeRegex(value)}`).source } };
         break;
       case OPERATORS.CONTAINS:
-        queryItem = { [field]: { $regex: new RegExp(value).source } };
+        queryItem = { [field]: { $regex: new RegExp(escapeRegex(value)).source } };
         break;
       default:
         break;
