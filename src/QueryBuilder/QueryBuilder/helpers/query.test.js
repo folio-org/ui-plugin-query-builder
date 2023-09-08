@@ -81,8 +81,8 @@ describe('mongoQueryToSource()', () => {
       { user_last_name: { $lt: 10 } },
       { user_last_name: { $gte: 'value' } },
       { languages: { $in: ['value', 'value2'] } },
+      { user_full_name: { $regex: '^^abc' } },
       { user_full_name: { $regex: '^abc' } },
-      { user_full_name: { $regex: 'abc' } },
       { languages: { $nin: ['value', 'value2'] } },
     ],
   };
