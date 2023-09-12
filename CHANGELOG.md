@@ -20,6 +20,7 @@
 * [UIPQB-37](https://issues.folio.org/browse/UIPQB-37) Reset form to original state after user cancel out
 * [UIPQB-36](https://issues.folio.org/browse/UIPQB-36) Add X button for closing the form
 * [UIPQB-26](https://issues.folio.org/browse/UIPQB-26) Validate value entered for integer property type
-* [UIPQB-43](https://issues.folio.org/browse/UIPQB-43) upgrade React to v18.
+* [UIPQB-43](https://issues.folio.org/browse/UIPQB-43) *BREAKING* upgrade React to v18.
 * [UIPQB-44](https://issues.folio.org/browse/UIPQB-44) Update Node.js to v18 in GitHub Actions.
 * [UIPQB-49](https://issues.folio.org/browse/UIPQB-49) Jest-related deps are used in development only.
+* [UIPQB-52](https://issues.folio.org/browse/UIPQB-52) *BREAKING* bump `react-intl` to `v6.4.4`.
