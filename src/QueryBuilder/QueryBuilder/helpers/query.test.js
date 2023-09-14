@@ -56,7 +56,7 @@ describe('mongoQueryToSource()', () => {
     {
       boolean: { options: booleanOptions, current: 'AND' },
       field: { options: fieldOptions, current: 'user_full_name' },
-      operator: { options: expect.any(Array), current: OPERATORS.STARTS_WITH },
+      operator: { options: expect.any(Array), current: OPERATORS.CONTAINS },
       value: { current: 'abc' },
     },
     {
@@ -81,7 +81,7 @@ describe('mongoQueryToSource()', () => {
       { user_last_name: { $lt: 10 } },
       { user_last_name: { $gte: 'value' } },
       { languages: { $in: ['value', 'value2'] } },
-      { user_full_name: { $regex: '^abc' } },
+      { user_full_name: { $regex: 'abc' } },
       { user_full_name: { $regex: 'abc' } },
       { languages: { $nin: ['value', 'value2'] } },
     ],
@@ -114,8 +114,22 @@ describe('mongoQueryToSource()', () => {
   });
 
   it('should convert from source to simple query format', () => {
+    const initial = {
+      $and: [
+        { user_first_name: { $eq: 'value' } },
+        { user_first_name: { $ne: 'value' } },
+        { user_last_name: { $gt: 'value' } },
+        { user_last_name: { $lt: 10 } },
+        { user_last_name: { $gte: 'value' } },
+        { languages: { $in: ['value', 'value2'] } },
+        { user_full_name: { $regex: '^abc' } },
+        { user_full_name: { $regex: '^abc' } },
+        { languages: { $nin: ['value', 'value2'] } },
+      ],
+    };
+
     const result = sourceToMongoQuery(source);
 
-    expect(result).toEqual(initialValues);
+    expect(result).toEqual(initial);
   });
 });

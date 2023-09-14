@@ -24,3 +24,4 @@
 * [UIPQB-44](https://issues.folio.org/browse/UIPQB-44) Update Node.js to v18 in GitHub Actions.
 * [UIPQB-49](https://issues.folio.org/browse/UIPQB-49) Jest-related deps are used in development only.
 * [UIPQB-52](https://issues.folio.org/browse/UIPQB-52) *BREAKING* bump `react-intl` to `v6.4.4`.
+* [UIPQB-45](https://issues.folio.org/browse/UIPQB-45) Query builder dies when certain characters are used in combination with regex operators.
