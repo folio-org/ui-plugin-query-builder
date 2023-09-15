@@ -126,6 +126,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
               <Col sm={4} className={css.rowCell}>
                 <Selection
                   id={`field-option-${index}`}
+                  emptyMessage={<></>}
                   placeholder={intl.formatMessage({ id: 'ui-plugin-query-builder.control.selection.placeholder' })}
                   dataOptions={row.field.options}
                   value={row.field.current}
