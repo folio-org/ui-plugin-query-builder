@@ -119,7 +119,7 @@ export const ResultViewer = ({
       size="large"
     />
     :
-    null;
+    intl.formatMessage({ id: 'ui-plugin-query-builder.result.emptyMessage' });
 
   const renderTable = () => {
     return (
