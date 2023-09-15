@@ -23,3 +23,4 @@
 * [UIPQB-43](https://issues.folio.org/browse/UIPQB-43) upgrade React to v18.
 * [UIPQB-44](https://issues.folio.org/browse/UIPQB-44) Update Node.js to v18 in GitHub Actions.
 * [UIPQB-45](https://issues.folio.org/browse/UIPQB-45) Query builder dies when certain characters are used in combination with regex operators.
+* [UIPQB-50](https://issues.folio.org/browse/UIPQB-50)Add 'in-progress' handling to plugin-query-builder
