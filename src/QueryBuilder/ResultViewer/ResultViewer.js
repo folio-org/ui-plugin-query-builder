@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Col, Row, Accordion, MultiColumnList, Headline, Layout } from '@folio/stripes/components';
+import { Col, Row, Accordion, MultiColumnList, Headline, Layout, Icon } from '@folio/stripes/components';
 import { PrevNextPagination } from '@folio/stripes-acq-components';
 import { useIntl } from 'react-intl';
 import { QueryLoader } from './QueryLoader';
@@ -94,12 +94,15 @@ export const ResultViewer = ({
       <Row between="xs">
         <Col xs={10}>
           <Headline size="large" margin="none" tag="h3">
-            {headline?.({
-              totalRecords: localizedTotalRecords,
-              currentRecordsCount: localizedCurrentRecordsCount,
-              defaultLimit,
-              status,
-            })}
+            {isListLoading ?
+              intl.formatMessage({ id: 'ui-plugin-query-builder.result.inProgress' })
+              :
+              headline?.({
+                totalRecords: localizedTotalRecords,
+                currentRecordsCount: localizedCurrentRecordsCount,
+                defaultLimit,
+                status,
+              })}
           </Headline>
         </Col>
         {headlineEnd?.({
@@ -109,6 +112,14 @@ export const ResultViewer = ({
       </Row>
     );
   };
+
+  const emptyResultMessage = isListLoading ?
+    <Icon
+      icon="spinner-ellipsis"
+      size="large"
+    />
+    :
+    intl.formatMessage({ id: 'ui-plugin-query-builder.result.emptyMessage' });
 
   const renderTable = () => {
     return (
@@ -123,6 +134,7 @@ export const ResultViewer = ({
             onNeedMoreData={changePage}
             height={height}
             loading={isListLoading}
+            isEmptyMessage={emptyResultMessage}
           />
           {showPagination && (
             <PrevNextPagination
