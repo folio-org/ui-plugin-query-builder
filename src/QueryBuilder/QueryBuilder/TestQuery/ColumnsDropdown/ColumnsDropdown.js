@@ -9,6 +9,7 @@ export const ColumnsDropdown = memo(({ columns, visibleColumns, onColumnChange }
     <Dropdown
       label={<FormattedMessage id="ui-plugin-query-builder.control.dropdown.showColumns" />}
       mame="test-query-preview-dropdown"
+      usePortal
     >
       <DropdownMenu
         role="menu"
