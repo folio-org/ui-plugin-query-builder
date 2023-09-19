@@ -13,7 +13,7 @@ export const ColumnsDropdown = memo(({ columns, visibleColumns, onColumnChange }
     >
       <DropdownMenu
         role="menu"
-        overrideStyle={{ maxHeight: 400 }}
+        overrideStyle={{ maxHeight: 240 }}
       >
         <CheckboxFilter
           dataOptions={columns}
