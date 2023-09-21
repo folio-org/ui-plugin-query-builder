@@ -26,3 +26,5 @@
 * [UIPQB-52](https://issues.folio.org/browse/UIPQB-52) *BREAKING* bump `react-intl` to `v6.4.4`.
 * [UIPQB-45](https://issues.folio.org/browse/UIPQB-45) Query builder dies when certain characters are used in combination with regex operators.
 * [UIPQB-46](https://issues.folio.org/browse/UIPQB-46) Incorrect text when no options available in the query builder's search bar.
+* [UIPQB-50](https://issues.folio.org/browse/UIPQB-50)Add 'in-progress' handling to plugin-query-builder
+

@@ -23,5 +23,7 @@
   "control.operator.placeholder": "Select operator",
   "control.dropdown.showColumns": "Show columns",
 
-  "viewer.retrieving": "Retrieving..."
+  "viewer.retrieving": "Retrieving...",
+  "result.inProgress": "Query in progress",
+  "result.emptyMessage": "The list contains no items"
 }
