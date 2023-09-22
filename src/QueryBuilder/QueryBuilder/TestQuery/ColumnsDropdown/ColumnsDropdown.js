@@ -9,10 +9,11 @@ export const ColumnsDropdown = memo(({ columns, visibleColumns, onColumnChange }
     <Dropdown
       label={<FormattedMessage id="ui-plugin-query-builder.control.dropdown.showColumns" />}
       mame="test-query-preview-dropdown"
+      usePortal
     >
       <DropdownMenu
         role="menu"
-        overrideStyle={{ maxHeight: 400 }}
+        overrideStyle={{ maxHeight: 240 }}
       >
         <CheckboxFilter
           dataOptions={columns}
