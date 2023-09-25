@@ -25,5 +25,7 @@
 * [UIPQB-49](https://issues.folio.org/browse/UIPQB-49) Jest-related deps are used in development only.
 * [UIPQB-52](https://issues.folio.org/browse/UIPQB-52) *BREAKING* bump `react-intl` to `v6.4.4`.
 * [UIPQB-45](https://issues.folio.org/browse/UIPQB-45) Query builder dies when certain characters are used in combination with regex operators.
+* [UIPQB-46](https://issues.folio.org/browse/UIPQB-46) Incorrect text when no options available in the query builder's search bar.
 * [UIPQB-50](https://issues.folio.org/browse/UIPQB-50)Add 'in-progress' handling to plugin-query-builder
+* [UIPQB-48](https://issues.folio.org/browse/UIPQB-48) "Show columns" dropdown doesn't fit in the screen.
 * [UIPQB-47](https://issues.folio.org/browse/UIPQB-47) 400 error blocks save or further action in query builder.
