@@ -38,6 +38,10 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
     setSource(filteredFields);
   };
 
+  const onFilter = (value, dataOptions) => {
+    return dataOptions.filter(option => new RegExp(value, 'i').test(option.label));
+  };
+
   const handleChange = (value, index, fieldName) => {
     const field = fieldOptions.find(o => o.value === value);
     const isField = fieldName === COLUMN_KEYS.FIELD;
@@ -130,6 +134,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
                   placeholder={intl.formatMessage({ id: 'ui-plugin-query-builder.control.selection.placeholder' })}
                   dataOptions={row.field.options}
                   value={row.field.current}
+                  onFilter={onFilter}
                   onChange={(value) => handleChange(value, index, COLUMN_KEYS.FIELD)}
                 />
               </Col>
