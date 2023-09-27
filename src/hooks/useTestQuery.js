@@ -13,7 +13,10 @@ export const useTestQuery = ({ testQueryDataSource, onQueryTestSuccess, onQueryT
   } = useMutation({
     mutationFn: ({ entityTypeId, fqlQuery }) => testQueryDataSource({ entityTypeId, fqlQuery }),
     onSuccess: onQueryTestSuccess,
-    onError: onQueryTestFail,
+    onError: () => {
+      setIsTestQueryInProgress(false);
+      onQueryTestFail();
+    },
   });
 
   const { queryId } = testQueryData || {};
