@@ -102,8 +102,11 @@ export const QueryBuilderModal = ({
       await cancelQuery({ queryId });
     }
   };
-  const handleCloseModal = async () => {
-    await handleCancelQuery();
+
+  const handleCloseModal = async (isCancel = true) => {
+    if (isCancel) {
+      await handleCancelQuery();
+    }
 
     const src = await getSourceValue({
       initialValues,
@@ -123,7 +126,7 @@ export const QueryBuilderModal = ({
       fqlQuery,
     });
 
-    await handleCloseModal();
+    await handleCloseModal(false);
   };
 
   const handleQueryRetrieved = (data) => {
