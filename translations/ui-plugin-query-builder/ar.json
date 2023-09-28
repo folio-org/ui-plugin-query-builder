@@ -19,5 +19,7 @@
     "control.value.placeholder": "Select value",
     "modal.preview.countingInProgress": "Counting in progress",
     "control.operator.placeholder": "Select operator",
-    "modal.banner.limit": "Warning: this query returns more records than the maximum allowed. Modify the query to limit your results."
+    "modal.banner.limit": "Warning: this query returns more records than the maximum allowed. Modify the query to limit your results.",
+    "result.inProgress": "Query in progress",
+    "result.emptyMessage": "لا تحتوي القائمة على مواد"
 }
