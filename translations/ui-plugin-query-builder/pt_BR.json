@@ -19,5 +19,7 @@
     "control.value.placeholder": "Selecione o valor",
     "modal.preview.countingInProgress": "Contagem em andamento",
     "control.operator.placeholder": "Selecionar operador",
-    "modal.banner.limit": "Atenção: esta consulta retorna mais registros do que o máximo permitido. Modifique a consulta para limitar seus resultados."
+    "modal.banner.limit": "Atenção: esta consulta retorna mais registros do que o máximo permitido. Modifique a consulta para limitar seus resultados.",
+    "result.inProgress": "Consulta em andamento",
+    "result.emptyMessage": "A lista não contém itens"
 }
