@@ -25,6 +25,7 @@ const renderResultViewer = (props) => (
         onSetDefaultVisibleColumns={setVisibleColumns}
         onSetDefaultColumns={setColumns}
         height={300}
+        refreshInProgress={false}
         {...props}
       />
     </QueryClientProvider>

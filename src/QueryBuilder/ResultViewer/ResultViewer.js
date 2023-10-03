@@ -30,6 +30,7 @@ export const ResultViewer = ({
   onPreviewShown,
   isPreviewLoading,
   additionalControls,
+  refreshInProgress,
 }) => {
   const intl = useIntl();
 
@@ -61,7 +62,7 @@ export const ResultViewer = ({
     contentQueryKeys,
   });
 
-  const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading;
+  const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading || refreshInProgress;
   const currentRecordsCount = contentData?.length || 0;
 
   // set visible by default columns once
@@ -202,4 +203,5 @@ ResultViewer.propTypes = {
   contentQueryOptions: PropTypes.object,
   contentQueryKeys: PropTypes.arrayOf(PropTypes.string),
   additionalControls: PropTypes.element,
+  refreshInProgress: PropTypes.bool,
 };
