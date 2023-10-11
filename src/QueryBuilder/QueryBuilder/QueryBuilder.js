@@ -8,6 +8,7 @@ import { QueryBuilderModal } from './QueryBuilderModal';
 import { queryBuilderModalPropTypes } from '../propTypes';
 
 export const QueryBuilder = ({
+  triggerButtonFullWidth = true,
   disabled,
   triggerButtonLabel,
   ...modalProps
@@ -22,7 +23,7 @@ export const QueryBuilder = ({
     <>
       <Button
         buttonStyle="primary"
-        fullWidth
+        fullWidth={triggerButtonFullWidth}
         onClick={openModal}
         disabled={disabled}
       >
@@ -40,5 +41,6 @@ export const QueryBuilder = ({
 QueryBuilder.propTypes = {
   disabled: PropTypes.bool,
   triggerButtonLabel: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+  triggerButtonFullWidth: PropTypes.bool,
   ...queryBuilderModalPropTypes,
 };
