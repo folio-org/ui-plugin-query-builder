@@ -47,7 +47,7 @@ export const sourceToMongoQuery = (source) => {
   const escapeRegex = (value) => {
     const escapedValue = value.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
 
-    return `^${escapedValue}`;
+    return `${escapedValue}`;
   };
 
   source.forEach((item) => {
