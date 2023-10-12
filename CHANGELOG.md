@@ -2,6 +2,8 @@
 
 ## (in progress)
 
+## [1.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.0.0) (2023-10-12)
+
 * [UIPQB-1](https://issues.folio.org/browse/UIPQB-1) Query plugin - project setup.
 * [UIPQB-5](https://issues.folio.org/browse/UIPQB-5) Field-action-value component: String.
 * [UIPQB-9](https://issues.folio.org/browse/UIPQB-9) Date-time property format - action-value component
