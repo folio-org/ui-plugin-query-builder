@@ -2,6 +2,8 @@
 
 ## (in progress)
 
+## [1.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.0.0) (2023-10-12)
+
 * [UIPQB-1](https://issues.folio.org/browse/UIPQB-1) Query plugin - project setup.
 * [UIPQB-5](https://issues.folio.org/browse/UIPQB-5) Field-action-value component: String.
 * [UIPQB-9](https://issues.folio.org/browse/UIPQB-9) Date-time property format - action-value component
@@ -31,3 +33,4 @@
 * [UIPQB-47](https://issues.folio.org/browse/UIPQB-47) 400 error blocks save or further action in query builder.
 * [UIPQB-51](https://issues.folio.org/browse/UIPQB-51) Dropdown typeahead should use contains not starts with.
 * [UIPQB-57](https://issues.folio.org/browse/UIPQB-57) 400 error should be reported in the UI
+* [UIPQB-55](https://issues.folio.org/browse/UIPQB-55) Regular expressions are incorrect for contains and starts_with operators
