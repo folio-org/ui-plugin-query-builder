@@ -25,5 +25,7 @@
 
   "viewer.retrieving": "Retrieving...",
   "result.inProgress": "Query in progress",
-  "result.emptyMessage": "The list contains no items"
+  "result.emptyMessage": "The list contains no items",
+
+  "error.sww": "Something went wrong"
 }
