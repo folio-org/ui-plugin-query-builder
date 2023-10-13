@@ -77,9 +77,11 @@ export const QueryBuilderModal = ({
     onQueryTestSuccess: () => {
       setIsQueryRetrieved(false);
     },
-    onQueryTestFail: () => {
+    onQueryTestFail: async (err) => {
+      const response = await err?.response.json();
+
       showCallout({
-        message: <FormattedMessage id="ui-plugin-query-builder.error.sww" />,
+        message: response?.message || <FormattedMessage id="ui-plugin-query-builder.error.sww" />,
         type: 'error',
       });
       setIsQueryRetrieved(false);
