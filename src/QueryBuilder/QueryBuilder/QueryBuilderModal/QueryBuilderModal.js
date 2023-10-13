@@ -8,7 +8,7 @@ import {
   Loading,
   Row,
 } from '@folio/stripes/components';
-
+import { useShowCallout } from '@folio/stripes-acq-components';
 import { useQueryClient } from '@tanstack/react-query';
 import css from './QueryBuilderModal.css';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
@@ -42,6 +42,7 @@ export const QueryBuilderModal = ({
 }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
+  const showCallout = useShowCallout();
 
   const { entityType } = useEntityType({ entityTypeDataSource });
 
@@ -74,6 +75,13 @@ export const QueryBuilderModal = ({
   } = useTestQuery({
     testQueryDataSource,
     onQueryTestSuccess: () => {
+      setIsQueryRetrieved(false);
+    },
+    onQueryTestFail: () => {
+      showCallout({
+        message: <FormattedMessage id="ui-plugin-query-builder.error.sww" />,
+        type: 'error',
+      });
       setIsQueryRetrieved(false);
     },
   });
