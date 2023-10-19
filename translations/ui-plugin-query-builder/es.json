@@ -21,5 +21,6 @@
     "control.operator.placeholder": "Select operator",
     "modal.banner.limit": "Warning: this query returns more records than the maximum allowed. Modify the query to limit your results.",
     "result.inProgress": "Query in progress",
-    "result.emptyMessage": "The list contains no items"
+    "result.emptyMessage": "The list contains no items",
+    "error.sww": "Algo salió mal"
 }

@@ -21,5 +21,6 @@
     "control.operator.placeholder": "Select operator",
     "modal.banner.limit": "Warning: this query returns more records than the maximum allowed. Modify the query to limit your results.",
     "result.inProgress": "Query in progress",
-    "result.emptyMessage": "此清單無單件"
+    "result.emptyMessage": "此清單無單件",
+    "error.sww": "發生了一些問題 (°ロ°) !"
 }
