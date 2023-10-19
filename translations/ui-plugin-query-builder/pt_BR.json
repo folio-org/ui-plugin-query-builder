@@ -21,5 +21,6 @@
     "control.operator.placeholder": "Selecionar operador",
     "modal.banner.limit": "Atenção: esta consulta retorna mais registros do que o máximo permitido. Modifique a consulta para limitar seus resultados.",
     "result.inProgress": "Consulta em andamento",
-    "result.emptyMessage": "A lista não contém itens"
+    "result.emptyMessage": "A lista não contém itens",
+    "error.sww": "Algo deu errado"
 }
