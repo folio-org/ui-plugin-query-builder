@@ -36,9 +36,16 @@ export const isQueryValid = (source) => {
 };
 
 export const getTransformedValue = (val) => {
-  if (typeof val === 'string') return val.split(',').map(item => item.trim());
+  // cover the case when user types comma-separated values instead multi-select
+  if (typeof val === 'string') {
+    return val.split(',').map(item => item.trim());
+  }
 
-  return Array.isArray(val) ? val.map(({ value }) => value) : val;
+  if (Array.isArray(val)) {
+    return val.map(({ value }) => value);
+  }
+
+  return val;
 };
 
 export const sourceToMongoQuery = (source) => {
