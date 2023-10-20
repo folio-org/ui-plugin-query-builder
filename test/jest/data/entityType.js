@@ -9,7 +9,7 @@ export const entityType = {
         'dataType': 'stringType',
       },
       'labelAlias': 'User ID',
-      'visibleByDefault': false,
+      'visibleByDefault': true,
     },
     {
       'name': 'user_first_name',

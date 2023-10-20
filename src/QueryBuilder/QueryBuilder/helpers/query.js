@@ -36,6 +36,8 @@ export const isQueryValid = (source) => {
 };
 
 export const getTransformedValue = (val) => {
+  if (typeof val === 'string') return val.split(',').map(item => item.trim());
+
   return Array.isArray(val) ? val.map(({ value }) => value) : val;
 };
 

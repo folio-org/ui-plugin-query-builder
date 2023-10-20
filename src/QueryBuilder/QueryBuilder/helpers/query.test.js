@@ -65,6 +65,18 @@ describe('mongoQueryToSource()', () => {
       operator: { options: expect.any(Array), current: OPERATORS.NOT_IN },
       value: { current: [{ label: 'value', value: 'value' }, { label: 'value2', value: 'value2' }] },
     },
+    {
+      boolean: { options: booleanOptions, current: 'AND' },
+      field: { options: fieldOptions, current: 'user_id' },
+      operator: { options: expect.any(Array), current: OPERATORS.NOT_IN },
+      value: { current: 'value, value2' },
+    },
+    {
+      boolean: { options: booleanOptions, current: 'AND' },
+      field: { options: fieldOptions, current: 'user_id' },
+      operator: { options: expect.any(Array), current: OPERATORS.IN },
+      value: { current: 'value, value2' },
+    },
   ];
 
   const initialValues = {
@@ -77,6 +89,8 @@ describe('mongoQueryToSource()', () => {
       { languages: { $in: ['value', 'value2'] } },
       { user_full_name: { $regex: 'abc' } },
       { languages: { $nin: ['value', 'value2'] } },
+      { user_id: { $nin: ['value', 'value2'] } },
+      { user_id: { $in: ['value', 'value2'] } },
     ],
   };
 
@@ -87,6 +101,17 @@ describe('mongoQueryToSource()', () => {
       fieldOptions,
       intl: { formatMessage: jest.fn() },
     });
+
+    const getCurrentValue = (v) => {
+      const currentValue = v.value.current;
+      const currentOperator = v.operator.current;
+
+      if (typeof currentValue === 'string' && [OPERATORS.IN, OPERATORS.NOT_IN].includes(currentOperator)) {
+        return currentValue.split(',').map(item => item.trim());
+      }
+
+      return Array.isArray(currentValue) ? currentValue.map(({ value }) => value) : currentValue;
+    };
 
     expect(result).toEqual(source.map(v => ({
       ...v,
@@ -99,7 +124,7 @@ describe('mongoQueryToSource()', () => {
         dataType: fieldOptions.find(({ value }) => value === v.field.current).dataType,
       },
       value: {
-        current: Array.isArray(v.value.current) ? v.value.current.map(({ value }) => value) : v.value.current,
+        current: getCurrentValue(v),
         source: undefined,
         options: fieldOptions.find(({ value }) => value === v.field.current).values,
       },
@@ -117,6 +142,8 @@ describe('mongoQueryToSource()', () => {
         { languages: { $in: ['value', 'value2'] } },
         { user_full_name: { $regex: 'abc' } },
         { languages: { $nin: ['value', 'value2'] } },
+        { user_id: { $nin: ['value', 'value2'] } },
+        { user_id: { $in: ['value', 'value2'] } },
       ],
     };
 
