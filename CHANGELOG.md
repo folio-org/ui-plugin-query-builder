@@ -1,6 +1,7 @@
 # Change history for ui-plugin-query-builder
 
 ## (in progress)
+* [UIPQB-60](https://issues.folio.org/browse/UIPQB-60) 'In' and 'Not In' requests not properly formatted for [Users] "User ID"
 
 ## [1.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.0.0) (2023-10-12)
 
