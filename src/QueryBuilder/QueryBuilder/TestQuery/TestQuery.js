@@ -108,6 +108,12 @@ export const TestQuery = ({
 
   const handleColumnChange = ({ values }) => setVisibleColumns(values);
 
+  const handleDefaultVisibleColumnsChange = (values) => {
+    if (!visibleColumns.length) {
+      setVisibleColumns(values);
+    }
+  };
+
   const renderDropdown = ({ currentRecordsCount }) => !!currentRecordsCount && (
     <ColumnsDropdown
       columns={columns}
@@ -154,7 +160,7 @@ export const TestQuery = ({
           onSuccess={handleQueryRetrieved}
           onPreviewShown={handlePreviewShown}
           onSetDefaultColumns={setColumns}
-          onSetDefaultVisibleColumns={setVisibleColumns}
+          onSetDefaultVisibleColumns={handleDefaultVisibleColumnsChange}
           contentDataSource={queryDetailsDataSource}
           entityTypeDataSource={entityTypeDataSource}
           headline={renderHeadline}
