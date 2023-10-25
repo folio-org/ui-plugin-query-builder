@@ -157,7 +157,7 @@ describe('QueryBuilderModal', () => {
     expect(screen.getByText(/testText/)).toBeVisible();
   });
 
-  it.skip('should show progress table when form valid and testQuery button clicked', async () => {
+  it('should show progress table when form valid and testQuery button clicked', async () => {
     renderQueryBuilderModal({});
 
     await waitFor(() => {
@@ -183,7 +183,7 @@ describe('QueryBuilderModal', () => {
     });
   });
 
-  it.skip('should show banner if limit is exceeded', async () => {
+  it('should show banner if limit is exceeded', async () => {
     renderQueryBuilderModal({
       recordsLimit: 1,
     });
