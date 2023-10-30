@@ -20,7 +20,7 @@
     "modal.preview.countingInProgress": "Probíhá počítání",
     "control.operator.placeholder": "Vybrat operátor",
     "modal.banner.limit": "Varování: tento dotaz vrátí více záznamů než je maximálně povoleno. Upravte dotaz tak, aby omezil vaše výsledky.",
-    "result.inProgress": "Query in progress",
+    "result.inProgress": "Probíhá dotaz",
     "result.emptyMessage": "Seznam neobsahuje žádné jednotky",
     "error.sww": "Něco se pokazilo"
 }
