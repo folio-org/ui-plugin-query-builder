@@ -10,6 +10,7 @@ describe('mongoQueryToSource()', () => {
       booleanOptions,
       fieldOptions,
       intl: { formatMessage: jest.fn() },
+      getParamsSource: jest.fn(),
     });
 
     expect(result).toEqual([]);

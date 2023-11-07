@@ -178,7 +178,7 @@ export const mongoQueryToSource = async ({
   intl,
   getParamsSource,
 }) => {
-  if (!fieldOptions?.length) return [];
+  if (!fieldOptions?.length || !Object.keys(initialValues).length) return [];
 
   const key = Object.keys(initialValues)[0];
   const sharedArgs = { intl, booleanOptions, getParamsSource, fieldOptions };
