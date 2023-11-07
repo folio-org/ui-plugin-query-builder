@@ -130,7 +130,7 @@ const getSourceFields = (field) => ({
   },
 }[field]);
 
-const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOptions, getParamsSource }) => {
+const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOptions, getParamsSource, boolean }) => {
   const [field, query] = Object.entries(item)[0];
   const mongoOperator = Object.keys(query)[0];
   const mongoValue = query[mongoOperator];
@@ -138,7 +138,6 @@ const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOption
   const { operator, value } = getSourceFields(mongoOperator)(mongoValue);
 
   if (operator && value) {
-    const boolean = BOOLEAN_OPERATORS.AND;
     const fieldItem = fieldOptions.find(f => f.value === field);
     const { dataType, values, source } = fieldItem;
     const hasSourceOrValues = values || source;
@@ -169,6 +168,8 @@ const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOption
       value: { current: formattedValue || value, source, options: values },
     };
   }
+
+  return null;
 };
 
 export const mongoQueryToSource = async ({
@@ -190,6 +191,7 @@ export const mongoQueryToSource = async ({
     for (const item of initialValues[key]) {
       const formattedItem = await getFormattedSourceField({
         item,
+        boolean: key,
         ...sharedArgs,
       });
 
@@ -201,6 +203,7 @@ export const mongoQueryToSource = async ({
 
   const singleItem = await getFormattedSourceField({
     item: initialValues,
+    boolean: '',
     ...sharedArgs,
   });
 

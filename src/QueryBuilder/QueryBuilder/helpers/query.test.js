@@ -16,6 +16,13 @@ describe('mongoQueryToSource()', () => {
     expect(result).toEqual([]);
   });
 
+  const singleSource = [{
+    boolean: { options: [{ label: 'AND', value: '' }], current: '' },
+    field: { options: fieldOptions, current: 'user_first_name', dataType: 'stringType' },
+    operator: { options: expect.any(Array), current: OPERATORS.EQUAL, dataType: 'stringType' },
+    value: { current: 'value', options: undefined, source: undefined },
+  }];
+
   const source = [
     {
       boolean: { options: booleanOptions, current: '$and' },
@@ -132,6 +139,17 @@ describe('mongoQueryToSource()', () => {
     })));
   });
 
+  it('should convert single query without operators to source format', async () => {
+    const result = await mongoQueryToSource({
+      initialValues: { user_first_name: { $eq: 'value' } },
+      booleanOptions: [{ label: 'AND', value: '' }],
+      fieldOptions,
+      intl: { formatMessage: jest.fn() },
+    });
+
+    expect(result).toEqual(singleSource);
+  });
+
   it('should convert from source to simple query format', () => {
     const initial = {
       $and: [
@@ -149,6 +167,14 @@ describe('mongoQueryToSource()', () => {
     };
 
     const result = sourceToMongoQuery(source);
+
+    expect(result).toEqual(initial);
+  });
+
+  it('should convert from SINGLE source to simple query format', () => {
+    const initial = { user_first_name: { $eq: 'value' } };
+
+    const result = sourceToMongoQuery(singleSource);
 
     expect(result).toEqual(initial);
   });
