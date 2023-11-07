@@ -17,62 +17,62 @@ describe('mongoQueryToSource()', () => {
 
   const source = [
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_first_name' },
       operator: { options: expect.any(Array), current: OPERATORS.EQUAL },
       value: { current: 'value' },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_first_name' },
       operator: { options: expect.any(Array), current: OPERATORS.NOT_EQUAL },
       value: { current: 'value' },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_last_name' },
       operator: { options: expect.any(Array), current: OPERATORS.GREATER_THAN },
       value: { current: 'value' },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_last_name' },
       operator: { options: expect.any(Array), current: OPERATORS.LESS_THAN },
       value: { current: 10 },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_last_name' },
       operator: { options: expect.any(Array), current: OPERATORS.GREATER_THAN_OR_EQUAL },
       value: { current: 'value' },
     },
 
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'languages' },
       operator: { options: expect.any(Array), current: OPERATORS.IN },
       value: { current: [{ label: 'value', value: 'value' }, { label: 'value2', value: 'value2' }] },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_full_name' },
       operator: { options: expect.any(Array), current: OPERATORS.CONTAINS },
       value: { current: 'abc' },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'languages' },
       operator: { options: expect.any(Array), current: OPERATORS.NOT_IN },
       value: { current: [{ label: 'value', value: 'value' }, { label: 'value2', value: 'value2' }] },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_id' },
       operator: { options: expect.any(Array), current: OPERATORS.NOT_IN },
       value: { current: 'value, value2' },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_id' },
       operator: { options: expect.any(Array), current: OPERATORS.IN },
       value: { current: 'value, value2' },

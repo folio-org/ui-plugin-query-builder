@@ -48,63 +48,66 @@ export const getTransformedValue = (val) => {
   return val;
 };
 
+const escapeRegex = (value) => {
+  const escapedValue = value.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+
+  return `${escapedValue}`;
+};
+
+const getQueryOperand = (item) => {
+  let queryOperand = {};
+
+  const field = item.field.current;
+  const operator = item.operator.current;
+  const value = item.value.current;
+
+  switch (operator) {
+    case OPERATORS.EQUAL:
+      queryOperand = { [field]: { $eq: value } };
+      break;
+    case OPERATORS.NOT_EQUAL:
+      queryOperand = { [field]: { $ne: value } };
+      break;
+    case OPERATORS.GREATER_THAN:
+      queryOperand = { [field]: { $gt: value } };
+      break;
+    case OPERATORS.GREATER_THAN_OR_EQUAL:
+      queryOperand = { [field]: { $gte: value } };
+      break;
+    case OPERATORS.LESS_THAN:
+      queryOperand = { [field]: { $lt: value } };
+      break;
+    case OPERATORS.LESS_THAN_OR_EQUAL:
+      queryOperand = { [field]: { $lte: value } };
+      break;
+    case OPERATORS.IN:
+      queryOperand = { [field]: { $in: getTransformedValue(value) } };
+      break;
+    case OPERATORS.NOT_IN:
+      queryOperand = { [field]: { $nin: getTransformedValue(value) } };
+      break;
+    case OPERATORS.STARTS_WITH:
+      queryOperand = { [field]: { $regex: new RegExp(`^${escapeRegex(value)}`).source } };
+      break;
+    case OPERATORS.CONTAINS:
+      queryOperand = { [field]: { $regex: new RegExp(escapeRegex(value)).source } };
+      break;
+    default:
+      break;
+  }
+
+  return queryOperand;
+};
+
 export const sourceToMongoQuery = (source) => {
   const query = {};
-  const andQuery = [];
-  let queryItem = {};
+  const boolOperator = source.find(item => Boolean(item.boolean.current))?.boolean.current;
+  const queryOperands = source.map(getQueryOperand);
 
-  const escapeRegex = (value) => {
-    const escapedValue = value.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
-
-    return `${escapedValue}`;
-  };
-
-  source.forEach((item) => {
-    const field = item.field.current;
-    const operator = item.operator.current;
-    const value = item.value.current;
-
-    switch (operator) {
-      case OPERATORS.EQUAL:
-        queryItem = { [field]: { $eq: value } };
-        break;
-      case OPERATORS.NOT_EQUAL:
-        queryItem = { [field]: { $ne: value } };
-        break;
-      case OPERATORS.GREATER_THAN:
-        queryItem = { [field]: { $gt: value } };
-        break;
-      case OPERATORS.GREATER_THAN_OR_EQUAL:
-        queryItem = { [field]: { $gte: value } };
-        break;
-      case OPERATORS.LESS_THAN:
-        queryItem = { [field]: { $lt: value } };
-        break;
-      case OPERATORS.LESS_THAN_OR_EQUAL:
-        queryItem = { [field]: { $lte: value } };
-        break;
-      case OPERATORS.IN:
-        queryItem = { [field]: { $in: getTransformedValue(value) } };
-        break;
-      case OPERATORS.NOT_IN:
-        queryItem = { [field]: { $nin: getTransformedValue(value) } };
-        break;
-      case OPERATORS.STARTS_WITH:
-        queryItem = { [field]: { $regex: new RegExp(`^${escapeRegex(value)}`).source } };
-        break;
-      case OPERATORS.CONTAINS:
-        queryItem = { [field]: { $regex: new RegExp(escapeRegex(value)).source } };
-        break;
-      default:
-        break;
-    }
-
-    andQuery.push(queryItem);
-  });
-
-  // temporary solution, because we should support only $and operator
-  if (andQuery.length) {
-    query.$and = andQuery;
+  if (boolOperator) {
+    query[boolOperator] = queryOperands;
+  } else {
+    return queryOperands[0];
   }
 
   return query;

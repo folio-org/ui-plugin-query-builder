@@ -106,7 +106,7 @@ export const getFieldOptions = (options) => {
 };
 
 export const booleanOptions = [
-  { label: 'AND', value: 'AND' },
+  { label: 'AND', value: OPERATORS.AND },
 ];
 
 export const sourceTemplate = (fieldOptions = []) => ({

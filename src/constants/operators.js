@@ -9,5 +9,5 @@ export const OPERATORS = {
   NOT_IN: 'not in',
   CONTAINS: 'contains',
   STARTS_WITH: 'starts with',
-  AND: 'AND',
+  AND: '$and',
 };
