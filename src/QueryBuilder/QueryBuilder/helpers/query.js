@@ -1,6 +1,6 @@
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { valueBuilder } from './valueBuilder';
-import { OPERATORS } from '../../../constants/operators';
+import { BOOLEAN_OPERATORS, OPERATORS } from '../../../constants/operators';
 import { getOperatorOptions } from './selectOptions';
 
 export const DEFAULT_PREVIEW_INTERVAL = 5000;
@@ -130,6 +130,47 @@ const getSourceFields = (field) => ({
   },
 }[field]);
 
+const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOptions, getParamsSource }) => {
+  const [field, query] = Object.entries(item)[0];
+  const mongoOperator = Object.keys(query)[0];
+  const mongoValue = query[mongoOperator];
+
+  const { operator, value } = getSourceFields(mongoOperator)(mongoValue);
+
+  if (operator && value) {
+    const boolean = BOOLEAN_OPERATORS.AND;
+    const fieldItem = fieldOptions.find(f => f.value === field);
+    const { dataType, values, source } = fieldItem;
+    const hasSourceOrValues = values || source;
+    let formattedValue;
+
+    if (Array.isArray(value) && source) {
+      const params = await getParamsSource?.({
+        entityTypeId: source?.entityTypeId,
+        columnName: source?.columnName,
+        searchValue: '',
+      });
+
+      formattedValue = value.map(val => params?.content?.find(param => param.value === val));
+    }
+
+    return {
+      boolean: { options: booleanOptions, current: boolean },
+      field: { options: fieldOptions, current: field, dataType },
+      operator: {
+        dataType,
+        options: getOperatorOptions({
+          dataType,
+          hasSourceOrValues,
+          intl,
+        }),
+        current: operator,
+      },
+      value: { current: formattedValue || value, source, options: values },
+    };
+  }
+};
+
 export const mongoQueryToSource = async ({
   initialValues,
   booleanOptions = [],
@@ -139,51 +180,21 @@ export const mongoQueryToSource = async ({
 }) => {
   if (!fieldOptions?.length) return [];
 
-  const target = [];
-  const andQuery = initialValues.$and || [];
+  const key = Object.keys(initialValues)[0];
+  const sharedArgs = { intl, booleanOptions, getParamsSource, fieldOptions };
 
-  for (const queryObj of andQuery) {
-    const [field, query] = Object.entries(queryObj)[0];
-    const mongoOperator = Object.keys(query)[0];
-    const mongoValue = query[mongoOperator];
-
-    const { operator, value } = getSourceFields(mongoOperator)(mongoValue);
-
-    if (operator && value) {
-      const boolean = OPERATORS.AND;
-      const fieldItem = fieldOptions.find(f => f.value === field);
-      const { dataType, values, source } = fieldItem;
-      const hasSourceOrValues = values || source;
-      let formattedValue;
-
-      if (Array.isArray(value) && source) {
-        const params = await getParamsSource?.({
-          entityTypeId: source?.entityTypeId,
-          columnName: source?.columnName,
-          searchValue: '',
-        });
-
-        formattedValue = value.map(item => params?.content?.find(param => param.value === item));
-      }
-
-      const item = {
-        boolean: { options: booleanOptions, current: boolean },
-        field: { options: fieldOptions, current: field, dataType },
-        operator: {
-          dataType,
-          options: getOperatorOptions({
-            dataType,
-            hasSourceOrValues,
-            intl,
-          }),
-          current: operator,
-        },
-        value: { current: formattedValue || value, source, options: values },
-      };
-
-      target.push(item);
-    }
+  // handle case when query contains boolean operators (AND, OR, etc.)
+  if (Object.values(BOOLEAN_OPERATORS).includes(key)) {
+    return initialValues[key].map((item) => getFormattedSourceField({
+      item,
+      ...sharedArgs,
+    }));
   }
 
-  return target;
+  return [
+    getFormattedSourceField({
+      item: initialValues,
+      ...sharedArgs,
+    }),
+  ];
 };
