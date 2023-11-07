@@ -185,16 +185,24 @@ export const mongoQueryToSource = async ({
 
   // handle case when query contains boolean operators (AND, OR, etc.)
   if (Object.values(BOOLEAN_OPERATORS).includes(key)) {
-    return initialValues[key].map((item) => getFormattedSourceField({
-      item,
-      ...sharedArgs,
-    }));
+    const formattedSource = [];
+
+    for (const item of initialValues[key]) {
+      const formattedItem = await getFormattedSourceField({
+        item,
+        ...sharedArgs,
+      });
+
+      formattedSource.push(formattedItem);
+    }
+
+    return formattedSource;
   }
 
-  return [
-    getFormattedSourceField({
-      item: initialValues,
-      ...sharedArgs,
-    }),
-  ];
+  const singleItem = await getFormattedSourceField({
+    item: initialValues,
+    ...sharedArgs,
+  });
+
+  return [singleItem];
 };
