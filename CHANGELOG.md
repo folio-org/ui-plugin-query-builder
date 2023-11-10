@@ -2,6 +2,10 @@
 
 ## (in progress)
 
+## [1.0.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.0.2) (2023-11-10)
+
+* [UIPQB-57](https://issues.folio.org/browse/UIPQB-57) 400 error should be reported in the UI
+
 ## [1.0.1](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.0.1) (2023-10-30)
 
 * [UIPQB-60](https://issues.folio.org/browse/UIPQB-60) 'In' and 'Not In' requests not properly formatted for [Users] "User ID"
@@ -36,5 +40,4 @@
 * [UIPQB-48](https://issues.folio.org/browse/UIPQB-48) "Show columns" dropdown doesn't fit in the screen.
 * [UIPQB-47](https://issues.folio.org/browse/UIPQB-47) 400 error blocks save or further action in query builder.
 * [UIPQB-51](https://issues.folio.org/browse/UIPQB-51) Dropdown typeahead should use contains not starts with.
-* [UIPQB-57](https://issues.folio.org/browse/UIPQB-57) 400 error should be reported in the UI
 * [UIPQB-55](https://issues.folio.org/browse/UIPQB-55) Regular expressions are incorrect for contains and starts_with operators
