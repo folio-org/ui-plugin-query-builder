@@ -101,7 +101,9 @@ const getQueryOperand = (item) => {
 
 export const sourceToMongoQuery = (source) => {
   const query = {};
-  const boolOperator = source.find(item => Boolean(item.boolean.current))?.boolean.current;
+  // A temporary solution to searching for the first operand and its operator, since we only support one at the moment.
+  const firstOperand = source.find(item => Boolean(item.boolean.current));
+  const boolOperator = firstOperand?.boolean.current;
   const queryOperands = source.map(getQueryOperand);
 
   if (boolOperator) {
