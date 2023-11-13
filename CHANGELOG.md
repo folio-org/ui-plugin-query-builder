@@ -4,6 +4,7 @@
 * [UIPQB-60](https://issues.folio.org/browse/UIPQB-60) 'In' and 'Not In' requests not properly formatted for [Users] "User ID"
 * [UIPQB-56](https://issues.folio.org/browse/UIPQB-56) Prevent columns from being reset when query is changed
 * [UIPQB-67](https://issues.folio.org/browse/UIPQB-67) Styles are defined globally for inputs with type "number"
+* [UIPQB-64](https://issues.folio.org/browse/UIPQB-64) Query builder can’t edit single condition queries without AND wrapper
 
 ## [1.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.0.0) (2023-10-12)
 

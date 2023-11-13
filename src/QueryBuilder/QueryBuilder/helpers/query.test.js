@@ -10,69 +10,77 @@ describe('mongoQueryToSource()', () => {
       booleanOptions,
       fieldOptions,
       intl: { formatMessage: jest.fn() },
+      getParamsSource: jest.fn(),
     });
 
     expect(result).toEqual([]);
   });
 
+  const singleSource = [{
+    boolean: { options: [{ label: 'AND', value: '' }], current: '' },
+    field: { options: fieldOptions, current: 'user_first_name', dataType: 'stringType' },
+    operator: { options: expect.any(Array), current: OPERATORS.EQUAL, dataType: 'stringType' },
+    value: { current: 'value', options: undefined, source: undefined },
+  }];
+
   const source = [
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_first_name' },
       operator: { options: expect.any(Array), current: OPERATORS.EQUAL },
       value: { current: 'value' },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_first_name' },
       operator: { options: expect.any(Array), current: OPERATORS.NOT_EQUAL },
       value: { current: 'value' },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_last_name' },
       operator: { options: expect.any(Array), current: OPERATORS.GREATER_THAN },
       value: { current: 'value' },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_last_name' },
       operator: { options: expect.any(Array), current: OPERATORS.LESS_THAN },
       value: { current: 10 },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_last_name' },
       operator: { options: expect.any(Array), current: OPERATORS.GREATER_THAN_OR_EQUAL },
       value: { current: 'value' },
     },
 
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'languages' },
       operator: { options: expect.any(Array), current: OPERATORS.IN },
       value: { current: [{ label: 'value', value: 'value' }, { label: 'value2', value: 'value2' }] },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_full_name' },
       operator: { options: expect.any(Array), current: OPERATORS.CONTAINS },
       value: { current: 'abc' },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'languages' },
       operator: { options: expect.any(Array), current: OPERATORS.NOT_IN },
       value: { current: [{ label: 'value', value: 'value' }, { label: 'value2', value: 'value2' }] },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_id' },
       operator: { options: expect.any(Array), current: OPERATORS.NOT_IN },
       value: { current: 'value, value2' },
     },
     {
-      boolean: { options: booleanOptions, current: 'AND' },
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_id' },
       operator: { options: expect.any(Array), current: OPERATORS.IN },
       value: { current: 'value, value2' },
@@ -131,6 +139,17 @@ describe('mongoQueryToSource()', () => {
     })));
   });
 
+  it('should convert single query without operators to source format', async () => {
+    const result = await mongoQueryToSource({
+      initialValues: { user_first_name: { $eq: 'value' } },
+      booleanOptions: [{ label: 'AND', value: '' }],
+      fieldOptions,
+      intl: { formatMessage: jest.fn() },
+    });
+
+    expect(result).toEqual(singleSource);
+  });
+
   it('should convert from source to simple query format', () => {
     const initial = {
       $and: [
@@ -148,6 +167,14 @@ describe('mongoQueryToSource()', () => {
     };
 
     const result = sourceToMongoQuery(source);
+
+    expect(result).toEqual(initial);
+  });
+
+  it('should convert from SINGLE source to simple query format', () => {
+    const initial = { user_first_name: { $eq: 'value' } };
+
+    const result = sourceToMongoQuery(singleSource);
 
     expect(result).toEqual(initial);
   });

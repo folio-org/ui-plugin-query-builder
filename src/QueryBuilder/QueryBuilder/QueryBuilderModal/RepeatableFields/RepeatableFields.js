@@ -14,7 +14,7 @@ import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import css from '../QueryBuilderModal.css';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
 import { booleanOptions, getFieldOptions, getOperatorOptions, sourceTemplate } from '../../helpers/selectOptions';
-import { OPERATORS } from '../../../../constants/operators';
+import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 
 export const RepeatableFields = ({ source, setSource, getParamsSource, columns }) => {
@@ -27,7 +27,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
       ...res,
       {
         ...sourceTemplate(fieldOptions),
-        [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: OPERATORS.AND },
+        [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: BOOLEAN_OPERATORS.AND },
       },
     ]));
   };

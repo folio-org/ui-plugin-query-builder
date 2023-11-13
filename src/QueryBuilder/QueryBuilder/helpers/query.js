@@ -1,6 +1,6 @@
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { valueBuilder } from './valueBuilder';
-import { OPERATORS } from '../../../constants/operators';
+import { BOOLEAN_OPERATORS, OPERATORS } from '../../../constants/operators';
 import { getOperatorOptions } from './selectOptions';
 
 export const DEFAULT_PREVIEW_INTERVAL = 5000;
@@ -48,63 +48,68 @@ export const getTransformedValue = (val) => {
   return val;
 };
 
+const escapeRegex = (value) => {
+  const escapedValue = value.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+
+  return `${escapedValue}`;
+};
+
+const getQueryOperand = (item) => {
+  let queryOperand = {};
+
+  const field = item.field.current;
+  const operator = item.operator.current;
+  const value = item.value.current;
+
+  switch (operator) {
+    case OPERATORS.EQUAL:
+      queryOperand = { [field]: { $eq: value } };
+      break;
+    case OPERATORS.NOT_EQUAL:
+      queryOperand = { [field]: { $ne: value } };
+      break;
+    case OPERATORS.GREATER_THAN:
+      queryOperand = { [field]: { $gt: value } };
+      break;
+    case OPERATORS.GREATER_THAN_OR_EQUAL:
+      queryOperand = { [field]: { $gte: value } };
+      break;
+    case OPERATORS.LESS_THAN:
+      queryOperand = { [field]: { $lt: value } };
+      break;
+    case OPERATORS.LESS_THAN_OR_EQUAL:
+      queryOperand = { [field]: { $lte: value } };
+      break;
+    case OPERATORS.IN:
+      queryOperand = { [field]: { $in: getTransformedValue(value) } };
+      break;
+    case OPERATORS.NOT_IN:
+      queryOperand = { [field]: { $nin: getTransformedValue(value) } };
+      break;
+    case OPERATORS.STARTS_WITH:
+      queryOperand = { [field]: { $regex: new RegExp(`^${escapeRegex(value)}`).source } };
+      break;
+    case OPERATORS.CONTAINS:
+      queryOperand = { [field]: { $regex: new RegExp(escapeRegex(value)).source } };
+      break;
+    default:
+      break;
+  }
+
+  return queryOperand;
+};
+
 export const sourceToMongoQuery = (source) => {
   const query = {};
-  const andQuery = [];
-  let queryItem = {};
+  // A temporary solution to searching for the first operand and its operator, since we only support one at the moment.
+  const firstOperand = source.find(item => Boolean(item.boolean.current));
+  const boolOperator = firstOperand?.boolean.current;
+  const queryOperands = source.map(getQueryOperand);
 
-  const escapeRegex = (value) => {
-    const escapedValue = value.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
-
-    return `${escapedValue}`;
-  };
-
-  source.forEach((item) => {
-    const field = item.field.current;
-    const operator = item.operator.current;
-    const value = item.value.current;
-
-    switch (operator) {
-      case OPERATORS.EQUAL:
-        queryItem = { [field]: { $eq: value } };
-        break;
-      case OPERATORS.NOT_EQUAL:
-        queryItem = { [field]: { $ne: value } };
-        break;
-      case OPERATORS.GREATER_THAN:
-        queryItem = { [field]: { $gt: value } };
-        break;
-      case OPERATORS.GREATER_THAN_OR_EQUAL:
-        queryItem = { [field]: { $gte: value } };
-        break;
-      case OPERATORS.LESS_THAN:
-        queryItem = { [field]: { $lt: value } };
-        break;
-      case OPERATORS.LESS_THAN_OR_EQUAL:
-        queryItem = { [field]: { $lte: value } };
-        break;
-      case OPERATORS.IN:
-        queryItem = { [field]: { $in: getTransformedValue(value) } };
-        break;
-      case OPERATORS.NOT_IN:
-        queryItem = { [field]: { $nin: getTransformedValue(value) } };
-        break;
-      case OPERATORS.STARTS_WITH:
-        queryItem = { [field]: { $regex: new RegExp(`^${escapeRegex(value)}`).source } };
-        break;
-      case OPERATORS.CONTAINS:
-        queryItem = { [field]: { $regex: new RegExp(escapeRegex(value)).source } };
-        break;
-      default:
-        break;
-    }
-
-    andQuery.push(queryItem);
-  });
-
-  // temporary solution, because we should support only $and operator
-  if (andQuery.length) {
-    query.$and = andQuery;
+  if (boolOperator) {
+    query[boolOperator] = queryOperands;
+  } else {
+    return queryOperands[0];
   }
 
   return query;
@@ -127,6 +132,48 @@ const getSourceFields = (field) => ({
   },
 }[field]);
 
+const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOptions, getParamsSource, boolean }) => {
+  const [field, query] = Object.entries(item)[0];
+  const mongoOperator = Object.keys(query)[0];
+  const mongoValue = query[mongoOperator];
+
+  const { operator, value } = getSourceFields(mongoOperator)(mongoValue);
+
+  if (operator && value) {
+    const fieldItem = fieldOptions.find(f => f.value === field);
+    const { dataType, values, source } = fieldItem;
+    const hasSourceOrValues = values || source;
+    let formattedValue;
+
+    if (Array.isArray(value) && source) {
+      const params = await getParamsSource?.({
+        entityTypeId: source?.entityTypeId,
+        columnName: source?.columnName,
+        searchValue: '',
+      });
+
+      formattedValue = value.map(val => params?.content?.find(param => param.value === val));
+    }
+
+    return {
+      boolean: { options: booleanOptions, current: boolean },
+      field: { options: fieldOptions, current: field, dataType },
+      operator: {
+        dataType,
+        options: getOperatorOptions({
+          dataType,
+          hasSourceOrValues,
+          intl,
+        }),
+        current: operator,
+      },
+      value: { current: formattedValue || value, source, options: values },
+    };
+  }
+
+  return null;
+};
+
 export const mongoQueryToSource = async ({
   initialValues,
   booleanOptions = [],
@@ -134,53 +181,33 @@ export const mongoQueryToSource = async ({
   intl,
   getParamsSource,
 }) => {
-  if (!fieldOptions?.length) return [];
+  if (!fieldOptions?.length || !Object.keys(initialValues).length) return [];
 
-  const target = [];
-  const andQuery = initialValues.$and || [];
+  const key = Object.keys(initialValues)[0];
+  const sharedArgs = { intl, booleanOptions, getParamsSource, fieldOptions };
 
-  for (const queryObj of andQuery) {
-    const [field, query] = Object.entries(queryObj)[0];
-    const mongoOperator = Object.keys(query)[0];
-    const mongoValue = query[mongoOperator];
+  // handle case when query contains boolean operators (AND, OR, etc.)
+  if (Object.values(BOOLEAN_OPERATORS).includes(key)) {
+    const formattedSource = [];
 
-    const { operator, value } = getSourceFields(mongoOperator)(mongoValue);
+    for (const item of initialValues[key]) {
+      const formattedItem = await getFormattedSourceField({
+        item,
+        boolean: key,
+        ...sharedArgs,
+      });
 
-    if (operator && value) {
-      const boolean = OPERATORS.AND;
-      const fieldItem = fieldOptions.find(f => f.value === field);
-      const { dataType, values, source } = fieldItem;
-      const hasSourceOrValues = values || source;
-      let formattedValue;
-
-      if (Array.isArray(value) && source) {
-        const params = await getParamsSource?.({
-          entityTypeId: source?.entityTypeId,
-          columnName: source?.columnName,
-          searchValue: '',
-        });
-
-        formattedValue = value.map(item => params?.content?.find(param => param.value === item));
-      }
-
-      const item = {
-        boolean: { options: booleanOptions, current: boolean },
-        field: { options: fieldOptions, current: field, dataType },
-        operator: {
-          dataType,
-          options: getOperatorOptions({
-            dataType,
-            hasSourceOrValues,
-            intl,
-          }),
-          current: operator,
-        },
-        value: { current: formattedValue || value, source, options: values },
-      };
-
-      target.push(item);
+      formattedSource.push(formattedItem);
     }
+
+    return formattedSource;
   }
 
-  return target;
+  const singleItem = await getFormattedSourceField({
+    item: initialValues,
+    boolean: '',
+    ...sharedArgs,
+  });
+
+  return [singleItem];
 };
