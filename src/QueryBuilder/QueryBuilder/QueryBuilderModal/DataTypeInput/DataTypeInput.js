@@ -13,6 +13,8 @@ import { OPERATORS } from '../../../../constants/operators';
 import { SelectionContainer } from '../SelectionContainer/SelectionContainer';
 import { ISO_FORMAT } from '../../helpers/timeUtils';
 
+import css from '../../../QueryBuilder.css';
+
 export const DataTypeInput = ({
   availableValues,
   onChange,
@@ -28,7 +30,7 @@ export const DataTypeInput = ({
   const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
   const hasSourceOrValues = source || availableValues;
 
-  const textControl = ({ testId, type = 'text' }) => {
+  const textControl = ({ testId, type = 'text', textClass }) => {
     const onKeyDown = (event) => {
       // prevent typing e, +, - in number type
       if (type === 'number' && (event.keyCode === 69 || event.keyCode === 187 || event.keyCode === 189)) {
@@ -42,6 +44,7 @@ export const DataTypeInput = ({
         onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
         onKeyDown={onKeyDown}
         type={type}
+        className={textClass}
         {...rest}
       />
     );
@@ -114,7 +117,9 @@ export const DataTypeInput = ({
   };
 
   const numericTypeControls = () => {
-    return hasSourceOrValues ? selectControl({ testId: 'data-input-select-numeric' }) : textControl({ type: 'number' });
+    return hasSourceOrValues
+      ? selectControl({ testId: 'data-input-select-numeric' })
+      : textControl({ type: 'number', textClass: css.NumberInput });
   };
 
   const booleanTypeControls = () => (
