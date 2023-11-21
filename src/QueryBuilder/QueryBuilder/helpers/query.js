@@ -1,6 +1,6 @@
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { valueBuilder } from './valueBuilder';
-import { BOOLEAN_OPERATORS, OPERATORS } from '../../../constants/operators';
+import { BOOLEAN_OPERATORS, BOOLEAN_OPERATORS_MAP, OPERATORS } from '../../../constants/operators';
 import { getOperatorOptions } from './selectOptions';
 
 export const DEFAULT_PREVIEW_INTERVAL = 5000;
@@ -20,7 +20,7 @@ export const getQueryStr = (rows, fieldOptions) => {
     }
 
     if (bool) {
-      str += ` ${bool || ''} ${baseQuery}`;
+      str += ` ${BOOLEAN_OPERATORS_MAP[bool] || ''} ${baseQuery}`;
     } else {
       str += baseQuery;
     }
