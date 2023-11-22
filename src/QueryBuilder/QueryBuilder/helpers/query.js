@@ -6,7 +6,7 @@ import { getOperatorOptions } from './selectOptions';
 export const DEFAULT_PREVIEW_INTERVAL = 5000;
 
 export const getQueryStr = (rows, fieldOptions) => {
-  return rows.reduce((str, row) => {
+  return rows.reduce((str, row, index) => {
     const bool = row[COLUMN_KEYS.BOOLEAN].current;
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
@@ -19,7 +19,8 @@ export const getQueryStr = (rows, fieldOptions) => {
       return '';
     }
 
-    if (bool) {
+    // if there is a boolean operator and it's not the first row - add it to the query
+    if (bool && index > 0) {
       str += ` ${BOOLEAN_OPERATORS_MAP[bool] || ''} ${baseQuery}`;
     } else {
       str += baseQuery;
