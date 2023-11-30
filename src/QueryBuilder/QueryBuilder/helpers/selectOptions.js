@@ -33,6 +33,15 @@ const UUIDOperators = () => [
   { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
 ];
 
+const ArrayOperators = () => [
+  { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
+  { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+  { label: OPERATORS.IN, value: OPERATORS.IN },
+  { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
+  { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
+  { label: OPERATORS.NOT_CONTAINS, value: OPERATORS.NOT_CONTAINS },
+];
+
 export const getFilledValues = (options) => {
   return options?.map(({ value, label }) => ({ value, label: label || value }));
 };
@@ -74,7 +83,7 @@ export const getOperatorOptions = ({
       return getOperatorsWithPlaceholder(baseLogicalOperators(), intl);
 
     case DATA_TYPES.ArrayType:
-      return getOperatorsWithPlaceholder(UUIDOperators(), intl);
+      return getOperatorsWithPlaceholder(ArrayOperators(), intl);
 
     case DATA_TYPES.DateType:
       return getOperatorsWithPlaceholder(extendedLogicalOperators(), intl);
