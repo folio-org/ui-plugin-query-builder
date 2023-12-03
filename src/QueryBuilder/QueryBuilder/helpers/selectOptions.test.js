@@ -181,6 +181,8 @@ describe('select options', () => {
           { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
           { label: OPERATORS.IN, value: OPERATORS.IN },
           { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
+          { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
+          { label: OPERATORS.NOT_CONTAINS, value: OPERATORS.NOT_CONTAINS },
         ],
       });
     });
