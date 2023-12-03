@@ -2,6 +2,7 @@ import { mongoQueryToSource, sourceToMongoQuery } from './query';
 import { booleanOptions } from './selectOptions';
 import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
+import { DATA_TYPES } from '../../../constants/dataTypes';
 
 describe('mongoQueryToSource()', () => {
   test('should return empty array for empty query', async () => {
@@ -85,6 +86,18 @@ describe('mongoQueryToSource()', () => {
       operator: { options: expect.any(Array), current: OPERATORS.IN },
       value: { current: 'value, value2' },
     },
+    {
+      boolean: { options: booleanOptions, current: '$and' },
+      field: { options: fieldOptions, current: 'department_names', dataType: DATA_TYPES.ArrayType },
+      operator: { options: expect.any(Array), current: OPERATORS.CONTAINS },
+      value: { current: 'value' },
+    },
+    {
+      boolean: { options: booleanOptions, current: '$and' },
+      field: { options: fieldOptions, current: 'department_names', dataType: DATA_TYPES.ArrayType },
+      operator: { options: expect.any(Array), current: OPERATORS.NOT_CONTAINS },
+      value: { current: 'value' },
+    },
   ];
 
   const initialValues = {
@@ -99,6 +112,8 @@ describe('mongoQueryToSource()', () => {
       { languages: { $nin: ['value', 'value2'] } },
       { user_id: { $nin: ['value', 'value2'] } },
       { user_id: { $in: ['value', 'value2'] } },
+      { department_names: { $contains: 'value' } },
+      { department_names: { $not_contains: 'value' } },
     ],
   };
 
@@ -163,6 +178,8 @@ describe('mongoQueryToSource()', () => {
         { languages: { $nin: ['value', 'value2'] } },
         { user_id: { $nin: ['value', 'value2'] } },
         { user_id: { $in: ['value', 'value2'] } },
+        { department_names: { $contains: 'value' } },
+        { department_names: { $not_contains: 'value' } },
       ],
     };
 

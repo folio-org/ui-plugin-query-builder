@@ -51,7 +51,7 @@ export const getTransformedValue = (val) => {
 };
 
 const escapeRegex = (value) => {
-  const escapedValue = value.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+  const escapedValue = value?.toString().replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
 
   return `${escapedValue}`;
 };
