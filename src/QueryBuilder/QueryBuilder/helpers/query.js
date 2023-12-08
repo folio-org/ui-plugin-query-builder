@@ -2,6 +2,7 @@ import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { valueBuilder } from './valueBuilder';
 import { BOOLEAN_OPERATORS, BOOLEAN_OPERATORS_MAP, OPERATORS } from '../../../constants/operators';
 import { getOperatorOptions } from './selectOptions';
+import { DATA_TYPES } from '../../../constants/dataTypes';
 
 export const DEFAULT_PREVIEW_INTERVAL = 5000;
 
@@ -50,7 +51,7 @@ export const getTransformedValue = (val) => {
 };
 
 const escapeRegex = (value) => {
-  const escapedValue = value.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+  const escapedValue = value?.toString().replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
 
   return `${escapedValue}`;
 };
@@ -61,6 +62,11 @@ const getQueryOperand = (item) => {
   const field = item.field.current;
   const operator = item.operator.current;
   const value = item.value.current;
+  const dataType = item.field.dataType;
+
+  const containsTemplate = dataType === DATA_TYPES.ArrayType
+    ? { $contains: value }
+    : { $regex: new RegExp(escapeRegex(value)).source };
 
   switch (operator) {
     case OPERATORS.EQUAL:
@@ -91,7 +97,10 @@ const getQueryOperand = (item) => {
       queryOperand = { [field]: { $regex: new RegExp(`^${escapeRegex(value)}`).source } };
       break;
     case OPERATORS.CONTAINS:
-      queryOperand = { [field]: { $regex: new RegExp(escapeRegex(value)).source } };
+      queryOperand = { [field]: containsTemplate };
+      break;
+    case OPERATORS.NOT_CONTAINS:
+      queryOperand = { [field]: { $not_contains: value } };
       break;
     default:
       break;
@@ -126,6 +135,8 @@ const getSourceFields = (field) => ({
   $lte: (value) => ({ operator: OPERATORS.LESS_THAN_OR_EQUAL, value }),
   $in: (value) => ({ operator: OPERATORS.IN, value }),
   $nin: (value) => ({ operator: OPERATORS.NOT_IN, value }),
+  $contains: (value) => ({ operator: OPERATORS.CONTAINS, value }),
+  $not_contains: (value) => ({ operator: OPERATORS.NOT_CONTAINS, value }),
   $regex: (value) => {
     return value?.includes('^')
       ? { operator: OPERATORS.STARTS_WITH, value: value?.replace(cleanerRegex, '') }

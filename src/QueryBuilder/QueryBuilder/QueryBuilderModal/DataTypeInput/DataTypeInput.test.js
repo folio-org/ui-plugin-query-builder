@@ -87,13 +87,8 @@ const arr = [
   },
   {
     dataType: DATA_TYPES.ArrayType,
-    operator: OPERATORS.IN,
-    text: 'stripes-components.multiSelection.controlDescription',
-  },
-  {
-    dataType: DATA_TYPES.ArrayType,
-    operator: OPERATORS.EQUAL,
-    componentTestId: 'data-input-select-arrayType',
+    operator: OPERATORS.CONTAINS,
+    componentTestId: 'data-input-text-arrayType',
     onChange: jest.fn(),
   },
   {

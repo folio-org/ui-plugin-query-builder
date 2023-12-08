@@ -296,6 +296,14 @@ export const entityType = {
         'columnName': 'material_type_name',
       },
     },
+    {
+      'name': 'department_names',
+      'dataType': {
+        'dataType': 'arrayType',
+      },
+      'labelAlias': 'Department names',
+      'visibleByDefault': true,
+    },
   ],
   'defaultSort': [
     {

@@ -168,6 +168,8 @@ export const DataTypeInput = ({
       return openUUIDTypeControls();
 
     case DATA_TYPES.ArrayType:
+      return textControl({ testId: 'data-input-text-arrayType' });
+
     case DATA_TYPES.EnumType:
       return arrayLikeTypeControls();
     default:
