@@ -51,6 +51,7 @@ export const ResultViewer = ({
     defaultVisibleColumns,
     refetch,
     status,
+    formatter,
   } = useAsyncDataSource({
     entityTypeDataSource,
     contentDataSource,
@@ -130,6 +131,7 @@ export const ResultViewer = ({
             data-testid="results-viewer-table"
             contentData={contentData}
             columnMapping={columnMapping}
+            formatter={formatter}
             visibleColumns={visibleColumns}
             pagingType={null}
             onNeedMoreData={changePage}
