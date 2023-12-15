@@ -44,7 +44,7 @@ export const useAsyncDataSource = ({
 
   const { content: contentData, totalRecords, status } = recordsData || {};
 
-  const { columnMapping, defaultColumns, defaultVisibleColumns } = getTableMetadata(entityType);
+  const { columnMapping, defaultColumns, defaultVisibleColumns, formatter } = getTableMetadata(entityType);
 
   return {
     contentData,
@@ -59,5 +59,6 @@ export const useAsyncDataSource = ({
     totalRecords,
     status,
     refetch,
+    formatter,
   };
 };

@@ -6,6 +6,7 @@
 * [UIPQB-67](https://issues.folio.org/browse/UIPQB-67) Styles are defined globally for inputs with type "number"
 * [UIPQB-64](https://issues.folio.org/browse/UIPQB-64) Query builder can’t edit single condition queries without AND wrapper
 * [UIPQB-53](https://issues.folio.org/browse/UIPQB-53) Add support for $contains and $not_contains operators
+* [UIPQB-66](https://issues.folio.org/browse/UIPQB-66) Localize dates in results view.
 
 ## [1.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.0.0) (2023-10-12)
 
