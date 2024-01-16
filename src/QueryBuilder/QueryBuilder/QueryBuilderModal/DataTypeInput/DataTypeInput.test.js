@@ -1,6 +1,7 @@
 import { render, cleanup, fireEvent, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Intl from '../../../../../test/jest/__mock__/intlProvider.mock';
+import '../../../../../test/jest/__mock__/resizeObserver.mock';
 import { DataTypeInput } from './DataTypeInput';
 import { DATA_TYPES } from '../../../../constants/dataTypes';
 import { OPERATORS } from '../../../../constants/operators';
