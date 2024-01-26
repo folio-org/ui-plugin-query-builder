@@ -42,3 +42,4 @@
 * [UIPQB-51](https://issues.folio.org/browse/UIPQB-51) Dropdown typeahead should use contains not starts with.
 * [UIPQB-57](https://issues.folio.org/browse/UIPQB-57) 400 error should be reported in the UI
 * [UIPQB-55](https://issues.folio.org/browse/UIPQB-55) Regular expressions are incorrect for contains and starts_with operators
+* [UIPQB-70](https://issues.folio.org/browse/UIPQB-70) Array fields support verification
