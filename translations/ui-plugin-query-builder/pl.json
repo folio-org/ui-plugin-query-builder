@@ -1,9 +1,9 @@
 {
     "meta.title": "Query builder",
-    "trigger": "Build query",
+    "trigger": "Zbuduj zapytanie",
     "modal.cancel": "Anuluj",
     "modal.run": "Uruchom zapytanie",
-    "modal.query": "Query",
+    "modal.query": "Zapytanie",
     "modal.test": "Test query",
     "columns.boolean": "Boolean",
     "columns.field": "Pole",
