@@ -115,7 +115,7 @@ describe('select options', () => {
       });
     });
 
-    it('should return base logical operators with placeholder for integer type', () => {
+    it('should return extended logical operators with placeholder for integer type', () => {
       const options = getOperatorOptions({
         dataType: DATA_TYPES.IntegerType,
         hasSourceOrValues: false,
@@ -129,6 +129,28 @@ describe('select options', () => {
           { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
           { label: OPERATORS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
           { label: OPERATORS.LESS_THAN, value: OPERATORS.LESS_THAN },
+          { label: OPERATORS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
+          { label: OPERATORS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
+        ],
+      });
+    });
+
+    it('should return extended logical operators with placeholder for number type', () => {
+      const options = getOperatorOptions({
+        dataType: DATA_TYPES.NumberType,
+        hasSourceOrValues: false,
+        intl: intlMock,
+      });
+
+      expectFn({
+        options,
+        operators: [
+          { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
+          { label: OPERATORS.LESS_THAN, value: OPERATORS.LESS_THAN },
+          { label: OPERATORS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
+          { label: OPERATORS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
         ],
       });
     });

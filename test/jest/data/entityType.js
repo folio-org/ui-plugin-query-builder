@@ -284,6 +284,14 @@ export const entityType = {
       'visibleByDefault': true,
     },
     {
+      'name': 'decimal_position',
+      'dataType': {
+        'dataType': 'numberType',
+      },
+      'labelAlias': 'Decimal position',
+      'visibleByDefault': true,
+    },
+    {
       'name': 'item_material_type',
       'dataType': {
         'dataType': 'stringType',
