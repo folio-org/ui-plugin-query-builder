@@ -44,3 +44,4 @@
 * [UIPQB-57](https://issues.folio.org/browse/UIPQB-57) 400 error should be reported in the UI
 * [UIPQB-55](https://issues.folio.org/browse/UIPQB-55) Regular expressions are incorrect for contains and starts_with operators
 * [UIPQB-70](https://issues.folio.org/browse/UIPQB-70) Array fields support verification
+* [UIPQB-71](https://issues.folio.org/browse/UIPQB-71) Allow dropdown menus for array types
