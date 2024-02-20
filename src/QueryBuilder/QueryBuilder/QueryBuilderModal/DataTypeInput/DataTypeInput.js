@@ -14,6 +14,7 @@ import { SelectionContainer } from '../SelectionContainer/SelectionContainer';
 import { ISO_FORMAT } from '../../helpers/timeUtils';
 
 import css from '../../../QueryBuilder.css';
+import { staticBooleanOptions } from '../../helpers/selectOptions';
 
 export const DataTypeInput = ({
   availableValues,
@@ -28,6 +29,7 @@ export const DataTypeInput = ({
 }) => {
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
   const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
+  const isEmptyRelatedOperator = [OPERATORS.EMPTY].includes(operator);
   const hasSourceOrValues = source || availableValues;
 
   const textControl = ({ testId, type = 'text', textClass }) => {
@@ -146,6 +148,18 @@ export const DataTypeInput = ({
       ? multiSelectControl({ testId: 'data-input-select-multi-arrayType' })
       : selectControl({ testId: 'data-input-select-arrayType' });
   };
+
+  if (isEmptyRelatedOperator) {
+    return (
+      <SelectionContainer
+        component={Select}
+        testId="data-input-select-booleanType"
+        availableValues={staticBooleanOptions}
+        onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+        {...rest}
+      />
+    );
+  }
 
   switch (dataType) {
     case DATA_TYPES.StringType:

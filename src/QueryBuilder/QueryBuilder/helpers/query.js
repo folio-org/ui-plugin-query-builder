@@ -102,6 +102,9 @@ const getQueryOperand = (item) => {
     case OPERATORS.NOT_CONTAINS:
       queryOperand = { [field]: { $not_contains: value } };
       break;
+    case OPERATORS.EMPTY:
+      queryOperand = { [field]: { $empty: value } };
+      break;
     default:
       break;
   }
@@ -137,6 +140,7 @@ const getSourceFields = (field) => ({
   $nin: (value) => ({ operator: OPERATORS.NOT_IN, value }),
   $contains: (value) => ({ operator: OPERATORS.CONTAINS, value }),
   $not_contains: (value) => ({ operator: OPERATORS.NOT_CONTAINS, value }),
+  $empty: (value) => ({ operator: OPERATORS.EMPTY, value }),
   $regex: (value) => {
     return value?.includes('^')
       ? { operator: OPERATORS.STARTS_WITH, value: value?.replace(cleanerRegex, '') }
