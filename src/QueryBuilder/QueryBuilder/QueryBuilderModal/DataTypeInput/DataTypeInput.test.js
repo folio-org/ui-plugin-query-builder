@@ -113,6 +113,11 @@ const arr = [
     onChange: jest.fn(),
   },
   {
+    dataType: DATA_TYPES.BooleanType,
+    operator: OPERATORS.EMPTY,
+    componentTestId: 'data-input-select-booleanType',
+  },
+  {
     dataType: 'DEFAULT',
     operator: OPERATORS.GREATER_THAN,
     componentTestId: 'data-input-text-default',

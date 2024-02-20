@@ -312,6 +312,14 @@ export const entityType = {
       'labelAlias': 'Department names',
       'visibleByDefault': true,
     },
+    {
+      'name': 'department_ids',
+      'dataType': {
+        'dataType': 'arrayType',
+      },
+      'labelAlias': 'Department Ids',
+      'visibleByDefault': true,
+    },
   ],
   'defaultSort': [
     {
