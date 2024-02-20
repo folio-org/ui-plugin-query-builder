@@ -130,7 +130,7 @@ export const booleanOptions = [
 ];
 
 export const staticBooleanOptions = [
-  { label: <FormattedMessage id="ui-plugin-query-builder.columns.true" />, value: true },
+  { label: <FormattedMessage id="ui-plugin-query-builder.options.true" />, value: true },
   { label: <FormattedMessage id="ui-plugin-query-builder.options.false" />, value: false },
 ];
 
