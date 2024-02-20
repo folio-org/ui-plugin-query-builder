@@ -32,9 +32,21 @@ export const getQueryStr = (rows, fieldOptions) => {
 };
 
 export const isQueryValid = (source) => {
+  const isValueValid = (value) => {
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+
+    if (typeof value === 'boolean') {
+      return true;
+    }
+
+    return Boolean(value);
+  };
+
   return source.every(item => item[COLUMN_KEYS.FIELD].current
     && item[COLUMN_KEYS.OPERATOR].current
-    && Boolean(item[COLUMN_KEYS.VALUE].current?.length));
+    && isValueValid(item[COLUMN_KEYS.VALUE].current));
 };
 
 export const getTransformedValue = (val) => {
