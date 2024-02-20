@@ -155,7 +155,7 @@ export const DataTypeInput = ({
         component={Select}
         testId="data-input-select-booleanType"
         availableValues={staticBooleanOptions}
-        onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+        onChange={(e) => onChange(JSON.parse(e.target.value), index, COLUMN_KEYS.VALUE)}
         {...rest}
       />
     );
