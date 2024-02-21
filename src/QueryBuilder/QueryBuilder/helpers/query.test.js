@@ -1,8 +1,9 @@
-import { mongoQueryToSource, sourceToMongoQuery } from './query';
+import { isQueryValid, mongoQueryToSource, sourceToMongoQuery } from './query';
 import { booleanOptions } from './selectOptions';
 import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
 import { DATA_TYPES } from '../../../constants/dataTypes';
+import { COLUMN_KEYS } from '../../../constants/columnKeys';
 
 describe('mongoQueryToSource()', () => {
   test('should return empty array for empty query', async () => {
@@ -202,5 +203,83 @@ describe('mongoQueryToSource()', () => {
     const result = sourceToMongoQuery(singleSource);
 
     expect(result).toEqual(initial);
+  });
+});
+
+describe('isQueryValid', () => {
+  it('returns true when all items in the source array are valid', () => {
+    const src = [
+      {
+        [COLUMN_KEYS.FIELD]: { current: 'field1' },
+        [COLUMN_KEYS.OPERATOR]: { current: '>' },
+        [COLUMN_KEYS.VALUE]: { current: 10 },
+      },
+      {
+        [COLUMN_KEYS.FIELD]: { current: 'field2' },
+        [COLUMN_KEYS.OPERATOR]: { current: '==' },
+        [COLUMN_KEYS.VALUE]: { current: true },
+      },
+    ];
+
+    expect(isQueryValid(src)).toBe(true);
+  });
+
+  it('returns false if any item in the source array is invalid', () => {
+    const src = [
+      {
+        [COLUMN_KEYS.FIELD]: { current: 'field1' },
+        [COLUMN_KEYS.OPERATOR]: { current: '>' },
+        [COLUMN_KEYS.VALUE]: { current: null },
+      },
+      {
+        [COLUMN_KEYS.FIELD]: { current: 'field2' },
+        [COLUMN_KEYS.OPERATOR]: { current: '==' },
+        [COLUMN_KEYS.VALUE]: { current: undefined },
+      },
+    ];
+
+    expect(isQueryValid(src)).toBe(false);
+  });
+
+  it('returns false if source is empty', () => {
+    const src = [];
+
+    expect(isQueryValid(src)).toBe(false);
+  });
+
+  it('returns true if values in the source array are arrays and not empty', () => {
+    const src = [
+      {
+        [COLUMN_KEYS.FIELD]: { current: 'field1' },
+        [COLUMN_KEYS.OPERATOR]: { current: '>' },
+        [COLUMN_KEYS.VALUE]: { current: [1, 2, 3] },
+      },
+    ];
+
+    expect(isQueryValid(src)).toBe(true);
+  });
+
+  it('returns true if values in the source array are boolean', () => {
+    const src = [
+      {
+        [COLUMN_KEYS.FIELD]: { current: 'field1' },
+        [COLUMN_KEYS.OPERATOR]: { current: '>' },
+        [COLUMN_KEYS.VALUE]: { current: true },
+      },
+    ];
+
+    expect(isQueryValid(src)).toBe(true);
+  });
+
+  it('returns true if values in the source array are truthy', () => {
+    const src = [
+      {
+        [COLUMN_KEYS.FIELD]: { current: 'field1' },
+        [COLUMN_KEYS.OPERATOR]: { current: '>' },
+        [COLUMN_KEYS.VALUE]: { current: 'some value' },
+      },
+    ];
+
+    expect(isQueryValid(src)).toBe(true);
   });
 });

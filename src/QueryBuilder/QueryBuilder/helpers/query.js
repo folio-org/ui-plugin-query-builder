@@ -44,7 +44,7 @@ export const isQueryValid = (source) => {
     return Boolean(value);
   };
 
-  return source.every(item => item[COLUMN_KEYS.FIELD].current
+  return source.length > 0 && source.every(item => item[COLUMN_KEYS.FIELD].current
     && item[COLUMN_KEYS.OPERATOR].current
     && isValueValid(item[COLUMN_KEYS.VALUE].current));
 };
