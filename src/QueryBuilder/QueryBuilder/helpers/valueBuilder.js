@@ -8,7 +8,7 @@ export const getCommaSeparatedStr = (arr) => {
 };
 
 export const getQuotedStr = (value) => {
-  return value ? `"${value}"` : '';
+  return value ?? (JSON.stringify(value) || '');
 };
 
 export const getFormattedUUID = (value, isInRelatedOperator) => {
