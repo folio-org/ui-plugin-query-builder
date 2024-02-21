@@ -27,6 +27,8 @@ export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
 
     [DATA_TYPES.IntegerType]: () => (isArray ? getCommaSeparatedStr(value) : value),
 
+    [DATA_TYPES.NumberType]: () => (isArray ? getCommaSeparatedStr(value) : value),
+
     [DATA_TYPES.RangedUUIDType]: () => getQuotedStr(value),
 
     [DATA_TYPES.ArrayType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value)),

@@ -9,6 +9,7 @@
 * [UIPQB-66](https://issues.folio.org/browse/UIPQB-66) Localize dates in results view.
 * [UIPQB-54](https://issues.folio.org/browse/UIPQB-54) Add support for array fields in query results.
 * [UIPQB-70](https://issues.folio.org/browse/UIPQB-70) Array fields support verification.
+* [UIPQB-80](https://issues.folio.org/browse/UIPQB-80) Add operators for NumberType and adjust operators for IntegerType.
 * [UIPQB-73](https://folio-org.atlassian.net/browse/UIPQB-73) Result Viewer shows current date if date column is not present.
 
 ## [1.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.0.0) (2023-10-12)
