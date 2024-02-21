@@ -19,7 +19,6 @@ const baseLogicalOperators = () => [
   { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
   { label: OPERATORS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
   { label: OPERATORS.LESS_THAN, value: OPERATORS.LESS_THAN },
-  { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
 ];
 
 const extendedLogicalOperators = () => [
