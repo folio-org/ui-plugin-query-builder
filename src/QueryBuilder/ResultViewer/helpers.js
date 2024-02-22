@@ -23,7 +23,7 @@ export const getTableMetadata = (entityType) => {
 
     formatted[value] = (item) => {
       if (dataType === DATA_TYPES.DateType) {
-        return <FormattedDate value={item[value]} />;
+        return item[value] ? <FormattedDate value={item[value]} /> : '';
       } else if (dataType === DATA_TYPES.ArrayType) {
         return item[value]?.join(' | ');
       } else {
