@@ -111,7 +111,7 @@ export const getFieldOptions = (options) => {
 
   return options?.filter(o => !ids.includes(o.name)).map(o => ({
     label: o.labelAlias,
-    value: o.idColumnName || o.name,
+    value: o.name,
     dataType: o.dataType.dataType,
     source: o.source,
     values: getFilledValues(o.values),
