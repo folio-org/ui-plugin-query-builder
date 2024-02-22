@@ -4,9 +4,13 @@
  * and to allow for more flexibility in the future.
  */
 export default function upgradeInitialValues(initialValues, entityType) {
+  if (!initialValues || !entityType) {
+    return initialValues;
+  }
+
   const idColumnMapping = {};
 
-  entityType?.columns.forEach((column) => {
+  entityType.columns.forEach((column) => {
     if (column.idColumnName) {
       idColumnMapping[column.idColumnName] = column.name;
     }
