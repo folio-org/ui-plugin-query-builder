@@ -17,6 +17,9 @@
   "columns.value": "Value",
   "columns.action": "Actions",
 
+  "options.true": "True",
+  "options.false": "False",
+
   "control.info.separateValues": "Separate multiple values with a comma.",
   "control.selection.placeholder": "Select field",
   "control.value.placeholder": "Select value",

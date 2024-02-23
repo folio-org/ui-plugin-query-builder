@@ -10,6 +10,7 @@ export const OPERATORS = {
   CONTAINS: 'contains',
   NOT_CONTAINS: 'not contains',
   STARTS_WITH: 'starts with',
+  EMPTY: ' is null/empty',
 };
 
 export const BOOLEAN_OPERATORS = {
