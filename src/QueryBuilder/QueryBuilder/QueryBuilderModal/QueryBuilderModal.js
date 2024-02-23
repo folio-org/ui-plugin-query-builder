@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import {
   Modal,
@@ -21,12 +21,13 @@ import { useEntityType } from '../../../hooks/useEntityType';
 import { useCancelQuery } from '../../../hooks/useCancelQuery';
 import { useTestQuery } from '../../../hooks/useTestQuery';
 import { getFieldOptions } from '../helpers/selectOptions';
+import upgradeInitialValues from '../helpers/upgradeInitialValues';
 
 export const QueryBuilderModal = ({
   isOpen,
   setIsModalShown,
   saveBtnLabel,
-  initialValues,
+  initialValues: originalInitialValues,
   entityTypeDataSource,
   runQueryDataSource,
   testQueryDataSource,
@@ -47,6 +48,11 @@ export const QueryBuilderModal = ({
   const { entityType } = useEntityType({ entityTypeDataSource });
 
   const { cancelQuery } = useCancelQuery({ cancelQueryDataSource });
+
+  const initialValues = useMemo(
+    () => upgradeInitialValues(originalInitialValues, entityType),
+    [originalInitialValues, entityType],
+  );
 
   const {
     source,
