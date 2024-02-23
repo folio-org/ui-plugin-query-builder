@@ -14,6 +14,7 @@ import { SelectionContainer } from '../SelectionContainer/SelectionContainer';
 import { ISO_FORMAT } from '../../helpers/timeUtils';
 
 import css from '../../../QueryBuilder.css';
+import { staticBooleanOptions } from '../../helpers/selectOptions';
 
 export const DataTypeInput = ({
   availableValues,
@@ -28,6 +29,8 @@ export const DataTypeInput = ({
 }) => {
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
   const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
+  const isEmptyRelatedOperator = [OPERATORS.EMPTY].includes(operator);
+  const isContainsRelatedOperator = [OPERATORS.CONTAINS, OPERATORS.NOT_CONTAINS].includes(operator);
   const hasSourceOrValues = source || availableValues;
 
   const textControl = ({ testId, type = 'text', textClass }) => {
@@ -147,6 +150,18 @@ export const DataTypeInput = ({
       : selectControl({ testId: 'data-input-select-arrayType' });
   };
 
+  if (isEmptyRelatedOperator) {
+    return (
+      <SelectionContainer
+        component={Select}
+        testId="data-input-select-booleanType"
+        availableValues={staticBooleanOptions}
+        onChange={(e) => onChange(JSON.parse(e.target.value), index, COLUMN_KEYS.VALUE)}
+        {...rest}
+      />
+    );
+  }
+
   switch (dataType) {
     case DATA_TYPES.StringType:
       return stringTypeControls();
@@ -168,7 +183,9 @@ export const DataTypeInput = ({
       return openUUIDTypeControls();
 
     case DATA_TYPES.ArrayType:
-      return textControl({ testId: 'data-input-text-arrayType' });
+      return isContainsRelatedOperator && hasSourceOrValues
+        ? selectControl({ testId: 'data-input-select-array' })
+        : textControl({ testId: 'data-input-text-arrayType' });
 
     case DATA_TYPES.EnumType:
       return arrayLikeTypeControls();
