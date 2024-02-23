@@ -30,6 +30,7 @@ export const DataTypeInput = ({
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
   const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
   const isEmptyRelatedOperator = [OPERATORS.EMPTY].includes(operator);
+  const isContainsRelatedOperator = [OPERATORS.CONTAINS, OPERATORS.NOT_CONTAINS].includes(operator);
   const hasSourceOrValues = source || availableValues;
 
   const textControl = ({ testId, type = 'text', textClass }) => {
@@ -182,7 +183,9 @@ export const DataTypeInput = ({
       return openUUIDTypeControls();
 
     case DATA_TYPES.ArrayType:
-      return textControl({ testId: 'data-input-text-arrayType' });
+      return isContainsRelatedOperator && hasSourceOrValues
+        ? selectControl({ testId: 'data-input-select-array' })
+        : textControl({ testId: 'data-input-text-arrayType' });
 
     case DATA_TYPES.EnumType:
       return arrayLikeTypeControls();
