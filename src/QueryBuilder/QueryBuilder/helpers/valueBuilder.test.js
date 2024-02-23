@@ -22,12 +22,12 @@ describe('valueBuilder', () => {
   });
 
   test('should return the same value for NumberType', () => {
-      const value = 42.1;
-      const field = 'decimal_position';
-      const operator = OPERATORS.EQUAL;
+    const value = 42.1;
+    const field = 'decimal_position';
+    const operator = OPERATORS.EQUAL;
 
-      expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(value);
-    });
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(value);
+  });
 
   test('should return a string enclosed in double quotes for BooleanType', () => {
     const value = true;

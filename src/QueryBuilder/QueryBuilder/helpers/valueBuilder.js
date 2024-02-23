@@ -8,6 +8,10 @@ export const getCommaSeparatedStr = (arr) => {
 };
 
 export const getQuotedStr = (value) => {
+  if (typeof value === 'boolean') {
+    return JSON.stringify(value);
+  }
+
   return value ? `"${value}"` : '';
 };
 
