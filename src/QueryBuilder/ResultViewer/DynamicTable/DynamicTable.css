@@ -1,0 +1,14 @@
+.DynamicTable {
+    width: calc(100% + calc(2 * var(--gutter-static-two-thirds)));
+    margin: calc(-1 * var(--gutter-static-one-third)) calc(-1 * var(--gutter-static-two-thirds));
+    border-collapse: collapse;
+}
+
+.DynamicTable td {
+    vertical-align: top;
+}
+
+
+.DynamicTable th, .DynamicTable td {
+    padding: var(--gutter-static-one-third) var(--gutter-static-two-thirds);
+}
