@@ -5,6 +5,8 @@ import css from './DynamicTable.css';
 export const DynamicTable = ({ properties, values }) => {
   const tableBodyRows = JSON.parse(values);
 
+  if (!tableBodyRows.length) return null;
+
   return (
     <table className={css.DynamicTable}>
       <thead>

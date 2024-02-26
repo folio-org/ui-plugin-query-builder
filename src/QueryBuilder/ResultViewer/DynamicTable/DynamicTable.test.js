@@ -48,6 +48,12 @@ describe('DynamicTable component', () => {
 
   const values = '[{"code": "STATE-MONOSER", "value": 100.0, "fundId": "bbd4a5e1-c9f3-44b9-bfdf-d184e04f0ba0", "encumbrance": "eb506834-6c70-4239-8d1a-6414a5b08010", "distributionType": "percentage"}]';
 
+  it('render null value if there are no rows', () => {
+    const { container } = render(<DynamicTable properties={properties} values="[]" />);
+
+    expect(container).toBeEmptyDOMElement();
+  });
+
   it('renders table with correct properties and values', () => {
     const { getByText } = render(<DynamicTable properties={properties} values={values} />);
 
