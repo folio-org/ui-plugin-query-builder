@@ -269,3 +269,90 @@ describe('select options', () => {
     });
   });
 });
+
+describe('getFieldOptions', () => {
+  it('returns the expected field options', () => {
+    // Mock input options
+    const options = {
+      columns: [
+        {
+          'name': 'user_full_name',
+          'dataType': {
+            'dataType': 'stringType',
+          },
+          'labelAlias': 'User full name',
+          'visibleByDefault': true,
+        },
+        {
+          'name': 'user_active',
+          'dataType': {
+            'dataType': 'object_type',
+            'itemDataType': { 'properties': [
+              {
+                'name': 'user_field1',
+                'dataType': {
+                  'dataType': 'stringType',
+                },
+                'labelAlias': 'User full name',
+                'labelAliasFullyQualified': 'User userField1',
+                'visibleByDefault': true,
+              },
+              {
+                'name': 'user_field2',
+                'dataType': {
+                  'dataType': 'stringType',
+                },
+                'labelAlias': 'User full name',
+                'labelAliasFullyQualified': 'User userField2',
+                'visibleByDefault': true,
+              },
+            ] },
+          },
+          'labelAlias': 'User active',
+          'visibleByDefault': true,
+          'values': [
+            { label: 'True', value: 'true' },
+            { label: 'False', value: 'false' },
+          ],
+        },
+      ],
+    };
+
+    const optionsResult = getFieldOptions(options.columns);
+
+    const expectedOutput = [
+      {
+        'dataType': 'stringType',
+        'label': 'User full name',
+        'value': 'user_full_name',
+      },
+      {
+        'dataType': 'object_type',
+        'label': 'User active',
+        'value': 'user_active',
+        'values': [
+          {
+            'label': 'True',
+            'value': 'true',
+          },
+          {
+            'label': 'False',
+            'value': 'false',
+          },
+        ],
+      },
+      {
+        'dataType': 'stringType',
+        'label': 'User userField1',
+        'value': 'user_active[*]->user_field1',
+      },
+      {
+        'dataType': 'stringType',
+        'label': 'User userField2',
+        'value': 'user_active[*]->user_field2',
+      },
+    ];
+
+    expect(optionsResult).toEqual(expectedOutput);
+  });
+});
