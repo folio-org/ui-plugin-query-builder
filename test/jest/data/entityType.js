@@ -284,6 +284,14 @@ export const entityType = {
       'visibleByDefault': true,
     },
     {
+      'name': 'decimal_position',
+      'dataType': {
+        'dataType': 'numberType',
+      },
+      'labelAlias': 'Decimal position',
+      'visibleByDefault': true,
+    },
+    {
       'name': 'item_material_type',
       'dataType': {
         'dataType': 'stringType',
@@ -302,6 +310,14 @@ export const entityType = {
         'dataType': 'arrayType',
       },
       'labelAlias': 'Department names',
+      'visibleByDefault': true,
+    },
+    {
+      'name': 'department_ids',
+      'dataType': {
+        'dataType': 'arrayType',
+      },
+      'labelAlias': 'Department Ids',
       'visibleByDefault': true,
     },
   ],

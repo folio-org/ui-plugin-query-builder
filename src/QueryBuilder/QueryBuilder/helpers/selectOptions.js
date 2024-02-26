@@ -1,3 +1,4 @@
+import { FormattedMessage } from 'react-intl';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { BOOLEAN_OPERATORS, OPERATORS } from '../../../constants/operators';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
@@ -24,6 +25,7 @@ const extendedLogicalOperators = () => [
   ...baseLogicalOperators(),
   { label: OPERATORS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
   { label: OPERATORS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
+  { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
 ];
 
 const UUIDOperators = () => [
@@ -31,6 +33,7 @@ const UUIDOperators = () => [
   { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
   { label: OPERATORS.IN, value: OPERATORS.IN },
   { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
+  { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
 ];
 
 const ArrayOperators = () => [
@@ -40,6 +43,7 @@ const ArrayOperators = () => [
   { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
   { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
   { label: OPERATORS.NOT_CONTAINS, value: OPERATORS.NOT_CONTAINS },
+  { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
 ];
 
 export const getFilledValues = (options) => {
@@ -57,12 +61,14 @@ const stringOperators = (hasSourceOrValues) => {
       { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
       { label: OPERATORS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
     ]),
+    { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
   ];
 };
 
 const booleanOperators = () => [
   { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
   { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+  { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
 ];
 
 export const getOperatorOptions = ({
@@ -79,8 +85,12 @@ export const getOperatorOptions = ({
 
     case DATA_TYPES.OpenUUIDType:
       return getOperatorsWithPlaceholder(UUIDOperators(), intl);
+
     case DATA_TYPES.IntegerType:
-      return getOperatorsWithPlaceholder(baseLogicalOperators(), intl);
+      return getOperatorsWithPlaceholder(extendedLogicalOperators(), intl);
+
+    case DATA_TYPES.NumberType:
+      return getOperatorsWithPlaceholder(extendedLogicalOperators(), intl);
 
     case DATA_TYPES.ArrayType:
       return getOperatorsWithPlaceholder(ArrayOperators(), intl);
@@ -107,7 +117,7 @@ export const getFieldOptions = (options) => {
 
   return options?.filter(o => !ids.includes(o.name)).map(o => ({
     label: o.labelAlias,
-    value: o.idColumnName || o.name,
+    value: o.name,
     dataType: o.dataType.dataType,
     source: o.source,
     values: getFilledValues(o.values),
@@ -116,6 +126,11 @@ export const getFieldOptions = (options) => {
 
 export const booleanOptions = [
   { label: 'AND', value: BOOLEAN_OPERATORS.AND },
+];
+
+export const staticBooleanOptions = [
+  { label: <FormattedMessage id="ui-plugin-query-builder.options.true" />, value: true },
+  { label: <FormattedMessage id="ui-plugin-query-builder.options.false" />, value: false },
 ];
 
 export const sourceTemplate = (fieldOptions = []) => ({

@@ -8,6 +8,10 @@ export const getCommaSeparatedStr = (arr) => {
 };
 
 export const getQuotedStr = (value) => {
+  if (typeof value === 'boolean') {
+    return JSON.stringify(value);
+  }
+
   return value ? `"${value}"` : '';
 };
 
@@ -26,6 +30,8 @@ export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
     [DATA_TYPES.StringType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value)),
 
     [DATA_TYPES.IntegerType]: () => (isArray ? getCommaSeparatedStr(value) : value),
+
+    [DATA_TYPES.NumberType]: () => (isArray ? getCommaSeparatedStr(value) : value),
 
     [DATA_TYPES.RangedUUIDType]: () => getQuotedStr(value),
 

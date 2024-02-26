@@ -93,6 +93,7 @@ describe('select options', () => {
           { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
           { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
           { label: OPERATORS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
+          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -111,11 +112,12 @@ describe('select options', () => {
           { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
           { label: OPERATORS.IN, value: OPERATORS.IN },
           { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
+          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
 
-    it('should return base logical operators with placeholder for integer type', () => {
+    it('should return extended logical operators with placeholder for integer type', () => {
       const options = getOperatorOptions({
         dataType: DATA_TYPES.IntegerType,
         hasSourceOrValues: false,
@@ -129,6 +131,30 @@ describe('select options', () => {
           { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
           { label: OPERATORS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
           { label: OPERATORS.LESS_THAN, value: OPERATORS.LESS_THAN },
+          { label: OPERATORS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
+          { label: OPERATORS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
+          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
+        ],
+      });
+    });
+
+    it('should return extended logical operators with placeholder for number type', () => {
+      const options = getOperatorOptions({
+        dataType: DATA_TYPES.NumberType,
+        hasSourceOrValues: false,
+        intl: intlMock,
+      });
+
+      expectFn({
+        options,
+        operators: [
+          { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
+          { label: OPERATORS.LESS_THAN, value: OPERATORS.LESS_THAN },
+          { label: OPERATORS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
+          { label: OPERATORS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
+          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -145,6 +171,7 @@ describe('select options', () => {
         operators: [
           { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
           { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -163,6 +190,7 @@ describe('select options', () => {
           { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
           { label: OPERATORS.IN, value: OPERATORS.IN },
           { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
+          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -183,6 +211,7 @@ describe('select options', () => {
           { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
           { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
           { label: OPERATORS.NOT_CONTAINS, value: OPERATORS.NOT_CONTAINS },
+          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -201,6 +230,7 @@ describe('select options', () => {
           { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
           { label: OPERATORS.IN, value: OPERATORS.IN },
           { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
+          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -221,6 +251,7 @@ describe('select options', () => {
           { label: OPERATORS.LESS_THAN, value: OPERATORS.LESS_THAN },
           { label: OPERATORS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
           { label: OPERATORS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
+          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
