@@ -115,8 +115,21 @@ export const getOperatorOptions = ({
 export const getFieldOptions = (options) => {
   const ids = options?.filter(o => Boolean(o.idColumnName)).map(o => o.idColumnName) || [];
 
-  return options?.filter(o => !ids.includes(o.name)).map(o => ({
-    label: o.labelAlias,
+  return options?.filter(o => !ids.includes(o.name)).reduce((acc, item) => {
+    if (item.dataType.itemDataType?.properties) {
+      const nestedNamedFields = item.dataType.itemDataType?.properties.map(child => ({
+        ...child,
+        name: `${item.name}[*]->${child.name}`,
+      }));
+
+      acc = [...acc, item, ...nestedNamedFields];
+    } else {
+      acc.push(item);
+    }
+
+    return acc;
+  }, []).map(o => ({
+    label: o.labelAliasFullyQualified || o.labelAlias,
     value: o.name,
     dataType: o.dataType.dataType,
     source: o.source,
