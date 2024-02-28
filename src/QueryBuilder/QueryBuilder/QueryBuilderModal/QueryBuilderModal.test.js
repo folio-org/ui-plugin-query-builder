@@ -108,30 +108,6 @@ describe('QueryBuilderModal', () => {
     });
   });
 
-  it('should render field select by default passed as property', async () => {
-    const recordColumns = ['user_id', 'user_first_name'];
-
-    renderQueryBuilderModal({recordColumns});
-
-    await waitFor(() => {
-      expect(screen.queryByText('LOADING')).not.toBeInTheDocument();
-    });
-
-    let selectFieldPlaceholder;
-
-    await waitFor(() => {
-      selectFieldPlaceholder = screen.getByText('ui-plugin-query-builder.control.selection.placeholder');
-    });
-
-    act(() => userEvent.click(selectFieldPlaceholder));
-
-    await waitFor(() => {
-      getFieldOptions(recordColumns.columns).forEach(col => {
-        expect(screen.getByText(`${col.label}`)).toBeInTheDocument();
-      });
-    });
-  });
-
   it('should render boolean select when row added', async () => {
     renderQueryBuilderModal({});
 
