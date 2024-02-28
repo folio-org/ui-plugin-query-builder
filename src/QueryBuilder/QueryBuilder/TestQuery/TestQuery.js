@@ -109,14 +109,15 @@ export const TestQuery = ({
   };
 
   const handleColumnChange = ({ values }) => {
-    onSetDefaultVisibleColumns(values)
-    return setVisibleColumns(values)
+    onSetDefaultVisibleColumns(values);
+
+    return setVisibleColumns(values);
   };
 
   const handleDefaultVisibleColumnsChange = (values) => {
     if (!visibleColumns.length) {
       setVisibleColumns(values);
-      onSetDefaultVisibleColumns(values)
+      onSetDefaultVisibleColumns(values);
     }
   };
 
@@ -206,5 +207,5 @@ TestQuery.propTypes = {
   isTestQueryInProgress: PropTypes.bool,
   setIsTestQueryInProgress: PropTypes.func,
   recordsLimit: PropTypes.number,
-  recordColumns: PropTypes.arrayOf(PropTypes.string)
+  recordColumns: PropTypes.arrayOf(PropTypes.string),
 };
