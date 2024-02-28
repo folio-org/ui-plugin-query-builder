@@ -48,3 +48,4 @@
 * [UIPQB-70](https://issues.folio.org/browse/UIPQB-70) Array fields support verification
 * [UIPQB-71](https://issues.folio.org/browse/UIPQB-71) Allow dropdown menus for array types
 * [UIPQB-75](https://issues.folio.org/browse/UIPQB-75) Display grouped fields within a list row
+* [UIPQB-83](https://issues.folio.org/browse/UIPQB-83) Add API for tracking selected columns in the query builder modal.
