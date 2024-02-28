@@ -21,7 +21,7 @@ export const TestQuery = ({
   onQueryExecutionFail,
   onQueryRetrieved,
   recordColumns = [],
-  onSetDefaultVisibleColumns,
+  onSetDefaultVisibleColumns = () => {},
   fqlQuery,
   entityTypeId,
   isPreviewLoading,
