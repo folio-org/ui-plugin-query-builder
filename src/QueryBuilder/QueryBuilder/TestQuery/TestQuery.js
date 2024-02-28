@@ -198,6 +198,7 @@ TestQuery.propTypes = {
   onQueryRetrieved: PropTypes.func,
   onQueryExecutionSuccess: PropTypes.func,
   onQueryExecutionFail: PropTypes.func,
+  onSetDefaultVisibleColumns: PropTypes.func,
   testQuery: PropTypes.func,
   isTestQueryLoading: PropTypes.bool,
   isPreviewLoading: PropTypes.bool,
@@ -205,4 +206,5 @@ TestQuery.propTypes = {
   isTestQueryInProgress: PropTypes.bool,
   setIsTestQueryInProgress: PropTypes.func,
   recordsLimit: PropTypes.number,
+  recordColumns: PropTypes.arrayOf(PropTypes.string)
 };
