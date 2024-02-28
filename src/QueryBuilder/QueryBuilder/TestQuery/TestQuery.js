@@ -20,6 +20,8 @@ export const TestQuery = ({
   onQueryExecutionSuccess,
   onQueryExecutionFail,
   onQueryRetrieved,
+  recordColumns = [],
+  onSetDefaultVisibleColumns,
   fqlQuery,
   entityTypeId,
   isPreviewLoading,
@@ -31,7 +33,7 @@ export const TestQuery = ({
   const queryClient = useQueryClient();
 
   const [columns, setColumns] = useState([]);
-  const [visibleColumns, setVisibleColumns] = useState([]);
+  const [visibleColumns, setVisibleColumns] = useState(recordColumns);
   const [includeContent, setIncludeContent] = useState(true);
   const [recordsLimitExceeded, setRecordsLimitExceeded] = useState(false);
 
@@ -106,11 +108,15 @@ export const TestQuery = ({
     setIsPreviewLoading(false);
   };
 
-  const handleColumnChange = ({ values }) => setVisibleColumns(values);
+  const handleColumnChange = ({ values }) => {
+    onSetDefaultVisibleColumns(values)
+    return setVisibleColumns(values)
+  };
 
   const handleDefaultVisibleColumnsChange = (values) => {
     if (!visibleColumns.length) {
       setVisibleColumns(values);
+      onSetDefaultVisibleColumns(values)
     }
   };
 

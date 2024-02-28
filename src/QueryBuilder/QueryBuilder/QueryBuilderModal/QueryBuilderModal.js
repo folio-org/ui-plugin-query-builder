@@ -37,6 +37,8 @@ export const QueryBuilderModal = ({
   onQueryRunFail,
   onQueryExecutionSuccess,
   onQueryExecutionFail,
+  onSetDefaultVisibleColumns,
+  recordColumns,
   getParamsSource,
   recordsLimit,
   additionalControls,
@@ -212,6 +214,8 @@ export const QueryBuilderModal = ({
             testQuery={testQuery}
             isTestQueryLoading={isTestQueryLoading}
             fqlQuery={fqlQuery}
+            recordColumns={recordColumns}
+            onSetDefaultVisibleColumns={onSetDefaultVisibleColumns}
             testQueryDataSource={testQueryDataSource}
             entityTypeDataSource={entityTypeDataSource}
             queryDetailsDataSource={queryDetailsDataSource}
