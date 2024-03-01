@@ -22,5 +22,7 @@
     "modal.banner.limit": "警告：此查询返回的记录数超过允许的最大值。修改查询以限制结果。",
     "result.inProgress": "查询中",
     "result.emptyMessage": "该列表不包含任何项目",
-    "error.sww": "出问题了"
+    "error.sww": "出问题了",
+    "options.true": "真",
+    "options.false": "假"
 }
