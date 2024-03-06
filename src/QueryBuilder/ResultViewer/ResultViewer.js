@@ -31,6 +31,7 @@ export const ResultViewer = ({
   isPreviewLoading,
   additionalControls,
   refreshInProgress,
+  forcedVisibleValues,
 }) => {
   const intl = useIntl();
 
@@ -45,7 +46,6 @@ export const ResultViewer = ({
     isContentDataLoading,
     isContentDataFetching,
     isEntityTypeLoading,
-    isContentTypeFetchedAfterMount,
     columnMapping,
     defaultColumns,
     defaultVisibleColumns,
@@ -61,6 +61,7 @@ export const ResultViewer = ({
     queryParams,
     contentQueryOptions,
     contentQueryKeys,
+    forcedVisibleValues,
   });
 
   const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading || refreshInProgress;
@@ -68,7 +69,6 @@ export const ResultViewer = ({
 
   // set visible by default columns once
   useViewerCallbacks({
-    isContentTypeFetchedAfterMount,
     onSetDefaultColumns,
     defaultColumns,
     onSetDefaultVisibleColumns,
@@ -76,6 +76,7 @@ export const ResultViewer = ({
     currentRecordsCount,
     onPreviewShown,
     defaultLimit,
+    forcedVisibleValues,
   });
 
   // refresh functionality
@@ -206,4 +207,5 @@ ResultViewer.propTypes = {
   contentQueryKeys: PropTypes.arrayOf(PropTypes.string),
   additionalControls: PropTypes.element,
   refreshInProgress: PropTypes.bool,
+  forcedVisibleValues: PropTypes.arrayOf(PropTypes.string),
 };

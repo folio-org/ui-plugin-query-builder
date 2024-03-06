@@ -29,11 +29,13 @@ export const TestQuery = ({
   isTestQueryInProgress,
   setIsTestQueryInProgress,
   recordsLimit,
+  forcedVisibleValues,
 }) => {
   const queryClient = useQueryClient();
 
   const [columns, setColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState(recordColumns);
+
   const [includeContent, setIncludeContent] = useState(true);
   const [recordsLimitExceeded, setRecordsLimitExceeded] = useState(false);
 
@@ -115,10 +117,8 @@ export const TestQuery = ({
   };
 
   const handleDefaultVisibleColumnsChange = (values) => {
-    if (!visibleColumns.length) {
-      setVisibleColumns(values);
-      onSetDefaultVisibleColumns(values);
-    }
+    setVisibleColumns(values);
+    onSetDefaultVisibleColumns(values);
   };
 
   const renderDropdown = ({ currentRecordsCount }) => !!currentRecordsCount && (
@@ -137,6 +137,7 @@ export const TestQuery = ({
       <ViewerHeadline
         total={total}
         limit={limit}
+        currentCount={currentRecordsCount}
         isInProgress={isInProgress}
       />
     );
@@ -166,6 +167,7 @@ export const TestQuery = ({
         <ResultViewer
           onSuccess={handleQueryRetrieved}
           onPreviewShown={handlePreviewShown}
+          forcedVisibleValues={forcedVisibleValues}
           onSetDefaultColumns={setColumns}
           onSetDefaultVisibleColumns={handleDefaultVisibleColumnsChange}
           contentDataSource={queryDetailsDataSource}
@@ -208,4 +210,5 @@ TestQuery.propTypes = {
   setIsTestQueryInProgress: PropTypes.func,
   recordsLimit: PropTypes.number,
   recordColumns: PropTypes.arrayOf(PropTypes.string),
+  forcedVisibleValues: PropTypes.arrayOf(PropTypes.string),
 };
