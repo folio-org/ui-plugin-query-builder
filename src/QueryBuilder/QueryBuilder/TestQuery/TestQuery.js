@@ -137,7 +137,6 @@ export const TestQuery = ({
       <ViewerHeadline
         total={total}
         limit={limit}
-        currentCount={currentRecordsCount}
         isInProgress={isInProgress}
       />
     );
