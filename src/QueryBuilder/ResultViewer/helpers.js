@@ -19,9 +19,8 @@ export const getTableMetadata = (entityType, forcedVisibleValues) => {
     return acc;
   }, {});
 
-  const defaultVisibleColumns = defaultColumns?.filter(col => !!forcedVisibleValues
-    .find(value => value === col.value) || col.selected)
-    .map(col => col.value) || [];
+  const defaultVisibleColumns = defaultColumns?.filter(col => !!forcedVisibleValues?.find(value => value === col.value)
+      || col.selected).map(col => col.value) || [];
 
   const formatter = defaultColumns.reduce((formatted, column) => {
     const { value, dataType, properties } = column;

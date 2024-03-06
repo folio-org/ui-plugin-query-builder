@@ -26,6 +26,7 @@ const renderResultViewer = (props) => (
         onSetDefaultColumns={setColumns}
         height={300}
         refreshInProgress={false}
+        forcedVisibleValues={['username']}
         {...props}
       />
     </QueryClientProvider>
