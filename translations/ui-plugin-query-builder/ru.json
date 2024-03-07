@@ -22,5 +22,7 @@
     "modal.banner.limit": "Warning: this query returns more records than the maximum allowed. Modify the query to limit your results.",
     "result.inProgress": "Query in progress",
     "result.emptyMessage": "Список не содержит элементов",
-    "error.sww": "Произошла ошибка"
+    "error.sww": "Произошла ошибка",
+    "options.true": "True",
+    "options.false": "False"
 }

@@ -22,5 +22,7 @@
     "modal.banner.limit": "Varování: tento dotaz vrátí více záznamů než je maximálně povoleno. Upravte dotaz tak, aby omezil vaše výsledky.",
     "result.inProgress": "Probíhá dotaz",
     "result.emptyMessage": "Seznam neobsahuje žádné jednotky",
-    "error.sww": "Něco se pokazilo"
+    "error.sww": "Něco se pokazilo",
+    "options.true": "Pravdivé",
+    "options.false": "Deaktivováno"
 }

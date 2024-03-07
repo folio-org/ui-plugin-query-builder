@@ -22,5 +22,7 @@
     "modal.banner.limit": "Warnung: Diese Abfrage liefert mehr Datensätze als die maximal zulässige Anzahl. Abfrage ändern, um die Ergebnisse einzuschränken.",
     "result.inProgress": "Abfrage wird ausgeführt",
     "result.emptyMessage": "Liste enthält keine Einträge",
-    "error.sww": "Fehler ist aufgetreten"
+    "error.sww": "Fehler ist aufgetreten",
+    "options.true": "Ja",
+    "options.false": "Nein"
 }

@@ -22,5 +22,7 @@
     "modal.banner.limit": "Warning: this query returns more records than the maximum allowed. Modify the query to limit your results.",
     "result.inProgress": "Query in progress",
     "result.emptyMessage": "La lista no contiene elementos",
-    "error.sww": "Algo falló"
+    "error.sww": "Algo falló",
+    "options.true": "True",
+    "options.false": "Falso"
 }

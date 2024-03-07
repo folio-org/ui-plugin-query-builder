@@ -22,5 +22,7 @@
     "modal.banner.limit": "Advertencia: esta consulta devuelve más registros que el máximo permitido. Modifique la consulta para limitar los resultados.",
     "result.inProgress": "Query in progress",
     "result.emptyMessage": "The list contains no items",
-    "error.sww": "Algo salió mal"
+    "error.sww": "Algo salió mal",
+    "options.true": "True",
+    "options.false": "Falso"
 }
