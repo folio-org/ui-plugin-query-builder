@@ -40,7 +40,7 @@ export const QueryBuilderModal = ({
   getParamsSource,
   recordsLimit,
   additionalControls,
-  canRunEmptyQuery,
+  canRunEmptyQuery = true,
 }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();

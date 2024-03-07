@@ -7,7 +7,7 @@ import css from '../../../QueryBuilder.css';
 export const ViewerHeadline = memo(({ limit, total, isInProgress }) => {
   return (
     <>
-      {Boolean(total) || Boolean(limit) ?
+      {Number(total) === 0 ?
         <FormattedMessage
           id="ui-plugin-query-builder.modal.preview.title.empty"
           values={{ total }}
