@@ -13,6 +13,7 @@
 * [UIPQB-73](https://folio-org.atlassian.net/browse/UIPQB-73) Result Viewer shows current date if date column is not present.
 * [UIPQB-82](https://folio-org.atlassian.net/browse/UIPQB-82) [Query Builder] Support querying based on nested objects within arrays.
 * [UIPQB-84](https://folio-org.atlassian.net/browse/UIPQB-84) Results viewer doesn't show 0 value for number type.
+* [UIPQB-78](https://folio-org.atlassian.net/browse/UIPQB-78) Query builder display if no records match the query
 
 ## [1.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.0.0) (2023-10-12)
 
