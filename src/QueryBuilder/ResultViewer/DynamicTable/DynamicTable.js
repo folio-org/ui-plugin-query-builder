@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import css from './DynamicTable.css';
 
 export const DynamicTable = ({ properties, values }) => {
+  if (!values) return null;
+
   const tableBodyRows = JSON.parse(values);
 
-  if (!tableBodyRows.length) return null;
+  if (!tableBodyRows?.length) return null;
 
   return (
     <table className={css.DynamicTable}>
