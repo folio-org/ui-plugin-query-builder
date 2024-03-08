@@ -24,5 +24,6 @@
     "result.emptyMessage": "此清單無單件",
     "error.sww": "發生了一些問題 (°ロ°) !",
     "options.true": "True",
-    "options.false": "False"
+    "options.false": "False",
+    "modal.preview.title.empty": "Query would return {total} records."
 }

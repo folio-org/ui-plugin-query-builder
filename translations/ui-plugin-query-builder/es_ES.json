@@ -24,5 +24,6 @@
     "result.emptyMessage": "La lista no contiene elementos",
     "error.sww": "Algo falló",
     "options.true": "True",
-    "options.false": "Falso"
+    "options.false": "Falso",
+    "modal.preview.title.empty": "Query would return {total} records."
 }

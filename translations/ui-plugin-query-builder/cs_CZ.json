@@ -24,5 +24,6 @@
     "result.emptyMessage": "Seznam neobsahuje žádné jednotky",
     "error.sww": "Něco se pokazilo",
     "options.true": "Pravdivé",
-    "options.false": "Deaktivováno"
+    "options.false": "Deaktivováno",
+    "modal.preview.title.empty": "Query would return {total} records."
 }
