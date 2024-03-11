@@ -2,7 +2,7 @@ import { FormattedDate } from 'react-intl';
 import { DATA_TYPES } from '../../constants/dataTypes';
 import { DynamicTable } from './DynamicTable/DynamicTable';
 
-export const getTableMetadata = (entityType) => {
+export const getTableMetadata = (entityType, forcedVisibleValues) => {
   const defaultColumns = entityType?.columns?.map((cell) => ({
     label: cell.labelAlias,
     value: cell.name,
@@ -19,7 +19,9 @@ export const getTableMetadata = (entityType) => {
     return acc;
   }, {});
 
-  const defaultVisibleColumns = defaultColumns?.filter(col => col.selected).map(col => col.value) || [];
+  const defaultVisibleColumns = defaultColumns?.filter(col => !!forcedVisibleValues?.find(value => value === col.value)
+      || col.selected).map(col => col.value) || [];
+
   const formatter = defaultColumns.reduce((formatted, column) => {
     const { value, dataType, properties } = column;
 

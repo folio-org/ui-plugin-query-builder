@@ -13,6 +13,7 @@ export const useAsyncDataSource = ({
   onSuccess,
   contentQueryOptions,
   contentQueryKeys,
+  forcedVisibleValues,
 }) => {
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
 
@@ -44,7 +45,12 @@ export const useAsyncDataSource = ({
 
   const { content: contentData, totalRecords, status } = recordsData || {};
 
-  const { columnMapping, defaultColumns, defaultVisibleColumns, formatter } = getTableMetadata(entityType);
+  const {
+    columnMapping,
+    defaultColumns,
+    defaultVisibleColumns,
+    formatter,
+  } = getTableMetadata(entityType, forcedVisibleValues);
 
   return {
     contentData,
