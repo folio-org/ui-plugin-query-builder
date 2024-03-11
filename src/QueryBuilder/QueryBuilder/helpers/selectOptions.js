@@ -115,26 +115,33 @@ export const getOperatorOptions = ({
 export const getFieldOptions = (options) => {
   const ids = options?.filter(o => Boolean(o.idColumnName)).map(o => o.idColumnName) || [];
 
-  return options?.filter(o => !ids.includes(o.name)).reduce((acc, item) => {
-    if (item.dataType.itemDataType?.properties) {
-      const nestedNamedFields = item.dataType.itemDataType?.properties.map(child => ({
-        ...child,
-        name: `${item.name}[*]->${child.name}`,
-      }));
+  return options
+    ?.filter((o) => !ids.includes(o.name))
+    .reduce((acc, item) => {
+      if (item.queryable) {
+        acc.push(item);
+      }
 
-      acc = [...acc, item, ...nestedNamedFields];
-    } else {
-      acc.push(item);
-    }
+      if (item.dataType.itemDataType?.properties) {
+        const nestedNamedFields = item.dataType.itemDataType?.properties
+          .filter((child) => child.queryable)
+          .map((child) => ({
+            ...child,
+            name: `${item.name}[*]->${child.name}`,
+          }));
 
-    return acc;
-  }, []).map(o => ({
-    label: o.labelAliasFullyQualified || o.labelAlias,
-    value: o.name,
-    dataType: o.dataType.dataType,
-    source: o.source,
-    values: getFilledValues(o.values),
-  }));
+        acc.push(...nestedNamedFields);
+      }
+
+      return acc;
+    }, [])
+    .map((o) => ({
+      label: o.labelAliasFullyQualified || o.labelAlias,
+      value: o.name,
+      dataType: o.dataType.dataType,
+      source: o.source,
+      values: getFilledValues(o.values),
+    }));
 };
 
 export const booleanOptions = [

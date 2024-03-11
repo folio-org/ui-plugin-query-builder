@@ -6,6 +6,7 @@ const entityType = {
   columns: [
     {
       'name': 'user_full_name',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -14,6 +15,7 @@ const entityType = {
     },
     {
       'name': 'user_active',
+      'queryable': true,
       'dataType': {
         'dataType': 'booleanType',
       },
@@ -23,6 +25,15 @@ const entityType = {
         { label: 'True', value: 'true' },
         { label: 'False', value: 'false' },
       ],
+    },
+    {
+      'name': 'not_queryable',
+      'queryable': false,
+      'dataType': {
+        'dataType': 'stringType',
+      },
+      'labelAlias': 'Not queryable',
+      'visibleByDefault': true,
     },
   ],
 };
@@ -277,6 +288,7 @@ describe('getFieldOptions', () => {
       columns: [
         {
           'name': 'user_full_name',
+          'queryable': true,
           'dataType': {
             'dataType': 'stringType',
           },
@@ -285,11 +297,26 @@ describe('getFieldOptions', () => {
         },
         {
           'name': 'user_active',
+          'queryable': true,
           'dataType': {
-            'dataType': 'object_type',
+            'dataType': 'stringType',
+          },
+          'labelAlias': 'User active',
+          'visibleByDefault': true,
+          'values': [
+            { label: 'True', value: 'true' },
+            { label: 'False', value: 'false' },
+          ],
+        },
+        {
+          'name': 'nested',
+          'queryable': false,
+          'dataType': {
+            'dataType': 'objectType',
             'itemDataType': { 'properties': [
               {
                 'name': 'user_field1',
+                'queryable': true,
                 'dataType': {
                   'dataType': 'stringType',
                 },
@@ -299,6 +326,7 @@ describe('getFieldOptions', () => {
               },
               {
                 'name': 'user_field2',
+                'queryable': true,
                 'dataType': {
                   'dataType': 'stringType',
                 },
@@ -308,12 +336,8 @@ describe('getFieldOptions', () => {
               },
             ] },
           },
-          'labelAlias': 'User active',
+          'labelAlias': 'Nested',
           'visibleByDefault': true,
-          'values': [
-            { label: 'True', value: 'true' },
-            { label: 'False', value: 'false' },
-          ],
         },
       ],
     };
@@ -327,7 +351,7 @@ describe('getFieldOptions', () => {
         'value': 'user_full_name',
       },
       {
-        'dataType': 'object_type',
+        'dataType': 'stringType',
         'label': 'User active',
         'value': 'user_active',
         'values': [
@@ -344,12 +368,12 @@ describe('getFieldOptions', () => {
       {
         'dataType': 'stringType',
         'label': 'User userField1',
-        'value': 'user_active[*]->user_field1',
+        'value': 'nested[*]->user_field1',
       },
       {
         'dataType': 'stringType',
         'label': 'User userField2',
-        'value': 'user_active[*]->user_field2',
+        'value': 'nested[*]->user_field2',
       },
     ];
 
