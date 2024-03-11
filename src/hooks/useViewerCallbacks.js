@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 
 export const useViewerCallbacks = ({
-  isContentTypeFetchedAfterMount,
   onSetDefaultColumns,
   defaultColumns,
   onSetDefaultVisibleColumns,
@@ -11,11 +10,11 @@ export const useViewerCallbacks = ({
   defaultLimit,
 }) => {
   useEffect(() => {
-    if (isContentTypeFetchedAfterMount) {
+    if (defaultColumns.length !== 0) {
       onSetDefaultColumns?.(defaultColumns);
       onSetDefaultVisibleColumns?.(defaultVisibleColumns);
     }
-  }, [isContentTypeFetchedAfterMount]);
+  }, [currentRecordsCount]);
 
   useEffect(() => {
     if (currentRecordsCount) onPreviewShown?.({ currentRecordsCount, defaultLimit });
