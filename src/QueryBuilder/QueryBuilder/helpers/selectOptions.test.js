@@ -6,6 +6,7 @@ const entityType = {
   columns: [
     {
       'name': 'user_full_name',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -14,6 +15,7 @@ const entityType = {
     },
     {
       'name': 'user_active',
+      'queryable': true,
       'dataType': {
         'dataType': 'booleanType',
       },
@@ -23,6 +25,15 @@ const entityType = {
         { label: 'True', value: 'true' },
         { label: 'False', value: 'false' },
       ],
+    },
+    {
+      'name': 'not_queryable',
+      'queryable': false,
+      'dataType': {
+        'dataType': 'stringType',
+      },
+      'labelAlias': 'Not queryable',
+      'visibleByDefault': true,
     },
   ],
 };
@@ -277,6 +288,7 @@ describe('getFieldOptions', () => {
       columns: [
         {
           'name': 'user_full_name',
+          'queryable': true,
           'dataType': {
             'dataType': 'stringType',
           },
@@ -285,11 +297,13 @@ describe('getFieldOptions', () => {
         },
         {
           'name': 'user_active',
+          'queryable': true,
           'dataType': {
             'dataType': 'object_type',
             'itemDataType': { 'properties': [
               {
                 'name': 'user_field1',
+                'queryable': true,
                 'dataType': {
                   'dataType': 'stringType',
                 },
@@ -299,6 +313,7 @@ describe('getFieldOptions', () => {
               },
               {
                 'name': 'user_field2',
+                'queryable': true,
                 'dataType': {
                   'dataType': 'stringType',
                 },

@@ -105,6 +105,8 @@ describe('QueryBuilderModal', () => {
       getFieldOptions(entityType.columns).forEach(col => {
         expect(screen.getByText(`${col.label}`)).toBeInTheDocument();
       });
+
+      expect(screen.queryByText('Not queryable')).toBeNull();
     });
   });
 

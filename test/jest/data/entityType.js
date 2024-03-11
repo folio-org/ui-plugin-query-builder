@@ -5,6 +5,7 @@ export const entityType = {
   'columns': [
     {
       'name': 'user_id',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -13,6 +14,7 @@ export const entityType = {
     },
     {
       'name': 'user_first_name',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -21,6 +23,7 @@ export const entityType = {
     },
     {
       'name': 'user_last_name',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -29,6 +32,7 @@ export const entityType = {
     },
     {
       'name': 'user_full_name',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -37,6 +41,7 @@ export const entityType = {
     },
     {
       'name': 'user_active',
+      'queryable': true,
       'dataType': {
         'dataType': 'booleanType',
       },
@@ -49,6 +54,7 @@ export const entityType = {
     },
     {
       'name': 'user_barcode',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -57,6 +63,7 @@ export const entityType = {
     },
     {
       'name': 'user_expiration_date',
+      'queryable': true,
       'dataType': {
         'dataType': 'dateType',
       },
@@ -65,6 +72,7 @@ export const entityType = {
     },
     {
       'name': 'user_patron_group_id',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -73,6 +81,7 @@ export const entityType = {
     },
     {
       'name': 'user_patron_group',
+      'queryable': true,
       'dataType': {
         'dataType': 'rangedUUIDType',
       },
@@ -85,6 +94,7 @@ export const entityType = {
     },
     {
       'name': 'status',
+      'queryable': true,
       'dataType': {
         'dataType': 'enumType',
       },
@@ -97,6 +107,7 @@ export const entityType = {
     },
     {
       'name': 'test',
+      'queryable': true,
       'dataType': {
         'dataType': 'enumType',
       },
@@ -109,6 +120,7 @@ export const entityType = {
     },
     {
       'name': 'user_customfields',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -117,6 +129,7 @@ export const entityType = {
     },
     {
       'name': 'id',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -125,6 +138,7 @@ export const entityType = {
     },
     {
       'name': 'loan_status',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -133,6 +147,7 @@ export const entityType = {
     },
     {
       'name': 'loan_checkout_date',
+      'queryable': true,
       'dataType': {
         'dataType': 'dateType',
       },
@@ -141,6 +156,7 @@ export const entityType = {
     },
     {
       'name': 'loan_due_date',
+      'queryable': true,
       'dataType': {
         'dataType': 'dateType',
       },
@@ -149,6 +165,7 @@ export const entityType = {
     },
     {
       'name': 'loan_return_date',
+      'queryable': true,
       'dataType': {
         'dataType': 'dateType',
       },
@@ -157,6 +174,7 @@ export const entityType = {
     },
     {
       'name': 'loan_policy_name',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -165,6 +183,7 @@ export const entityType = {
     },
     {
       'name': 'loan_checkout_servicepoint_id',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -173,6 +192,7 @@ export const entityType = {
     },
     {
       'name': 'loan_checkout_servicepoint_name',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -181,6 +201,7 @@ export const entityType = {
     },
     {
       'name': 'loan_checkin_servicepoint_id',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -189,6 +210,7 @@ export const entityType = {
     },
     {
       'name': 'loan_checkin_servicepoint_name',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -197,6 +219,7 @@ export const entityType = {
     },
     {
       'name': 'item_holdingsrecord_id',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -205,6 +228,7 @@ export const entityType = {
     },
     {
       'name': 'instance_id',
+      'queryable': true,
       'dataType': {
         'dataType': 'openUUIDType',
       },
@@ -217,6 +241,7 @@ export const entityType = {
     },
     {
       'name': 'instance_title',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -225,6 +250,7 @@ export const entityType = {
     },
     {
       'name': 'instance_primary_contributor',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -233,6 +259,7 @@ export const entityType = {
     },
     {
       'name': 'item_id',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -241,6 +268,7 @@ export const entityType = {
     },
     {
       'name': 'item_barcode',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -249,6 +277,7 @@ export const entityType = {
     },
     {
       'name': 'item_call_number',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -257,6 +286,7 @@ export const entityType = {
     },
     {
       'name': 'item_material_type_id',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -265,6 +295,7 @@ export const entityType = {
     },
     {
       'name': 'languages',
+      'queryable': true,
       'dataType': {
         'dataType': 'arrayType',
       },
@@ -277,6 +308,7 @@ export const entityType = {
     },
     {
       'name': 'position',
+      'queryable': true,
       'dataType': {
         'dataType': 'integerType',
       },
@@ -285,6 +317,7 @@ export const entityType = {
     },
     {
       'name': 'decimal_position',
+      'queryable': true,
       'dataType': {
         'dataType': 'numberType',
       },
@@ -293,6 +326,7 @@ export const entityType = {
     },
     {
       'name': 'item_material_type',
+      'queryable': true,
       'dataType': {
         'dataType': 'stringType',
       },
@@ -306,6 +340,7 @@ export const entityType = {
     },
     {
       'name': 'department_names',
+      'queryable': true,
       'dataType': {
         'dataType': 'arrayType',
       },
@@ -314,11 +349,21 @@ export const entityType = {
     },
     {
       'name': 'department_ids',
+      'queryable': true,
       'dataType': {
         'dataType': 'arrayType',
       },
       'labelAlias': 'Department Ids',
       'visibleByDefault': true,
+    },
+    {
+      'name': 'not_queryable',
+      'queryable': false,
+      'dataType': {
+        'dataType': 'stringType',
+      },
+      'labelAlias': 'Not queryable',
+      'visibleByDefault': false,
     },
   ],
   'defaultSort': [
