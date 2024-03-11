@@ -42,6 +42,7 @@ export const QueryBuilderModal = ({
   getParamsSource,
   recordsLimit,
   additionalControls,
+  canRunEmptyQuery = true,
 }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
@@ -162,11 +163,16 @@ export const QueryBuilderModal = ({
     }
   }, [source, isTestQueryInProgress]);
 
+  const isRunQueryDisabled = !isQueryRetrieved
+      || !isQueryFilled
+      || isRunQueryLoading
+      || (!canRunEmptyQuery && entityType?.columns);
+
   const renderFooter = () => (
     <ModalFooter>
       <Button
         buttonStyle="primary"
-        disabled={!isQueryRetrieved || !isQueryFilled || isRunQueryLoading}
+        disabled={isRunQueryDisabled}
         onClick={handleRun}
       >
         {getSaveBtnLabel()}

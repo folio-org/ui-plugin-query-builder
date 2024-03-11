@@ -32,6 +32,12 @@ export const getTableMetadata = (entityType, forcedVisibleValues) => {
         return item[value] ? <FormattedDate value={item[value]} /> : '';
       } else if (dataType === DATA_TYPES.ArrayType) {
         return item[value]?.join(' | ');
+      } else if (dataType === DATA_TYPES.NumberType) {
+        if (item[value] === undefined) {
+          return '';
+        }
+
+        return item[value];
       } else {
         // If value is empty we will return empty string
         // instead of undefined
