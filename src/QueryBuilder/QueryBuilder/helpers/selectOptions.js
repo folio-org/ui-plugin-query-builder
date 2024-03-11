@@ -117,8 +117,11 @@ export const getFieldOptions = (options) => {
 
   return options
     ?.filter((o) => !ids.includes(o.name))
-    .filter((o) => o.queryable)
     .reduce((acc, item) => {
+      if (item.queryable) {
+        acc.push(item);
+      }
+
       if (item.dataType.itemDataType?.properties) {
         const nestedNamedFields = item.dataType.itemDataType?.properties
           .filter((child) => child.queryable)
@@ -127,9 +130,7 @@ export const getFieldOptions = (options) => {
             name: `${item.name}[*]->${child.name}`,
           }));
 
-        acc = [...acc, item, ...nestedNamedFields];
-      } else {
-        acc.push(item);
+        acc.push(...nestedNamedFields);
       }
 
       return acc;

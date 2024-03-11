@@ -299,7 +299,20 @@ describe('getFieldOptions', () => {
           'name': 'user_active',
           'queryable': true,
           'dataType': {
-            'dataType': 'object_type',
+            'dataType': 'stringType',
+          },
+          'labelAlias': 'User active',
+          'visibleByDefault': true,
+          'values': [
+            { label: 'True', value: 'true' },
+            { label: 'False', value: 'false' },
+          ],
+        },
+        {
+          'name': 'nested',
+          'queryable': false,
+          'dataType': {
+            'dataType': 'objectType',
             'itemDataType': { 'properties': [
               {
                 'name': 'user_field1',
@@ -323,12 +336,8 @@ describe('getFieldOptions', () => {
               },
             ] },
           },
-          'labelAlias': 'User active',
+          'labelAlias': 'Nested',
           'visibleByDefault': true,
-          'values': [
-            { label: 'True', value: 'true' },
-            { label: 'False', value: 'false' },
-          ],
         },
       ],
     };
@@ -342,7 +351,7 @@ describe('getFieldOptions', () => {
         'value': 'user_full_name',
       },
       {
-        'dataType': 'object_type',
+        'dataType': 'stringType',
         'label': 'User active',
         'value': 'user_active',
         'values': [
@@ -359,12 +368,12 @@ describe('getFieldOptions', () => {
       {
         'dataType': 'stringType',
         'label': 'User userField1',
-        'value': 'user_active[*]->user_field1',
+        'value': 'nested[*]->user_field1',
       },
       {
         'dataType': 'stringType',
         'label': 'User userField2',
-        'value': 'user_active[*]->user_field2',
+        'value': 'nested[*]->user_field2',
       },
     ];
 
