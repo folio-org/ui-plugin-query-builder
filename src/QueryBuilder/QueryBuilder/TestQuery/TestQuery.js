@@ -28,6 +28,8 @@ export const TestQuery = ({
   setIsPreviewLoading,
   isTestQueryInProgress,
   setIsTestQueryInProgress,
+  recordsLimitExceeded,
+  setRecordsLimitExceeded,
   recordsLimit,
   forcedVisibleValues,
 }) => {
@@ -37,7 +39,6 @@ export const TestQuery = ({
   const [visibleColumns, setVisibleColumns] = useState(recordColumns);
 
   const [includeContent, setIncludeContent] = useState(true);
-  const [recordsLimitExceeded, setRecordsLimitExceeded] = useState(false);
 
   const isTestQueryBtnDisabled = isTestQueryLoading || !isQueryFilled || isTestQueryInProgress;
 
@@ -207,6 +208,8 @@ TestQuery.propTypes = {
   setIsPreviewLoading: PropTypes.func,
   isTestQueryInProgress: PropTypes.bool,
   setIsTestQueryInProgress: PropTypes.func,
+  recordsLimitExceeded: PropTypes.bool,
+  setRecordsLimitExceeded: PropTypes.func,
   recordsLimit: PropTypes.number,
   recordColumns: PropTypes.arrayOf(PropTypes.string),
   forcedVisibleValues: PropTypes.arrayOf(PropTypes.string),

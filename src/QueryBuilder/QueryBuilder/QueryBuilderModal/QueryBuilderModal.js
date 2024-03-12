@@ -71,6 +71,7 @@ export const QueryBuilderModal = ({
   });
 
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
+  const [recordsLimitExceeded, setRecordsLimitExceeded] = useState(false);
 
   const {
     queryId,
@@ -164,9 +165,10 @@ export const QueryBuilderModal = ({
   }, [source, isTestQueryInProgress]);
 
   const isRunQueryDisabled = !isQueryRetrieved
-      || !isQueryFilled
-      || isRunQueryLoading
-      || (!canRunEmptyQuery && entityType?.columns);
+    || !isQueryFilled
+    || isRunQueryLoading
+    || (!canRunEmptyQuery && entityType?.columns)
+    || recordsLimitExceeded;
 
   const renderFooter = () => (
     <ModalFooter>
@@ -234,6 +236,8 @@ export const QueryBuilderModal = ({
             setIsPreviewLoading={setIsPreviewLoading}
             isTestQueryInProgress={isTestQueryInProgress}
             setIsTestQueryInProgress={setIsTestQueryInProgress}
+            recordsLimitExceeded={recordsLimitExceeded}
+            setRecordsLimitExceeded={setRecordsLimitExceeded}
             recordsLimit={recordsLimit}
             additionalControls={additionalControls}
           />
