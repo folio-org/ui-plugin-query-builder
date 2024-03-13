@@ -24,5 +24,6 @@
     "result.emptyMessage": "该列表不包含任何项目",
     "error.sww": "出问题了",
     "options.true": "真",
-    "options.false": "假"
+    "options.false": "假",
+    "modal.preview.title.empty": "Query would return {total} records."
 }

@@ -24,5 +24,6 @@
     "result.emptyMessage": "Lista nie zawiera żadnych pozycji",
     "error.sww": "Coś poszło nie tak",
     "options.true": "True",
-    "options.false": "False"
+    "options.false": "False",
+    "modal.preview.title.empty": "Query would return {total} records."
 }
