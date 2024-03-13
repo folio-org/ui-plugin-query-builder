@@ -24,5 +24,6 @@
     "result.emptyMessage": "Список не содержит элементов",
     "error.sww": "Произошла ошибка",
     "options.true": "True",
-    "options.false": "False"
+    "options.false": "False",
+    "modal.preview.title.empty": "Query would return {total} records."
 }

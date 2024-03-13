@@ -24,5 +24,6 @@
     "result.emptyMessage": "A lista não contém itens",
     "error.sww": "Algo deu errado",
     "options.true": "Verdadeiro",
-    "options.false": "Falso"
+    "options.false": "Falso",
+    "modal.preview.title.empty": "A consulta retornaria {total} registros."
 }

@@ -24,5 +24,6 @@
     "result.emptyMessage": "La lista è vuota",
     "error.sww": "Qualcosa è andato storto",
     "options.true": "Vero",
-    "options.false": "Falso"
+    "options.false": "Falso",
+    "modal.preview.title.empty": "Query would return {total} records."
 }
