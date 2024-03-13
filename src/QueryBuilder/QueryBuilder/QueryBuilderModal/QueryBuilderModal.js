@@ -145,6 +145,7 @@ export const QueryBuilderModal = ({
     await runQuery({
       queryId,
       fqlQuery,
+      queryStr,
     });
 
     await handleCloseModal(false);
