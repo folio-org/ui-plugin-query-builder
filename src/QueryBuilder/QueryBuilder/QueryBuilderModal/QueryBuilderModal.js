@@ -47,7 +47,6 @@ export const QueryBuilderModal = ({
   const intl = useIntl();
   const queryClient = useQueryClient();
   const showCallout = useShowCallout();
-  const [previewRecordsCount, setPreviewRecordsCount] = useState(0);
 
   const { entityType } = useEntityType({ entityTypeDataSource });
 
@@ -73,6 +72,7 @@ export const QueryBuilderModal = ({
 
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
   const [recordsLimitExceeded, setRecordsLimitExceeded] = useState(false);
+  const [previewRecordsCount, setPreviewRecordsCount] = useState(false);
 
   const {
     queryId,
@@ -156,7 +156,7 @@ export const QueryBuilderModal = ({
   const handleQueryRetrieved = (data) => {
     const completed = data?.status === QUERY_DETAILS_STATUSES.SUCCESS;
 
-    setPreviewRecordsCount(data?.totalRecords);
+    setPreviewRecordsCount(!!data?.totalRecords);
 
     setIsQueryRetrieved(completed);
   };
