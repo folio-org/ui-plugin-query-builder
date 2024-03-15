@@ -115,6 +115,7 @@ export const QueryBuilderModal = ({
     if (queryId) {
       setIsTestQueryInProgress(false);
       setIsPreviewLoading(false);
+      setRecordsLimitExceeded(false);
 
       queryClient.removeQueries({ queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA] });
 
