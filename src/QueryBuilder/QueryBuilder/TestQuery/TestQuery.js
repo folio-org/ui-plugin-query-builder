@@ -32,6 +32,7 @@ export const TestQuery = ({
   setRecordsLimitExceeded,
   recordsLimit,
   forcedVisibleValues,
+  setPreviewRecordsCount,
 }) => {
   const queryClient = useQueryClient();
 
@@ -169,6 +170,7 @@ export const TestQuery = ({
           onPreviewShown={handlePreviewShown}
           forcedVisibleValues={forcedVisibleValues}
           onSetDefaultColumns={setColumns}
+          setPreviewRecordsCount={setPreviewRecordsCount}
           onSetDefaultVisibleColumns={handleDefaultVisibleColumnsChange}
           contentDataSource={queryDetailsDataSource}
           entityTypeDataSource={entityTypeDataSource}
@@ -213,4 +215,5 @@ TestQuery.propTypes = {
   recordsLimit: PropTypes.number,
   recordColumns: PropTypes.arrayOf(PropTypes.string),
   forcedVisibleValues: PropTypes.arrayOf(PropTypes.string),
+  setPreviewRecordsCount: PropTypes.func,
 };
