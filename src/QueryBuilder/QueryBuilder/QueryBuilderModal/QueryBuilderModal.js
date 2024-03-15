@@ -72,6 +72,7 @@ export const QueryBuilderModal = ({
 
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
   const [recordsLimitExceeded, setRecordsLimitExceeded] = useState(false);
+  const [isQueryEmpty, setIsQueryEmpty] = useState(false);
 
   const {
     queryId,
@@ -155,6 +156,8 @@ export const QueryBuilderModal = ({
   const handleQueryRetrieved = (data) => {
     const completed = data?.status === QUERY_DETAILS_STATUSES.SUCCESS;
 
+    setIsQueryEmpty(!data?.totalRecords);
+
     setIsQueryRetrieved(completed);
   };
 
@@ -169,7 +172,7 @@ export const QueryBuilderModal = ({
   const isRunQueryDisabled = !isQueryRetrieved
     || !isQueryFilled
     || isRunQueryLoading
-    || (!canRunEmptyQuery && entityType?.columns)
+    || (!canRunEmptyQuery && isQueryEmpty)
     || recordsLimitExceeded;
 
   const renderFooter = () => (
