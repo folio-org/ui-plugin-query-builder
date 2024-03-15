@@ -27,7 +27,6 @@ const renderResultViewer = (props) => (
         height={300}
         refreshInProgress={false}
         forcedVisibleValues={['username']}
-        setPreviewRecordsCount={jest.fn()}
         {...props}
       />
     </QueryClientProvider>

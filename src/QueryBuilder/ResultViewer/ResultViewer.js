@@ -32,7 +32,6 @@ export const ResultViewer = ({
   additionalControls,
   refreshInProgress,
   forcedVisibleValues,
-  setPreviewRecordsCount,
 }) => {
   const intl = useIntl();
 
@@ -63,7 +62,6 @@ export const ResultViewer = ({
     contentQueryOptions,
     contentQueryKeys,
     forcedVisibleValues,
-    setPreviewRecordsCount,
   });
 
   const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading || refreshInProgress;
@@ -210,5 +208,4 @@ ResultViewer.propTypes = {
   additionalControls: PropTypes.element,
   refreshInProgress: PropTypes.bool,
   forcedVisibleValues: PropTypes.arrayOf(PropTypes.string),
-  setPreviewRecordsCount: PropTypes.func,
 };

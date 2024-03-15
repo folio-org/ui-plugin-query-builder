@@ -14,7 +14,6 @@ export const useAsyncDataSource = ({
   contentQueryOptions,
   contentQueryKeys,
   forcedVisibleValues,
-  setPreviewRecordsCount,
 }) => {
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
 
@@ -45,8 +44,6 @@ export const useAsyncDataSource = ({
   );
 
   const { content: contentData, totalRecords, status } = recordsData || {};
-
-  setPreviewRecordsCount(totalRecords);
 
   const {
     columnMapping,
