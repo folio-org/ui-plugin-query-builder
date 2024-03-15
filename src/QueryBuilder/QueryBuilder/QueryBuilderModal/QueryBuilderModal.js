@@ -156,7 +156,7 @@ export const QueryBuilderModal = ({
   const handleQueryRetrieved = (data) => {
     const completed = data?.status === QUERY_DETAILS_STATUSES.SUCCESS;
 
-    setIsQueryEmpty(!!data?.totalRecords);
+    setIsQueryEmpty(!data?.totalRecords);
 
     setIsQueryRetrieved(completed);
   };
