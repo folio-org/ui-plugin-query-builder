@@ -156,6 +156,8 @@ export const QueryBuilderModal = ({
   const handleQueryRetrieved = (data) => {
     const completed = data?.status === QUERY_DETAILS_STATUSES.SUCCESS;
 
+    setPreviewRecordsCount(data?.totalRecords);
+
     setIsQueryRetrieved(completed);
   };
 
@@ -242,7 +244,6 @@ export const QueryBuilderModal = ({
             recordsLimitExceeded={recordsLimitExceeded}
             setRecordsLimitExceeded={setRecordsLimitExceeded}
             recordsLimit={recordsLimit}
-            setPreviewRecordsCount={setPreviewRecordsCount}
             additionalControls={additionalControls}
           />
         </>
