@@ -161,6 +161,8 @@ export const QueryBuilderModal = ({
     setIsQueryRetrieved(completed);
   };
 
+  const forcedVisibleValues = source?.map(el => el?.field.current);
+
   const getSaveBtnLabel = () => (saveBtnLabel || <FormattedMessage id="ui-plugin-query-builder.modal.run" />);
 
   useEffect(() => {
@@ -225,6 +227,7 @@ export const QueryBuilderModal = ({
           <TestQuery
             queryId={queryId}
             testQuery={testQuery}
+            forcedVisibleValues={forcedVisibleValues}
             isTestQueryLoading={isTestQueryLoading}
             fqlQuery={fqlQuery}
             recordColumns={recordColumns}
