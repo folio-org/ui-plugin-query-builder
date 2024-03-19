@@ -173,14 +173,14 @@ const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOption
     const hasSourceOrValues = values || source;
     let formattedValue;
 
-    if (Array.isArray(value) && source) {
-      const params = await getParamsSource?.({
+    if (Array.isArray(value) && hasSourceOrValues) {
+      const params = source ? await getParamsSource?.({
         entityTypeId: source?.entityTypeId,
         columnName: source?.columnName,
         searchValue: '',
-      });
+      }).then((data) => data?.content) : values;
 
-      formattedValue = value.map(val => params?.content?.find(param => param.value === val));
+      formattedValue = value.map(val => params?.find(param => param.value === val));
     }
 
     return {
