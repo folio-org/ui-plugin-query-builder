@@ -14,7 +14,7 @@ export const useViewerCallbacks = ({
     if (defaultColumns.length !== 0) {
       onSetDefaultColumns?.(defaultColumns);
       // only set visible columns if we're building a new query from scratch
-      if (visibleColumns.length === 0) {
+      if (!visibleColumns?.length) {
         onSetDefaultVisibleColumns?.(defaultVisibleColumns);
       }
     }
