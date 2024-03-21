@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 export const useViewerCallbacks = ({
+  visibleColumns,
   onSetDefaultColumns,
   defaultColumns,
   onSetDefaultVisibleColumns,
@@ -12,7 +13,10 @@ export const useViewerCallbacks = ({
   useEffect(() => {
     if (defaultColumns.length !== 0) {
       onSetDefaultColumns?.(defaultColumns);
-      onSetDefaultVisibleColumns?.(defaultVisibleColumns);
+      // only set visible columns if we're building a new query from scratch
+      if (visibleColumns.length === 0) {
+        onSetDefaultVisibleColumns?.(defaultVisibleColumns);
+      }
     }
   }, [currentRecordsCount]);
 
