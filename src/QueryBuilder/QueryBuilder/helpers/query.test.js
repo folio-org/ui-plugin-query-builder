@@ -105,6 +105,12 @@ describe('mongoQueryToSource()', () => {
       operator: { options: expect.any(Array), current: OPERATORS.EMPTY },
       value: { current: true },
     },
+    {
+      boolean: { options: booleanOptions, current: '$and' },
+      field: { options: fieldOptions, current: 'department_ids', dataType: DATA_TYPES.ArrayType },
+      operator: { options: expect.any(Array), current: OPERATORS.EMPTY },
+      value: { current: false },
+    },
   ];
 
   const initialValues = {
@@ -122,6 +128,7 @@ describe('mongoQueryToSource()', () => {
       { department_names: { $contains: 'value' } },
       { department_names: { $not_contains: 'value' } },
       { department_ids: { $empty: true } },
+      { department_ids: { $empty: false } },
     ],
   };
 
@@ -189,6 +196,7 @@ describe('mongoQueryToSource()', () => {
         { department_names: { $contains: 'value' } },
         { department_names: { $not_contains: 'value' } },
         { department_ids: { $empty: true } },
+        { department_ids: { $empty: false } },
       ],
     };
 

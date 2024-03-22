@@ -95,6 +95,7 @@ export const QueryBuilderModal = ({
       showCallout({
         message,
         type: 'error',
+        timeout: 6000, // from https://ux.folio.org/docs/guidelines/components/callout/
       });
       setIsQueryRetrieved(false);
     },

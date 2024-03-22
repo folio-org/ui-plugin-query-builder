@@ -167,7 +167,7 @@ const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOption
 
   const { operator, value } = getSourceFields(mongoOperator)(mongoValue);
 
-  if (operator && value) {
+  if (operator) {
     const fieldItem = fieldOptions.find(f => f.value === field);
     const { dataType, values, source } = fieldItem;
     const hasSourceOrValues = values || source;

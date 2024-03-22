@@ -69,6 +69,7 @@ export const ResultViewer = ({
 
   // set visible by default columns once
   useViewerCallbacks({
+    visibleColumns,
     onSetDefaultColumns,
     defaultColumns,
     onSetDefaultVisibleColumns,
