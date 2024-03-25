@@ -133,8 +133,8 @@ describe('mongoQueryToSource()', () => {
       { department_names: { $contains: 'value' } },
       { department_names: { $not_contains: 'value' } },
       { department_ids: { $empty: true } },
-      { languages: { $in: ['value', 'value2'] } },
       { department_ids: { $empty: false } },
+      { languages: { $in: ['value', 'value2'] } },
     ],
   };
 
