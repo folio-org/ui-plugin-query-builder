@@ -56,24 +56,11 @@ describe('mongoQueryToSource()', () => {
       operator: { options: expect.any(Array), current: OPERATORS.GREATER_THAN_OR_EQUAL },
       value: { current: 'value' },
     },
-
-    {
-      boolean: { options: booleanOptions, current: '$and' },
-      field: { options: fieldOptions, current: 'languages' },
-      operator: { options: expect.any(Array), current: OPERATORS.IN },
-      value: { current: [{ label: 'value', value: 'value' }, { label: 'value2', value: 'value2' }] },
-    },
     {
       boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_full_name' },
       operator: { options: expect.any(Array), current: OPERATORS.CONTAINS },
       value: { current: 'abc' },
-    },
-    {
-      boolean: { options: booleanOptions, current: '$and' },
-      field: { options: fieldOptions, current: 'languages' },
-      operator: { options: expect.any(Array), current: OPERATORS.NOT_IN },
-      value: { current: [{ label: 'value', value: 'value' }, { label: 'value2', value: 'value2' }] },
     },
     {
       boolean: { options: booleanOptions, current: '$and' },
@@ -113,6 +100,26 @@ describe('mongoQueryToSource()', () => {
     },
   ];
 
+  const sourceFromUI = [
+    ...source,
+    {
+      boolean: { options: booleanOptions, current: '$and' },
+      field: { options: fieldOptions, current: 'languages' },
+      operator: { options: expect.any(Array), current: OPERATORS.IN },
+      value: { current: [{ label: 'value', value: 'value' }, { label: 'value2', value: 'value2' }] },
+    },
+  ];
+
+  const sourceFromBE = [
+    ...source,
+    {
+      boolean: { options: booleanOptions, current: '$and' },
+      field: { options: fieldOptions, current: 'languages' },
+      operator: { options: expect.any(Array), current: OPERATORS.IN },
+      value: { current: ['value', 'value2'] },
+    },
+  ];
+
   const initialValues = {
     $and: [
       { user_first_name: { $eq: 'value' } },
@@ -120,15 +127,14 @@ describe('mongoQueryToSource()', () => {
       { user_last_name: { $gt: 'value' } },
       { user_last_name: { $lt: 10 } },
       { user_last_name: { $gte: 'value' } },
-      { languages: { $in: ['value', 'value2'] } },
       { user_full_name: { $regex: 'abc' } },
-      { languages: { $nin: ['value', 'value2'] } },
       { user_id: { $nin: ['value', 'value2'] } },
       { user_id: { $in: ['value', 'value2'] } },
       { department_names: { $contains: 'value' } },
       { department_names: { $not_contains: 'value' } },
       { department_ids: { $empty: true } },
       { department_ids: { $empty: false } },
+      { languages: { $in: ['value', 'value2'] } },
     ],
   };
 
@@ -151,7 +157,7 @@ describe('mongoQueryToSource()', () => {
       return Array.isArray(currentValue) ? currentValue.map(({ value }) => value) : currentValue;
     };
 
-    expect(result).toEqual(source.map(v => ({
+    expect(result).toEqual(sourceFromBE.map(v => ({
       ...v,
       field: {
         ...v.field,
@@ -181,28 +187,9 @@ describe('mongoQueryToSource()', () => {
   });
 
   it('should convert from source to simple query format', () => {
-    const initial = {
-      $and: [
-        { user_first_name: { $eq: 'value' } },
-        { user_first_name: { $ne: 'value' } },
-        { user_last_name: { $gt: 'value' } },
-        { user_last_name: { $lt: 10 } },
-        { user_last_name: { $gte: 'value' } },
-        { languages: { $in: ['value', 'value2'] } },
-        { user_full_name: { $regex: 'abc' } },
-        { languages: { $nin: ['value', 'value2'] } },
-        { user_id: { $nin: ['value', 'value2'] } },
-        { user_id: { $in: ['value', 'value2'] } },
-        { department_names: { $contains: 'value' } },
-        { department_names: { $not_contains: 'value' } },
-        { department_ids: { $empty: true } },
-        { department_ids: { $empty: false } },
-      ],
-    };
+    const result = sourceToMongoQuery(sourceFromUI);
 
-    const result = sourceToMongoQuery(source);
-
-    expect(result).toEqual(initial);
+    expect(result).toEqual(initialValues);
   });
 
   it('should convert from SINGLE source to simple query format', () => {
