@@ -2,6 +2,8 @@
 
 ## (in progress)
 
+## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
+
 * [UIPQB-108](https://issues.folio.org/browse/UIPQB-108) Fix missing horizontal overflow in ResultViewer
 
 ## [1.1.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.3) (2024-04-02)
