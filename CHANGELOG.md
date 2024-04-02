@@ -2,6 +2,9 @@
 
 ## (in progress)
 
+## [1.1.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.3) (2024-04-02)
+* [UIPQB-86](https://folio-org.atlassian.net/browse/UIPQB-86) The IN operator is incorrectly rendered in the query builder when editing existing queries
+
 ## [1.1.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.2) (2024-03-22)
 
 * [UIPQB-101](https://folio-org.atlassian.net/browse/UIPQB-101) Fix crash when attempting to edit a query with null/empty operator
@@ -30,7 +33,6 @@
 * [UIPQB-74](https://folio-org.atlassian.net/browse/UIPQB-74)Non-default fields that are part of the query are automatically displayed as columns
 * [UIPQB-95](https://folio-org.atlassian.net/browse/UIPQB-95) Disable run query button when records limit exceeded
 * [UIPQB-96](https://folio-org.atlassian.net/browse/UIPQB-96) Extend runQuery handler with "user-friendly" query param
-* [UIPQB-86](https://folio-org.atlassian.net/browse/UIPQB-86) The IN operator is incorrectly rendered in the query builder when editing existing queries
 
 ## [1.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.0.0) (2023-10-12)
 
