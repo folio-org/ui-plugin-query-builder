@@ -3,7 +3,7 @@ import { DATA_TYPES } from '../../constants/dataTypes';
 import { DynamicTable } from './DynamicTable/DynamicTable';
 
 export const getTableMetadata = (entityType, forcedVisibleValues) => {
-  const defaultColumns = entityType?.columns?.map((cell) => ({
+  const defaultColumns = (entityType?.columns?.map((cell) => ({
     label: cell.labelAlias,
     value: cell.name,
     disabled: false,
@@ -11,7 +11,7 @@ export const getTableMetadata = (entityType, forcedVisibleValues) => {
     selected: cell.visibleByDefault,
     dataType: cell.dataType.dataType,
     properties: cell.dataType.itemDataType?.properties,
-  })) || [];
+  })) || []).sort((a, b) => a.label.localeCompare(b.label));
 
   const columnMapping = defaultColumns?.reduce((acc, { value, label }) => {
     acc[value] = label;

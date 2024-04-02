@@ -1,4 +1,4 @@
-import { isQueryValid, mongoQueryToSource, sourceToMongoQuery } from './query';
+import { getTransformedValue, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from './query';
 import { booleanOptions } from './selectOptions';
 import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
@@ -276,5 +276,24 @@ describe('isQueryValid', () => {
     ];
 
     expect(isQueryValid(src)).toBe(true);
+  });
+});
+
+describe('getTransformedValue', () => {
+  it.each([
+    [undefined, undefined],
+    ['a', ['a']],
+    ['a ', ['a']],
+    [' a ', ['a']],
+    [' a , b   ', ['a', 'b']],
+    [[], []],
+    [['a', 'b'], ['a', 'b']],
+    [[{ value: 'a' }, { value: 'b' }], ['a', 'b']],
+    [[{ value: 'a' }, { value: 'b' }, 'c'], ['a', 'b', 'c']],
+    [[undefined, { value: 'b' }, 'c'], [undefined, 'b', 'c']],
+  ])('transforms %s to %s', (val, expected) => {
+    const actual = getTransformedValue(val);
+
+    expect(actual).toEqual(expected);
   });
 });

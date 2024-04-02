@@ -56,7 +56,9 @@ export const getTransformedValue = (val) => {
   }
 
   if (Array.isArray(val)) {
-    return val.map(({ value }) => value);
+    // when using multi-select - 'item.value'
+    // for initial value case = just 'item'
+    return val.map((item) => item?.value || item);
   }
 
   return val;
