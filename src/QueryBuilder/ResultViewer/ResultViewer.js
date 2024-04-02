@@ -165,7 +165,7 @@ export const ResultViewer = ({
       <>
         {renderHeader()}
         {renderAdditionalControls()}
-        {renderTable()}
+        {!!Object.keys(columnMapping).length && renderTable()}
       </>
     );
   };
