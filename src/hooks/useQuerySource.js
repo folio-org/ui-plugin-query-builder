@@ -20,30 +20,30 @@ export const getSourceValue = ({ initialValues, fieldOptions, intl, getParamsSou
 
 export const useQuerySource = ({ initialValues, entityType, getParamsSource }) => {
   const intl = useIntl();
-  const [isSourceInit, setIsSourceInit] = useState(false);
-  const columns = entityType?.columns;
-  const fieldOptions = getFieldOptions(columns);
   const [source, setSource] = useState([]);
 
-  useEffect(() => {
-    const setInitialValue = async () => {
-      const value = await getSourceValue({ initialValues, fieldOptions, intl, getParamsSource });
-
-      setSource(value);
-    };
-
-    if (fieldOptions && !isSourceInit) {
-      setInitialValue().then(() => setIsSourceInit(true));
-    }
-  }, [initialValues, fieldOptions, isSourceInit]);
+  const columns = entityType?.columns;
+  const fieldOptions = getFieldOptions(columns);
+  const stringifiedFieldOptions = JSON.stringify(fieldOptions);
 
   const queryStr = getQueryStr(source, fieldOptions);
   const isQueryFilled = isQueryValid(source);
   const fqlQuery = sourceToMongoQuery(source);
 
+  useEffect(() => {
+    if (stringifiedFieldOptions) {
+      const setInitialValue = async () => {
+        const value = await getSourceValue({ initialValues, fieldOptions, intl, getParamsSource });
+
+        setSource(value);
+      };
+
+      setInitialValue();
+    }
+  }, [initialValues, stringifiedFieldOptions]);
+
   return {
     source,
-    isSourceInit,
     setSource,
     queryStr,
     isQueryFilled,

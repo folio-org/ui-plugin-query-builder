@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from 'react-query';
 
 export const useCancelQuery = ({ cancelQueryDataSource }) => {
   const { mutateAsync: cancelQuery } = useMutation({

@@ -1,6 +1,6 @@
 import { screen, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { ResultViewer } from './ResultViewer';
 import { entityType } from '../../../test/jest/data/entityType';
 import { content } from '../../../test/jest/data/content';

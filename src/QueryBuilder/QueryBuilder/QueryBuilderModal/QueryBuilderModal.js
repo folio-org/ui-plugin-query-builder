@@ -9,7 +9,8 @@ import {
   Row,
 } from '@folio/stripes/components';
 import { useShowCallout } from '@folio/stripes-acq-components';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from 'react-query';
+import { useNamespace } from '@folio/stripes/core';
 import css from './QueryBuilderModal.css';
 import { RepeatableFields } from './RepeatableFields/RepeatableFields';
 import { TestQuery } from '../TestQuery/TestQuery';
@@ -46,9 +47,12 @@ export const QueryBuilderModal = ({
 }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
+  const [entityKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_ENTITY_TYPE });
+
+  const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const showCallout = useShowCallout();
 
-  const { entityType } = useEntityType({ entityTypeDataSource });
+  const { entityType, isEntityTypeFetching } = useEntityType({ entityTypeDataSource, queryKey: entityKey });
 
   const { cancelQuery } = useCancelQuery({ cancelQueryDataSource });
 
@@ -63,7 +67,6 @@ export const QueryBuilderModal = ({
     fqlQuery,
     isQueryFilled,
     queryStr,
-    isSourceInit,
   } = useQuerySource({
     getParamsSource,
     initialValues,
@@ -119,7 +122,7 @@ export const QueryBuilderModal = ({
       setIsPreviewLoading(false);
       setRecordsLimitExceeded(false);
 
-      queryClient.removeQueries({ queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA] });
+      queryClient.removeQueries({ queryKey: [contentDataKey] });
 
       resetTestQuery();
 
@@ -139,8 +142,9 @@ export const QueryBuilderModal = ({
       getParamsSource,
     });
 
-    setSource(src);
+    queryClient.removeQueries({ queryKey: [entityKey] });
 
+    setSource(src);
     setIsModalShown(false);
   };
 
@@ -213,7 +217,7 @@ export const QueryBuilderModal = ({
         {queryStr}
       </div>
 
-      {!entityType && isSourceInit ? (
+      {isEntityTypeFetching ? (
         <Row center="xs">
           <Loading size="large" />
         </Row>
