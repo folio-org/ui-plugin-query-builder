@@ -1,4 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
+
+import { useNamespace } from '@folio/stripes/core';
+
 import { getTableMetadata } from '../QueryBuilder/ResultViewer/helpers';
 import { useDebounce } from './useDebounce';
 import { useEntityType } from './useEntityType';
@@ -15,6 +18,7 @@ export const useAsyncDataSource = ({
   contentQueryKeys,
   forcedVisibleValues,
 }) => {
+  const [namespaceKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
 
   const sharedOptions = { refetchOnWindowFocus: false, keepPreviousData: true };
@@ -31,7 +35,7 @@ export const useAsyncDataSource = ({
     refetch,
   } = useQuery(
     {
-      queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA, debouncedOffset, debouncedLimit, ...contentQueryKeys],
+      queryKey: [namespaceKey, debouncedOffset, debouncedLimit, ...contentQueryKeys],
       queryFn: () => contentDataSource({
         offset: debouncedOffset,
         limit: debouncedLimit,
