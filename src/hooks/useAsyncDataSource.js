@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
 import { useNamespace } from '@folio/stripes/core';
 
@@ -6,6 +6,21 @@ import { getTableMetadata } from '../QueryBuilder/ResultViewer/helpers';
 import { useDebounce } from './useDebounce';
 import { useEntityType } from './useEntityType';
 import { QUERY_KEYS } from '../constants/query';
+
+// temporary solution to emulate structuralSharing before migrating to react-query v4+
+const structuralSharing = (queryClient, key, newData) => {
+  let data = newData;
+  const { data: cachedData } = queryClient.getQueryState(key) || {};
+
+  if (cachedData?.status && cachedData?.content && !newData?.content) {
+    data = {
+      ...newData,
+      content: cachedData.content,
+    };
+  }
+
+  return data;
+};
 
 export const useAsyncDataSource = ({
   contentDataSource,
@@ -18,15 +33,19 @@ export const useAsyncDataSource = ({
   contentQueryKeys,
   forcedVisibleValues,
 }) => {
-  const [namespaceKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
+  const queryClient = useQueryClient();
+  const [namespaceKey] = useNamespace();
+  const [entityKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_PREVIEW_ENTITY_TYPE });
+  const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
-
-  const sharedOptions = { refetchOnWindowFocus: false, keepPreviousData: true };
 
   const { entityType, isContentTypeFetchedAfterMount, isEntityTypeLoading } = useEntityType({
     entityTypeDataSource,
-    sharedOptions,
+    queryKey: entityKey,
   });
+
+  const sharedOptions = { refetchOnWindowFocus: false, keepPreviousData: true };
+  const queryKey = [namespaceKey, contentDataKey, debouncedOffset, debouncedLimit, ...contentQueryKeys];
 
   const {
     data: recordsData,
@@ -35,12 +54,16 @@ export const useAsyncDataSource = ({
     refetch,
   } = useQuery(
     {
-      queryKey: [namespaceKey, debouncedOffset, debouncedLimit, ...contentQueryKeys],
-      queryFn: () => contentDataSource({
-        offset: debouncedOffset,
-        limit: debouncedLimit,
-        ...queryParams,
-      }),
+      queryKey,
+      queryFn: async () => {
+        const data = await contentDataSource({
+          offset: debouncedOffset,
+          limit: debouncedLimit,
+          ...queryParams,
+        });
+
+        return structuralSharing(queryClient, queryKey, data);
+      },
       onSuccess,
       ...sharedOptions,
       ...contentQueryOptions,

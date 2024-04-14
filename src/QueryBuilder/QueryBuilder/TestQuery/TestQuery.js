@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { Button, MessageBanner, Layout } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from 'react-query';
+import { useNamespace } from '@folio/stripes/core';
 import { ResultViewer } from '../../ResultViewer';
 import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
 import { ViewerHeadline } from './ViewerHeadline/ViewerHeadline';
@@ -34,7 +35,7 @@ export const TestQuery = ({
   forcedVisibleValues,
 }) => {
   const queryClient = useQueryClient();
-
+  const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const [columns, setColumns] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState(recordColumns);
 
@@ -70,19 +71,8 @@ export const TestQuery = ({
     }
   };
 
-  const structuralSharing = (oldData, newData) => {
-    if (oldData?.status && oldData?.content && !newData?.content) {
-      return {
-        ...newData,
-        content: oldData.content,
-      };
-    }
-
-    return newData;
-  };
-
   const handleTestQuery = async () => {
-    queryClient.removeQueries({ queryKey: [QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA] });
+    queryClient.removeQueries({ queryKey: [contentDataKey] });
 
     setIncludeContent(true);
     setIsPreviewLoading(true);
@@ -176,7 +166,6 @@ export const TestQuery = ({
           headlineEnd={renderDropdown}
           contentQueryOptions={{
             refetchInterval,
-            structuralSharing,
             keepPreviousData: false,
           }}
           contentQueryKeys={[queryId]}

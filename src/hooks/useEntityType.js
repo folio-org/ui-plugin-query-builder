@@ -1,18 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from 'react-query';
 
-import { useNamespace } from '@folio/stripes/core';
-
-import { QUERY_KEYS } from '../constants/query';
-
-export const useEntityType = ({ entityTypeDataSource, sharedOptions = {} }) => {
-  const [namespaceKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_ENTITY_TYPE });
-
+export const useEntityType = ({ entityTypeDataSource, queryKey, sharedOptions = {} }) => {
   const {
     data: entityType,
     isLoading: isEntityTypeLoading,
+    isFetching: isEntityTypeFetching,
     isFetchedAfterMount: isContentTypeFetchedAfterMount,
   } = useQuery({
-    queryKey: [namespaceKey],
+    queryKey: [queryKey],
     queryFn: entityTypeDataSource,
     ...sharedOptions,
   });
@@ -20,6 +15,7 @@ export const useEntityType = ({ entityTypeDataSource, sharedOptions = {} }) => {
   return {
     entityType,
     isEntityTypeLoading,
+    isEntityTypeFetching,
     isContentTypeFetchedAfterMount,
   };
 };
