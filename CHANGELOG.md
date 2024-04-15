@@ -2,6 +2,7 @@
 
 ## (in progress)
 * [UIPQB-113](https://issues.folio.org/browse/UIPQB-113) Remove local QueryClientProvider from plugin-query-builder
+* [UIPQB-103](https://issues.folio.org/browse/UIPQB-103) Correct formatting of in and not in operators in query string.
 
 ## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
 
