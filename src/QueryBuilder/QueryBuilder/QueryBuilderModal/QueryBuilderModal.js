@@ -48,6 +48,7 @@ export const QueryBuilderModal = ({
   const intl = useIntl();
   const queryClient = useQueryClient();
   const [entityKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_ENTITY_TYPE });
+  const [entityPreviewKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_PREVIEW_ENTITY_TYPE });
 
   const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const showCallout = useShowCallout();
@@ -150,6 +151,7 @@ export const QueryBuilderModal = ({
     });
 
     queryClient.removeQueries({ queryKey: [entityKey] });
+    queryClient.removeQueries({ queryKey: [entityPreviewKey] });
 
     setSource(src);
     setIsModalShown(false);
