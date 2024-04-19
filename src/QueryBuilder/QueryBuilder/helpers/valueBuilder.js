@@ -4,7 +4,7 @@ import { OPERATORS } from '../../../constants/operators';
 export const getCommaSeparatedStr = (arr) => {
   const str = arr?.map(el => `"${el?.value}"`).join(',');
 
-  return `${str}`;
+  return `(${str})`;
 };
 
 export const getQuotedStr = (value) => {
