@@ -13,7 +13,7 @@ export const DynamicTable = ({ properties, values }) => {
     <table className={css.DynamicTable}>
       <thead>
         <tr>{properties?.map((cell) => (
-          <th key={cell.property} style={{ width: `${100 / properties.length}%` }}>{cell.labelAlias}</th>
+          <th key={cell.property} style={{ width: '180px', minWidth: '180px' }}>{cell.labelAlias}</th>
         ))}
         </tr>
       </thead>
