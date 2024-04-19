@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import css from './DynamicTable.css';
 
+const columnStyle = { width: '180px', minWidth: '180px' };
+
 export const DynamicTable = ({ properties, values }) => {
   if (!values) return null;
 
@@ -13,7 +15,7 @@ export const DynamicTable = ({ properties, values }) => {
     <table className={css.DynamicTable}>
       <thead>
         <tr>{properties?.map((cell) => (
-          <th key={cell.property} style={{ width: '180px', minWidth: '180px' }}>{cell.labelAlias}</th>
+          <th key={cell.property} style={columnStyle}>{cell.labelAlias}</th>
         ))}
         </tr>
       </thead>
@@ -21,7 +23,7 @@ export const DynamicTable = ({ properties, values }) => {
         {tableBodyRows.map((row, index) => (
           <tr key={index}>
             {properties?.map((cell) => (
-              <td key={cell.property}>
+              <td key={cell.property} style={columnStyle}>
                 {row[cell.property]}
               </td>
             ))}
