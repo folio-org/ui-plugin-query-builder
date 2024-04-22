@@ -77,6 +77,7 @@ export const useAsyncDataSource = ({
     defaultColumns,
     defaultVisibleColumns,
     formatter,
+    columnWidths,
   } = getTableMetadata(entityType, forcedVisibleValues);
 
   return {
@@ -93,5 +94,6 @@ export const useAsyncDataSource = ({
     status,
     refetch,
     formatter,
+    columnWidths,
   };
 };

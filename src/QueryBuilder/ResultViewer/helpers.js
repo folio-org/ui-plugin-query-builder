@@ -19,6 +19,14 @@ export const getTableMetadata = (entityType, forcedVisibleValues) => {
     return acc;
   }, {});
 
+  const columnWidths = defaultColumns?.reduce((acc, { value, properties }) => {
+    if (properties?.length) {
+      acc[value] = `${properties.length * 180}px`;
+    }
+
+    return acc;
+  }, {});
+
   const defaultVisibleColumns = defaultColumns?.filter(col => !!forcedVisibleValues?.find(value => value === col.value)
       || col.selected).map(col => col.value) || [];
 
@@ -53,5 +61,6 @@ export const getTableMetadata = (entityType, forcedVisibleValues) => {
     defaultColumns,
     columnMapping,
     formatter,
+    columnWidths,
   };
 };

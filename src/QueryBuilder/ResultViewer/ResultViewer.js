@@ -52,6 +52,7 @@ export const ResultViewer = ({
     refetch,
     status,
     formatter,
+    columnWidths,
   } = useAsyncDataSource({
     entityTypeDataSource,
     contentDataSource,
@@ -134,6 +135,7 @@ export const ResultViewer = ({
             contentData={contentData}
             columnMapping={columnMapping}
             formatter={formatter}
+            columnWidths={columnWidths}
             visibleColumns={visibleColumns}
             pagingType={null}
             onNeedMoreData={changePage}
