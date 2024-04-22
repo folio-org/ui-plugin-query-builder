@@ -2,6 +2,7 @@
     width: calc(100% + calc(2 * var(--gutter-static-two-thirds)));
     margin: calc(-1 * var(--gutter-static-one-third)) calc(-1 * var(--gutter-static-two-thirds));
     border-collapse: collapse;
+    align-self: flex-start;
 }
 
 .DynamicTable td {
