@@ -2,6 +2,8 @@
 
 ## (in progress)
 
+## [1.1.5](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.5) (2024-04-22)
+
 * [UIPQB-115](https://issues.folio.org/browse/UIPQB-115) Array type fields display strangely on the list details page, after adding them.
 
 ## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
