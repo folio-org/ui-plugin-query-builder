@@ -38,6 +38,7 @@ export const useAsyncDataSource = ({
   const [entityKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_PREVIEW_ENTITY_TYPE });
   const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
+  const debouncedContentQueryKeys = useDebounce(contentQueryKeys, 500);
 
   const { entityType, isContentTypeFetchedAfterMount, isEntityTypeLoading } = useEntityType({
     entityTypeDataSource,
@@ -45,7 +46,7 @@ export const useAsyncDataSource = ({
   });
 
   const sharedOptions = { refetchOnWindowFocus: false, keepPreviousData: true };
-  const queryKey = [namespaceKey, contentDataKey, debouncedOffset, debouncedLimit, ...contentQueryKeys];
+  const queryKey = [namespaceKey, contentDataKey, debouncedOffset, debouncedLimit, ...debouncedContentQueryKeys];
 
   const {
     data: recordsData,
