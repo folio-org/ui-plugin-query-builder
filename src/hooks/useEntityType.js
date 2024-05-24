@@ -10,7 +10,7 @@ export const useEntityType = ({ entityTypeDataSource, queryKey, sharedOptions = 
     queryKey: [queryKey],
     queryFn: entityTypeDataSource,
     ...sharedOptions,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
 
   return {
