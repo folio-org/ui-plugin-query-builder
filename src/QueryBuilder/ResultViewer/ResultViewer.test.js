@@ -79,14 +79,14 @@ describe('ResultViewer', () => {
       });
     });
 
-    it('should only call initial column setter when initial fields are provided', async () => {
+    it('should call initial column setter when initial fields are changed', async () => {
       render(renderResultViewer({ visibleColumns: ['user_id'] }));
 
       await waitFor(() => {
         expect(screen.queryByText('ui-plugin-query-builder.viewer.retrieving')).not.toBeInTheDocument();
 
         expect(setColumns).toHaveBeenCalled();
-        expect(setVisibleColumns).not.toHaveBeenCalled();
+        expect(setVisibleColumns).toHaveBeenCalled();
       });
     });
   });
