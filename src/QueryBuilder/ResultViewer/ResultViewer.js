@@ -68,9 +68,7 @@ export const ResultViewer = ({
   const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading || refreshInProgress;
   const currentRecordsCount = contentData?.length || 0;
 
-  // set visible by default columns once
   useViewerCallbacks({
-    visibleColumns,
     onSetDefaultColumns,
     defaultColumns,
     onSetDefaultVisibleColumns,
