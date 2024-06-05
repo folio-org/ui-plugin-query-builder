@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl';
 import { DATA_TYPES } from '../../../constants/dataTypes';
-import { BOOLEAN_OPERATORS, OPERATORS } from '../../../constants/operators';
+import { BOOLEAN_OPERATORS, OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
 
 const getOperatorsWithPlaceholder = (options, intl) => {
@@ -15,8 +15,8 @@ const getOperatorsWithPlaceholder = (options, intl) => {
 };
 
 const baseLogicalOperators = () => [
-  { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-  { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+  { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+  { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
   { label: OPERATORS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
   { label: OPERATORS.LESS_THAN, value: OPERATORS.LESS_THAN },
 ];
@@ -29,16 +29,16 @@ const extendedLogicalOperators = () => [
 ];
 
 const UUIDOperators = () => [
-  { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-  { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+  { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+  { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
   { label: OPERATORS.IN, value: OPERATORS.IN },
   { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
   { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
 ];
 
 const ArrayOperators = () => [
-  { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-  { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+  { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+  { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
   { label: OPERATORS.IN, value: OPERATORS.IN },
   { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
   { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
@@ -52,8 +52,8 @@ export const getFilledValues = (options) => {
 
 const stringOperators = (hasSourceOrValues) => {
   return [
-    { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-    { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+    { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+    { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
     ...(hasSourceOrValues ? [
       { label: OPERATORS.IN, value: OPERATORS.IN },
       { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
@@ -66,8 +66,8 @@ const stringOperators = (hasSourceOrValues) => {
 };
 
 const booleanOperators = () => [
-  { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-  { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+  { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+  { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
   { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
 ];
 

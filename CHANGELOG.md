@@ -6,6 +6,7 @@
 * [UIPQB-115](https://issues.folio.org/browse/UIPQB-115) Array type fields display strangely on the list details page, after adding them.
 * [UIPQB-117](https://folio-org.atlassian.net/browse/UIPQB-117)Add debounce for contentQueryKeys in useAsyncDataSource
 * [UIPQB-105](https://folio-org.atlassian.net/browse/UIPQB-106) The selected field doesn't display in the record table when we edit the query.
+* [UIPQB-112](https://folio-org.atlassian.net/browse/UIPQB-112) Query builder: Accessibility: Not equal operator value is not read by screenreader
 
 ## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
 
