@@ -58,7 +58,7 @@ describe('valueBuilder', () => {
     const field = 'user_patron_group';
     const operator = OPERATORS.IN;
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value, true));
   });
 
   test('should return an empty string if value is falsy for DateType', () => {
@@ -112,5 +112,13 @@ describe('valueBuilder', () => {
     const operator = OPERATORS.EQUAL;
 
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
+  });
+
+  test('should return a string enclosed in double quotes for String with in operator', () => {
+    const value = '123,456,789';
+    const field = 'item_holdingsrecord_id';
+    const operator = OPERATORS.IN;
+
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value, true));
   });
 });
