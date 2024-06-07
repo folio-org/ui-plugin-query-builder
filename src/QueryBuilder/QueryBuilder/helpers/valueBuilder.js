@@ -7,9 +7,13 @@ export const getCommaSeparatedStr = (arr) => {
   return `(${str})`;
 };
 
-export const getQuotedStr = (value) => {
+export const getQuotedStr = (value, isInRelatedOperator = false) => {
   if (typeof value === 'boolean') {
     return JSON.stringify(value);
+  }
+
+  if (typeof value === 'string' && isInRelatedOperator) {
+    return `(${value.split(',').map(item => `"${item}"`).join(',')})`;
   }
 
   return value ? `"${value}"` : '';
@@ -27,23 +31,23 @@ export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
   const isArray = Array.isArray(value);
   // add additional templates for dataTypes
   const valueMap = {
-    [DATA_TYPES.StringType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value)),
+    [DATA_TYPES.StringType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value, isInRelatedOperator)),
 
     [DATA_TYPES.IntegerType]: () => (isArray ? getCommaSeparatedStr(value) : value),
 
     [DATA_TYPES.NumberType]: () => (isArray ? getCommaSeparatedStr(value) : value),
 
-    [DATA_TYPES.RangedUUIDType]: () => getQuotedStr(value),
+    [DATA_TYPES.RangedUUIDType]: () => getQuotedStr(value, isInRelatedOperator),
 
-    [DATA_TYPES.ArrayType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value)),
+    [DATA_TYPES.ArrayType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value, isInRelatedOperator)),
 
-    [DATA_TYPES.EnumType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value)),
+    [DATA_TYPES.EnumType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value, isInRelatedOperator)),
 
-    [DATA_TYPES.BooleanType]: () => getQuotedStr(value),
+    [DATA_TYPES.BooleanType]: () => getQuotedStr(value, isInRelatedOperator),
 
-    [DATA_TYPES.ObjectType]: () => getQuotedStr(value),
+    [DATA_TYPES.ObjectType]: () => getQuotedStr(value, isInRelatedOperator),
 
-    [DATA_TYPES.DateType]: () => getQuotedStr(value),
+    [DATA_TYPES.DateType]: () => getQuotedStr(value, isInRelatedOperator),
 
     [DATA_TYPES.OpenUUIDType]: () => getFormattedUUID(value, isInRelatedOperator),
   };
