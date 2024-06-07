@@ -1,6 +1,6 @@
 import { getFieldOptions, getOperatorOptions } from './selectOptions';
 import { DATA_TYPES } from '../../../constants/dataTypes';
-import { OPERATORS } from '../../../constants/operators';
+import { OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
 
 const entityType = {
   columns: [
@@ -100,11 +100,11 @@ describe('select options', () => {
       expectFn({
         options,
         operators: [
-          { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-          { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
-          { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
-          { label: OPERATORS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
-          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
+          { label: OPERATORS_LABELS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -119,11 +119,11 @@ describe('select options', () => {
       expectFn({
         options,
         operators: [
-          { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-          { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
-          { label: OPERATORS.IN, value: OPERATORS.IN },
-          { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
-          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
+          { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -138,13 +138,13 @@ describe('select options', () => {
       expectFn({
         options,
         operators: [
-          { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-          { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
-          { label: OPERATORS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
-          { label: OPERATORS.LESS_THAN, value: OPERATORS.LESS_THAN },
-          { label: OPERATORS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
-          { label: OPERATORS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
-          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
+          { label: OPERATORS_LABELS.LESS_THAN, value: OPERATORS.LESS_THAN },
+          { label: OPERATORS_LABELS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
+          { label: OPERATORS_LABELS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -159,13 +159,13 @@ describe('select options', () => {
       expectFn({
         options,
         operators: [
-          { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-          { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
-          { label: OPERATORS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
-          { label: OPERATORS.LESS_THAN, value: OPERATORS.LESS_THAN },
-          { label: OPERATORS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
-          { label: OPERATORS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
-          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
+          { label: OPERATORS_LABELS.LESS_THAN, value: OPERATORS.LESS_THAN },
+          { label: OPERATORS_LABELS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
+          { label: OPERATORS_LABELS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -180,9 +180,9 @@ describe('select options', () => {
       expectFn({
         options,
         operators: [
-          { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-          { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
-          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -197,11 +197,11 @@ describe('select options', () => {
       expectFn({
         options,
         operators: [
-          { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-          { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
-          { label: OPERATORS.IN, value: OPERATORS.IN },
-          { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
-          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
+          { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -216,13 +216,13 @@ describe('select options', () => {
       expectFn({
         options,
         operators: [
-          { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-          { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
-          { label: OPERATORS.IN, value: OPERATORS.IN },
-          { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
-          { label: OPERATORS.CONTAINS, value: OPERATORS.CONTAINS },
-          { label: OPERATORS.NOT_CONTAINS, value: OPERATORS.NOT_CONTAINS },
-          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
+          { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
+          { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
+          { label: OPERATORS_LABELS.NOT_CONTAINS, value: OPERATORS.NOT_CONTAINS },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -237,11 +237,11 @@ describe('select options', () => {
       expectFn({
         options,
         operators: [
-          { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-          { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
-          { label: OPERATORS.IN, value: OPERATORS.IN },
-          { label: OPERATORS.NOT_IN, value: OPERATORS.NOT_IN },
-          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
+          { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
@@ -256,13 +256,13 @@ describe('select options', () => {
       expectFn({
         options,
         operators: [
-          { label: OPERATORS.EQUAL, value: OPERATORS.EQUAL },
-          { label: OPERATORS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
-          { label: OPERATORS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
-          { label: OPERATORS.LESS_THAN, value: OPERATORS.LESS_THAN },
-          { label: OPERATORS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
-          { label: OPERATORS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
-          { label: OPERATORS.EMPTY, value: OPERATORS.EMPTY },
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
+          { label: OPERATORS_LABELS.LESS_THAN, value: OPERATORS.LESS_THAN },
+          { label: OPERATORS_LABELS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
+          { label: OPERATORS_LABELS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });
     });
