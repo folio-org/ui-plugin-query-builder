@@ -2,6 +2,7 @@ export const DATA_TYPES = {
   StringType: 'stringType',
   RangedUUIDType: 'rangedUUIDType',
   OpenUUIDType: 'openUUIDType',
+  StringUUIDType: 'stringUUIDType',
   NumberType: 'numberType',
   IntegerType: 'integerType',
   DateType: 'dateType',

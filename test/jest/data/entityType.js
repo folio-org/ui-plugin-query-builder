@@ -365,6 +365,15 @@ export const entityType = {
       'labelAlias': 'Not queryable',
       'visibleByDefault': false,
     },
+    {
+      'name': 'string_uuid',
+      'queryable': false,
+      'dataType': {
+        'dataType': 'stringUUIDType',
+      },
+      'labelAlias': 'UUID, but string',
+      'visibleByDefault': false,
+    },
   ],
   'defaultSort': [
     {

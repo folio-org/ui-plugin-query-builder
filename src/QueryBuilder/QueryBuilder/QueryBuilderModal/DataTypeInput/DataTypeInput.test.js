@@ -75,6 +75,11 @@ const arr = [
     componentTestId: 'data-input-text-rangedUUIDType',
   },
   {
+    dataType: DATA_TYPES.StringUUIDType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-text-stringUUIDType',
+  },
+  {
     dataType: DATA_TYPES.OpenUUIDType,
     operator: OPERATORS.IN,
     componentTestId: 'data-input-textarea',

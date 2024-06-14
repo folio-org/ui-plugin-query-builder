@@ -128,6 +128,25 @@ describe('select options', () => {
       });
     });
 
+    it('should return UUID operators with placeholder for string UUID type', () => {
+      const options = getOperatorOptions({
+        dataType: DATA_TYPES.StringUUIDType,
+        hasSourceOrValues: true,
+        intl: intlMock,
+      });
+
+      expectFn({
+        options,
+        operators: [
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
+          { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+        ],
+      });
+    });
+
     it('should return extended logical operators with placeholder for integer type', () => {
       const options = getOperatorOptions({
         dataType: DATA_TYPES.IntegerType,
