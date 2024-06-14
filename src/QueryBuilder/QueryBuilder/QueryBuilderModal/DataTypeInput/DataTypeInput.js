@@ -176,6 +176,9 @@ export const DataTypeInput = ({
     case DATA_TYPES.RangedUUIDType:
       return textControl({ testId: 'data-input-text-rangedUUIDType' });
 
+    case DATA_TYPES.StringUUIDType:
+      return textControl({ testId: 'data-input-text-stringUUIDType' });
+
     case DATA_TYPES.DateType:
       return datePickerControl();
 

@@ -106,6 +106,14 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
+  test('should return a string enclosed in double quotes for StringUUIDType if operator is not IN or NOT_IN', () => {
+    const value = 'val';
+    const field = 'string_uuid';
+    const operator = OPERATORS.EQUAL;
+
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
+  });
+
   test('should return a string enclosed in double quotes for EnumType if value is a string', () => {
     const value = 'active';
     const field = 'status';

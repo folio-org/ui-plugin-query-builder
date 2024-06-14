@@ -81,14 +81,11 @@ export const getOperatorOptions = ({
       return getOperatorsWithPlaceholder(stringOperators(hasSourceOrValues), intl);
 
     case DATA_TYPES.RangedUUIDType:
-      return getOperatorsWithPlaceholder(UUIDOperators(), intl);
-
     case DATA_TYPES.OpenUUIDType:
+    case DATA_TYPES.StringUUIDType:
       return getOperatorsWithPlaceholder(UUIDOperators(), intl);
 
     case DATA_TYPES.IntegerType:
-      return getOperatorsWithPlaceholder(extendedLogicalOperators(), intl);
-
     case DATA_TYPES.NumberType:
       return getOperatorsWithPlaceholder(extendedLogicalOperators(), intl);
 

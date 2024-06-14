@@ -50,6 +50,8 @@ export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
     [DATA_TYPES.DateType]: () => getQuotedStr(value, isInRelatedOperator),
 
     [DATA_TYPES.OpenUUIDType]: () => getFormattedUUID(value, isInRelatedOperator),
+
+    [DATA_TYPES.StringUUIDType]: () => getFormattedUUID(value, isInRelatedOperator),
   };
 
   return valueMap[dataType]?.();
