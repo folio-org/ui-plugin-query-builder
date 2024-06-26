@@ -26,10 +26,13 @@
   "control.value.placeholder": "Select value",
   "control.operator.placeholder": "Select operator",
   "control.dropdown.showColumns": "Show columns",
+  "control.search.placeholder": "Search column name",
 
   "viewer.retrieving": "Retrieving...",
   "result.inProgress": "Query in progress",
   "result.emptyMessage": "The list contains no items",
 
-  "error.sww": "Something went wrong"
+  "error.sww": "Something went wrong",
+
+  "ariaLabel.columnFilter": "Column filter input"
 }
