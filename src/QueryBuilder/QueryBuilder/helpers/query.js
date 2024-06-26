@@ -2,7 +2,6 @@ import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { valueBuilder } from './valueBuilder';
 import { BOOLEAN_OPERATORS, BOOLEAN_OPERATORS_MAP, OPERATORS } from '../../../constants/operators';
 import { getOperatorOptions } from './selectOptions';
-import { DATA_TYPES } from '../../../constants/dataTypes';
 
 export const DEFAULT_PREVIEW_INTERVAL = 5000;
 
@@ -76,11 +75,6 @@ const getQueryOperand = (item) => {
   const field = item.field.current;
   const operator = item.operator.current;
   const value = item.value.current;
-  const dataType = item.field.dataType;
-
-  const containsTemplate = dataType === DATA_TYPES.ArrayType
-    ? { $contains: value }
-    : { $regex: new RegExp(escapeRegex(value)).source };
 
   switch (operator) {
     case OPERATORS.EQUAL:
@@ -111,10 +105,22 @@ const getQueryOperand = (item) => {
       queryOperand = { [field]: { $regex: new RegExp(`^${escapeRegex(value)}`).source } };
       break;
     case OPERATORS.CONTAINS:
-      queryOperand = { [field]: containsTemplate };
+      queryOperand = { [field]: { $regex: new RegExp(escapeRegex(value)).source } };
       break;
     case OPERATORS.NOT_CONTAINS:
       queryOperand = { [field]: { $not_contains: value } };
+      break;
+    case OPERATORS.CONTAINS_ANY:
+      queryOperand = { [field]: { $contains_any: getTransformedValue(value) } };
+      break;
+    case OPERATORS.NOT_CONTAINS_ANY:
+      queryOperand = { [field]: { $not_contains_any: getTransformedValue(value) } };
+      break;
+    case OPERATORS.CONTAINS_ALL:
+      queryOperand = { [field]: { $contains_all: getTransformedValue(value) } };
+      break;
+    case OPERATORS.NOT_CONTAINS_ALL:
+      queryOperand = { [field]: { $not_contains_all: getTransformedValue(value) } };
       break;
     case OPERATORS.EMPTY:
       queryOperand = { [field]: { $empty: value } };
@@ -153,7 +159,10 @@ const getSourceFields = (field) => ({
   $in: (value) => ({ operator: OPERATORS.IN, value }),
   $nin: (value) => ({ operator: OPERATORS.NOT_IN, value }),
   $contains: (value) => ({ operator: OPERATORS.CONTAINS, value }),
-  $not_contains: (value) => ({ operator: OPERATORS.NOT_CONTAINS, value }),
+  $contains_all: (value) => ({ operator: OPERATORS.CONTAINS_ALL, value }),
+  $not_contains_all: (value) => ({ operator: OPERATORS.NOT_CONTAINS_ALL, value }),
+  $contains_any: (value) => ({ operator: OPERATORS.CONTAINS_ANY, value }),
+  $not_contains_any: (value) => ({ operator: OPERATORS.NOT_CONTAINS_ANY, value }),
   $empty: (value) => ({ operator: OPERATORS.EMPTY, value }),
   $regex: (value) => {
     return value?.includes('^')
