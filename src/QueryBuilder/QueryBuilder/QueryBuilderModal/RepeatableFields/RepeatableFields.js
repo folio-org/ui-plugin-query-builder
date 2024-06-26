@@ -43,7 +43,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
   };
 
   const handleChange = (value, index, fieldName) => {
-    const field = fieldOptions.find(o => o.value === value);
+    const field = fieldOptions.find(o => o.value === value) || {};
     const isField = fieldName === COLUMN_KEYS.FIELD;
     const isOperator = fieldName === COLUMN_KEYS.OPERATOR;
     const rowField = source[index].field.current;
