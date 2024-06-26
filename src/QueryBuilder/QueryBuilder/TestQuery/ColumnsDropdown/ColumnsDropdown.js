@@ -11,6 +11,8 @@ export const ColumnsDropdown = memo(({ columns, visibleColumns, onColumnChange }
   const filteredColumns = columns.filter(item => item.label.toLowerCase().includes(columnSearch.toLowerCase()));
   const allDisabled = columns.every(item => item.disabled);
 
+  if (!columns.length) return null;
+
   return (
     <Dropdown
       label={<FormattedMessage id="ui-plugin-query-builder.control.dropdown.showColumns" />}
