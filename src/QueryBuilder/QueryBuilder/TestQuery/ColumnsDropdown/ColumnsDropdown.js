@@ -1,10 +1,18 @@
-import React, { memo } from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Dropdown, DropdownMenu } from '@folio/stripes/components';
+import React, { memo, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { Dropdown, DropdownMenu, TextField } from '@folio/stripes/components';
 import { CheckboxFilter } from '@folio/stripes/smart-components';
 import PropTypes from 'prop-types';
 
 export const ColumnsDropdown = memo(({ columns, visibleColumns, onColumnChange }) => {
+  const intl = useIntl();
+  const [columnSearch, setColumnSearch] = useState('');
+
+  const filteredColumns = columns.filter(item => item.label.toLowerCase().includes(columnSearch.toLowerCase()));
+  const allDisabled = columns.every(item => item.disabled);
+
+  if (!columns.length) return null;
+
   return (
     <Dropdown
       label={<FormattedMessage id="ui-plugin-query-builder.control.dropdown.showColumns" />}
@@ -15,8 +23,15 @@ export const ColumnsDropdown = memo(({ columns, visibleColumns, onColumnChange }
         role="menu"
         overrideStyle={{ maxHeight: 240 }}
       >
+        <TextField
+          value={columnSearch}
+          onChange={e => setColumnSearch(e.target.value)}
+          aria-label={intl.formatMessage({ id: 'ui-plugin-query-builder.ariaLabel.columnFilter' })}
+          disabled={allDisabled}
+          placeholder={intl.formatMessage({ id: 'ui-plugin-query-builder.control.search.placeholder' })}
+        />
         <CheckboxFilter
-          dataOptions={columns}
+          dataOptions={filteredColumns}
           selectedValues={visibleColumns}
           onChange={onColumnChange}
           name="name"
