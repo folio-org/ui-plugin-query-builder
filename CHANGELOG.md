@@ -8,6 +8,7 @@
 * [UIPQB-105](https://folio-org.atlassian.net/browse/UIPQB-106) The selected field doesn't display in the record table when we edit the query.
 * [UIPQB-116](https://folio-org.atlassian.net/browse/UIPQB-116) Correct formatting of in and not in operators in query string when “Value“ column contains text box
 * [UIPQB-112](https://folio-org.atlassian.net/browse/UIPQB-112) Query builder: Accessibility: Not equal operator value is not read by screenreader
+* [UIPQB-119](https://folio-org.atlassian.net/browse/UIPQB-119) Filter column names
 
 ## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
 
