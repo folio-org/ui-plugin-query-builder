@@ -77,13 +77,25 @@ describe('mongoQueryToSource()', () => {
     {
       boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'department_names', dataType: DATA_TYPES.ArrayType },
-      operator: { options: expect.any(Array), current: OPERATORS.CONTAINS },
+      operator: { options: expect.any(Array), current: OPERATORS.CONTAINS_ALL },
       value: { current: 'value' },
     },
     {
       boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'department_names', dataType: DATA_TYPES.ArrayType },
-      operator: { options: expect.any(Array), current: OPERATORS.NOT_CONTAINS },
+      operator: { options: expect.any(Array), current: OPERATORS.NOT_CONTAINS_ALL },
+      value: { current: 'value' },
+    },
+    {
+      boolean: { options: booleanOptions, current: '$and' },
+      field: { options: fieldOptions, current: 'department_names', dataType: DATA_TYPES.ArrayType },
+      operator: { options: expect.any(Array), current: OPERATORS.CONTAINS_ANY },
+      value: { current: 'value' },
+    },
+    {
+      boolean: { options: booleanOptions, current: '$and' },
+      field: { options: fieldOptions, current: 'department_names', dataType: DATA_TYPES.ArrayType },
+      operator: { options: expect.any(Array), current: OPERATORS.NOT_CONTAINS_ANY },
       value: { current: 'value' },
     },
     {
@@ -130,8 +142,10 @@ describe('mongoQueryToSource()', () => {
       { user_full_name: { $regex: 'abc' } },
       { user_id: { $nin: ['value', 'value2'] } },
       { user_id: { $in: ['value', 'value2'] } },
-      { department_names: { $contains: 'value' } },
-      { department_names: { $not_contains: 'value' } },
+      { department_names: { $contains_all: ['value'] } },
+      { department_names: { $not_contains_all: ['value'] } },
+      { department_names: { $contains_any: ['value'] } },
+      { department_names: { $not_contains_any: ['value'] } },
       { department_ids: { $empty: true } },
       { department_ids: { $empty: false } },
       { languages: { $in: ['value', 'value2'] } },
@@ -150,7 +164,14 @@ describe('mongoQueryToSource()', () => {
       const currentValue = v.value.current;
       const currentOperator = v.operator.current;
 
-      if (typeof currentValue === 'string' && [OPERATORS.IN, OPERATORS.NOT_IN].includes(currentOperator)) {
+      if (typeof currentValue === 'string' && [
+        OPERATORS.IN,
+        OPERATORS.NOT_IN,
+        OPERATORS.CONTAINS_ALL,
+        OPERATORS.NOT_CONTAINS_ALL,
+        OPERATORS.CONTAINS_ANY,
+        OPERATORS.NOT_CONTAINS_ANY,
+      ].includes(currentOperator)) {
         return currentValue.split(',').map(item => item.trim());
       }
 

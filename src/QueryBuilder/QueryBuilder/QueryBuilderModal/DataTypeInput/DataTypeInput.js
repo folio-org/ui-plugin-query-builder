@@ -30,7 +30,12 @@ export const DataTypeInput = ({
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
   const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
   const isEmptyRelatedOperator = [OPERATORS.EMPTY].includes(operator);
-  const isContainsRelatedOperator = [OPERATORS.CONTAINS, OPERATORS.NOT_CONTAINS].includes(operator);
+  const isContainsRelatedOperator = [
+    OPERATORS.NOT_CONTAINS_ANY,
+    OPERATORS.CONTAINS_ANY,
+    OPERATORS.CONTAINS_ALL,
+    OPERATORS.NOT_CONTAINS_ALL,
+  ].includes(operator);
   const hasSourceOrValues = source || availableValues;
 
   const textControl = ({ testId, type = 'text', textClass }) => {
@@ -187,7 +192,7 @@ export const DataTypeInput = ({
 
     case DATA_TYPES.ArrayType:
       return isContainsRelatedOperator && hasSourceOrValues
-        ? selectControl({ testId: 'data-input-select-array' })
+        ? multiSelectControl({ testId: 'data-input-select-multi-arrayType' })
         : textControl({ testId: 'data-input-text-arrayType' });
 
     case DATA_TYPES.EnumType:
