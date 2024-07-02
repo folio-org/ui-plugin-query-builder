@@ -25,5 +25,7 @@
     "error.sww": "出问题了",
     "options.true": "真",
     "options.false": "假",
-    "modal.preview.title.empty": "查询将返回{total}条记录。"
+    "modal.preview.title.empty": "查询将返回{total}条记录。",
+    "control.search.placeholder": "搜索栏名称",
+    "ariaLabel.columnFilter": "列筛选输入"
 }

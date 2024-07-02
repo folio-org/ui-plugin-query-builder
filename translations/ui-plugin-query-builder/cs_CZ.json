@@ -25,5 +25,7 @@
     "error.sww": "Něco se pokazilo",
     "options.true": "Pravdivé",
     "options.false": "Deaktivováno",
-    "modal.preview.title.empty": "Dotaz by vrátil {total} záznamů."
+    "modal.preview.title.empty": "Dotaz by vrátil {total} záznamů.",
+    "control.search.placeholder": "Název vyhledávacího sloupce",
+    "ariaLabel.columnFilter": "Vstup filtru sloupců"
 }

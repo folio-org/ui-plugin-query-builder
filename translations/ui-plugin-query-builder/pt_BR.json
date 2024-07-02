@@ -25,5 +25,7 @@
     "error.sww": "Algo deu errado",
     "options.true": "Verdadeiro",
     "options.false": "Falso",
-    "modal.preview.title.empty": "A consulta retornaria {total} registros."
+    "modal.preview.title.empty": "A consulta retornaria {total} registros.",
+    "control.search.placeholder": "Nome da coluna de busca",
+    "ariaLabel.columnFilter": "Entrada de filtro de coluna"
 }
