@@ -25,5 +25,7 @@
     "error.sww": "發生了一些問題 !",
     "options.true": "正確",
     "options.false": "錯誤",
-    "modal.preview.title.empty": "查詢將傳回{total}筆記錄。"
+    "modal.preview.title.empty": "查詢將傳回{total}筆記錄。",
+    "control.search.placeholder": "搜尋欄名稱",
+    "ariaLabel.columnFilter": "列過濾器輸入"
 }

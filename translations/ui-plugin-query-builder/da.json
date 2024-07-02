@@ -25,5 +25,7 @@
     "error.sww": "Something went wrong",
     "options.true": "True",
     "options.false": "False",
-    "modal.preview.title.empty": "Query would return {total} records."
+    "modal.preview.title.empty": "Query would return {total} records.",
+    "control.search.placeholder": "Search column name",
+    "ariaLabel.columnFilter": "Column filter input"
 }
