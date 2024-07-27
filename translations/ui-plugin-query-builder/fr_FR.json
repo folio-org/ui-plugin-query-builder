@@ -26,6 +26,6 @@
     "options.true": "True",
     "options.false": "False",
     "modal.preview.title.empty": "Query would return {total} records.",
-    "control.search.placeholder": "Search column name",
+    "control.search.placeholder": "Rechercher un nom de colonne",
     "ariaLabel.columnFilter": "Column filter input"
 }
