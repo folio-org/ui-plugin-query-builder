@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { useParamsDataSource } from '../../../../hooks/useParamsDataSource';
 
 export const SelectionContainer = ({
+  operator,
   component: Component,
   availableValues,
   getParamsSource,
@@ -50,6 +51,7 @@ export const SelectionContainer = ({
 
   return (
     <Component
+      key={operator}
       {...rest}
       data-testid={testId}
       onChange={onChange}
@@ -59,6 +61,7 @@ export const SelectionContainer = ({
 };
 
 SelectionContainer.propTypes = {
+  operator: PropTypes.string,
   component: PropTypes.elementType,
   testId: PropTypes.string,
   isMulti: PropTypes.bool,

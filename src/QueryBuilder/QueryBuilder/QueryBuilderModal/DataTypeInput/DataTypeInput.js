@@ -80,6 +80,7 @@ export const DataTypeInput = ({
 
   const multiSelectControl = ({ testId } = {}) => (
     <SelectionContainer
+      operator={operator}
       testId={testId}
       component={MultiSelection}
       source={source}
