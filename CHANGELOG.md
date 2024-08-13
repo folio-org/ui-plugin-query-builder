@@ -47,6 +47,7 @@
 * [UIPQB-74](https://folio-org.atlassian.net/browse/UIPQB-74)Non-default fields that are part of the query are automatically displayed as columns
 * [UIPQB-95](https://folio-org.atlassian.net/browse/UIPQB-95) Disable run query button when records limit exceeded
 * [UIPQB-96](https://folio-org.atlassian.net/browse/UIPQB-96) Extend runQuery handler with "user-friendly" query param
+* [UIPQB-124](https://folio-org.atlassian.net/browse/UIPQB-124) Switching array operators disables the "Test" button
 
 ## [1.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.0.0) (2023-10-12)
 
