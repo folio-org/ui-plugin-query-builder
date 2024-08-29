@@ -3,7 +3,7 @@ import { valueBuilder } from './valueBuilder';
 import { BOOLEAN_OPERATORS, BOOLEAN_OPERATORS_MAP, OPERATORS } from '../../../constants/operators';
 import { getOperatorOptions } from './selectOptions';
 
-export const DEFAULT_PREVIEW_INTERVAL = 5000;
+export const DEFAULT_PREVIEW_INTERVAL = 3000;
 
 export const getQueryStr = (rows, fieldOptions) => {
   return rows.reduce((str, row, index) => {
