@@ -1,6 +1,6 @@
 {
     "meta.title": "クエリビルダー",
-    "trigger": "Build query",
+    "trigger": "クエリの構築",
     "modal.cancel": "キャンセル",
     "modal.run": "クエリの実行",
     "modal.query": "クエリ",
@@ -25,7 +25,7 @@
     "error.sww": "問題が発生しました",
     "options.true": "真",
     "options.false": "偽",
-    "modal.preview.title.empty": "Query would return {total} records.",
+    "modal.preview.title.empty": "クエリは{total}のレコードを返します",
     "control.search.placeholder": "Search column name",
     "ariaLabel.columnFilter": "Column filter input"
 }
