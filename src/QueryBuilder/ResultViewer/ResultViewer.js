@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Col, Row, Accordion, MultiColumnList, Headline, Layout, Icon } from '@folio/stripes/components';
 import { PrevNextPagination } from '@folio/stripes-acq-components';
 import { useIntl } from 'react-intl';
+import { isEmpty } from 'lodash';
 import { QueryLoader } from './QueryLoader';
 import { useAsyncDataSource } from '../../hooks/useAsyncDataSource';
 import { usePagination } from '../../hooks/usePagination';
@@ -116,31 +117,36 @@ export const ResultViewer = ({
     );
   };
 
-  const emptyResultMessage = isListLoading ?
-    <Icon
-      icon="spinner-ellipsis"
-      size="large"
-    />
-    :
-    intl.formatMessage({ id: 'ui-plugin-query-builder.result.emptyMessage' });
+  const emptyResultMessage = intl.formatMessage(
+    { id: 'ui-plugin-query-builder.result.emptyMessage' },
+  );
 
   const renderTable = () => {
+    const showSpinner = isListLoading && isEmpty(contentData);
+
     return (
       <Row center="xs">
         <Col xs={12}>
-          <MultiColumnList
-            data-testid="results-viewer-table"
-            contentData={contentData}
-            columnMapping={columnMapping}
-            formatter={formatter}
-            columnWidths={columnWidths}
-            visibleColumns={visibleColumns}
-            pagingType={null}
-            onNeedMoreData={changePage}
-            height={height}
-            loading={isListLoading}
-            isEmptyMessage={emptyResultMessage}
-          />
+          {showSpinner ? (
+            <Icon
+              icon="spinner-ellipsis"
+              size="large"
+            />
+          ) : (
+            <MultiColumnList
+              data-testid="results-viewer-table"
+              contentData={contentData}
+              columnMapping={columnMapping}
+              formatter={formatter}
+              columnWidths={columnWidths}
+              visibleColumns={visibleColumns}
+              pagingType={null}
+              onNeedMoreData={changePage}
+              height={height}
+              loading={isListLoading}
+              isEmptyMessage={emptyResultMessage}
+            />
+          )}
           {showPagination && (
             <PrevNextPagination
               limit={limit}
@@ -165,7 +171,7 @@ export const ResultViewer = ({
       <>
         {renderHeader()}
         {renderAdditionalControls()}
-        {!!Object.keys(columnMapping).length && renderTable()}
+        {!isEmpty(columnMapping) && renderTable()}
       </>
     );
   };
