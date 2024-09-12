@@ -112,7 +112,7 @@ export const TestQuery = ({
     onSetDefaultVisibleColumns(values);
   };
 
-  const renderDropdown = ({ currentRecordsCount }) => !!currentRecordsCount && (
+  const renderDropdown = ({ currentRecordsCount }) => !!Number(currentRecordsCount) && (
     <ColumnsDropdown
       columns={columns}
       visibleColumns={visibleColumns}
