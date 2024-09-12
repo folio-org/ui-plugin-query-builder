@@ -33,7 +33,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - uses: folio-org/checkout@v2
+      - uses: folio-org/checkout@v4
         with:
           fetch-depth: 0
 
@@ -93,7 +93,7 @@ jobs:
           comment_title: Jest Unit Test Statistics
 
       - name: Publish Jest coverage report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: jest-coverage-report
@@ -101,7 +101,7 @@ jobs:
           retention-days: 30
           
       - name: Publish yarn.lock
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: yarn.lock
