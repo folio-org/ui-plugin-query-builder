@@ -11,6 +11,7 @@
 * [UIPQB-119](https://folio-org.atlassian.net/browse/UIPQB-119) Filter column names
 * [UIPQB-79](https://folio-org.atlassian.net/browse/UIPQB-79) Update available operators for arrays
 * [UIPQB-131](https://folio-org.atlassian.net/browse/UIPQB-131) Columns and empty area display in the list details page, when we refresh the page 1st time or duplicate the list
+* [UIPQB-132](https://folio-org.atlassian.net/browse/UIPQB-132) Save not empty previews results and show it in test query
 
 ## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
 

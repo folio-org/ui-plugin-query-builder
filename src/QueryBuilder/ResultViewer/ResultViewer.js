@@ -9,6 +9,7 @@ import { useAsyncDataSource } from '../../hooks/useAsyncDataSource';
 import { usePagination } from '../../hooks/usePagination';
 import { useViewerRefresh } from '../../hooks/useViewerRefresh';
 import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
+import { useLastNotEmptyValue } from '../../hooks/useLastNotEmptyValue';
 
 export const ResultViewer = ({
   showPagination = true,
@@ -66,6 +67,8 @@ export const ResultViewer = ({
     forcedVisibleValues,
   });
 
+  const lastNotEmptyContent = useLastNotEmptyValue(contentData, []);
+
   const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading || refreshInProgress;
   const currentRecordsCount = contentData?.length || 0;
 
@@ -98,7 +101,7 @@ export const ResultViewer = ({
       <Row between="xs">
         <Col xs={10}>
           <Headline size="large" margin="none" tag="h3">
-            {isListLoading ?
+            {isListLoading && !totalRecords ?
               intl.formatMessage({ id: 'ui-plugin-query-builder.result.inProgress' })
               :
               headline?.({
@@ -135,7 +138,7 @@ export const ResultViewer = ({
           ) : (
             <MultiColumnList
               data-testid="results-viewer-table"
-              contentData={contentData}
+              contentData={lastNotEmptyContent}
               columnMapping={columnMapping}
               formatter={formatter}
               columnWidths={columnWidths}
