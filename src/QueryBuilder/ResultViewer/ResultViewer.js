@@ -66,11 +66,10 @@ export const ResultViewer = ({
     contentQueryKeys,
     forcedVisibleValues,
   });
-
   const lastNotEmptyContent = useLastNotEmptyValue(contentData, []);
+  const currentRecordsCount = useLastNotEmptyValue(contentData?.length, 0);
 
   const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading || refreshInProgress;
-  const currentRecordsCount = contentData?.length || 0;
 
   useViewerCallbacks({
     onSetDefaultColumns,
@@ -125,7 +124,7 @@ export const ResultViewer = ({
   );
 
   const renderTable = () => {
-    const showSpinner = isListLoading && isEmpty(contentData);
+    const showSpinner = !lastNotEmptyContent && isListLoading && isEmpty(contentData);
 
     return (
       <Row center="xs">
