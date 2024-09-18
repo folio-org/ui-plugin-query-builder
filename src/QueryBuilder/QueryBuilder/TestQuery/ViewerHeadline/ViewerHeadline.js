@@ -7,12 +7,12 @@ import css from '../../../QueryBuilder.css';
 export const ViewerHeadline = memo(({ limit, total, isInProgress }) => {
   return (
     <>
-      {Number(total) === 0 ?
+      {Number(total) === 0 ? (
         <FormattedMessage
           id="ui-plugin-query-builder.modal.preview.title.empty"
           values={{ total }}
         />
-        :
+      ) : (
         <FormattedMessage
           id="ui-plugin-query-builder.modal.preview.title"
           values={{
@@ -20,8 +20,7 @@ export const ViewerHeadline = memo(({ limit, total, isInProgress }) => {
             limit,
           }}
         />
-            }
-      {' '}
+      )}{' '}
       {isInProgress && (
         <span className={css.AccordionHeaderLoading}>
           <FormattedMessage id="ui-plugin-query-builder.modal.preview.countingInProgress" />
@@ -33,7 +32,7 @@ export const ViewerHeadline = memo(({ limit, total, isInProgress }) => {
 });
 
 ViewerHeadline.propTypes = {
-  limit: PropTypes.number,
+  limit: PropTypes.string,
   total: PropTypes.number,
   isInProgress: PropTypes.bool,
 };
