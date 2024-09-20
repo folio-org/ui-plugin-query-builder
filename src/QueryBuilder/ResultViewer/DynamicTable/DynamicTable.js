@@ -1,22 +1,25 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import css from './DynamicTable.css';
 
 const columnStyle = { width: '180px', minWidth: '180px' };
 
 export const DynamicTable = ({ properties, values }) => {
-  if (!values) return null;
+  const tableBodyRows = useMemo(() => JSON.parse(values ?? '[]'), [values]);
 
-  const tableBodyRows = JSON.parse(values);
+  if (!values) return null;
 
   if (!tableBodyRows?.length) return null;
 
   return (
     <table className={css.DynamicTable}>
       <thead>
-        <tr>{properties?.map((cell) => (
-          <th key={cell.property} style={columnStyle}>{cell.labelAlias}</th>
-        ))}
+        <tr>
+          {properties?.map((cell) => (
+            <th key={cell.property} style={columnStyle}>
+              {cell.labelAlias}
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody>

@@ -1,7 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
-import { getQueryStr, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from '../QueryBuilder/QueryBuilder/helpers/query';
-import { booleanOptions, getFieldOptions, sourceTemplate } from '../QueryBuilder/QueryBuilder/helpers/selectOptions';
+import {
+  getQueryStr,
+  isQueryValid,
+  mongoQueryToSource,
+  sourceToMongoQuery,
+} from '../QueryBuilder/QueryBuilder/helpers/query';
+import {
+  booleanOptions,
+  getFieldOptions,
+  sourceTemplate,
+} from '../QueryBuilder/QueryBuilder/helpers/selectOptions';
 
 export const getSourceValue = ({ initialValues, fieldOptions, intl, getParamsSource }) => {
   // if initial value provided, fill the source with it
@@ -22,9 +31,8 @@ export const useQuerySource = ({ initialValues, entityType, getParamsSource }) =
   const intl = useIntl();
   const [source, setSource] = useState([]);
 
-  const columns = entityType?.columns;
-  const fieldOptions = getFieldOptions(columns);
-  const stringifiedFieldOptions = JSON.stringify(fieldOptions);
+  const fieldOptions = useMemo(() => getFieldOptions(entityType?.columns), [entityType]);
+  const stringifiedFieldOptions = useMemo(() => JSON.stringify(fieldOptions), [fieldOptions]);
 
   const queryStr = getQueryStr(source, fieldOptions);
   const isQueryFilled = isQueryValid(source);
