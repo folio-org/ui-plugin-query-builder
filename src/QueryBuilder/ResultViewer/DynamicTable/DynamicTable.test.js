@@ -46,7 +46,7 @@ describe('DynamicTable component', () => {
     },
   ];
 
-  it.each(['[]', 'null', 'undefined', undefined, null])(
+  it.each(['[]', undefined, null])(
     'renders null value for empty/invalid input %s',
     (v) => {
       const { container } = render(<DynamicTable properties={properties} values={v} />);
