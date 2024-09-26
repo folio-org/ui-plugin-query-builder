@@ -124,7 +124,7 @@ export const ResultViewer = ({
   );
 
   const renderTable = () => {
-    const showSpinner = !lastNotEmptyContent && isListLoading && isEmpty(contentData);
+    const showSpinner = isEmpty(lastNotEmptyContent) && (isListLoading || isContentDataLoading) && isEmpty(contentData);
 
     return (
       <Row center="xs">
