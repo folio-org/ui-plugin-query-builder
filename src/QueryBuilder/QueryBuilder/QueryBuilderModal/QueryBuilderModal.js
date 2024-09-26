@@ -54,8 +54,6 @@ export const QueryBuilderModal = ({
   const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const showCallout = useShowCallout();
 
-  const fqmVersion = useFqmVersion();
-
   const { entityType, isEntityTypeFetching } = useEntityType({
     entityTypeDataSource,
     queryKey: entityKey,
@@ -64,6 +62,8 @@ export const QueryBuilderModal = ({
       staleTime: 0,
     },
   });
+
+  const fqmVersion = useFqmVersion();
 
   const { cancelQuery } = useCancelQuery({ cancelQueryDataSource });
 
