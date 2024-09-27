@@ -13,7 +13,7 @@ describe('initial values legacy conversion', () => {
     [{}, null],
     [{}, undefined],
   ])('ignores initialValues=%s and entityType=%s', (initialValues, entityType) => {
-    expect(upgradeInitialValues(initialValues, entityType)).toBe(initialValues);
+    expect(upgradeInitialValues(initialValues, entityType)).toStrictEqual(initialValues);
   });
 
   it.each([{}, { foo: '' }, { bar: '' }, { foo: '', bar: '' }])(
@@ -26,7 +26,8 @@ describe('initial values legacy conversion', () => {
   );
 
   it.each([
-    [{ idColumn: '' }, { foo: '' }],
+    [{ _version: '1', foo: '' }, { foo: '' }],
+    [{ _version: '1', idColumn: '' }, { foo: '' }],
     [
       { idColumn: '', bar: '' },
       { foo: '', bar: '' },
