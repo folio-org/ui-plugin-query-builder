@@ -14,6 +14,7 @@ import { useLastNotEmptyValue } from '../../hooks/useLastNotEmptyValue';
 export const ResultViewer = ({
   showPagination = true,
   defaultLimit = 100,
+  pollingMode = false,
   defaultOffset = 0,
   queryParams = {},
   contentQueryOptions = {},
@@ -137,7 +138,7 @@ export const ResultViewer = ({
           ) : (
             <MultiColumnList
               data-testid="results-viewer-table"
-              contentData={lastNotEmptyContent}
+              contentData={pollingMode ? lastNotEmptyContent : contentData}
               columnMapping={columnMapping}
               formatter={formatter}
               columnWidths={columnWidths}
@@ -205,6 +206,7 @@ ResultViewer.propTypes = {
   onSetDefaultColumns: PropTypes.func,
   defaultLimit: PropTypes.number,
   defaultOffset: PropTypes.number,
+  pollingMode: PropTypes.bool,
   height: PropTypes.number,
   showPagination: PropTypes.bool,
   refreshTrigger: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
