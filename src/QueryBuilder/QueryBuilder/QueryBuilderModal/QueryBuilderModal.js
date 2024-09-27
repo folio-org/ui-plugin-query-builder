@@ -18,8 +18,9 @@ import { useRunQuery } from '../../../hooks/useRunQuery';
 import { getSourceValue, useQuerySource } from '../../../hooks/useQuerySource';
 import { queryBuilderModalPropTypes } from '../../propTypes';
 import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
-import { useEntityType } from '../../../hooks/useEntityType';
 import { useCancelQuery } from '../../../hooks/useCancelQuery';
+import { useEntityType } from '../../../hooks/useEntityType';
+import { useFqmVersion } from '../../../hooks/useFqmVersion';
 import { useTestQuery } from '../../../hooks/useTestQuery';
 import { getFieldOptions } from '../helpers/selectOptions';
 import upgradeInitialValues from '../helpers/upgradeInitialValues';
@@ -61,6 +62,8 @@ export const QueryBuilderModal = ({
       staleTime: 0,
     },
   });
+
+  const fqmVersion = useFqmVersion();
 
   const { cancelQuery } = useCancelQuery({ cancelQueryDataSource });
 
@@ -160,7 +163,7 @@ export const QueryBuilderModal = ({
   const handleRun = async () => {
     await runQuery({
       queryId,
-      fqlQuery,
+      fqlQuery: { ...fqlQuery, _version: fqmVersion },
       userFriendlyQuery: queryStr,
     });
 

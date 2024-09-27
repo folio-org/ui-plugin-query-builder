@@ -14,7 +14,9 @@
     ],
     "pluginType": "query-builder",
     "displayName": "ui-plugin-query-builder.meta.title",
-    "okapiInterfaces": {},
+    "okapiInterfaces": {
+      "fqm-query": "2.0"
+    },
     "stripesDeps": [
       "@folio/stripes-acq-components"
     ]
