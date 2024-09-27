@@ -155,6 +155,7 @@ export const TestQuery = ({
 
       {queryId && (
         <ResultViewer
+          pollingMode
           onSuccess={handleQueryRetrieved}
           onPreviewShown={handlePreviewShown}
           forcedVisibleValues={forcedVisibleValues}
