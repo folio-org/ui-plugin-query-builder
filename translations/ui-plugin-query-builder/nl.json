@@ -26,6 +26,6 @@
     "options.true": "Waar",
     "options.false": "Onwaar",
     "modal.preview.title.empty": "Query zou {total} records opleveren.",
-    "control.search.placeholder": "Search column name",
+    "control.search.placeholder": "Kolomnaam zoeken",
     "ariaLabel.columnFilter": "Invoer kolomfilter"
 }
