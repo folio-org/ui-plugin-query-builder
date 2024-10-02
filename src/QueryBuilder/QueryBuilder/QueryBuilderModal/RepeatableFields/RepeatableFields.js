@@ -39,7 +39,8 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
   };
 
   const onFilter = (value, dataOptions) => {
-    return dataOptions.filter(option => new RegExp(value, 'i').test(option.label));
+    const escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return dataOptions.filter(option => new RegExp(escapedValue, 'i').test(option.label));
   };
 
   const handleChange = (value, index, fieldName) => {
