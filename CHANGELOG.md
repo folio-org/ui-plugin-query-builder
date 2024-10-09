@@ -14,6 +14,7 @@
 * [UIPQB-132](https://folio-org.atlassian.net/browse/UIPQB-132) Save not empty previews results and show it in test query
 * [UIPQB-126](https://folio-org.atlassian.net/browse/UIPQB-126) Update date format in requests to UTC
 * [UIPQB-125](https://folio-org.atlassian.net/browse/UIPQB-125) Add support for FQM _version
+* [FOLIO-4086](https://folio-org.atlassian.net/browse/FOLIO-4086) Fix GitHub Actions workflow not running for tags
   
 ## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
 
