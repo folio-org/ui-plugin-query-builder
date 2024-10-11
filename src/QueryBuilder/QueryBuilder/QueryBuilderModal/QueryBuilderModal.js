@@ -98,6 +98,7 @@ export const QueryBuilderModal = ({
     isTestQueryInProgress,
     setIsTestQueryInProgress,
   } = useTestQuery({
+    fqmVersion,
     testQueryDataSource,
     onQueryTestSuccess: () => {
       setIsQueryRetrieved(false);
