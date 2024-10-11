@@ -11,7 +11,6 @@ import { DATA_TYPES } from '../../../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
 import { OPERATORS } from '../../../../constants/operators';
 import { SelectionContainer } from '../SelectionContainer/SelectionContainer';
-import { UTC_FORMAT } from '../../helpers/timeUtils';
 
 import css from '../../../QueryBuilder.css';
 import { staticBooleanOptions } from '../../helpers/selectOptions';
@@ -95,9 +94,8 @@ export const DataTypeInput = ({
   const datePickerControl = () => (
     <Datepicker
       data-testid="data-input-dateType"
-      backendDateStandard={UTC_FORMAT}
       onChange={(e, value, formattedValue) => {
-        onChange(formattedValue, index, COLUMN_KEYS.VALUE);
+        onChange(formattedValue.replace('Z', ''), index, COLUMN_KEYS.VALUE);
       }}
       {...rest}
     />
