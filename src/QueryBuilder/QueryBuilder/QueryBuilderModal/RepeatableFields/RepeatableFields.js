@@ -39,7 +39,10 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
   };
 
   const onFilter = (value, dataOptions) => {
-    const escapedValue = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // Escapes all non-word and non-whitespace characters in a string.
+    // This regular expression matches any character that is not a letter, digit, or whitespace character
+    const escapedValue = value.replace(/[^\w\s]/g, '\\$&');
+
     return dataOptions.filter(option => new RegExp(escapedValue, 'i').test(option.label));
   };
 
