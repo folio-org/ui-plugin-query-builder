@@ -449,4 +449,14 @@ describe('getFilteredOptions', () => {
 
     expect(res).toEqual([]);
   });
+
+  test('should correctly match labels with non-Latin characters (Chinese)', () => {
+    const mockDataOptionsChina = [
+      { label: '項目 - 持股 - 報表' },
+    ];
+
+    const res = getFilteredOptions('持股', mockDataOptionsChina);
+
+    expect(res).toEqual([{ label: '項目 - 持股 - 報表' }]);
+  });
 });

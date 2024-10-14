@@ -156,8 +156,8 @@ export const sourceTemplate = (fieldOptions = []) => ({
 });
 
 export const getFilteredOptions = (value, dataOptions) => {
-  // retain alphanumeric characters, spaces, and the specific special characters (—,–,-).
-  const cleanedValue = value.replace(/[^\w\s—–-]/g, '');
+  // Retain letters (from any language), numbers, spaces, and specific special characters (em dash, en dash, hyphen).
+  const cleanedValue = value.replace(/[^\p{L}\p{N}\s—–-]/gu, '');
 
   // create a case-insensitive regex using the cleaned value.
   const regex = new RegExp(cleanedValue, 'i');
