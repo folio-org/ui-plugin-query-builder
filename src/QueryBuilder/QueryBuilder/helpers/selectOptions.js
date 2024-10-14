@@ -154,3 +154,14 @@ export const sourceTemplate = (fieldOptions = []) => ({
   [COLUMN_KEYS.OPERATOR]: { options: [], current: '' },
   [COLUMN_KEYS.VALUE]: { current: '' },
 });
+
+export const getFilteredOptions = (value, dataOptions) => {
+  // retain alphanumeric characters, spaces, and the specific special characters (—,–,-).
+  const cleanedValue = value.replace(/[^\w\s—–-]/g, '');
+
+  // create a case-insensitive regex using the cleaned value.
+  const regex = new RegExp(cleanedValue, 'i');
+
+  // filter options based on whether the label matches the simplified pattern.
+  return dataOptions.filter(option => regex.test(option.label));
+};

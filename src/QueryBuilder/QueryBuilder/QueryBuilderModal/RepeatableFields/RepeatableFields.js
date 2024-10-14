@@ -13,7 +13,13 @@ import { useIntl } from 'react-intl';
 import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import css from '../QueryBuilderModal.css';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
-import { booleanOptions, getFieldOptions, getOperatorOptions, sourceTemplate } from '../../helpers/selectOptions';
+import {
+  booleanOptions,
+  getFieldOptions,
+  getFilteredOptions,
+  getOperatorOptions,
+  sourceTemplate,
+} from '../../helpers/selectOptions';
 import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 
@@ -36,14 +42,6 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
     const filteredFields = source.filter((_, i) => i !== index);
 
     setSource(filteredFields);
-  };
-
-  const onFilter = (value, dataOptions) => {
-    // Escapes all non-word and non-whitespace characters in a string.
-    // This regular expression matches any character that is not a letter, digit, or whitespace character
-    const escapedValue = value.replace(/[^\w\s]/g, '\\$&');
-
-    return dataOptions.filter(option => new RegExp(escapedValue, 'i').test(option.label));
   };
 
   const handleChange = (value, index, fieldName) => {
@@ -138,7 +136,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
                   placeholder={intl.formatMessage({ id: 'ui-plugin-query-builder.control.selection.placeholder' })}
                   dataOptions={row.field.options}
                   value={row.field.current}
-                  onFilter={onFilter}
+                  onFilter={getFilteredOptions}
                   onChange={(value) => handleChange(value, index, COLUMN_KEYS.FIELD)}
                 />
               </Col>

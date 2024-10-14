@@ -1,4 +1,4 @@
-import { getFieldOptions, getOperatorOptions } from './selectOptions';
+import { getFieldOptions, getFilteredOptions, getOperatorOptions } from './selectOptions';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
 
@@ -395,5 +395,58 @@ describe('getFieldOptions', () => {
     ];
 
     expect(optionsResult).toEqual(expectedOutput);
+  });
+});
+
+describe('getFilteredOptions', () => {
+  const mockDataOptions = [
+    { label: 'Items — Holdings — Receiving history display type' },
+    { label: 'Items — Holdings — Statements' },
+    { label: 'Items — Holdings — HRID' },
+    { label: 'Items — Instances — Updated date' },
+  ];
+
+  test('should return options that match the input value', () => {
+    const res = getFilteredOptions('Receiving', mockDataOptions);
+
+    expect(res).toEqual([{ label: 'Items — Holdings — Receiving history display type' }]);
+  });
+
+  test('should retain special characters like em dash (—) in the input and match labels', () => {
+    // The em dash (—) should be preserved, allowing this search to match.
+    const res = getFilteredOptions('Instances — Updated date', mockDataOptions);
+
+    expect(res).toEqual([{ label: 'Items — Instances — Updated date' }]);
+  });
+
+  test('should ignore other special characters but still match meaningful content', () => {
+    // Ignore special characters like '*' and '!', and match only the meaningful content.
+    const res = getFilteredOptions('Items — Ins*tan!ces — Upd?ate.', mockDataOptions);
+
+    expect(res).toEqual([{ label: 'Items — Instances — Updated date' }]);
+  });
+
+  test('should return entire list if put "—"', () => {
+    const res = getFilteredOptions('—', mockDataOptions);
+
+    expect(res).toEqual(mockDataOptions);
+  });
+
+  test('should match values case-insensitively', () => {
+    const res = getFilteredOptions(' — statements', mockDataOptions);
+
+    expect(res).toEqual([{ label: 'Items — Holdings — Statements' }]);
+  });
+
+  test('should return all options if input value is an empty string', () => {
+    const res = getFilteredOptions('', mockDataOptions);
+
+    expect(res).toEqual(mockDataOptions);
+  });
+
+  test('should return an empty array if no options match', () => {
+    const res = getFilteredOptions('no such option present', mockDataOptions);
+
+    expect(res).toEqual([]);
   });
 });
