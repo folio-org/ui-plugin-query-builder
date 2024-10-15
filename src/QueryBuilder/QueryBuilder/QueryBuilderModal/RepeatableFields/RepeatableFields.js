@@ -13,7 +13,13 @@ import { useIntl } from 'react-intl';
 import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import css from '../QueryBuilderModal.css';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
-import { booleanOptions, getFieldOptions, getOperatorOptions, sourceTemplate } from '../../helpers/selectOptions';
+import {
+  booleanOptions,
+  getFieldOptions,
+  getFilteredOptions,
+  getOperatorOptions,
+  sourceTemplate,
+} from '../../helpers/selectOptions';
 import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 
@@ -36,10 +42,6 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
     const filteredFields = source.filter((_, i) => i !== index);
 
     setSource(filteredFields);
-  };
-
-  const onFilter = (value, dataOptions) => {
-    return dataOptions.filter(option => new RegExp(value, 'i').test(option.label));
   };
 
   const handleChange = (value, index, fieldName) => {
@@ -134,7 +136,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
                   placeholder={intl.formatMessage({ id: 'ui-plugin-query-builder.control.selection.placeholder' })}
                   dataOptions={row.field.options}
                   value={row.field.current}
-                  onFilter={onFilter}
+                  onFilter={getFilteredOptions}
                   onChange={(value) => handleChange(value, index, COLUMN_KEYS.FIELD)}
                 />
               </Col>
