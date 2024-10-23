@@ -97,7 +97,8 @@ describe('ResultViewer', () => {
     const changePage = jest.fn();
 
     it('should format language name shortcuts to full name', async () => {
-      const { debug } = render(renderResultViewer({ visibleColumns: ['instance.languages'] }));
+      const { debug } = render(renderResultViewer({ visibleColumns:
+          ['instance.languages', 'user_expiration_date', 'department_names', 'decimal_position', 'user_id'] }));
 
       await waitFor(() => {
         expect(screen.queryByText('ui-plugin-query-builder.result.inProgress')).not.toBeInTheDocument();
