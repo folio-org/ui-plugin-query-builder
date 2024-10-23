@@ -12,7 +12,7 @@ const structuralSharing = (queryClient, key, newData) => {
   let data = newData;
   const { data: cachedData } = queryClient.getQueryState(key) || {};
 
-  if (cachedData?.status && cachedData?.content && !newData?.content) {
+  if (cachedData?.status && cachedData?.content && !newData?.content?.length) {
     data = {
       ...newData,
       content: cachedData.content,

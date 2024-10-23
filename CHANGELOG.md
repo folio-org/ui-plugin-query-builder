@@ -16,6 +16,8 @@
 * [UIPQB-125](https://folio-org.atlassian.net/browse/UIPQB-125) Add support for FQM _version
 * [FOLIO-4086](https://folio-org.atlassian.net/browse/FOLIO-4086) Fix GitHub Actions workflow not running for tags
 * [UIPQB-133](https://folio-org.atlassian.net/browse/UIPQB-133) Add getFilteredOptions function for enhanced option filtering
+* [UIPQB-137](https://folio-org.atlassian.net/browse/UIPQB-137) Spell out query builder operators
+* [UIPQB-140](https://folio-org.atlassian.net/browse/UIPQB-140) fix preview to display records when result is more than 100
   
 ## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
 
