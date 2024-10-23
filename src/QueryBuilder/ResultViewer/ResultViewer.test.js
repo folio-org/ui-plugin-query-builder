@@ -96,6 +96,19 @@ describe('ResultViewer', () => {
     const limit = 200;
     const changePage = jest.fn();
 
+    it('should format language name shortcuts to full name', async () => {
+      const { debug } = render(renderResultViewer({ visibleColumns: ['instance.languages'] }));
+
+      await waitFor(() => {
+        expect(screen.queryByText('ui-plugin-query-builder.result.inProgress')).not.toBeInTheDocument();
+
+        expect(screen.queryByText('Languages')).toBeVisible();
+        expect(screen.queryByText('English | French')).toBeVisible();
+
+        debug(undefined, Infinity);
+      });
+    });
+
     it('should be rendered with pagination', async () => {
       jest.spyOn(pagination, 'usePagination').mockImplementation(() => ({
         limit,

@@ -1,4 +1,5 @@
 import { useQuery, useQueryClient } from 'react-query';
+import { useIntl } from 'react-intl';
 
 import { useNamespace } from '@folio/stripes/core';
 
@@ -33,6 +34,7 @@ export const useAsyncDataSource = ({
   contentQueryKeys,
   forcedVisibleValues,
 }) => {
+  const intl = useIntl();
   const queryClient = useQueryClient();
   const [namespaceKey] = useNamespace();
   const [entityKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_PREVIEW_ENTITY_TYPE });
@@ -79,7 +81,7 @@ export const useAsyncDataSource = ({
     defaultVisibleColumns,
     formatter,
     columnWidths,
-  } = getTableMetadata(entityType, forcedVisibleValues);
+  } = getTableMetadata(entityType, forcedVisibleValues, intl);
 
   return {
     contentData,

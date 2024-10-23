@@ -294,7 +294,7 @@ export const entityType = {
       'visibleByDefault': false,
     },
     {
-      'name': 'languages',
+      'name': 'instance.languages',
       'queryable': true,
       'dataType': {
         'dataType': 'arrayType',
