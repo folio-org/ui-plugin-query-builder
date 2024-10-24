@@ -81,7 +81,7 @@ describe('valueBuilder', () => {
 
   test('should return a string enclosed in double quotes for ArrayType if value is a string', () => {
     const value = 'fr';
-    const field = 'languages';
+    const field = 'instance.languages';
     const operator = OPERATORS.EQUAL;
 
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
@@ -92,7 +92,7 @@ describe('valueBuilder', () => {
       { label: 'English', value: 'eng' },
       { label: 'French', value: 'fra' },
     ];
-    const field = 'languages';
+    const field = 'instance.languages';
     const operator = OPERATORS.IN;
 
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getCommaSeparatedStr(value));
