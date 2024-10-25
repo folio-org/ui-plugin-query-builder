@@ -70,7 +70,7 @@ describe('valueBuilder', () => {
   });
 
   test('should return a string enclosed in double quotes for DateType if value is truthy', () => {
-    const value = new Date('2022-01-01');
+    const value = new Date('2024-10-16T04:00:00.000');
     const field = 'user_expiration_date';
     const operator = OPERATORS.EQUAL;
 
