@@ -18,6 +18,7 @@
 * [UIPQB-133](https://folio-org.atlassian.net/browse/UIPQB-133) Add getFilteredOptions function for enhanced option filtering
 * [UIPQB-137](https://folio-org.atlassian.net/browse/UIPQB-137) Spell out query builder operators
 * [UIPQB-140](https://folio-org.atlassian.net/browse/UIPQB-140) fix preview to display records when result is more than 100
+* [UIPQB-143](https://folio-org.atlassian.net/browse/UIPQB-143) Translate language codes to languages in the ResultsViewer
   
 ## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
 

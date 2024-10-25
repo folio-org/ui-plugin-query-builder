@@ -29,6 +29,7 @@ export const content = {
       'item_material_type': 'book',
       'content_id': '993eb55b-c237-44e7-bba5-227ce3ab5d80',
       'sort_seq': 0,
+      'instance.languages': ['eng', 'fre'],
     },
     {
       'user_id': '55c0f118-7a44-462a-a18b-861b91659543',

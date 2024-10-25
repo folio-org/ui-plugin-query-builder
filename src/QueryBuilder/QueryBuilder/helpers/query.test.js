@@ -116,7 +116,7 @@ describe('mongoQueryToSource()', () => {
     ...source,
     {
       boolean: { options: booleanOptions, current: '$and' },
-      field: { options: fieldOptions, current: 'languages' },
+      field: { options: fieldOptions, current: 'instance.languages' },
       operator: { options: expect.any(Array), current: OPERATORS.IN },
       value: { current: [{ label: 'value', value: 'value' }, { label: 'value2', value: 'value2' }] },
     },
@@ -126,7 +126,7 @@ describe('mongoQueryToSource()', () => {
     ...source,
     {
       boolean: { options: booleanOptions, current: '$and' },
-      field: { options: fieldOptions, current: 'languages' },
+      field: { options: fieldOptions, current: 'instance.languages' },
       operator: { options: expect.any(Array), current: OPERATORS.IN },
       value: { current: ['value', 'value2'] },
     },
@@ -148,7 +148,7 @@ describe('mongoQueryToSource()', () => {
       { department_names: { $not_contains_any: ['value'] } },
       { department_ids: { $empty: true } },
       { department_ids: { $empty: false } },
-      { languages: { $in: ['value', 'value2'] } },
+      { 'instance.languages': { $in: ['value', 'value2'] } },
     ],
   };
 
