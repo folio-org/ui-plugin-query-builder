@@ -1,18 +1,17 @@
+import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import PropTypes from 'prop-types';
+import { DATA_TYPES } from '../../../constants/dataTypes';
 import css from './DynamicTable.css';
 
 const columnStyle = { width: '180px', minWidth: '180px' };
 
 function getCellValue(row, property) {
   // typeof check to ensure we don't try to display null/undefined as a booleans
-  if (property.dataType.dataType === 'booleanType' && typeof row[property.property] === 'boolean') {
-    return row[property.property] ? (
-      <FormattedMessage id="ui-plugin-query-builder.options.true" />
-    ) : (
-      <FormattedMessage id="ui-plugin-query-builder.options.false" />
-    );
+  if (property.dataType.dataType === DATA_TYPES.BooleanType && typeof row[property.property] === 'boolean') {
+    return row[property.property]
+      ? <FormattedMessage id="ui-plugin-query-builder.options.true" />
+      : <FormattedMessage id="ui-plugin-query-builder.options.false" />;
   }
 
   return row[property.property];
