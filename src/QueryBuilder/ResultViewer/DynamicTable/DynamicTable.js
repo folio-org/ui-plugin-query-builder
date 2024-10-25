@@ -1,8 +1,20 @@
 import React, { useMemo } from 'react';
+import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import css from './DynamicTable.css';
 
 const columnStyle = { width: '180px', minWidth: '180px' };
+
+function getCellValue(row, property) {
+  // typeof check to ensure we don't consider null/undefined as a boolean
+  if (property.dataType.dataType === 'booleanType' && typeof row[property.property] === 'boolean') {
+    return row[property.property]
+      ? <FormattedMessage id="ui-plugin-query-builder.options.true" />
+      : <FormattedMessage id="ui-plugin-query-builder.options.false" />;
+  }
+
+  return row[property.property];
+}
 
 export const DynamicTable = ({ properties, values }) => {
   const tableBodyRows = useMemo(() => JSON.parse(values ?? '[]'), [values]);
@@ -27,7 +39,7 @@ export const DynamicTable = ({ properties, values }) => {
           <tr key={index}>
             {properties?.map((cell) => (
               <td key={cell.property} style={columnStyle}>
-                {row[cell.property]}
+                {getCellValue(row, cell)}
               </td>
             ))}
           </tr>
