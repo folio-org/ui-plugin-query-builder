@@ -6,11 +6,13 @@ import css from './DynamicTable.css';
 const columnStyle = { width: '180px', minWidth: '180px' };
 
 function getCellValue(row, property) {
-  // typeof check to ensure we don't consider null/undefined as a boolean
+  // typeof check to ensure we don't try to display null/undefined as a booleans
   if (property.dataType.dataType === 'booleanType' && typeof row[property.property] === 'boolean') {
-    return row[property.property]
-      ? <FormattedMessage id="ui-plugin-query-builder.options.true" />
-      : <FormattedMessage id="ui-plugin-query-builder.options.false" />;
+    return row[property.property] ? (
+      <FormattedMessage id="ui-plugin-query-builder.options.true" />
+    ) : (
+      <FormattedMessage id="ui-plugin-query-builder.options.false" />
+    );
   }
 
   return row[property.property];
