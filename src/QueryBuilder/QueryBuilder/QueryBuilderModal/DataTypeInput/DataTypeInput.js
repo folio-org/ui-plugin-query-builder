@@ -91,15 +91,22 @@ export const DataTypeInput = ({
     />
   );
 
-  const datePickerControl = () => (
-    <Datepicker
-      data-testid="data-input-dateType"
-      onChange={(e, value, formattedValue) => {
-        onChange(formattedValue.replace('Z', ''), index, COLUMN_KEYS.VALUE);
-      }}
-      {...rest}
-    />
-  );
+  const datePickerControl = () => {
+    const { selectedDate } = rest;
+    const formattedSelectedDate = selectedDate ? `${selectedDate}Z` : selectedDate;
+
+    return (
+      <Datepicker
+        data-testid="data-input-dateType"
+        onChange={(e, value, formattedValue) => {
+          onChange(formattedValue.replace('Z', ''), index, COLUMN_KEYS.VALUE);
+        }}
+        {...rest}
+        value={formattedSelectedDate}
+      />
+    );
+  };
+
   const stringTypeControls = () => {
     const isInRelatedWithOptions = isInRelatedOperator && hasSourceOrValues;
     const isEqualRelatedWithOptions = isEqualRelatedOperator && hasSourceOrValues;
