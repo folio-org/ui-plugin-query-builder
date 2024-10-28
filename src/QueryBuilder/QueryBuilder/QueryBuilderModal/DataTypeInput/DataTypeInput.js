@@ -92,8 +92,8 @@ export const DataTypeInput = ({
   );
 
   const datePickerControl = () => {
-    const { selectedDate } = rest;
-    const formattedSelectedDate = selectedDate ? `${selectedDate}Z` : selectedDate;
+    const { value: selectedValue } = rest;
+    const formattedSelectedDate = selectedValue ? `${selectedValue}Z` : selectedValue;
 
     return (
       <Datepicker
