@@ -19,7 +19,9 @@
 * [UIPQB-137](https://folio-org.atlassian.net/browse/UIPQB-137) Spell out query builder operators
 * [UIPQB-140](https://folio-org.atlassian.net/browse/UIPQB-140) fix preview to display records when result is more than 100
 * [UIPQB-143](https://folio-org.atlassian.net/browse/UIPQB-143) Translate language codes to languages in the ResultsViewer
+* [UIPQB-102](https://folio-org.atlassian.net/browse/UIPQB-102)The 'Organization accounting code' value contains incorrect '\'(backslash) in the query.
   
+
 ## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
 
 * [UIPQB-108](https://issues.folio.org/browse/UIPQB-108) Fix missing horizontal overflow in ResultViewer
