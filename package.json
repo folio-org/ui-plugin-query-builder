@@ -64,7 +64,7 @@
     "use-deep-compare": "^1.1.0"
   },
   "dependencies": {
-    "@folio/stripes-acq-components": "~5.1.0",
+    "@folio/stripes-acq-components": "^6.0.0",
     "react-query": "^3.6.0",
     "ky": "^0.33.2",
     "lodash": "^4.17.5",
