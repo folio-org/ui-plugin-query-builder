@@ -7,6 +7,7 @@ import {
   Headline,
   Loading,
   Row,
+  StripesOverlayWrapper,
 } from '@folio/stripes/components';
 import { useShowCallout } from '@folio/stripes-acq-components';
 import { useQueryClient } from 'react-query';
@@ -235,7 +236,7 @@ export const QueryBuilderModal = ({
           <Loading size="large" />
         </Row>
       ) : (
-        <>
+        <StripesOverlayWrapper>
           <RepeatableFields
             source={source}
             setSource={handleSetSource}
@@ -267,7 +268,7 @@ export const QueryBuilderModal = ({
             recordsLimit={recordsLimit}
             additionalControls={additionalControls}
           />
-        </>
+        </StripesOverlayWrapper>
       )}
 
     </Modal>
