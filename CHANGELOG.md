@@ -23,6 +23,7 @@
 * [UIPQB-140](https://folio-org.atlassian.net/browse/UIPQB-140) fix preview to display records when result is more than 100
 * [UIPQB-143](https://folio-org.atlassian.net/browse/UIPQB-143) Translate language codes to languages in the ResultsViewer
 * Bump "@folio/stripes-acq-components" version to v6.0.0
+* [UIPQB-147](https://folio-org.atlassian.net/browse/UIPQB-147) Filtering of available values is case sensitive.
   
 ## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
 
