@@ -166,6 +166,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
                     onChange={handleChange}
                     data-testid={`input-value-${index}`}
                     aria-label={`input-value-${index}`}
+                    usePortal
                   />
                 )}
               </Col>
