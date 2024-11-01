@@ -6,6 +6,9 @@
 * [UIPQB-147](https://folio-org.atlassian.net/browse/UIPQB-147) Filtering of available values is case sensitive.
 * [UIPQB-138](https://folio-org.atlassian.net/browse/UIPQB-138) [QB] It's not possible to select the current date from the DatePicker.
 
+## [1.2.1](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.1) (2024-10-31)
+* Bump version to v1.2.1
+
 ## [1.2.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.0) (2024-10-30)
 
 * [UIPQB-113](https://issues.folio.org/browse/UIPQB-113) Remove local QueryClientProvider from plugin-query-builder
