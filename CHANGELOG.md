@@ -3,6 +3,7 @@
 ## (in progress)
 
 * [UIPQB-102](https://folio-org.atlassian.net/browse/UIPQB-102)The 'Organization accounting code' value contains incorrect '\'(backslash) in the query.
+* [UIPQB-147](https://folio-org.atlassian.net/browse/UIPQB-147) Filtering of available values is case sensitive.
 
 ## [1.2.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.0) (2024-10-30)
 
