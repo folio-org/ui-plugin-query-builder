@@ -33,16 +33,19 @@ export const SelectionContainer = ({
   const { data } = useParamsDataSource({ source, searchValue, getParamsSource });
 
   const filterOptions = (filterText, list) => {
-    // escape special characters in filter text, so they won't be interpreted by RegExp
-    const escapedFilterText = filterText?.replace(/[#-.]|[[-^]|[?|{}]/g, '\\$&');
+    const lowerCaseFilterText = filterText?.toLowerCase() || '';
 
-    setSearchValue(filterText);
+    setSearchValue(lowerCaseFilterText);
 
-    const filterRegExp = new RegExp(`${escapedFilterText}`, 'i');
-    const renderedItems = filterText ? list?.filter(item => item.label.search(filterRegExp) !== -1)
-      :
-      list;
-    const exactMatch = filterText ? (renderedItems.filter(item => item.label === filterText).length === 1) : false;
+    // filtering based on list label
+    const renderedItems = lowerCaseFilterText
+      ? list.filter(item => item.label.toLowerCase().includes(lowerCaseFilterText))
+      : list;
+
+    // check for exact math using non-case sensitive
+    const exactMatch = lowerCaseFilterText
+      ? renderedItems.some(item => item.label.toLowerCase() === lowerCaseFilterText)
+      : false;
 
     return { renderedItems, exactMatch };
   };
