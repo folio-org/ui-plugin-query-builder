@@ -2,6 +2,8 @@
 
 ## (in progress)
 
+* [UIPQB-102](https://folio-org.atlassian.net/browse/UIPQB-102)The 'Organization accounting code' value contains incorrect '\'(backslash) in the query.
+
 ## [1.2.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.0) (2024-10-30)
 
 * [UIPQB-113](https://issues.folio.org/browse/UIPQB-113) Remove local QueryClientProvider from plugin-query-builder
@@ -23,7 +25,7 @@
 * [UIPQB-140](https://folio-org.atlassian.net/browse/UIPQB-140) fix preview to display records when result is more than 100
 * [UIPQB-143](https://folio-org.atlassian.net/browse/UIPQB-143) Translate language codes to languages in the ResultsViewer
 * Bump "@folio/stripes-acq-components" version to v6.0.0
-  
+
 ## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
 
 * [UIPQB-108](https://issues.folio.org/browse/UIPQB-108) Fix missing horizontal overflow in ResultViewer
