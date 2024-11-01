@@ -1,6 +1,11 @@
 # Change history for ui-plugin-query-builder
 
 ## (in progress)
+
+* [UIPQB-102](https://folio-org.atlassian.net/browse/UIPQB-102)The 'Organization accounting code' value contains incorrect '\'(backslash) in the query.
+
+## [1.2.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.0) (2024-10-30)
+
 * [UIPQB-113](https://issues.folio.org/browse/UIPQB-113) Remove local QueryClientProvider from plugin-query-builder
 * [UIPQB-103](https://issues.folio.org/browse/UIPQB-103) Correct formatting of in and not in operators in query string.
 * [UIPQB-115](https://issues.folio.org/browse/UIPQB-115) Array type fields display strangely on the list details page, after adding them.
@@ -19,8 +24,7 @@
 * [UIPQB-137](https://folio-org.atlassian.net/browse/UIPQB-137) Spell out query builder operators
 * [UIPQB-140](https://folio-org.atlassian.net/browse/UIPQB-140) fix preview to display records when result is more than 100
 * [UIPQB-143](https://folio-org.atlassian.net/browse/UIPQB-143) Translate language codes to languages in the ResultsViewer
-* [UIPQB-102](https://folio-org.atlassian.net/browse/UIPQB-102)The 'Organization accounting code' value contains incorrect '\'(backslash) in the query.
-  
+* Bump "@folio/stripes-acq-components" version to v6.0.0
 
 ## [1.1.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.1.4) (2024-04-02)
 
