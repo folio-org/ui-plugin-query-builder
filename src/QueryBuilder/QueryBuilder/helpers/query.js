@@ -64,9 +64,7 @@ export const getTransformedValue = (val) => {
 };
 
 const escapeRegex = (value) => {
-  const escapedValue = value?.toString().replace(/[/^$*+?.()|[\]{}]/g, '\\$&');
-
-  return `${escapedValue}`;
+  return value?.toString().replace(/[/^$*+?.()|[\]{}]/g, '\\$&');
 };
 
 const getQueryOperand = (item) => {
@@ -148,7 +146,7 @@ export const sourceToMongoQuery = (source) => {
   return query;
 };
 
-const cleanerRegex = /((^\^?)|(\/$))/g;
+const cleanerRegex = /(^\^?)|([\\/]+$)|\\/g;
 const getSourceFields = (field) => ({
   $eq: (value) => ({ operator: OPERATORS.EQUAL, value }),
   $ne: (value) => ({ operator: OPERATORS.NOT_EQUAL, value }),
