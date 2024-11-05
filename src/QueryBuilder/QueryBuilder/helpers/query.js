@@ -64,7 +64,15 @@ export const getTransformedValue = (val) => {
 };
 
 const escapeRegex = (value) => {
-  return value?.toString().replace(/[/^$*+?.()|[\]{}]/g, '\\$&');
+  return value?.toString().replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+};
+
+const unescapeRegex = (value) => {
+  // remove leading '^' and trailing '/' from regex
+  const cleanerRegex = /((^\^?)|(\/$))/g;
+
+  // + remove escaped characters
+  return value?.replace(cleanerRegex, '').replace(/\\(.)/g, '$1');
 };
 
 const getQueryOperand = (item) => {
@@ -146,7 +154,6 @@ export const sourceToMongoQuery = (source) => {
   return query;
 };
 
-const cleanerRegex = /(^\^?)|([\\/]+$)|\\/g;
 const getSourceFields = (field) => ({
   $eq: (value) => ({ operator: OPERATORS.EQUAL, value }),
   $ne: (value) => ({ operator: OPERATORS.NOT_EQUAL, value }),
@@ -164,8 +171,8 @@ const getSourceFields = (field) => ({
   $empty: (value) => ({ operator: OPERATORS.EMPTY, value }),
   $regex: (value) => {
     return value?.includes('^')
-      ? { operator: OPERATORS.STARTS_WITH, value: value?.replace(cleanerRegex, '') }
-      : { operator: OPERATORS.CONTAINS, value: value?.replace(cleanerRegex, '') };
+      ? { operator: OPERATORS.STARTS_WITH, value: unescapeRegex(value) }
+      : { operator: OPERATORS.CONTAINS, value: unescapeRegex(value) };
   },
 }[field]);
 
