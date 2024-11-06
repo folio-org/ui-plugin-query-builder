@@ -93,20 +93,26 @@ export const DataTypeInput = ({
 
   const datePickerControl = () => {
     const { value: selectedValue } = rest;
-    const formattedSelectedDate = selectedValue ? `${selectedValue}Z` : selectedValue;
-
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  
+    const formattedSelectedDate = selectedValue 
+      ? `${new Date(selectedValue).toLocaleString('en-GB', { timeZone: userTimeZone })}Z` 
+      : selectedValue;
+  
     return (
       <Datepicker
         data-testid="data-input-dateType"
         onChange={(e, value, formattedValue) => {
-          onChange(formattedValue.replace('Z', ''), index, COLUMN_KEYS.VALUE);
+          const utcDate = new Date(formattedValue).toISOString();
+          onChange(utcDate, index, COLUMN_KEYS.VALUE);
         }}
         {...rest}
         value={formattedSelectedDate}
       />
     );
   };
-
+  
+  
   const stringTypeControls = () => {
     const isInRelatedWithOptions = isInRelatedOperator && hasSourceOrValues;
     const isEqualRelatedWithOptions = isEqualRelatedOperator && hasSourceOrValues;
