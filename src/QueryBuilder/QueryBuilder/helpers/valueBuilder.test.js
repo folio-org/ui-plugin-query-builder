@@ -69,15 +69,15 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe('');
   });
 
-  // test('should return a string enclosed in double quotes for DateType if value is truthy', () => {
-  //   const value = new Date('2024-10-16T04:00:00.000');
-  //   const field = 'user_expiration_date';
-  //   const operator = OPERATORS.EQUAL;
+  test('should return a string enclosed in double quotes for DateType if value is truthy', () => {
+    const value = new Date('2024-10-16T04:00:00.000');
+    const field = 'user_expiration_date';
+    const operator = OPERATORS.EQUAL;
 
-  //   const date = moment(value).format(ISO_FORMAT);
+    const date = moment(value).format(ISO_FORMAT);
 
-  //   expect(valueBuilder({ value: date, field, operator, fieldOptions })).toBe(`"${date}"`);
-  // });
+    expect(valueBuilder({ value: date, field, operator, fieldOptions })).toBe(`"${date}"`);
+  });
 
   test('should return a string enclosed in double quotes for ArrayType if value is a string', () => {
     const value = 'fr';

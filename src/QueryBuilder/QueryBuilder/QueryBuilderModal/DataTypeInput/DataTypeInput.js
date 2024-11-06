@@ -111,8 +111,7 @@ export const DataTypeInput = ({
       />
     );
   };
-  
-  
+
   const stringTypeControls = () => {
     const isInRelatedWithOptions = isInRelatedOperator && hasSourceOrValues;
     const isEqualRelatedWithOptions = isEqualRelatedOperator && hasSourceOrValues;
