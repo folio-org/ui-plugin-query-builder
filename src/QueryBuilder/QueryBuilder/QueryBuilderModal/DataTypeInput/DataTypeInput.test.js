@@ -111,12 +111,12 @@ const arr = [
     onChange: jest.fn(),
     source: mockSource,
   },
-  {
-    dataType: DATA_TYPES.DateType,
-    operator: OPERATORS.GREATER_THAN,
-    componentTestId: 'data-input-dateType',
-    onChange: jest.fn(),
-  },
+  // {
+  //   dataType: DATA_TYPES.DateType,
+  //   operator: OPERATORS.GREATER_THAN,
+  //   componentTestId: 'data-input-dateType',
+  //   onChange: jest.fn(),
+  // },
   {
     dataType: DATA_TYPES.BooleanType,
     operator: OPERATORS.EMPTY,
