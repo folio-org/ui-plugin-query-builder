@@ -111,12 +111,12 @@ const arr = [
     onChange: jest.fn(),
     source: mockSource,
   },
-  // {
-  //   dataType: DATA_TYPES.DateType,
-  //   operator: OPERATORS.GREATER_THAN,
-  //   componentTestId: 'data-input-dateType',
-  //   onChange: jest.fn(),
-  // },
+  {
+    dataType: DATA_TYPES.DateType,
+    operator: OPERATORS.GREATER_THAN,
+    componentTestId: 'data-input-dateType',
+    onChange: jest.fn(),
+  },
   {
     dataType: DATA_TYPES.BooleanType,
     operator: OPERATORS.EMPTY,
@@ -147,7 +147,9 @@ describe('DataTypeInput', () => {
         expect(el).toBeVisible();
 
         if (onChange) {
-          fireEvent.change(el, { target: { value: 2 } });
+          fireEvent.change(el, { 
+            target: { value: dataType === DATA_TYPES.DateType ? new Date().toISOString() :2 },
+           });
 
           expect(onChange).toHaveBeenCalled();
         }
