@@ -34,7 +34,7 @@ export const useQuerySource = ({ initialValues, entityType, getParamsSource }) =
   const fieldOptions = useMemo(() => getFieldOptions(entityType?.columns), [entityType]);
   const stringifiedFieldOptions = useMemo(() => JSON.stringify(fieldOptions), [fieldOptions]);
 
-  const queryStr = getQueryStr(source, fieldOptions);
+  const queryStr = getQueryStr(source, fieldOptions, intl);
   const isQueryFilled = isQueryValid(source);
   const fqlQuery = sourceToMongoQuery(source);
 
