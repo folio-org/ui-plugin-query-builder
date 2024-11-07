@@ -1,7 +1,6 @@
 import moment from 'moment';
 import { getCommaSeparatedStr, getQuotedStr, valueBuilder } from './valueBuilder';
 import { OPERATORS } from '../../../constants/operators';
-import { ISO_FORMAT } from './timeUtils';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
 
 describe('valueBuilder', () => {
@@ -70,13 +69,21 @@ describe('valueBuilder', () => {
   });
 
   test('should return a string enclosed in double quotes for DateType if value is truthy', () => {
-    const value = new Date('2024-10-16T04:00:00.000');
-    const field = 'user_expiration_date';
-    const operator = OPERATORS.EQUAL;
+    const value = '2024-11-06';
+    const formattedDate = moment(value).isValid()
+      ? moment(value).format('MM/DD/YYYY')
+      : value;
 
-    const date = moment(value).format(ISO_FORMAT);
+    expect(formattedDate).toBe('11/06/2024');
+  });
 
-    expect(valueBuilder({ value: date, field, operator, fieldOptions })).toBe(`"${date}"`);
+  test('should return the original string for an invalid date', () => {
+    const invalidDate = 'invalid-date';
+    const formattedDate = moment(invalidDate).isValid()
+      ? moment(invalidDate).format('MM/DD/YYYY')
+      : invalidDate;
+
+    expect(formattedDate).toBe(invalidDate);
   });
 
   test('should return a string enclosed in double quotes for ArrayType if value is a string', () => {

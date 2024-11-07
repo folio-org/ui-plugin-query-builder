@@ -1,7 +1,6 @@
 import moment from 'moment/moment';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS } from '../../../constants/operators';
-import { ISO_FORMAT } from './timeUtils';
 
 export const getCommaSeparatedStr = (arr) => {
   const str = arr?.map(el => `"${el?.value}"`).join(',');
@@ -27,17 +26,17 @@ export const getFormattedUUID = (value, isInRelatedOperator) => {
     : getQuotedStr(value);
 };
 
-const formatDateToPreview = (dateString) => {
-  const date = moment(dateString);
+const formatDateToPreview = (dateString, intl) => {
+  const formatedDate = moment(dateString);
 
-  if (date.isValid()) {
-    return date.format(ISO_FORMAT);
+  if (formatedDate.isValid()) {
+    return intl.formatDate(formatedDate.toDate(), { dateStyle: 'short' });
   }
 
   return dateString;
 };
 
-export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
+export const valueBuilder = ({ value, field, operator, fieldOptions, intl }) => {
   const dataType = fieldOptions?.find(o => o.value === field)?.dataType || DATA_TYPES.BooleanType;
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
   const isArray = Array.isArray(value);
@@ -59,7 +58,7 @@ export const valueBuilder = ({ value, field, operator, fieldOptions }) => {
 
     [DATA_TYPES.ObjectType]: () => getQuotedStr(value, isInRelatedOperator),
 
-    [DATA_TYPES.DateType]: () => getQuotedStr(formatDateToPreview(value), isInRelatedOperator),
+    [DATA_TYPES.DateType]: () => getQuotedStr(formatDateToPreview(value, intl), isInRelatedOperator),
 
     [DATA_TYPES.OpenUUIDType]: () => getFormattedUUID(value, isInRelatedOperator),
 
