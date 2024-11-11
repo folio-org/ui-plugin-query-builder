@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { getCommaSeparatedStr, getQuotedStr, valueBuilder } from './valueBuilder';
 import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
@@ -70,20 +69,23 @@ describe('valueBuilder', () => {
 
   test('should return a string enclosed in double quotes for DateType if value is truthy', () => {
     const value = '2024-11-06';
-    const formattedDate = moment(value).isValid()
-      ? moment(value).format('MM/DD/YYYY')
-      : value;
+    const field = 'user_expiration_date';
+    const operator = OPERATORS.EQUAL;
 
-    expect(formattedDate).toBe('11/06/2024');
+    const intl = {
+      formatDate: (val, { timeZone }) => `${val.toUTCString()} in ${timeZone}`,
+    };
+
+    expect(valueBuilder({ value, field, operator, fieldOptions, intl, timezone: 'Narnia' }))
+      .toBe('"Wed, 06 Nov 2024 00:00:00 GMT in Narnia"');
   });
 
   test('should return the original string for an invalid date', () => {
-    const invalidDate = 'invalid-date';
-    const formattedDate = moment(invalidDate).isValid()
-      ? moment(invalidDate).format('MM/DD/YYYY')
-      : invalidDate;
+    const value = 'invalid-date';
+    const field = 'user_expiration_date';
+    const operator = OPERATORS.EQUAL;
 
-    expect(formattedDate).toBe(invalidDate);
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe('"invalid-date"');
   });
 
   test('should return a string enclosed in double quotes for ArrayType if value is a string', () => {
