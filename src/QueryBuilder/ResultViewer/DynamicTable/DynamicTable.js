@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedDate, FormattedMessage } from 'react-intl';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import css from './DynamicTable.css';
 
@@ -12,6 +12,10 @@ function getCellValue(row, property) {
     return row[property.property]
       ? <FormattedMessage id="ui-plugin-query-builder.options.true" />
       : <FormattedMessage id="ui-plugin-query-builder.options.false" />;
+  }
+
+  if (property.dataType.dataType === DATA_TYPES.DateType) {
+    return row[property.property] ? <FormattedDate value={row[property.property]} /> : '';
   }
 
   return row[property.property];

@@ -68,7 +68,6 @@
     "react-query": "^3.6.0",
     "ky": "^0.33.2",
     "lodash": "^4.17.5",
-    "moment": "^2.29.4",
     "prop-types": "^15.5.10"
   },
   "peerDependencies": {

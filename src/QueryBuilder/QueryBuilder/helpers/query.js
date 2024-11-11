@@ -5,13 +5,13 @@ import { getOperatorOptions } from './selectOptions';
 
 export const DEFAULT_PREVIEW_INTERVAL = 3000;
 
-export const getQueryStr = (rows, fieldOptions, intl) => {
+export const getQueryStr = (rows, fieldOptions, intl, timezone) => {
   return rows.reduce((str, row, index) => {
     const bool = row[COLUMN_KEYS.BOOLEAN].current;
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
-    const builtValue = valueBuilder({ value, field, operator, fieldOptions, intl });
+    const builtValue = valueBuilder({ value, field, operator, fieldOptions, intl, timezone });
     const baseQuery = `(${field} ${operator} ${builtValue})`;
 
     // if there aren't values yet - return empty string

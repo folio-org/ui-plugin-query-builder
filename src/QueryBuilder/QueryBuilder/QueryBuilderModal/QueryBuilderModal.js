@@ -25,6 +25,7 @@ import { useFqmVersion } from '../../../hooks/useFqmVersion';
 import { useTestQuery } from '../../../hooks/useTestQuery';
 import { getFieldOptions } from '../helpers/selectOptions';
 import upgradeInitialValues from '../helpers/upgradeInitialValues';
+import useTenantTimezone from '../../../hooks/useTenantTimezone';
 
 export const QueryBuilderModal = ({
   isOpen,
@@ -116,6 +117,10 @@ export const QueryBuilderModal = ({
       setIsQueryRetrieved(false);
     },
   });
+
+  // TODO (UIPQB-155): display warning message from here, if applicable
+  const { tenantTimezone, userTimezone } = useTenantTimezone();
+  console.log(tenantTimezone, userTimezone)
 
   const { runQuery, isRunQueryLoading } = useRunQuery({
     onQueryRunSuccess,
