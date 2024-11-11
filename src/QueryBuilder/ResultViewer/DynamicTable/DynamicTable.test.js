@@ -85,6 +85,14 @@ describe('DynamicTable component', () => {
       labelAlias: 'Date column 2',
       property: 'lessCoolDate',
     },
+    {
+      name: 'empty_date',
+      dataType: {
+        dataType: 'dateType',
+      },
+      labelAlias: 'Empty date column',
+      property: 'emptyDate',
+    },
   ];
 
   it.each(['[]', undefined, null])(
@@ -108,7 +116,8 @@ describe('DynamicTable component', () => {
         "isNotCool": false,
         "isEmptyBool": null,
         "coolDate": "2021-01-01T05:00:00.000Z",
-        "lessCoolDate": "2021-01-01T04:59:00.000Z"
+        "lessCoolDate": "2021-01-01T04:59:00.000Z",
+        "emptyDate": null
       }
     ]`;
 
