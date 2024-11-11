@@ -13,6 +13,20 @@ export function getQueryWarning(tenantTimezone, userTimezone) {
   return 'a warning should go here! TODO [UIPQB-155]';
 }
 
+export async function getConfigEntryTimezone(ky, query) {
+  return JSON.parse(
+    (
+      await ky
+        .get('configurations/entries', {
+          searchParams: {
+            query,
+          },
+        })
+        .json()
+    ).configs?.[0].value ?? '{}',
+  ).timezone;
+}
+
 /**
  * Determines the timezone that should be used when building a query and displaying results.
  *
@@ -40,39 +54,25 @@ export default function useTenantTimezone() {
 
   const tenantTimezone = useQuery({
     queryKey: ['@folio/plugin-query-builder', 'timezone-config', 'tenant'],
-    queryFn: async () => JSON.parse(
-      (
-        await ky
-          .get('configurations/entries', {
-            searchParams: {
-              query: `(${[
-                'module==ORG',
-                'configName == localeSettings',
-                '(cql.allRecords=1 NOT userId="" NOT code="")',
-              ].join(' AND ')})`,
-            },
-          })
-          .json()
-      ).configs?.[0].value ?? '{}',
-    ).timezone,
+    queryFn: () => getConfigEntryTimezone(
+      ky,
+      `(${[
+        'module==ORG',
+        'configName == localeSettings',
+        '(cql.allRecords=1 NOT userId="" NOT code="")',
+      ].join(' AND ')})`,
+    ),
     refetchOnMount: false,
   });
 
   const userTimezone = useQuery({
     queryKey: ['@folio/plugin-query-builder', 'timezone-config', 'user'],
-    queryFn: async () => JSON.parse(
-      (
-        await ky
-          .get('configurations/entries', {
-            searchParams: {
-              query: `(${Object.entries({ ...userLocaleConfig, userId: stripes.user.user.id })
-                .map(([k, v]) => `"${k}"=="${v}"`)
-                .join(' AND ')})`,
-            },
-          })
-          .json()
-      ).configs?.[0].value ?? '{}',
-    ).timezone,
+    queryFn: () => getConfigEntryTimezone(
+      ky,
+      `(${Object.entries({ ...userLocaleConfig, userId: stripes.user.user.id })
+        .map(([k, v]) => `"${k}"=="${v}"`)
+        .join(' AND ')})`,
+    ),
     refetchOnMount: false,
   });
 
