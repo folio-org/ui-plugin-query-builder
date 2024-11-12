@@ -10,6 +10,7 @@ import { FormattedMessage } from 'react-intl';
 import { DATA_TYPES } from '../../../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
 import { OPERATORS } from '../../../../constants/operators';
+import useTenantTimezone from '../../../../hooks/useTenantTimezone';
 import { SelectionContainer } from '../SelectionContainer/SelectionContainer';
 
 import css from '../../../QueryBuilder.css';
@@ -36,6 +37,8 @@ export const DataTypeInput = ({
     OPERATORS.NOT_CONTAINS_ALL,
   ].includes(operator);
   const hasSourceOrValues = source || availableValues;
+
+  const { tenantTimezone: timezone } = useTenantTimezone();
 
   const textControl = ({ testId, type = 'text', textClass }) => {
     const onKeyDown = (event) => {
@@ -97,6 +100,7 @@ export const DataTypeInput = ({
 
     return (
       <Datepicker
+        timeZone={timezone}
         data-testid="data-input-dateType"
         onChange={(e, value, formattedValue) => {
           onChange(formattedValue.replace('Z', ''), index, COLUMN_KEYS.VALUE);

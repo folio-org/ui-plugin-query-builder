@@ -1,5 +1,6 @@
-import React from 'react';
 import { render } from '@testing-library/react';
+import React from 'react';
+import { IntlProvider } from 'react-intl';
 import { DynamicTable } from './DynamicTable';
 
 describe('DynamicTable component', () => {
@@ -68,6 +69,30 @@ describe('DynamicTable component', () => {
       labelAlias: 'Empty bool column',
       property: 'isEmptyBool',
     },
+    {
+      name: 'cool_date',
+      dataType: {
+        dataType: 'dateType',
+      },
+      labelAlias: 'Date column',
+      property: 'coolDate',
+    },
+    {
+      name: 'less_cool_date',
+      dataType: {
+        dataType: 'dateType',
+      },
+      labelAlias: 'Date column 2',
+      property: 'lessCoolDate',
+    },
+    {
+      name: 'empty_date',
+      dataType: {
+        dataType: 'dateType',
+      },
+      labelAlias: 'Empty date column',
+      property: 'emptyDate',
+    },
   ];
 
   it.each(['[]', undefined, null])(
@@ -89,12 +114,19 @@ describe('DynamicTable component', () => {
         "distributionType": "percentage",
         "isCool": true,
         "isNotCool": false,
-        "isEmptyBool": null
+        "isEmptyBool": null,
+        "coolDate": "2021-01-01T05:00:00.000Z",
+        "lessCoolDate": "2021-01-01T04:59:00.000Z",
+        "emptyDate": null
       }
     ]`;
 
   it('renders table with correct properties and values', () => {
-    const { getByText } = render(<DynamicTable properties={properties} values={values} />);
+    const { getByText } = render(
+      <IntlProvider timeZone="America/New_York">
+        <DynamicTable properties={properties} values={values} />
+      </IntlProvider>,
+    );
 
     properties.forEach((property) => {
       const label = getByText(property.labelAlias);
@@ -114,5 +146,12 @@ describe('DynamicTable component', () => {
     expect(trueCell).toBeInTheDocument();
     expect(falseCell).toBeInTheDocument();
     expect(trueCell.compareDocumentPosition(falseCell)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+
+    const coolDateCell = getByText('1/1/2021'); // after midnight in EST
+    const lessCoolDateCell = getByText('12/31/2020'); // before midnight in EST
+
+    expect(coolDateCell).toBeInTheDocument();
+    expect(lessCoolDateCell).toBeInTheDocument();
+    expect(coolDateCell.compareDocumentPosition(lessCoolDateCell)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
 });

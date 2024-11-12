@@ -1,7 +1,5 @@
-import moment from 'moment';
 import { getCommaSeparatedStr, getQuotedStr, valueBuilder } from './valueBuilder';
 import { OPERATORS } from '../../../constants/operators';
-import { ISO_FORMAT } from './timeUtils';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
 
 describe('valueBuilder', () => {
@@ -70,13 +68,24 @@ describe('valueBuilder', () => {
   });
 
   test('should return a string enclosed in double quotes for DateType if value is truthy', () => {
-    const value = new Date('2024-10-16T04:00:00.000');
+    const value = '2024-11-06';
     const field = 'user_expiration_date';
     const operator = OPERATORS.EQUAL;
 
-    const date = moment(value).format(ISO_FORMAT);
+    const intl = {
+      formatDate: (val, { timeZone }) => `${val.toUTCString()} in ${timeZone}`,
+    };
 
-    expect(valueBuilder({ value: date, field, operator, fieldOptions })).toBe(`"${date}"`);
+    expect(valueBuilder({ value, field, operator, fieldOptions, intl, timezone: 'Narnia' }))
+      .toBe('"Wed, 06 Nov 2024 00:00:00 GMT in Narnia"');
+  });
+
+  test('should return the original string for an invalid date', () => {
+    const value = 'invalid-date';
+    const field = 'user_expiration_date';
+    const operator = OPERATORS.EQUAL;
+
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe('"invalid-date"');
   });
 
   test('should return a string enclosed in double quotes for ArrayType if value is a string', () => {

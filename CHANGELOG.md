@@ -2,11 +2,13 @@
 
 ## (in progress)
 
+* [UIPQB-126](https://folio-org.atlassian.net/browse/UIPQB-126) Convert local date to UTC with respect to tenant zone, rather than user.
+
 ## [1.2.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.2) (2024-11-08)
 
-* [UIPQB-102](https://folio-org.atlassian.net/browse/UIPQB-102)The 'Organization accounting code' value contains incorrect '\'(backslash) in the query.
+* [UIPQB-102](https://folio-org.atlassian.net/browse/UIPQB-102) The 'Organization accounting code' value contains incorrect '\'(backslash) in the query.
 * [UIPQB-147](https://folio-org.atlassian.net/browse/UIPQB-147) Filtering of available values is case sensitive.
-* [UIPQB-138](https://folio-org.atlassian.net/browse/UIPQB-138) [QB] It's not possible to select the current date from the DatePicker.
+* [UIPQB-138](https://folio-org.atlassian.net/browse/UIPQB-138) It's not possible to select the current date from the DatePicker.
 
 ## [1.2.1](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.1) (2024-10-31)
 * Bump version to v1.2.1
