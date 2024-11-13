@@ -22,7 +22,7 @@
     "modal.banner.limit": "Warning: this query returns more records than the maximum allowed. Modify the query to limit your results.",
     "result.inProgress": "Query in progress",
     "result.emptyMessage": "La liste ne contient aucun élément",
-    "error.sww": "Quelque chose s'est mal déroulé",
+    "error.sww": "Une erreur s'est produite",
     "options.true": "True",
     "options.false": "False",
     "modal.preview.title.empty": "Query would return {total} records.",
