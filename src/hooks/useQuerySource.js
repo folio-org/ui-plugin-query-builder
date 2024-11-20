@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import useTenantTimezone from './useTenantTimezone';
 import {
   getQueryStr,
   isQueryValid,
@@ -34,7 +35,8 @@ export const useQuerySource = ({ initialValues, entityType, getParamsSource }) =
   const fieldOptions = useMemo(() => getFieldOptions(entityType?.columns), [entityType]);
   const stringifiedFieldOptions = useMemo(() => JSON.stringify(fieldOptions), [fieldOptions]);
 
-  const queryStr = getQueryStr(source, fieldOptions, intl);
+  const { tenantTimezone: timezone } = useTenantTimezone();
+  const queryStr = getQueryStr(source, fieldOptions, intl, timezone);
   const isQueryFilled = isQueryValid(source);
   const fqlQuery = sourceToMongoQuery(source);
 
