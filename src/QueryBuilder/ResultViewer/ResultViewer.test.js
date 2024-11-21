@@ -12,6 +12,8 @@ const queryClient = new QueryClient();
 
 const setVisibleColumns = jest.fn();
 const setColumns = jest.fn();
+const refetchIntervalMock = jest.fn();
+const completeExecutionMock = jest.fn();
 
 const renderResultViewer = (props) => (
   <Intl locale="en">
@@ -27,6 +29,10 @@ const renderResultViewer = (props) => (
         height={300}
         refreshInProgress={false}
         forcedVisibleValues={['username']}
+        contentQueryOptions={{
+          refetchInterval: refetchIntervalMock,
+          completeExecution: completeExecutionMock,
+        }}
         {...props}
       />
     </QueryClientProvider>
