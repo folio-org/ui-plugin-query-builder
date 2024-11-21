@@ -168,7 +168,7 @@ export const TestQuery = ({
           contentQueryOptions={{
             refetchInterval,
             keepPreviousData: false,
-            completeExecution
+            completeExecution,
           }}
           contentQueryKeys={[queryId]}
           queryParams={{ queryId, includeContent }}

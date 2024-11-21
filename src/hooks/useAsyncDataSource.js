@@ -1,14 +1,14 @@
+import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { useIntl } from 'react-intl';
 
 import { useNamespace } from '@folio/stripes/core';
-import { useShowCallout } from "@folio/stripes-acq-components";
+import { useShowCallout } from '@folio/stripes-acq-components';
 
 import { getTableMetadata } from '../QueryBuilder/ResultViewer/helpers';
 import { useDebounce } from './useDebounce';
 import { useEntityType } from './useEntityType';
 import { QUERY_KEYS } from '../constants/query';
-import { useState } from "react";
 
 const DEFAULT_TIMEOUT = 6000;
 
@@ -49,7 +49,7 @@ export const useAsyncDataSource = ({
   const [retryCount, setRetryCount] = useState(0);
   const [hasShownError, setHasShownError] = useState(false);
   const maxRetries = 3;
-  const { refetchInterval, completeExecution, keepPreviousData } = contentQueryOptions
+  const { refetchInterval, completeExecution, keepPreviousData } = contentQueryOptions;
 
   const { entityType, isContentTypeFetchedAfterMount, isEntityTypeLoading } = useEntityType({
     entityTypeDataSource,
@@ -77,7 +77,7 @@ export const useAsyncDataSource = ({
         return structuralSharing(queryClient, queryKey, data);
       },
       refetchInterval: (query) => {
-        if (retryCount === maxRetries ) {
+        if (retryCount === maxRetries) {
           if (!hasShownError) {
             completeExecution();
             showCallout({
@@ -87,11 +87,13 @@ export const useAsyncDataSource = ({
             });
             setHasShownError(true); // Устанавливаем флаг, чтобы предотвратить повторное выполнение
           }
+
           return 0;
         }
+
         return refetchInterval(query);
       },
-      onSuccess: ()=>{
+      onSuccess: () => {
         onSuccess();
         setRetryCount(0);
         setHasShownError(false);
