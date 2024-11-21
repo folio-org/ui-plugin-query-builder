@@ -1,12 +1,16 @@
+import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { useIntl } from 'react-intl';
 
 import { useNamespace } from '@folio/stripes/core';
+import { useShowCallout } from '@folio/stripes-acq-components';
 
 import { getTableMetadata } from '../QueryBuilder/ResultViewer/helpers';
 import { useDebounce } from './useDebounce';
 import { useEntityType } from './useEntityType';
 import { QUERY_KEYS } from '../constants/query';
+
+const DEFAULT_TIMEOUT = 6000;
 
 // temporary solution to emulate structuralSharing before migrating to react-query v4+
 const structuralSharing = (queryClient, key, newData) => {
@@ -36,11 +40,16 @@ export const useAsyncDataSource = ({
 }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
+  const showCallout = useShowCallout();
   const [namespaceKey] = useNamespace();
   const [entityKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_PREVIEW_ENTITY_TYPE });
   const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
   const debouncedContentQueryKeys = useDebounce(contentQueryKeys, 500);
+  const [retryCount, setRetryCount] = useState(0);
+  const [hasShownError, setHasShownError] = useState(false);
+  const maxRetries = 3;
+  const { refetchInterval, completeExecution, keepPreviousData } = contentQueryOptions;
 
   const { entityType, isContentTypeFetchedAfterMount, isEntityTypeLoading } = useEntityType({
     entityTypeDataSource,
@@ -67,9 +76,33 @@ export const useAsyncDataSource = ({
 
         return structuralSharing(queryClient, queryKey, data);
       },
-      onSuccess,
+      refetchInterval: (query) => {
+        if (retryCount === maxRetries) {
+          if (!hasShownError) {
+            completeExecution();
+            showCallout({
+              type: 'error',
+              message: intl.formatMessage({ id: 'ui-plugin-query-builder.error.sww' }),
+              timeout: DEFAULT_TIMEOUT,
+            });
+            setHasShownError(true);
+          }
+
+          return 0;
+        }
+
+        return refetchInterval(query);
+      },
+      onSuccess: () => {
+        onSuccess();
+        setRetryCount(0);
+        setHasShownError(false);
+      },
+      onError: () => {
+        setRetryCount((prev) => prev + 1);
+      },
+      keepPreviousData,
       ...sharedOptions,
-      ...contentQueryOptions,
     },
   );
 
