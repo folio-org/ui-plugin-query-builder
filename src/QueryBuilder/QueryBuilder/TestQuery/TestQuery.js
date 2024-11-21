@@ -43,16 +43,16 @@ export const TestQuery = ({
 
   const isTestQueryBtnDisabled = isTestQueryLoading || !isQueryFilled || isTestQueryInProgress;
 
+  const completeExecution = () => {
+    setIsPreviewLoading(false);
+    setIsTestQueryInProgress(false);
+
+    return 0;
+  };
+
   const refetchInterval = (query) => {
     const status = query?.status;
     const totalRecords = query?.totalRecords || 0;
-
-    const completeExecution = () => {
-      setIsPreviewLoading(false);
-      setIsTestQueryInProgress(false);
-
-      return 0;
-    };
 
     if (recordsLimit && totalRecords > recordsLimit) {
       setRecordsLimitExceeded(true);
@@ -168,6 +168,7 @@ export const TestQuery = ({
           contentQueryOptions={{
             refetchInterval,
             keepPreviousData: false,
+            completeExecution
           }}
           contentQueryKeys={[queryId]}
           queryParams={{ queryId, includeContent }}
