@@ -85,7 +85,7 @@ export const useAsyncDataSource = ({
               message: intl.formatMessage({ id: 'ui-plugin-query-builder.error.sww' }),
               timeout: DEFAULT_TIMEOUT,
             });
-            setHasShownError(true); // Устанавливаем флаг, чтобы предотвратить повторное выполнение
+            setHasShownError(true);
           }
 
           return 0;
