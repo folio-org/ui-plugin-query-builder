@@ -26,12 +26,10 @@ describe('DynamicTable component', () => {
       </IntlProvider>,
     );
 
-    // Проверяем, что заголовки таблицы рендерятся
     properties.forEach((property) => {
       expect(getByText(property.labelAlias)).toBeInTheDocument();
     });
 
-    // Проверяем содержимое таблицы
     formattedValues.forEach((row) => {
       Object.values(row).forEach((value) => {
         expect(getByText(value)).toBeInTheDocument();
