@@ -55,7 +55,7 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
       if (properties?.length) {
         const tableBodyRows = JSON.parse(val ?? '[]');
 
-        // Форматирование данных для DynamicTable
+        // formatting for DynamicTable
         const formattedRows = tableBodyRows.map(row => (
           properties.map(property => getCellValue(row, property))
         ));
