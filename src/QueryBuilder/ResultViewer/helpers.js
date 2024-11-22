@@ -1,22 +1,27 @@
-import {FormattedDate, FormattedMessage} from 'react-intl';
+import {
+  FormattedDate,
+  FormattedMessage,
+} from 'react-intl';
+
 import { formattedLanguageName } from '@folio/stripes/components';
+
 import { DATA_TYPES } from '../../constants/dataTypes';
 import { DynamicTable } from './DynamicTable/DynamicTable';
 
-export const formatCellValue = (value, dataType, properties, intl) => {
+const formatCellValue = (value, dataType, properties, intl) => {
   if (properties?.length) {
     // Nested table case
-    return <DynamicTable properties={properties} values={value} />;
+    return <DynamicTable properties={properties} values={value} format={formatCellValue} />;
   }
 
   switch (dataType) {
     case DATA_TYPES.BooleanType:
       return value === true ? (
-          <FormattedMessage id="ui-plugin-query-builder.options.true" />
+        <FormattedMessage id="ui-plugin-query-builder.options.true" />
       ) : value === false ? (
-          <FormattedMessage id="ui-plugin-query-builder.options.false" />
+        <FormattedMessage id="ui-plugin-query-builder.options.false" />
       ) : (
-          ''
+        ''
       );
 
     case DATA_TYPES.DateType:
@@ -28,8 +33,10 @@ export const formatCellValue = (value, dataType, properties, intl) => {
         if (properties?.some((prop) => prop.property === 'instance.languages')) {
           return value.map((lang) => formattedLanguageName(lang, intl)).join(' | ');
         }
+
         return value.join(' | ');
       }
+
       return '';
 
     case DATA_TYPES.NumberType:
@@ -54,6 +61,7 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
 
   const columnMapping = defaultColumns.reduce((acc, { value, label }) => {
     acc[value] = label;
+
     return acc;
   }, {});
 
@@ -61,16 +69,19 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
     if (properties?.length) {
       acc[value] = `${properties.length * 180}px`;
     }
+
     return acc;
   }, {});
 
-  const defaultVisibleColumns = defaultColumns.filter((col) =>
-      forcedVisibleValues?.includes(col.value) || col.selected
-  ).map((col) => col.value);
+  const defaultVisibleColumns = defaultColumns
+    .filter((col) => forcedVisibleValues?.includes(col.value) || col.selected)
+    .map((col) => col.value);
 
   const formatter = defaultColumns.reduce((formatted, column) => {
     const { value, dataType, properties } = column;
+
     formatted[value] = (item) => formatCellValue(item[value], dataType, properties, intl);
+
     return formatted;
   }, {});
 
@@ -82,4 +93,3 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
     columnWidths,
   };
 };
-
