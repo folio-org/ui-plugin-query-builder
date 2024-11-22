@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { useIntl } from 'react-intl';
-import {noop} from "lodash";
+import { noop } from 'lodash';
 
 import { useNamespace } from '@folio/stripes/core';
 import { useShowCallout } from '@folio/stripes-acq-components';
