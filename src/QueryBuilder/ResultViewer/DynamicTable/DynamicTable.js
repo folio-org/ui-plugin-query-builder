@@ -1,56 +1,41 @@
-import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
-import { FormattedDate, FormattedMessage } from 'react-intl';
-import { DATA_TYPES } from '../../../constants/dataTypes';
+import PropTypes from 'prop-types';
+import {useIntl} from "react-intl";
+
+import { formatCellValue } from '../helpers';
 import css from './DynamicTable.css';
 
 const columnStyle = { width: '180px', minWidth: '180px' };
 
-function getCellValue(row, property) {
-  // typeof check to ensure we don't try to display null/undefined as a booleans
-  if (property.dataType.dataType === DATA_TYPES.BooleanType && typeof row[property.property] === 'boolean') {
-    return row[property.property]
-      ? <FormattedMessage id="ui-plugin-query-builder.options.true" />
-      : <FormattedMessage id="ui-plugin-query-builder.options.false" />;
-  }
-
-  if (property.dataType.dataType === DATA_TYPES.DateType) {
-    return row[property.property] ? <FormattedDate value={row[property.property]} /> : '';
-  }
-
-  return row[property.property];
-}
-
 export const DynamicTable = ({ properties, values }) => {
+    const intl = useIntl()
   const tableBodyRows = useMemo(() => JSON.parse(values ?? '[]'), [values]);
 
-  if (!values) return null;
-
-  if (!tableBodyRows?.length) return null;
+  if (!values || !tableBodyRows.length) return null;
 
   return (
-    <table className={css.DynamicTable}>
-      <thead>
+      <table className={css.DynamicTable}>
+        <thead>
         <tr>
           {properties?.map((cell) => (
-            <th key={cell.property} style={columnStyle}>
-              {cell.labelAlias}
-            </th>
+              <th key={cell.property} style={columnStyle}>
+                {cell.labelAlias}
+              </th>
           ))}
         </tr>
-      </thead>
-      <tbody>
+        </thead>
+        <tbody>
         {tableBodyRows.map((row, index) => (
-          <tr key={index}>
-            {properties?.map((cell) => (
-              <td key={cell.property} style={columnStyle}>
-                {getCellValue(row, cell)}
-              </td>
-            ))}
-          </tr>
+            <tr key={index}>
+              {properties?.map((cell) => (
+                  <td key={cell.property} style={columnStyle}>
+                    {formatCellValue(row[cell.property], cell.dataType.dataType, cell.properties, intl)}
+                  </td>
+              ))}
+            </tr>
         ))}
-      </tbody>
-    </table>
+        </tbody>
+      </table>
   );
 };
 
