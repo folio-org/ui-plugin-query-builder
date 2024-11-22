@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { useIntl } from 'react-intl';
+import { noop } from 'lodash';
 
 import { useNamespace } from '@folio/stripes/core';
 import { useShowCallout } from '@folio/stripes-acq-components';
@@ -33,7 +34,7 @@ export const useAsyncDataSource = ({
   offset,
   limit,
   queryParams,
-  onSuccess,
+  onSuccess = noop,
   contentQueryOptions,
   contentQueryKeys,
   forcedVisibleValues,
@@ -49,7 +50,7 @@ export const useAsyncDataSource = ({
   const [retryCount, setRetryCount] = useState(0);
   const [hasShownError, setHasShownError] = useState(false);
   const maxRetries = 3;
-  const { refetchInterval, completeExecution, keepPreviousData } = contentQueryOptions;
+  const { refetchInterval = noop, completeExecution = noop, keepPreviousData = false } = contentQueryOptions;
 
   const { entityType, isContentTypeFetchedAfterMount, isEntityTypeLoading } = useEntityType({
     entityTypeDataSource,
@@ -93,10 +94,10 @@ export const useAsyncDataSource = ({
 
         return refetchInterval(query);
       },
-      onSuccess: () => {
-        onSuccess();
+      onSuccess: (data) => {
         setRetryCount(0);
         setHasShownError(false);
+        onSuccess(data);
       },
       onError: () => {
         setRetryCount((prev) => prev + 1);
