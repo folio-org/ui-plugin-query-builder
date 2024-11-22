@@ -1,16 +1,14 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
 
 import css from './DynamicTable.css';
 
 const columnStyle = { width: '180px', minWidth: '180px' };
 
-export const DynamicTable = ({ properties, values, format }) => {
-  const intl = useIntl();
-  const tableBodyRows = useMemo(() => JSON.parse(values ?? '[]'), [values]);
+export const DynamicTable = ({ properties, values }) => {
+  if (!values) return null;
 
-  if (!values || !tableBodyRows.length) return null;
+  if (!values.length) return null;
 
   return (
     <table className={css.DynamicTable}>
@@ -24,11 +22,11 @@ export const DynamicTable = ({ properties, values, format }) => {
         </tr>
       </thead>
       <tbody>
-        {tableBodyRows.map((row, index) => (
+        {values?.map((row, index) => (
           <tr key={index}>
-            {properties?.map((cell) => (
-              <td key={cell.property} style={columnStyle}>
-                {format(row[cell.property], cell.dataType.dataType, cell.properties, intl)}
+            {row?.map((cell, cellIndex) => (
+              <td key={cellIndex} style={columnStyle}>
+                {cell}
               </td>
             ))}
           </tr>
@@ -40,6 +38,5 @@ export const DynamicTable = ({ properties, values, format }) => {
 
 DynamicTable.propTypes = {
   properties: PropTypes.arrayOf(PropTypes.object),
-  values: PropTypes.string,
-  format: PropTypes.func,
+  values: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
 };
