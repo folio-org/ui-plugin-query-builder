@@ -1,7 +1,5 @@
-import { FormattedDate } from 'react-intl';
-import { formattedLanguageName } from '@folio/stripes/components';
-import { DATA_TYPES } from '../../constants/dataTypes';
 import { DynamicTable } from './DynamicTable/DynamicTable';
+import { formatValueByDataType } from './utils';
 
 export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
   const defaultColumns = (entityType?.columns?.map((cell) => ({
@@ -39,26 +37,14 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
 
       if (properties?.length) {
         return <DynamicTable properties={properties} values={val} />;
-      } else if (dataType === DATA_TYPES.DateType) {
-        return val ? <FormattedDate value={val} /> : '';
-      } else if (dataType === DATA_TYPES.ArrayType) {
-        // Special case for instance languages, to format them as translated strings
-        if (value === 'instance.languages') {
-          return val?.map(lang => formattedLanguageName(lang, intl)).join(' | ');
-        }
-
-        return val?.join(' | ');
-      } else if (dataType === DATA_TYPES.NumberType || dataType === DATA_TYPES.IntegerType) {
-        if (val === undefined) {
-          return '';
-        }
-
-        return val;
-      } else {
-        // If value is empty we will return empty string
-        // instead of undefined
-        return val || '';
       }
+
+      return formatValueByDataType(
+        val,
+        dataType,
+        intl,
+        { isInstanceLanguages: value === 'instance.languages' },
+      );
     };
 
     return formatted;
