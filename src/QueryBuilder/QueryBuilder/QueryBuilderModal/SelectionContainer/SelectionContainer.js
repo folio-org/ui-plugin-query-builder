@@ -30,7 +30,7 @@ export const SelectionContainer = ({
     return [];
   };
 
-  const { data } = useParamsDataSource({ source, searchValue, getParamsSource });
+  const { data, isLoading } = useParamsDataSource({ source, searchValue, getParamsSource });
 
   const filterOptions = (filterText, list) => {
     const lowerCaseFilterText = filterText?.toLowerCase() || '';
@@ -60,6 +60,7 @@ export const SelectionContainer = ({
       onChange={onChange}
       filter={filterOptions}
       dataOptions={dataOptions}
+      loading={isLoading}
     />);
 };
 

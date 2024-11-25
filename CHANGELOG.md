@@ -1,6 +1,7 @@
 # Change history for ui-plugin-query-builder
 
 * [UIPQB-157](https://folio-org.atlassian.net/browse/UIPQB-157) Add stop polling mechanism for useAsyncDataSource after 3 retries.
+* [UIPQB-158](https://folio-org.atlassian.net/browse/UIPQB-158) “No matching items found!” displayed when it takes longer to populate dropdown.
 
 ## [1.2.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.3) (2024-11-12)
 
