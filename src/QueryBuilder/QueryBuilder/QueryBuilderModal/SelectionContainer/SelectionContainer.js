@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
+
+import { Loading } from '@folio/stripes/components';
+
 import { useParamsDataSource } from '../../../../hooks/useParamsDataSource';
 
 export const SelectionContainer = ({
@@ -52,6 +55,8 @@ export const SelectionContainer = ({
 
   const dataOptions = getOptions(availableValues, data?.content);
 
+  if (isLoading) return <Loading size="large" />;
+
   return (
     <Component
       key={operator}
@@ -60,7 +65,6 @@ export const SelectionContainer = ({
       onChange={onChange}
       filter={filterOptions}
       dataOptions={dataOptions}
-      loading={isLoading}
     />);
 };
 
