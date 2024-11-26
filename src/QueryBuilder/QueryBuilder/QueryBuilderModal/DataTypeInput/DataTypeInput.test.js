@@ -1,10 +1,23 @@
 import { render, cleanup, fireEvent, waitFor } from '@testing-library/react';
+import { noop } from 'lodash';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Intl from '../../../../../test/jest/__mock__/intlProvider.mock';
 import '../../../../../test/jest/__mock__/resizeObserver.mock';
 import { DataTypeInput } from './DataTypeInput';
 import { DATA_TYPES } from '../../../../constants/dataTypes';
 import { OPERATORS } from '../../../../constants/operators';
+
+jest.mock('../../../../hooks/useParamsDataSource', () => ({
+  useParamsDataSource: jest.fn().mockReturnValue({
+    data: {
+      content: [
+        { label: 'Available', value: 'available' },
+        { label: 'Checked out', value: 'checked' },
+      ],
+    },
+    isLoading: false,
+  }),
+}));
 
 const queryClient = new QueryClient();
 const mockSource = {
@@ -13,13 +26,6 @@ const mockSource = {
     columnName: 'test',
   },
 };
-
-const mockGetParamsSource = async () => ({
-  content: [
-    { label: 'Available', value: 'available' },
-    { label: 'Checked out', value: 'checked' },
-  ],
-});
 
 const renderDataTypeInput = ({
   onChange,
@@ -36,7 +42,7 @@ const renderDataTypeInput = ({
         operator={operator}
         source={source}
         availableValues={availableValues}
-        getParamsSource={mockGetParamsSource}
+        getParamsSource={noop}
       />
     </QueryClientProvider>,
   </Intl>,
