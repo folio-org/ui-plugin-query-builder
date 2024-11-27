@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
+
+import { Loading } from '@folio/stripes/components';
+
 import { useParamsDataSource } from '../../../../hooks/useParamsDataSource';
 
 export const SelectionContainer = ({
@@ -30,7 +33,7 @@ export const SelectionContainer = ({
     return [];
   };
 
-  const { data } = useParamsDataSource({ source, searchValue, getParamsSource });
+  const { data, isLoading } = useParamsDataSource({ source, searchValue, getParamsSource });
 
   const filterOptions = (filterText, list) => {
     const lowerCaseFilterText = filterText?.toLowerCase() || '';
@@ -51,6 +54,8 @@ export const SelectionContainer = ({
   };
 
   const dataOptions = getOptions(availableValues, data?.content);
+
+  if (isLoading) return <Loading size="large" />;
 
   return (
     <Component

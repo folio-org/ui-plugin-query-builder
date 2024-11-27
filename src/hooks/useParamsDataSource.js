@@ -12,6 +12,7 @@ export const useParamsDataSource = ({ source, searchValue, getParamsSource }) =>
       columnName: source?.columnName,
       searchValue,
     }),
+    keepPreviousData: true,
     enabled: !!source,
   });
 
