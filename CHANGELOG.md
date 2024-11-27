@@ -1,5 +1,6 @@
 # Change history for ui-plugin-query-builder
 
+* [UIPQB-159](https://folio-org.atlassian.net/browse/UIPQB-159) [Lists] Empty columns are displaying when the user duplicates the list and the refresh is in progress
 * [UIPQB-156](https://folio-org.atlassian.net/browse/UIPQB-156) Nested table data display is inconsistent with regular result viewer.
 * [UIPQB-157](https://folio-org.atlassian.net/browse/UIPQB-157) Add stop polling mechanism for useAsyncDataSource after 3 retries.
 
