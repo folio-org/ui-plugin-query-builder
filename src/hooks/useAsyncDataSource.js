@@ -88,7 +88,7 @@ export const useAsyncDataSource = ({
               timeout: DEFAULT_TIMEOUT,
             });
             setHasShownError(true);
-            setIsErrorOccurred(true)
+            setIsErrorOccurred(true);
           }
 
           return 0;
@@ -99,7 +99,7 @@ export const useAsyncDataSource = ({
       onSuccess: (data) => {
         setRetryCount(0);
         setHasShownError(false);
-        setIsErrorOccurred(false)
+        setIsErrorOccurred(false);
         onSuccess(data);
       },
       onError: () => {
