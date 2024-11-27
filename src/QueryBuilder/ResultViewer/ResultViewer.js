@@ -128,7 +128,7 @@ export const ResultViewer = ({
     const showSpinner =
         refreshInProgress
         ||
-        isEmpty(lastNotEmptyContent) && (isListLoading || isContentDataLoading ) && isEmpty(contentData);
+        (isEmpty(lastNotEmptyContent) && (isListLoading || isContentDataLoading) && isEmpty(contentData));
 
     return (
       <Row center="xs">
