@@ -1,5 +1,6 @@
 # Change history for ui-plugin-query-builder
 
+* [UIPQB-160](https://folio-org.atlassian.net/browse/UIPQB-160) [QB] Update the text in the query builder after 3 attempts result in 500 errors.
 * [UIPQB-156](https://folio-org.atlassian.net/browse/UIPQB-156) Nested table data display is inconsistent with regular result viewer.
 * [UIPQB-157](https://folio-org.atlassian.net/browse/UIPQB-157) Add stop polling mechanism for useAsyncDataSource after 3 retries.
 * [UIPQB-158](https://folio-org.atlassian.net/browse/UIPQB-158) “No matching items found!” displayed when it takes longer to populate dropdown.

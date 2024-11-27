@@ -56,6 +56,7 @@ export const ResultViewer = ({
     status,
     formatter,
     columnWidths,
+    isErrorOccurred,
   } = useAsyncDataSource({
     entityTypeDataSource,
     contentDataSource,
@@ -97,27 +98,43 @@ export const ResultViewer = ({
     const localizedTotalRecords = intl.formatNumber(totalRecords);
     const localizedCurrentRecordsCount = intl.formatNumber(currentRecordsCount);
 
-    return (
-      <Row between="xs">
-        <Col xs={10}>
-          <Headline size="large" margin="none" tag="h3">
-            {isListLoading && !totalRecords ?
-              intl.formatMessage({ id: 'ui-plugin-query-builder.result.inProgress' })
-              :
-              headline?.({
-                totalRecords: localizedTotalRecords,
-                currentRecordsCount: localizedCurrentRecordsCount,
-                defaultLimit,
-                status,
-              })}
-          </Headline>
-        </Col>
-        {headlineEnd?.({
-          currentRecordsCount: localizedCurrentRecordsCount,
-          status,
-        })}
-      </Row>
-    );
+    const renderErrorMessage = () => {
+      return (
+          <Row between="xs">
+            <Col xs={10}>
+              <Headline size="large" margin="none" tag="h3">
+                {intl.formatMessage({ id: 'ui-plugin-query-builder.error.occurredMessage' })}
+              </Headline>
+            </Col>
+          </Row>
+      )
+    }
+
+    const renderSuccessMessage = () => {
+      return (
+          <Row between="xs">
+            <Col xs={10}>
+              <Headline size="large" margin="none" tag="h3">
+                {isListLoading && !totalRecords ?
+                    intl.formatMessage({ id: 'ui-plugin-query-builder.result.inProgress' })
+                    :
+                    headline?.({
+                      totalRecords: localizedTotalRecords,
+                      currentRecordsCount: localizedCurrentRecordsCount,
+                      defaultLimit,
+                      status,
+                    })}
+              </Headline>
+            </Col>
+            {headlineEnd?.({
+              currentRecordsCount: localizedCurrentRecordsCount,
+              status,
+            })}
+          </Row>
+      )
+    }
+
+    return isErrorOccurred ? renderErrorMessage() : renderSuccessMessage();
   };
 
   const emptyResultMessage = intl.formatMessage(

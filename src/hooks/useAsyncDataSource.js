@@ -49,6 +49,7 @@ export const useAsyncDataSource = ({
   const debouncedContentQueryKeys = useDebounce(contentQueryKeys, 500);
   const [retryCount, setRetryCount] = useState(0);
   const [hasShownError, setHasShownError] = useState(false);
+  const [isErrorOccurred, setIsErrorOccurred] = useState(false);
   const maxRetries = 3;
   const { refetchInterval = noop, completeExecution = noop, keepPreviousData = false } = contentQueryOptions;
 
@@ -87,6 +88,7 @@ export const useAsyncDataSource = ({
               timeout: DEFAULT_TIMEOUT,
             });
             setHasShownError(true);
+            setIsErrorOccurred(true)
           }
 
           return 0;
@@ -97,6 +99,7 @@ export const useAsyncDataSource = ({
       onSuccess: (data) => {
         setRetryCount(0);
         setHasShownError(false);
+        setIsErrorOccurred(false)
         onSuccess(data);
       },
       onError: () => {
@@ -132,5 +135,6 @@ export const useAsyncDataSource = ({
     refetch,
     formatter,
     columnWidths,
+    isErrorOccurred,
   };
 };
