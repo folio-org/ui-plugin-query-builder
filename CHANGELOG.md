@@ -1,5 +1,7 @@
 # Change history for ui-plugin-query-builder
 
+* [UIPQB-159](https://folio-org.atlassian.net/browse/UIPQB-159) [Lists] Empty columns are displaying when the user duplicates the list and the refresh is in progress
+
 ## [1.2.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.4) (2024-11-27)
 
 * [UIPQB-126](https://folio-org.atlassian.net/browse/UIPQB-126) Use tenant timezeone instead of tenant timezone.
