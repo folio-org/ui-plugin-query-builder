@@ -1,6 +1,6 @@
 {
   "name": "@folio/plugin-query-builder",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Create FQL query plugin for Stripes",
   "main": "index.js",
   "repository": "",

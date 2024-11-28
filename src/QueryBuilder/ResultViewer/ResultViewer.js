@@ -142,7 +142,10 @@ export const ResultViewer = ({
   );
 
   const renderTable = () => {
-    const showSpinner = isEmpty(lastNotEmptyContent) && (isListLoading || isContentDataLoading) && isEmpty(contentData);
+    const showSpinner =
+        refreshInProgress
+        ||
+        (isEmpty(lastNotEmptyContent) && (isListLoading || isContentDataLoading) && isEmpty(contentData));
 
     return (
       <Row center="xs">
