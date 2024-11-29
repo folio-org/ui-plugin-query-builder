@@ -1,6 +1,7 @@
 # Change history for ui-plugin-query-builder
 
 * [UIPQB-159](https://folio-org.atlassian.net/browse/UIPQB-159) [Lists] Empty columns are displaying when the user duplicates the list and the refresh is in progress
+* [UIPQB-160](https://folio-org.atlassian.net/browse/UIPQB-160) [QB] Update the text in the query builder after 3 attempts result in 500 errors.
 
 ## [1.2.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.4) (2024-11-27)
 

@@ -33,6 +33,7 @@
   "result.emptyMessage": "The list contains no items",
 
   "error.sww": "Something went wrong",
+  "error.occurredMessage": "An error occurred.",
 
   "ariaLabel.columnFilter": "Column filter input"
 }
