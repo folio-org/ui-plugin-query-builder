@@ -27,5 +27,6 @@
     "options.false": "偽",
     "modal.preview.title.empty": "クエリは{total}のレコードを返します",
     "control.search.placeholder": "Search column name",
-    "ariaLabel.columnFilter": "Column filter input"
+    "ariaLabel.columnFilter": "Column filter input",
+    "error.occurredMessage": "エラーが発生しました"
 }

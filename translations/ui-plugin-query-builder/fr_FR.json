@@ -27,5 +27,6 @@
     "options.false": "False",
     "modal.preview.title.empty": "Query would return {total} records.",
     "control.search.placeholder": "Rechercher un nom de colonne",
-    "ariaLabel.columnFilter": "Column filter input"
+    "ariaLabel.columnFilter": "Column filter input",
+    "error.occurredMessage": "Une erreur s'est produite."
 }

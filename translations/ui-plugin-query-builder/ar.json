@@ -27,5 +27,6 @@
     "options.false": "غير صحيح",
     "modal.preview.title.empty": "Query would return {total} records.",
     "control.search.placeholder": "Search column name",
-    "ariaLabel.columnFilter": "Column filter input"
+    "ariaLabel.columnFilter": "Column filter input",
+    "error.occurredMessage": "لقد حدث خطأ."
 }
