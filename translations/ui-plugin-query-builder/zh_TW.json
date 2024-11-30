@@ -27,5 +27,6 @@
     "options.false": "錯誤",
     "modal.preview.title.empty": "查詢將傳回{total}筆記錄。",
     "control.search.placeholder": "搜尋欄名稱",
-    "ariaLabel.columnFilter": "列過濾器輸入"
+    "ariaLabel.columnFilter": "列過濾器輸入",
+    "error.occurredMessage": "發生未知錯誤"
 }
