@@ -185,7 +185,7 @@ const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOption
 
   if (operator) {
     const fieldItem = fieldOptions.find(f => f.value === field);
-    const defaultItem = fieldOptions[0]
+    const defaultItem = fieldOptions[0];
 
     // Exceptional case, when queried field were deleted
     if (!fieldItem) {
