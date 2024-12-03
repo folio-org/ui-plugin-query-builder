@@ -185,6 +185,26 @@ const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOption
 
   if (operator) {
     const fieldItem = fieldOptions.find(f => f.value === field);
+    const defaultItem = fieldOptions[0]
+
+    // Exceptional case, when queried field were deleted
+    if (!fieldItem) {
+      return {
+        boolean: { options: booleanOptions, current: boolean },
+        field: { options: fieldOptions, current: field, dataType: defaultItem?.dataType },
+        operator: {
+          dataType: defaultItem?.dataType,
+          options: getOperatorOptions({
+            dataType: defaultItem?.dataType,
+            hasSourceOrValues: defaultItem?.value || defaultItem?.source,
+            intl,
+          }),
+          current: '',
+        },
+        value: { current: '', source: defaultItem?.source, options: defaultItem?.values },
+      };
+    }
+
     const { dataType, values, source } = fieldItem;
     const hasSourceOrValues = values || source;
     let formattedValue;
