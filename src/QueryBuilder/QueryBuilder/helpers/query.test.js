@@ -220,6 +220,60 @@ describe('mongoQueryToSource()', () => {
 
     expect(result).toEqual(initial);
   });
+
+  it('should handle case when queried field is deleted', async () => {
+    const initialValuesUpdated = {
+      $and: [
+        { user_first_name: { $eq: 'value' } },
+        { delegate_languages: { $empty: true } },
+      ],
+    };
+
+    const defaultField = fieldOptions[0];
+
+    const result = await mongoQueryToSource({
+      initialValues: initialValuesUpdated,
+      booleanOptions,
+      fieldOptions,
+      intl: { formatMessage: jest.fn() },
+      getParamsSource: jest.fn(),
+    });
+
+    expect(result).toEqual([
+      {
+        boolean: { options: booleanOptions, current: '$and' },
+        field: {
+          options: fieldOptions,
+          current: 'user_first_name',
+          dataType: 'stringType',
+        },
+        operator: {
+          dataType: 'stringType',
+          options: expect.any(Array),
+          current: '==',
+        },
+        value: { current: 'value', source: undefined, options: undefined },
+      },
+      {
+        boolean: { options: booleanOptions, current: '$and' },
+        field: {
+          options: fieldOptions,
+          current: 'delegate_languages',
+          dataType: defaultField?.dataType,
+        },
+        operator: {
+          dataType: defaultField?.dataType,
+          options: expect.any(Array),
+          current: '',
+        },
+        value: {
+          current: '',
+          source: defaultField?.source,
+          options: defaultField?.values,
+        },
+      },
+    ]);
+  });
 });
 
 describe('isQueryValid', () => {
