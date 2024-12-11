@@ -1,10 +1,13 @@
 # Change history for ui-plugin-query-builder
 
+## [1.2.6](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.6) (2024-12-11)
+
+* [UIPQB-128](https://folio-org.atlassian.net/browse/UIPQB-128) Invalid fields handling > Errors when query includes a deleted custom field.
+
 ## [1.2.5](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.5) (2024-12-04)
 
 * [UIPQB-159](https://folio-org.atlassian.net/browse/UIPQB-159) [Lists] Empty columns are displaying when the user duplicates the list and the refresh is in progress
 * [UIPQB-160](https://folio-org.atlassian.net/browse/UIPQB-160) [QB] Update the text in the query builder after 3 attempts result in 500 errors.
-* [UIPQB-128](https://folio-org.atlassian.net/browse/UIPQB-128) Invalid fields handling > Errors when query includes a deleted custom field.
 
 ## [1.2.4](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.4) (2024-11-27)
 
