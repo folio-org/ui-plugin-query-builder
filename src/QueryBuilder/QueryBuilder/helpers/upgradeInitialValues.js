@@ -7,6 +7,8 @@
  * queries edited/created here are the latest version, as we only have the latest version of entity types available.
  * In the future, it might be neat to send a request to /fqm/migrate if we see initialValues are out of date, but that's
  * outside the scope of UIPQB-125 as we already upgrade queries in the background in mod-lists.
+ *
+ * Returns undefined if there is no initial value (new query).
  */
 export default function upgradeInitialValues(initialValues, entityType) {
   if (!initialValues) {
@@ -16,6 +18,13 @@ export default function upgradeInitialValues(initialValues, entityType) {
   const withoutVersion = { ...initialValues };
 
   delete withoutVersion._version;
+
+  if (Object.keys(withoutVersion).length === 0) {
+    // if the query is {}, treat it as a new query
+    // (all add buttons are displayed on existing rows except for the "new list" state, so if we do
+    // not simulate this state, the user will be unable to add anything)
+    return undefined;
+  }
 
   if (!entityType) {
     return withoutVersion;
