@@ -1,5 +1,9 @@
 # Change history for ui-plugin-query-builder
 
+## IN PROGRESS
+
+* [UIPQB-168](https://folio-org.atlassian.net/browse/UIPQB-168) Allow editing queries containing no fields.
+
 ## [1.2.6](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.6) (2024-12-11)
 
 * [UIPQB-128](https://folio-org.atlassian.net/browse/UIPQB-128) Invalid fields handling > Errors when query includes a deleted custom field.

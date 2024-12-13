@@ -10,13 +10,16 @@ describe('initial values legacy conversion', () => {
     [undefined, undefined],
     [null, {}],
     [undefined, {}],
-    [{}, null],
-    [{}, undefined],
-  ])('ignores initialValues=%s and entityType=%s', (initialValues, entityType) => {
-    expect(upgradeInitialValues(initialValues, entityType)).toStrictEqual(initialValues);
+    [{ _version: '1' }, null],
+    [{ _version: '1' }, undefined],
+    [{ _version: '1' }, null],
+    [{ _version: '1' }, undefined],
+    [{ _version: '1' }, {}],
+  ])('considers initialValues=%s and entityType=%s as a new query', (initialValues, entityType) => {
+    expect(upgradeInitialValues(initialValues, entityType)).toStrictEqual(undefined);
   });
 
-  it.each([{}, { foo: '' }, { bar: '' }, { foo: '', bar: '' }])(
+  it.each([{ foo: '' }, { bar: '' }, { foo: '', bar: '' }])(
     'processes but does not convert non-id columns in %s',
     (values) => {
       expect(upgradeInitialValues(values, ENTITY_TYPE)).toStrictEqual(values);
