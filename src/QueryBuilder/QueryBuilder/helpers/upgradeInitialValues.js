@@ -12,7 +12,7 @@
  */
 export default function upgradeInitialValues(initialValues, entityType) {
   if (!initialValues) {
-    return initialValues;
+    return undefined;
   }
 
   const withoutVersion = { ...initialValues };
