@@ -6,7 +6,7 @@ import {
   Selection,
   Col,
   Row,
-  getFirstFocusable
+  getFirstFocusable,
 } from '@folio/stripes/components';
 
 import PropTypes from 'prop-types';
@@ -49,6 +49,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
 
     if (previousRowElement) {
       const firstFocusableElement = getFirstFocusable(previousRowElement);
+
       if (firstFocusableElement) {
         firstFocusableElement.focus();
       }
