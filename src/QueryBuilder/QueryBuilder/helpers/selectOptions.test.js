@@ -241,6 +241,25 @@ describe('select options', () => {
       });
     });
 
+    it('should return operators with placeholder for jsonb array type', () => {
+      const options = getOperatorOptions({
+        dataType: DATA_TYPES.JsonbArrayType,
+        hasSourceOrValues: false,
+        intl: intlMock,
+      });
+
+      expectFn({
+        options,
+        operators: [
+          { label: OPERATORS_LABELS.CONTAINS_ALL, value: OPERATORS.CONTAINS_ALL },
+          { label: OPERATORS_LABELS.NOT_CONTAINS_ALL, value: OPERATORS.NOT_CONTAINS_ALL },
+          { label: OPERATORS_LABELS.CONTAINS_ANY, value: OPERATORS.CONTAINS_ANY },
+          { label: OPERATORS_LABELS.NOT_CONTAINS_ANY, value: OPERATORS.NOT_CONTAINS_ANY },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+        ],
+      });
+    });
+
     it('should return operators with placeholder for enum type', () => {
       const options = getOperatorOptions({
         dataType: DATA_TYPES.EnumType,
