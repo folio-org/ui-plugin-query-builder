@@ -6,6 +6,7 @@ import {
   Selection,
   Col,
   Row,
+  getFirstFocusable
 } from '@folio/stripes/components';
 
 import PropTypes from 'prop-types';
@@ -42,6 +43,16 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
     const filteredFields = source.filter((_, i) => i !== index);
 
     setSource(filteredFields);
+
+    const previousRowSelector = `[class^=repeatableFieldItem-]:nth-child(${index})`;
+    const previousRowElement = document.querySelector(previousRowSelector);
+
+    if (previousRowElement) {
+      const firstFocusableElement = getFirstFocusable(previousRowElement);
+      if (firstFocusableElement) {
+        firstFocusableElement.focus();
+      }
+    }
   };
 
   const handleChange = (value, index, fieldName) => {
