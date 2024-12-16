@@ -10,4 +10,5 @@ export const DATA_TYPES = {
   EnumType: 'enumType',
   ObjectType: 'objectType',
   ArrayType: 'arrayType',
+  JsonbArrayType: 'jsonbArrayType',
 };
