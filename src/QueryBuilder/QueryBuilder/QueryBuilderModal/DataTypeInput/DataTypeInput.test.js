@@ -104,6 +104,12 @@ const arr = [
     onChange: jest.fn(),
   },
   {
+    dataType: DATA_TYPES.JsonbArrayType,
+    operator: OPERATORS.CONTAINS,
+    componentTestId: 'data-input-text-jsonbArrayType',
+    onChange: jest.fn(),
+  },
+  {
     dataType: DATA_TYPES.EnumType,
     operator: OPERATORS.EQUAL,
     componentTestId: 'data-input-select-arrayType',
