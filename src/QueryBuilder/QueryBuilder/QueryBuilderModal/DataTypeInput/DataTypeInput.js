@@ -205,6 +205,11 @@ export const DataTypeInput = ({
         ? multiSelectControl({ testId: 'data-input-select-multi-arrayType' })
         : textControl({ testId: 'data-input-text-arrayType' });
 
+        case DATA_TYPES.JsonbArrayType:
+          return isContainsRelatedOperator && hasSourceOrValues
+            ? multiSelectControl({ testId: 'data-input-select-multi-jsonbArrayType' })
+            : textControl({ testId: 'data-input-text-jsonbArrayType' });
+
     case DATA_TYPES.EnumType:
       return arrayLikeTypeControls();
     default:
