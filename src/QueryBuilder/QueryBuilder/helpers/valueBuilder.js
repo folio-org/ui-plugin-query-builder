@@ -52,6 +52,8 @@ export const valueBuilder = ({ value, field, operator, fieldOptions, intl, timez
 
     [DATA_TYPES.ArrayType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value, isInRelatedOperator)),
 
+    [DATA_TYPES.JsonbArrayType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value, isInRelatedOperator)),
+
     [DATA_TYPES.EnumType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value, isInRelatedOperator)),
 
     [DATA_TYPES.BooleanType]: () => getQuotedStr(value, isInRelatedOperator),
