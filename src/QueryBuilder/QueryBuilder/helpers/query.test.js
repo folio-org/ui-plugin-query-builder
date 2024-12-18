@@ -1,4 +1,4 @@
-import {findMissingValues, getTransformedValue, isQueryValid, mongoQueryToSource, sourceToMongoQuery} from './query';
+import { findMissingValues, getTransformedValue, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from './query';
 import { booleanOptions } from './selectOptions';
 import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';

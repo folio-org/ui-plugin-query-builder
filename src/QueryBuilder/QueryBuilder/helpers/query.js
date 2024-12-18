@@ -281,18 +281,20 @@ export const mongoQueryToSource = async ({
 };
 
 export const findMissingValues = (
-    mainArray,
-    secondaryArray
+  mainArray,
+  secondaryArray,
 ) => {
   const mainValues = new Set(mainArray?.map((item) => item.value));
 
   const missingValues = [];
+
   for (const secondaryItem of secondaryArray) {
     const currentValue = secondaryItem.field.current;
+
     if (currentValue && !mainValues.has(currentValue)) {
       missingValues.push(currentValue);
     }
   }
 
   return missingValues;
-}
+};

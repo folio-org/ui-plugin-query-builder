@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import {
   IconButton,
   RepeatableField,
@@ -8,10 +8,10 @@ import {
   Row,
   getFirstFocusable,
 } from '@folio/stripes/components';
-import { useShowCallout } from "@folio/stripes-acq-components";
+import { useShowCallout } from '@folio/stripes-acq-components';
 
 import PropTypes from 'prop-types';
-import {FormattedMessage, useIntl} from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import css from '../QueryBuilderModal.css';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
@@ -24,7 +24,7 @@ import {
 } from '../../helpers/selectOptions';
 import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
-import {findMissingValues} from "../../helpers/query";
+import { findMissingValues } from '../../helpers/query';
 
 export const RepeatableFields = memo(({ source, setSource, getParamsSource, columns }) => {
   const intl = useIntl();
@@ -53,6 +53,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
 
     if (previousRowElement) {
       const firstFocusableElement = getFirstFocusable(previousRowElement);
+
       if (firstFocusableElement) {
         firstFocusableElement.focus();
       }
@@ -121,21 +122,21 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
   useEffect(() => {
     if (calloutCalledRef.current) return;
 
-    const deletedFields = findMissingValues(fieldOptions, source)
+    const deletedFields = findMissingValues(fieldOptions, source);
 
-    if(deletedFields.length >= 1) {
+    if (deletedFields.length >= 1) {
       calloutCalledRef.current = true;
 
       callout({
         type: 'warning',
         message: (
-            <FormattedMessage
-                id="ui-plugin-query-builder.warning.deletedField"
-                values={{value: deletedFields.join(',')}}
-            />
+          <FormattedMessage
+            id="ui-plugin-query-builder.warning.deletedField"
+            values={{ value: deletedFields.join(',') }}
+          />
         ),
         timeout: 0,
-      })
+      });
     }
   }, []);
 
@@ -227,7 +228,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
       />
     </>
   );
-};
+});
 
 RepeatableFields.propTypes = {
   source: PropTypes.arrayOf(PropTypes.object),
