@@ -35,5 +35,7 @@
   "error.sww": "Something went wrong",
   "error.occurredMessage": "An error occurred.",
 
+  "warning.deletedField": "{value} in your query is unavailable. Please revise your query. ",
+
   "ariaLabel.columnFilter": "Column filter input"
 }

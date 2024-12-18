@@ -4,6 +4,7 @@
 
 * [UIPQB-168](https://folio-org.atlassian.net/browse/UIPQB-168) Allow editing queries containing no fields.
 * [UIPQB-141](https://folio-org.atlassian.net/browse/UIPQB-141) Modal dialog focus inconsistencies across screenreaders.
+* [UIPQB-162](https://folio-org.atlassian.net/browse/UIPQB-162) Errors when query includes a modified custom field.
 
 ## [1.2.6](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.6) (2024-12-11)
 
