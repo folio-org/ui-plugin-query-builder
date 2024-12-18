@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React from 'react';
 import {
   IconButton,
   RepeatableField,
@@ -6,10 +6,9 @@ import {
   Selection,
   Col,
   Row,
-  getFirstFocusable
+  getFirstFocusable,
 } from '@folio/stripes/components';
 import { useShowCallout } from "@folio/stripes-acq-components";
-import {MESSAGE_TYPES} from "@folio/lists/src/hooks/useMessages/useMessages";
 
 import PropTypes from 'prop-types';
 import {FormattedMessage, useIntl} from 'react-intl';
@@ -128,7 +127,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
       calloutCalledRef.current = true;
 
       callout({
-        type: MESSAGE_TYPES.WARNING,
+        type: 'warning',
         message: (
             <FormattedMessage
                 id="ui-plugin-query-builder.warning.deletedField"
@@ -228,7 +227,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
       />
     </>
   );
-});
+};
 
 RepeatableFields.propTypes = {
   source: PropTypes.arrayOf(PropTypes.object),
