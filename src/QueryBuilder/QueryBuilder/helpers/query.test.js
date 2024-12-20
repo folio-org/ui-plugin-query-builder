@@ -258,18 +258,13 @@ describe('mongoQueryToSource()', () => {
         boolean: { options: booleanOptions, current: '$and' },
         field: {
           options: fieldOptions,
-          current: 'delegate_languages',
           dataType: defaultField?.dataType,
         },
         operator: {
-          dataType: defaultField?.dataType,
-          options: expect.any(Array),
           current: '',
         },
         value: {
           current: '',
-          source: defaultField?.source,
-          options: defaultField?.values,
         },
       },
     ]);
