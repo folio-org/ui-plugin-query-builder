@@ -132,7 +132,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
         message: (
           <FormattedMessage
             id="ui-plugin-query-builder.warning.deletedField"
-            values={{ value: deletedFields.join(',') }}
+            values={{ value: intl.formatList(deletedFields) }}
           />
         ),
         timeout: 0,
