@@ -1,4 +1,4 @@
-import { getTransformedValue, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from './query';
+import { findMissingValues, getTransformedValue, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from './query';
 import { booleanOptions } from './selectOptions';
 import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
@@ -370,5 +370,93 @@ describe('getTransformedValue', () => {
     const actual = getTransformedValue(val);
 
     expect(actual).toEqual(expected);
+  });
+});
+
+describe('findMissingValues', () => {
+  it('should return missing values from secondaryArray that are not in mainArray', () => {
+    const mainArray = [
+      { value: 'value1' },
+      { value: 'value2' },
+      { value: 'value3' },
+    ];
+
+    const secondaryArray = [
+      { field: { current: 'value2' } },
+      { field: { current: 'value4' } },
+      { field: { current: 'value5' } },
+    ];
+
+    const result = findMissingValues(mainArray, secondaryArray);
+
+    expect(result).toEqual(['value4', 'value5']);
+  });
+
+  it('should return an empty array when all values are present in mainArray', () => {
+    const mainArray = [
+      { value: 'value1' },
+      { value: 'value2' },
+    ];
+
+    const secondaryArray = [
+      { field: { current: 'value1' } },
+      { field: { current: 'value2' } },
+    ];
+
+    const result = findMissingValues(mainArray, secondaryArray);
+
+    expect(result).toEqual([]);
+  });
+
+  it('should handle cases where mainArray is empty', () => {
+    const mainArray = [];
+
+    const secondaryArray = [
+      { field: { current: 'value1' } },
+      { field: { current: 'value2' } },
+    ];
+
+    const result = findMissingValues(mainArray, secondaryArray);
+
+    expect(result).toEqual(['value1', 'value2']);
+  });
+
+  it('should handle cases where secondaryArray is empty', () => {
+    const mainArray = [
+      { value: 'value1' },
+      { value: 'value2' },
+    ];
+
+    const secondaryArray = [];
+
+    const result = findMissingValues(mainArray, secondaryArray);
+
+    expect(result).toEqual([]);
+  });
+
+  it('should handle cases where both arrays are empty', () => {
+    const mainArray = [];
+    const secondaryArray = [];
+
+    const result = findMissingValues(mainArray, secondaryArray);
+
+    expect(result).toEqual([]);
+  });
+
+  it('should ignore null or undefined values in secondaryArray', () => {
+    const mainArray = [
+      { value: 'value1' },
+      { value: 'value2' },
+    ];
+
+    const secondaryArray = [
+      { field: { current: 'value3' } },
+      { field: { current: null } },
+      { field: { current: undefined } },
+    ];
+
+    const result = findMissingValues(mainArray, secondaryArray);
+
+    expect(result).toEqual(['value3']);
   });
 });
