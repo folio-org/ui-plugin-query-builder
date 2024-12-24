@@ -82,6 +82,7 @@ export const ResultViewer = ({
     onPreviewShown,
     defaultLimit,
     forcedVisibleValues,
+    visibleColumns
   });
 
   // refresh functionality
