@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import {
   IconButton,
   RepeatableField,
@@ -6,10 +6,12 @@ import {
   Selection,
   Col,
   Row,
+  getFirstFocusable,
 } from '@folio/stripes/components';
+import { useShowCallout } from '@folio/stripes-acq-components';
 
 import PropTypes from 'prop-types';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import css from '../QueryBuilderModal.css';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
@@ -22,9 +24,12 @@ import {
 } from '../../helpers/selectOptions';
 import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
+import { findMissingValues } from '../../helpers/query';
 
-export const RepeatableFields = ({ source, setSource, getParamsSource, columns }) => {
+export const RepeatableFields = memo(({ source, setSource, getParamsSource, columns }) => {
   const intl = useIntl();
+  const callout = useShowCallout();
+  const calloutCalledRef = useRef(false);
 
   const fieldOptions = getFieldOptions(columns);
 
@@ -42,6 +47,17 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
     const filteredFields = source.filter((_, i) => i !== index);
 
     setSource(filteredFields);
+
+    const previousRowSelector = `[class^=repeatableFieldItem-]:nth-child(${index})`;
+    const previousRowElement = document.querySelector(previousRowSelector);
+
+    if (previousRowElement) {
+      const firstFocusableElement = getFirstFocusable(previousRowElement);
+
+      if (firstFocusableElement) {
+        firstFocusableElement.focus();
+      }
+    }
   };
 
   const handleChange = (value, index, fieldName) => {
@@ -73,6 +89,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
           },
         };
       }
+
       if (isOperator) {
         return {
           [COLUMN_KEYS.VALUE]: {
@@ -101,6 +118,27 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
       return item;
     }));
   };
+
+  useEffect(() => {
+    if (calloutCalledRef.current) return;
+
+    const deletedFields = findMissingValues(fieldOptions, source);
+
+    if (deletedFields.length >= 1) {
+      calloutCalledRef.current = true;
+
+      callout({
+        type: 'warning',
+        message: (
+          <FormattedMessage
+            id="ui-plugin-query-builder.warning.deletedField"
+            values={{ value: intl.formatList(deletedFields) }}
+          />
+        ),
+        timeout: 0,
+      });
+    }
+  }, []);
 
   return (
     <>
@@ -190,7 +228,7 @@ export const RepeatableFields = ({ source, setSource, getParamsSource, columns }
       />
     </>
   );
-};
+});
 
 RepeatableFields.propTypes = {
   source: PropTypes.arrayOf(PropTypes.object),

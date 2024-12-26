@@ -191,17 +191,11 @@ const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOption
     if (!fieldItem) {
       return {
         boolean: { options: booleanOptions, current: boolean },
-        field: { options: fieldOptions, current: field, dataType: defaultItem?.dataType },
+        field: { options: fieldOptions, dataType: defaultItem?.dataType },
         operator: {
-          dataType: defaultItem?.dataType,
-          options: getOperatorOptions({
-            dataType: defaultItem?.dataType,
-            hasSourceOrValues: defaultItem?.value || defaultItem?.source,
-            intl,
-          }),
           current: '',
         },
-        value: { current: '', source: defaultItem?.source, options: defaultItem?.values },
+        value: { current: '' },
       };
     }
 
@@ -278,4 +272,23 @@ export const mongoQueryToSource = async ({
   });
 
   return [singleItem];
+};
+
+export const findMissingValues = (
+  mainArray,
+  secondaryArray,
+) => {
+  const mainValues = new Set(mainArray?.map((item) => item.value));
+
+  const missingValues = [];
+
+  for (const secondaryItem of secondaryArray) {
+    const currentValue = secondaryItem.field.current;
+
+    if (currentValue && !mainValues.has(currentValue)) {
+      missingValues.push(currentValue);
+    }
+  }
+
+  return missingValues;
 };
