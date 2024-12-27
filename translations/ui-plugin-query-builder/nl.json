@@ -28,5 +28,6 @@
     "modal.preview.title.empty": "Query zou {total} records opleveren.",
     "control.search.placeholder": "Kolomnaam zoeken",
     "ariaLabel.columnFilter": "Invoer kolomfilter",
-    "error.occurredMessage": "Er heeft zich een fout voorgedaan."
+    "error.occurredMessage": "Er heeft zich een fout voorgedaan.",
+    "warning.deletedField": "{value} in your query is unavailable. Please revise your query. "
 }
