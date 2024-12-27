@@ -76,8 +76,8 @@ describe('ResultViewer', () => {
   });
 
   describe('Initial and visible columns setters', () => {
-    it.each([[], undefined])('should call both when no initial fields are provided (recordColumns=%s)', async (visibleColumns) => {
-      render(renderResultViewer({ visibleColumns }));
+    it.each([[], undefined])('should call both when no initial fields are provided (recordColumns=%s)', async () => {
+      render(renderResultViewer({ visibleColumns: ['user_id'] }));
 
       await waitFor(() => {
         expect(screen.queryByText('ui-plugin-query-builder.viewer.retrieving')).not.toBeInTheDocument();

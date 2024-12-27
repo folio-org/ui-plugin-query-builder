@@ -4,7 +4,8 @@
 
 * [UIPQB-141](https://folio-org.atlassian.net/browse/UIPQB-141) Modal dialog focus inconsistencies across screenreaders.
 * [UIPQB-162](https://folio-org.atlassian.net/browse/UIPQB-162) Errors when query includes a modified custom field.
-* [UIPQB-175](https://folio-org.atlassian.net/browse/UIPQB-175) Displays the "Smth went wrong" page, when the user clicks on "Select operator" dropdown and selects any of them, if there are deleted custom fields
+* [UIPQB-175](https://folio-org.atlassian.net/browse/UIPQB-175) Displays the "Smth went wrong" page, when the user clicks on "Select operator" dropdown and selects any of them, if there are deleted custom fields.
+* [UIPQB-164](https://folio-org.atlassian.net/browse/UIPQB-164) Columns are reset when user modifies query.
 
 ## [1.2.7](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.7) (2024-12-26)
 
