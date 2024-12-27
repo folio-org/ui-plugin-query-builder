@@ -11,16 +11,27 @@ export const formatValueByDataType = (value, dataType, intl, additionalParams = 
 
   switch (dataType) {
     case DATA_TYPES.BooleanType:
-      return value
-        ? <FormattedMessage id="ui-plugin-query-builder.options.true" />
-        : <FormattedMessage id="ui-plugin-query-builder.options.false" />;
+      // booleans may be returned as true booleans, or strings 'true' or 'false'
+      if (typeof value === 'string') {
+        return value === 'true' ? (
+          <FormattedMessage id="ui-plugin-query-builder.options.true" />
+        ) : (
+          <FormattedMessage id="ui-plugin-query-builder.options.false" />
+        );
+      } else {
+        return value ? (
+          <FormattedMessage id="ui-plugin-query-builder.options.true" />
+        ) : (
+          <FormattedMessage id="ui-plugin-query-builder.options.false" />
+        );
+      }
 
     case DATA_TYPES.DateType:
       return <FormattedDate value={value} />;
 
     case DATA_TYPES.ArrayType:
       if (additionalParams?.isInstanceLanguages) {
-        return value.map(lang => formattedLanguageName(lang, intl)).join(' | ');
+        return value.map((lang) => formattedLanguageName(lang, intl)).join(' | ');
       }
 
       return value.join(' | ');
