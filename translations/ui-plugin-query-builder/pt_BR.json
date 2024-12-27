@@ -28,5 +28,6 @@
     "modal.preview.title.empty": "A consulta retornaria {total} registros.",
     "control.search.placeholder": "Nome da coluna de busca",
     "ariaLabel.columnFilter": "Entrada de filtro de coluna",
-    "error.occurredMessage": "Ocorreu um erro."
+    "error.occurredMessage": "Ocorreu um erro.",
+    "warning.deletedField": "{value} em sua consulta não está disponível. Por favor, revise sua consulta. "
 }

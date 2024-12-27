@@ -12,7 +12,7 @@
     "columns.action": "操作",
     "control.info.separateValues": "用逗號分隔多個值。",
     "control.selection.placeholder": "選擇欄位",
-    "modal.preview.title": "查詢將傳回{total}筆記錄。預覽前{limit}筆記錄。",
+    "modal.preview.title": "查詢將傳回 {total} 筆紀錄。預覽前 {limit} 筆紀錄。",
     "modal.preview.queryInProgress": "處理中",
     "control.dropdown.showColumns": "顯示欄位",
     "viewer.retrieving": "檢索中...",
@@ -25,8 +25,9 @@
     "error.sww": "發生了一些問題 !",
     "options.true": "正確",
     "options.false": "錯誤",
-    "modal.preview.title.empty": "查詢將傳回{total}筆記錄。",
+    "modal.preview.title.empty": "查詢將傳回 {total} 筆紀錄。",
     "control.search.placeholder": "搜尋欄名稱",
     "ariaLabel.columnFilter": "列過濾器輸入",
-    "error.occurredMessage": "發生未知錯誤"
+    "error.occurredMessage": "發生未知錯誤",
+    "warning.deletedField": "{value} in your query is unavailable. Please revise your query. "
 }
