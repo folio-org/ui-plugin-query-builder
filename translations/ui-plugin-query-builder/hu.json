@@ -28,5 +28,6 @@
     "modal.preview.title.empty": "Query would return {total} records.",
     "control.search.placeholder": "Search column name",
     "ariaLabel.columnFilter": "Column filter input",
-    "error.occurredMessage": "An error occurred."
+    "error.occurredMessage": "An error occurred.",
+    "warning.deletedField": "{value} in your query is unavailable. Please revise your query. "
 }

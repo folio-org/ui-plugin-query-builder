@@ -28,5 +28,6 @@
     "modal.preview.title.empty": "Dotaz by vrátil {total} záznamů.",
     "control.search.placeholder": "Název vyhledávacího sloupce",
     "ariaLabel.columnFilter": "Vstup filtru sloupců",
-    "error.occurredMessage": "Došlo k chybě."
+    "error.occurredMessage": "Došlo k chybě.",
+    "warning.deletedField": "{value} in your query is unavailable. Please revise your query. "
 }

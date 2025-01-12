@@ -28,5 +28,6 @@
     "modal.preview.title.empty": "クエリは{total}のレコードを返します",
     "control.search.placeholder": "Search column name",
     "ariaLabel.columnFilter": "Column filter input",
-    "error.occurredMessage": "エラーが発生しました"
+    "error.occurredMessage": "エラーが発生しました",
+    "warning.deletedField": "{value} in your query is unavailable. Please revise your query. "
 }
