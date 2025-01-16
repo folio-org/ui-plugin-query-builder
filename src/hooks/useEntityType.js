@@ -11,6 +11,8 @@ export const useEntityType = ({ entityTypeDataSource, queryKey, sharedOptions = 
     queryFn: entityTypeDataSource,
     ...sharedOptions,
     refetchOnWindowFocus: false,
+    keepPreviousData: false,
+    cacheTime: 0,
   });
 
   return {
