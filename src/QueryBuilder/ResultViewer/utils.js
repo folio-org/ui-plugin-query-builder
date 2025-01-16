@@ -29,6 +29,7 @@ export const formatValueByDataType = (value, dataType, intl, additionalParams = 
     case DATA_TYPES.DateType:
       return <FormattedDate value={value} />;
 
+    case DATA_TYPES.JsonbArrayType:
     case DATA_TYPES.ArrayType:
       if (additionalParams?.isInstanceLanguages) {
         return value.map((lang) => formattedLanguageName(lang, intl)).join(' | ');
