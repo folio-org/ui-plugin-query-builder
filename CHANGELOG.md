@@ -2,12 +2,19 @@
 
 ## IN PROGRESS
 
-* [UIPQB-168](https://folio-org.atlassian.net/browse/UIPQB-168) Allow editing queries containing no fields.
+* [UIPQB-164](https://folio-org.atlassian.net/browse/UIPQB-164) Columns are reset when user modifies query.
+* [UIPQB-185](https://folio-org.atlassian.net/browse/UIPQB-185) Missing spaces and pipe delimiter for some fields.
+
+## [1.2.8](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.8) (2025-01-09)
+
 * [UIPQB-141](https://folio-org.atlassian.net/browse/UIPQB-141) Modal dialog focus inconsistencies across screenreaders.
 * [UIPQB-162](https://folio-org.atlassian.net/browse/UIPQB-162) Errors when query includes a modified custom field.
-* [UIPQB-175](https://folio-org.atlassian.net/browse/UIPQB-175) Displays the "Smth went wrong" page, when the user clicks on "Select operator" dropdown and selects any of them, if there are deleted custom fields.
-* [UIPQB-164](https://folio-org.atlassian.net/browse/UIPQB-164) Columns are reset when user modifies query.
+* [UIPQB-175](https://folio-org.atlassian.net/browse/UIPQB-175) Displays the "Something went wrong" page, when the user clicks on "Select operator" dropdown and selects any of them, if there are deleted custom fields.
+* [UIPQB-179](https://folio-org.atlassian.net/browse/UIPQB-179) Fix string-based booleans improperly displaying.
 
+## [1.2.7](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.7) (2024-12-26)
+
+* [UIPQB-168](https://folio-org.atlassian.net/browse/UIPQB-168) Allow editing queries containing no fields.
 
 ## [1.2.6](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.6) (2024-12-11)
 
