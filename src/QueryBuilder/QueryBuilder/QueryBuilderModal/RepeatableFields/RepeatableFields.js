@@ -44,9 +44,20 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
   };
 
   const handleRemove = (index) => {
-    const filteredFields = source.filter((_, i) => i !== index);
+    if (index === 0) {
+      setSource((prevSource) => {
+        const updatedSource = [...prevSource];
+        if (updatedSource[1]?.boolean) {
+          updatedSource[1].boolean.current = "";
+        }
+        return updatedSource;
+      });
+    }
 
-    setSource(filteredFields);
+      const filteredFields = source.filter((_, i) => i !== index);
+
+      setSource(filteredFields);
+
 
     const previousRowSelector = `[class^=repeatableFieldItem-]:nth-child(${index})`;
     const previousRowElement = document.querySelector(previousRowSelector);
@@ -140,6 +151,8 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
     }
   }, []);
 
+  console.log(source)
+
   return (
     <>
       <QueryBuilderTitle results={source} />
@@ -218,7 +231,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
                 <IconButton
                   icon="trash"
                   onClick={() => handleRemove(index)}
-                  disabled={index === 0}
+                  disabled={source.length  === 1}
                   data-testid={`remove-button-${index}`}
                 />
               </Col>
