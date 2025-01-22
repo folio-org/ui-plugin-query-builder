@@ -2,7 +2,8 @@
 
 ## IN PROGRESS
 
-* [UIPQB-164](https://folio-org.atlassian.net/browse/UIPQB-164) Columns are reset when user modifies query.
+## [1.2.9](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.9) (2025-01-22)
+
 * [UIPQB-185](https://folio-org.atlassian.net/browse/UIPQB-185) Missing spaces and pipe delimiter for some fields.
 
 ## [1.2.8](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.8) (2025-01-09)
