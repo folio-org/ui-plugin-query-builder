@@ -21,8 +21,6 @@ export const useViewerCallbacks = ({
   }, [currentRecordsCount]);
 
   useEffect(() => {
-    if (currentRecordsCount) {
-      onPreviewShown?.({ currentRecordsCount, defaultLimit });
-    }
+    if (currentRecordsCount) onPreviewShown?.({ currentRecordsCount, defaultLimit });
   }, [currentRecordsCount]);
 };

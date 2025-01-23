@@ -44,6 +44,18 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
   };
 
   const handleRemove = (index) => {
+    if (index === 0) {
+      setSource((prevSource) => {
+        const updatedSource = [...prevSource];
+
+        if (updatedSource[1]?.boolean) {
+          updatedSource[1].boolean.current = '';
+        }
+
+        return updatedSource;
+      });
+    }
+
     const filteredFields = source.filter((_, i) => i !== index);
 
     setSource(filteredFields);
@@ -218,7 +230,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
                 <IconButton
                   icon="trash"
                   onClick={() => handleRemove(index)}
-                  disabled={index === 0}
+                  disabled={source.length === 1}
                   data-testid={`remove-button-${index}`}
                 />
               </Col>
