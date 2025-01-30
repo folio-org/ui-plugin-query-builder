@@ -29,5 +29,5 @@
     "control.search.placeholder": "Název vyhledávacího sloupce",
     "ariaLabel.columnFilter": "Vstup filtru sloupců",
     "error.occurredMessage": "Došlo k chybě.",
-    "warning.deletedField": "{value} in your query is unavailable. Please revise your query. "
+    "warning.deletedField": "{value} ve vašem dotazu není k dispozici. Upravte svůj dotaz."
 }
