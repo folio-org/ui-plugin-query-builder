@@ -8,16 +8,20 @@ export const useViewerCallbacks = ({
   currentRecordsCount,
   onPreviewShown,
   defaultLimit,
-  visibleColumns,
   forcedVisibleValues,
+  visibleColumns,
 }) => {
   useEffect(() => {
     if (defaultColumns.length > 0) {
       onSetDefaultColumns?.(defaultColumns);
 
-      onSetDefaultVisibleColumns?.(Array.from(new Set([...defaultVisibleColumns, ...visibleColumns])));
+      if (!visibleColumns?.length) {
+        onSetDefaultVisibleColumns?.(Array.from(new Set([...defaultVisibleColumns, ...forcedVisibleValues || []])));
+      } else {
+        onSetDefaultVisibleColumns?.((prev) => Array.from(new Set([...prev, ...forcedVisibleValues || []])));
+      }
     }
-  }, [currentRecordsCount, forcedVisibleValues]);
+  }, [currentRecordsCount]);
 
   useEffect(() => {
     if (currentRecordsCount) onPreviewShown?.({ currentRecordsCount, defaultLimit });
