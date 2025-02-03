@@ -62,4 +62,6 @@ export const OPERATOR_GROUPS = {
 export const OPERATORS_GROUPS_NAME = {
   ARRAY_COMPARISON: 'arrayComparison',
   COMPARISON: 'comparison',
+  LIKE: 'like',
+  NULL: 'null',
 };
