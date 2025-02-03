@@ -25,7 +25,7 @@ import {
 import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 import { findMissingValues } from '../../helpers/query';
-import { retainValueOnOperatorChange } from "../../helpers/valueBuilder";
+import { retainValueOnOperatorChange } from '../../helpers/valueBuilder';
 
 export const RepeatableFields = memo(({ source, setSource, getParamsSource, columns }) => {
   const intl = useIntl();

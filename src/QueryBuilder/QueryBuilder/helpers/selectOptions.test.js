@@ -1,4 +1,4 @@
-import { getFieldOptions, getFilteredOptions, getOperatorOptions } from './selectOptions';
+import { getFieldOptions, getFilteredOptions, getOperatorOptions, getOperatorType } from './selectOptions';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
 
@@ -473,5 +473,21 @@ describe('getFilteredOptions', () => {
     const res = getFilteredOptions('持股', mockDataOptionsChina);
 
     expect(res).toEqual([{ label: '項目 - 持股 - 報表' }]);
+  });
+});
+
+describe('getOperatorType', () => {
+  test('should return the correct operator group for an operator', () => {
+    expect(getOperatorType(OPERATORS.EQUAL)).toBe('comparison');
+    expect(getOperatorType(OPERATORS.NOT_EQUAL)).toBe('comparison');
+    expect(getOperatorType(OPERATORS.CONTAINS)).toBe('like');
+    expect(getOperatorType(OPERATORS.STARTS_WITH)).toBe('like');
+    expect(getOperatorType(OPERATORS.EMPTY)).toBe('null');
+    expect(getOperatorType(OPERATORS.IN)).toBe('arrayCompression');
+    expect(getOperatorType(OPERATORS.NOT_IN)).toBe('arrayCompression');
+  });
+
+  test('should return undefined if the operator is not found in any group', () => {
+    expect(getOperatorType('NON_EXISTENT_OPERATOR')).toBeUndefined();
   });
 });
