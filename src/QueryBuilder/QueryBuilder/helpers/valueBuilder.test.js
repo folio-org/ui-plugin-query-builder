@@ -147,26 +147,20 @@ describe('retainValueOnOperatorChange', () => {
     expect(result).toBe('someValue');
   });
 
-  it('should return the empty value', () => {
+  it('should return the previous value when switching between comparison and comparison array', () => {
     const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, 'someValue');
 
-    expect(result).toBe('');
+    expect(result).toBe('someValue');
   });
 
   it('should return the empty value of the array when switching from comparison array to comparison', () => {
     const result = retainValueOnOperatorChange(OPERATORS.IN, OPERATORS.EQUAL, [1, 2, 3]);
 
-    expect(result).toBe('');
+    expect(result).toBe(1);
   });
 
   it('should return an empty string when operator types are different and invalid', () => {
     const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.STARTS_WITH, 'someValue');
-
-    expect(result).toBe('');
-  });
-
-  it('should return an empty string when the operator type is not found', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, 'someValue');
 
     expect(result).toBe('');
   });

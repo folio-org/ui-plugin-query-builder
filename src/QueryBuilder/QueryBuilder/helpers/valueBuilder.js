@@ -85,7 +85,6 @@ export const retainValueOnOperatorChange = (
 ) => {
   const prevType = getOperatorType(prevOperator);
   const newType = getOperatorType(newOperator);
-  console.log(prevType, newType)
 
   if (!prevType || !newType) {
     return '';
