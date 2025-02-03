@@ -25,6 +25,7 @@ import {
 import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 import { findMissingValues } from '../../helpers/query';
+import { retainValueOnOperatorChange } from '../../helpers/valueBuilder';
 
 export const RepeatableFields = memo(({ source, setSource, getParamsSource, columns }) => {
   const intl = useIntl();
@@ -78,6 +79,8 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
     const isOperator = fieldName === COLUMN_KEYS.OPERATOR;
     const rowField = source[index].field.current;
     const memorizedField = fieldOptions.find(o => o.value === rowField);
+    const memorizedOperator = source[index].operator.current;
+    const memorizedValue = source[index].value.current;
     const modifications = (item) => {
       if (isField) {
         return {
@@ -107,7 +110,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
           [COLUMN_KEYS.VALUE]: {
             options: memorizedField.values,
             source: memorizedField.source,
-            current: '',
+            current: retainValueOnOperatorChange(memorizedOperator, value, memorizedValue),
           },
         };
       }

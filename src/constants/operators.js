@@ -43,3 +43,25 @@ export const OPERATORS_LABELS = {
   STARTS_WITH: 'starts with',
   EMPTY: ' is null/empty',
 };
+
+export const OPERATOR_GROUPS = {
+  comparison: [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL],
+  like: [OPERATORS.CONTAINS, OPERATORS.STARTS_WITH],
+  null: [OPERATORS.EMPTY],
+  arrayComparison: [
+    OPERATORS.IN,
+    OPERATORS.NOT_IN,
+    OPERATORS.CONTAINS_ALL,
+    OPERATORS.CONTAINS_ANY,
+    OPERATORS.NOT_CONTAINS_ANY,
+    OPERATORS.NOT_CONTAINS_ALL,
+    OPERATORS.NOT_CONTAINS,
+  ],
+};
+
+export const OPERATORS_GROUPS_NAME = {
+  ARRAY_COMPARISON: 'arrayComparison',
+  COMPARISON: 'comparison',
+  LIKE: 'like',
+  NULL: 'null',
+};

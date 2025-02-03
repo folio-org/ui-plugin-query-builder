@@ -1,4 +1,4 @@
-import { getCommaSeparatedStr, getQuotedStr, valueBuilder } from './valueBuilder';
+import { getCommaSeparatedStr, getQuotedStr, retainValueOnOperatorChange, valueBuilder } from './valueBuilder';
 import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
 
@@ -137,5 +137,35 @@ describe('valueBuilder', () => {
     const operator = OPERATORS.IN;
 
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value, true));
+  });
+});
+
+describe('retainValueOnOperatorChange', () => {
+  test('should return the previous value when the operator type is the same', () => {
+    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.EQUAL, 'someValue');
+
+    expect(result).toBe('someValue');
+  });
+
+  test('should return the previous value when switching between comparison and comparison array', () => {
+    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, 'someValue');
+
+    expect(result).toEqual([{ label: 'someValue', value: 'someValue' }]);
+  });
+
+  test('should return the first value of the array when switching from comparison array to comparison', () => {
+    const result = retainValueOnOperatorChange(OPERATORS.IN, OPERATORS.EQUAL, [
+      { value: 1, label: 'First value' },
+      { value: 2, label: 'Second value' },
+      { value: 3, label: 'Third value' },
+    ]);
+
+    expect(result).toBe(1);
+  });
+
+  test('should return an empty string when operator types are different and incompatible', () => {
+    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.STARTS_WITH, 'someValue');
+
+    expect(result).toBe('');
   });
 });

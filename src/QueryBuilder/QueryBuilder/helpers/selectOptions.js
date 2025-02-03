@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl';
 import { DATA_TYPES } from '../../../constants/dataTypes';
-import { BOOLEAN_OPERATORS, OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
+import { BOOLEAN_OPERATORS, OPERATOR_GROUPS, OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
 
 const getOperatorsWithPlaceholder = (options, intl) => {
@@ -164,4 +164,8 @@ export const getFilteredOptions = (value, dataOptions) => {
 
   // filter options based on whether the label matches the simplified pattern.
   return dataOptions.filter(option => regex.test(option.label));
+};
+
+export const getOperatorType = (operator) => {
+  return Object.keys(OPERATOR_GROUPS).find((type) => OPERATOR_GROUPS[type].includes(operator));
 };
