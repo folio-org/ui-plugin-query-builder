@@ -28,6 +28,10 @@ export const getFormattedUUID = (value, isInRelatedOperator) => {
 };
 
 const formatDateToPreview = (dateString, intl, timezone) => {
+  if (typeof dateString === 'boolean') {
+    return dateString;
+  }
+
   const formattedDate = dayjs.utc(dateString);
 
   if (formattedDate.isValid()) {
@@ -53,7 +57,10 @@ export const valueBuilder = ({ value, field, operator, fieldOptions, intl, timez
 
     [DATA_TYPES.ArrayType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value, isInRelatedOperator)),
 
-    [DATA_TYPES.JsonbArrayType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value, isInRelatedOperator)),
+    [DATA_TYPES.JsonbArrayType]: () => (isArray ?
+      getCommaSeparatedStr(value)
+      :
+      getQuotedStr(value, isInRelatedOperator)),
 
     [DATA_TYPES.EnumType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value, isInRelatedOperator)),
 
