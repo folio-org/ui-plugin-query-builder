@@ -4,6 +4,7 @@
 
 * [UIPQB-164](https://folio-org.atlassian.net/browse/UIPQB-164) Columns are reset when user modifies query.
 * [UIPQB-182](https://folio-org.atlassian.net/browse/UIPQB-182) Add ability to remove first query parameter.
+* [UIPQB-180](https://folio-org.atlassian.net/browse/UIPQB-180) Don't reset 'Value' when operator is changed
 
 ## [1.2.9](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.9) (2025-01-22)
 
