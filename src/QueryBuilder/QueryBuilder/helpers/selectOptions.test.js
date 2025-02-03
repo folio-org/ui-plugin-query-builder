@@ -483,8 +483,8 @@ describe('getOperatorType', () => {
     expect(getOperatorType(OPERATORS.CONTAINS)).toBe('like');
     expect(getOperatorType(OPERATORS.STARTS_WITH)).toBe('like');
     expect(getOperatorType(OPERATORS.EMPTY)).toBe('null');
-    expect(getOperatorType(OPERATORS.IN)).toBe('arrayCompression');
-    expect(getOperatorType(OPERATORS.NOT_IN)).toBe('arrayCompression');
+    expect(getOperatorType(OPERATORS.IN)).toBe('arrayComparison');
+    expect(getOperatorType(OPERATORS.NOT_IN)).toBe('arrayComparison');
   });
 
   test('should return undefined if the operator is not found in any group', () => {

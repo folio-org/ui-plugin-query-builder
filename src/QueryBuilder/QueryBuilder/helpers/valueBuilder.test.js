@@ -141,25 +141,29 @@ describe('valueBuilder', () => {
 });
 
 describe('retainValueOnOperatorChange', () => {
-  it('should return the previous value when the operator type is the same', () => {
+  test('should return the previous value when the operator type is the same', () => {
     const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.EQUAL, 'someValue');
 
     expect(result).toBe('someValue');
   });
 
-  it('should return the previous value when switching between comparison and comparison array', () => {
+  test('should return the previous value when switching between comparison and comparison array', () => {
     const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, 'someValue');
 
-    expect(result).toBe('someValue');
+    expect(result).toEqual([{ label: 'someValue', value: 'someValue' }]);
   });
 
-  it('should return the empty value of the array when switching from comparison array to comparison', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.IN, OPERATORS.EQUAL, [1, 2, 3]);
+  test('should return the first value of the array when switching from comparison array to comparison', () => {
+    const result = retainValueOnOperatorChange(OPERATORS.IN, OPERATORS.EQUAL, [
+      { value: 1, label: 'First value' },
+      { value: 2, label: 'Second value' },
+      { value: 3, label: 'Third value' },
+    ]);
 
     expect(result).toBe(1);
   });
 
-  it('should return an empty string when operator types are different and invalid', () => {
+  test('should return an empty string when operator types are different and incompatible', () => {
     const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.STARTS_WITH, 'someValue');
 
     expect(result).toBe('');

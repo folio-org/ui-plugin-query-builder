@@ -48,7 +48,7 @@ export const OPERATOR_GROUPS = {
   comparison: [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL],
   like: [OPERATORS.CONTAINS, OPERATORS.STARTS_WITH],
   null: [OPERATORS.EMPTY],
-  arrayCompression: [
+  arrayComparison: [
     OPERATORS.IN,
     OPERATORS.NOT_IN,
     OPERATORS.CONTAINS_ALL,
@@ -60,6 +60,6 @@ export const OPERATOR_GROUPS = {
 };
 
 export const OPERATORS_GROUPS_NAME = {
-  arrayCompression: 'arrayCompression',
-  comparison: 'comparison'
-}
+  ARRAY_COMPARISON: 'arrayComparison',
+  COMPARISON: 'comparison',
+};

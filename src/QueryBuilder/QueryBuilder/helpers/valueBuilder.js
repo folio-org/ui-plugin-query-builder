@@ -94,12 +94,12 @@ export const retainValueOnOperatorChange = (
     return prevValue;
   }
 
-  if (prevType === OPERATORS_GROUPS_NAME.comparison && newType === OPERATORS_GROUPS_NAME.arrayCompression) {
-    return prevValue;
+  if (prevType === OPERATORS_GROUPS_NAME.COMPARISON && newType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON) {
+    return [{ value: prevValue, label: prevValue }];
   }
 
-  if (prevType === OPERATORS_GROUPS_NAME.arrayCompression && newType === OPERATORS_GROUPS_NAME.comparison) {
-    return Array.isArray(prevValue) ? prevValue[0] : prevValue;
+  if (prevType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON && newType === OPERATORS_GROUPS_NAME.COMPARISON) {
+    return Array.isArray(prevValue) ? prevValue[0]?.value : prevValue;
   }
 
   return '';
