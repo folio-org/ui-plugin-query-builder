@@ -58,3 +58,8 @@ export const OPERATOR_GROUPS = {
     OPERATORS.NOT_CONTAINS,
   ],
 };
+
+export const OPERATORS_GROUPS_NAME = {
+  arrayCompression: 'arrayCompression',
+  comparison: 'comparison'
+}

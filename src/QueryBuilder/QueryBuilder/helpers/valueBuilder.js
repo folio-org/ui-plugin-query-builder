@@ -1,6 +1,6 @@
 import { dayjs } from '@folio/stripes/components';
 import { DATA_TYPES } from '../../../constants/dataTypes';
-import { OPERATORS } from '../../../constants/operators';
+import { OPERATORS, OPERATORS_GROUPS_NAME } from '../../../constants/operators';
 import { getOperatorType } from './selectOptions';
 
 export const getCommaSeparatedStr = (arr) => {
@@ -85,6 +85,7 @@ export const retainValueOnOperatorChange = (
 ) => {
   const prevType = getOperatorType(prevOperator);
   const newType = getOperatorType(newOperator);
+  console.log(prevType, newType)
 
   if (!prevType || !newType) {
     return '';
@@ -94,11 +95,11 @@ export const retainValueOnOperatorChange = (
     return prevValue;
   }
 
-  if (prevType === 'comparison' && newType === 'comparison array') {
+  if (prevType === OPERATORS_GROUPS_NAME.comparison && newType === OPERATORS_GROUPS_NAME.arrayCompression) {
     return prevValue;
   }
 
-  if (prevType === 'comparison array' && newType === 'comparison') {
+  if (prevType === OPERATORS_GROUPS_NAME.arrayCompression && newType === OPERATORS_GROUPS_NAME.comparison) {
     return Array.isArray(prevValue) ? prevValue[0] : prevValue;
   }
 
