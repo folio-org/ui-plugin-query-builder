@@ -233,7 +233,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
                 <IconButton
                   icon="trash"
                   onClick={() => handleRemove(index)}
-                  disabled={index === 0}
+                  disabled={source.length === 1}
                   data-testid={`remove-button-${index}`}
                 />
               </Col>
