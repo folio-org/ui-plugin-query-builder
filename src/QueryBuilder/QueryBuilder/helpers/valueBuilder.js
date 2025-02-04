@@ -2,9 +2,16 @@ import { dayjs } from '@folio/stripes/components';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS, OPERATORS_GROUPS_NAME } from '../../../constants/operators';
 import { getOperatorType } from './selectOptions';
+import { findLabelByValue } from '../../ResultViewer/utils';
 
 export const getCommaSeparatedStr = (arr) => {
-  const str = arr?.map(el => `"${el?.value}"`).join(',');
+  const str = arr?.map(el => {
+    if (/^(_custom_field|opt_)/.test(el.value)) {
+      return `"${el?.label}"`;
+    }
+
+    return `"${el?.value}"`;
+  }).join(',');
 
   return `(${str})`;
 };
@@ -82,6 +89,7 @@ export const retainValueOnOperatorChange = (
   prevOperator,
   newOperator,
   prevValue,
+  options = [],
 ) => {
   const prevType = getOperatorType(prevOperator);
   const newType = getOperatorType(newOperator);
@@ -95,7 +103,7 @@ export const retainValueOnOperatorChange = (
   }
 
   if (prevType === OPERATORS_GROUPS_NAME.COMPARISON && newType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON) {
-    return [{ value: prevValue, label: prevValue }];
+    return [{ value: prevValue, label: findLabelByValue(options, prevValue) }];
   }
 
   if (prevType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON && newType === OPERATORS_GROUPS_NAME.COMPARISON) {

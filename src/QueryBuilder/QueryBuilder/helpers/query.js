@@ -2,6 +2,7 @@ import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { valueBuilder } from './valueBuilder';
 import { BOOLEAN_OPERATORS, BOOLEAN_OPERATORS_MAP, OPERATORS } from '../../../constants/operators';
 import { getOperatorOptions } from './selectOptions';
+import { findLabelByValue } from '../../ResultViewer/utils';
 
 export const DEFAULT_PREVIEW_INTERVAL = 3000;
 
@@ -11,8 +12,9 @@ export const getQueryStr = (rows, fieldOptions, intl, timezone) => {
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
-    const builtValue = valueBuilder({ value, field, operator, fieldOptions, intl, timezone });
-    const baseQuery = `(${field} ${operator} ${builtValue})`;
+    const labeledValue = findLabelByValue(row[COLUMN_KEYS.VALUE], value);
+    const builtValue = valueBuilder({ value: labeledValue, field, operator, fieldOptions, intl, timezone });
+    const baseQuery = `(${findLabelByValue(row[COLUMN_KEYS.FIELD], field)} ${operator} ${builtValue})`;
 
     // if there aren't values yet - return empty string
     if (![bool, field, operator, value].some(val => Boolean(val))) {
