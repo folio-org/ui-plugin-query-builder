@@ -45,3 +45,11 @@ export const formatValueByDataType = (value, dataType, intl, additionalParams = 
       return value || '';
   }
 };
+
+export const findLabelByValue = (options, value) => {
+  // Exceptional case for custom field, that can be identified using that pattern,
+  // that comes from JSONB
+  if (!/^(_custom_field|opt_)/.test(value) || Array.isArray(value)) return value;
+
+  return options?.options.find(option => option.value === value)?.label;
+};

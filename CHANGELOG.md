@@ -6,6 +6,8 @@
 * [UIPQB-182](https://folio-org.atlassian.net/browse/UIPQB-182) Add ability to remove first query parameter.
 * [UIPQB-181](https://folio-org.atlassian.net/browse/UIPQB-181) The user-friendly query contains random dates instead of true/false values.
 * [UIPQB-180](https://folio-org.atlassian.net/browse/UIPQB-180) Don't reset 'Value' when operator is changed
+* [UIPQB-183](https://folio-org.atlassian.net/browse/UIPQB-183) Show custom field labels in "Query" box of query builder.
+* [UIPQB-184](https://folio-org.atlassian.net/browse/UIPQB-184) Show array field labels in "Query" box of query builder.
 
 ## [1.2.9](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.9) (2025-01-22)
 
