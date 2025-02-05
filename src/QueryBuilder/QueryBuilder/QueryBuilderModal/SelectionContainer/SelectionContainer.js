@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { Loading } from '@folio/stripes/components';
 
 import { useParamsDataSource } from '../../../../hooks/useParamsDataSource';
-import { RootContext } from "../../../../context/RootContext";
+import { RootContext } from '../../../../context/RootContext';
 
 export const SelectionContainer = ({
   operator,
@@ -58,7 +58,7 @@ export const SelectionContainer = ({
   const dataOptions = getOptions(availableValues, data?.content);
 
   const handleOnChange = (value) => {
-    setDataOptions(dataOptions)
+    setDataOptions(dataOptions);
 
     if (onChange) onChange(value);
   };

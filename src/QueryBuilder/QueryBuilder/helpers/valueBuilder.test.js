@@ -148,9 +148,11 @@ describe('retainValueOnOperatorChange', () => {
   });
 
   test('should return the previous value when switching between comparison and comparison array', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, 'someValue');
+    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, 'someValue', [{
+      label: 'someLabel', value: 'someValue',
+    }]);
 
-    expect(result).toEqual([{ label: 'someValue', value: 'someValue' }]);
+    expect(result).toEqual([{ label: 'someLabel', value: 'someValue' }]);
   });
 
   test('should return the first value of the array when switching from comparison array to comparison', () => {

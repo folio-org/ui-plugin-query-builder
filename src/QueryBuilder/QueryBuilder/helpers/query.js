@@ -7,8 +7,8 @@ import { findLabelByValue } from '../../ResultViewer/utils';
 export const DEFAULT_PREVIEW_INTERVAL = 3000;
 
 const getLabeledValue = (value, dataOptions) => {
-  if(value === '') {
-    return ''
+  if (value === '') {
+    return '';
   }
 
   if (Array.isArray(value)) {
@@ -16,6 +16,7 @@ const getLabeledValue = (value, dataOptions) => {
   }
 
   const matchedOption = dataOptions?.find(option => option.value === value);
+
   return matchedOption ? matchedOption.label : value;
 };
 
