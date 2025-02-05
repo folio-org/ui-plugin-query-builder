@@ -116,9 +116,9 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
             current: retainValueOnOperatorChange(
               memorizedOperator,
               value,
+              memorizedFieldDataType,
               memorizedValue,
               dataOptions,
-              memorizedFieldDataType,
             ),
           },
         };
