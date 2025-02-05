@@ -2,16 +2,9 @@ import { dayjs } from '@folio/stripes/components';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS, OPERATORS_GROUPS_NAME } from '../../../constants/operators';
 import { getOperatorType } from './selectOptions';
-import { findLabelByValue } from '../../ResultViewer/utils';
 
 export const getCommaSeparatedStr = (arr) => {
-  const str = arr?.map(el => {
-    if (/^(_custom_field|opt_)/.test(el.value)) {
-      return `"${el?.label}"`;
-    }
-
-    return `"${el?.value}"`;
-  }).join(',');
+  const str = arr?.map(el => `"${el?.label}"`).join(',');
 
   return `(${str})`;
 };
@@ -88,7 +81,8 @@ export const valueBuilder = ({ value, field, operator, fieldOptions, intl, timez
 export const retainValueOnOperatorChange = (
   prevOperator,
   newOperator,
-  prevValue,
+  memorizedFieldDataType,
+  prevValue = '',
   options = [],
 ) => {
   const prevType = getOperatorType(prevOperator);
@@ -103,7 +97,11 @@ export const retainValueOnOperatorChange = (
   }
 
   if (prevType === OPERATORS_GROUPS_NAME.COMPARISON && newType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON) {
-    return [{ value: prevValue, label: findLabelByValue(options, prevValue) }];
+    if (memorizedFieldDataType === DATA_TYPES.RangedUUIDType) {
+      return prevValue;
+    }
+
+    return [{ value: prevValue, label: options?.find(option => option.value === prevValue)?.label }];
   }
 
   if (prevType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON && newType === OPERATORS_GROUPS_NAME.COMPARISON) {

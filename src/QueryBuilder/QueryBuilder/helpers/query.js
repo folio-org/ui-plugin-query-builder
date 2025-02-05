@@ -6,13 +6,31 @@ import { findLabelByValue } from '../../ResultViewer/utils';
 
 export const DEFAULT_PREVIEW_INTERVAL = 3000;
 
-export const getQueryStr = (rows, fieldOptions, intl, timezone) => {
+const getLabeledValue = (value, dataOptions) => {
+  if (typeof value === 'boolean') {
+    return value;
+  }
+
+  if (value === '') {
+    return '';
+  }
+
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  const matchedOption = dataOptions?.find(option => option.value === value);
+
+  return matchedOption ? matchedOption.label : value;
+};
+
+export const getQueryStr = (rows, fieldOptions, intl, timezone, dataOptions = []) => {
   return rows.reduce((str, row, index) => {
     const bool = row[COLUMN_KEYS.BOOLEAN].current;
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
-    const labeledValue = findLabelByValue(row[COLUMN_KEYS.VALUE], value);
+    const labeledValue = getLabeledValue(value, dataOptions);
     const builtValue = valueBuilder({ value: labeledValue, field, operator, fieldOptions, intl, timezone });
     const baseQuery = `(${findLabelByValue(row[COLUMN_KEYS.FIELD], field)} ${operator} ${builtValue})`;
 

@@ -1,6 +1,7 @@
 import { getCommaSeparatedStr, getQuotedStr, retainValueOnOperatorChange, valueBuilder } from './valueBuilder';
 import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
+import { DATA_TYPES } from '../../../constants/dataTypes';
 
 describe('valueBuilder', () => {
   test('should return a string enclosed in double quotes for StringType', () => {
@@ -142,19 +143,21 @@ describe('valueBuilder', () => {
 
 describe('retainValueOnOperatorChange', () => {
   test('should return the previous value when the operator type is the same', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.EQUAL, 'someValue');
+    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.EQUAL, DATA_TYPES.StringType, 'someValue');
 
     expect(result).toBe('someValue');
   });
 
   test('should return the previous value when switching between comparison and comparison array', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, 'someValue');
+    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, DATA_TYPES.StringType, 'someValue', [{
+      label: 'someLabel', value: 'someValue',
+    }]);
 
-    expect(result).toEqual([{ label: 'someValue', value: 'someValue' }]);
+    expect(result).toEqual([{ label: 'someLabel', value: 'someValue' }]);
   });
 
   test('should return the first value of the array when switching from comparison array to comparison', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.IN, OPERATORS.EQUAL, [
+    const result = retainValueOnOperatorChange(OPERATORS.IN, OPERATORS.EQUAL, DATA_TYPES.StringType, [
       { value: 1, label: 'First value' },
       { value: 2, label: 'Second value' },
       { value: 3, label: 'Third value' },
@@ -164,7 +167,7 @@ describe('retainValueOnOperatorChange', () => {
   });
 
   test('should return an empty string when operator types are different and incompatible', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.STARTS_WITH, 'someValue');
+    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.STARTS_WITH, DATA_TYPES.StringType, 'someValue');
 
     expect(result).toBe('');
   });

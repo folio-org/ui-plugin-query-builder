@@ -6,6 +6,7 @@ import '../../../../../test/jest/__mock__/resizeObserver.mock';
 import { DataTypeInput } from './DataTypeInput';
 import { DATA_TYPES } from '../../../../constants/dataTypes';
 import { OPERATORS } from '../../../../constants/operators';
+import { RootContext } from '../../../../context/RootContext';
 
 jest.mock('../../../../hooks/useParamsDataSource', () => ({
   useParamsDataSource: jest.fn().mockReturnValue({
@@ -27,6 +28,8 @@ const mockSource = {
   },
 };
 
+const setDataOptionsMock = jest.fn();
+
 const renderDataTypeInput = ({
   onChange,
   dataType,
@@ -35,16 +38,18 @@ const renderDataTypeInput = ({
   availableValues,
 }) => render(
   <Intl>
-    <QueryClientProvider client={queryClient}>
-      <DataTypeInput
-        onChange={onChange}
-        dataType={dataType}
-        operator={operator}
-        source={source}
-        availableValues={availableValues}
-        getParamsSource={noop}
-      />
-    </QueryClientProvider>,
+    <RootContext.Provider value={{ setDataOptions: setDataOptionsMock }}>
+      <QueryClientProvider client={queryClient}>
+        <DataTypeInput
+          onChange={onChange}
+          dataType={dataType}
+          operator={operator}
+          source={source}
+          availableValues={availableValues}
+          getParamsSource={noop}
+        />
+      </QueryClientProvider>,
+    </RootContext.Provider>
   </Intl>,
 );
 

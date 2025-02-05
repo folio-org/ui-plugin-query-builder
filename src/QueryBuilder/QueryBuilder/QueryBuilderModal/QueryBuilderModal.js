@@ -25,6 +25,7 @@ import { useFqmVersion } from '../../../hooks/useFqmVersion';
 import { useTestQuery } from '../../../hooks/useTestQuery';
 import { getFieldOptions } from '../helpers/selectOptions';
 import upgradeInitialValues from '../helpers/upgradeInitialValues';
+import { RootContext } from '../../../context/RootContext';
 
 export const QueryBuilderModal = ({
   isOpen,
@@ -51,6 +52,9 @@ export const QueryBuilderModal = ({
   const queryClient = useQueryClient();
   const [entityKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_ENTITY_TYPE });
   const [entityPreviewKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_PREVIEW_ENTITY_TYPE });
+  const [dataOptions, setDataOptions] = useState([]);
+
+  const memoizedDataOptions = useMemo(() => ({ setDataOptions, dataOptions }), [setDataOptions, dataOptions]);
 
   const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const showCallout = useShowCallout();
@@ -83,6 +87,7 @@ export const QueryBuilderModal = ({
     getParamsSource,
     initialValues,
     entityType,
+    dataOptions,
   });
 
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
@@ -214,64 +219,66 @@ export const QueryBuilderModal = ({
   );
 
   return (
-    <Modal
-      open={isOpen}
-      footer={renderFooter()}
-      onClose={handleCloseModal}
-      dismissible
-      label={<FormattedMessage id="ui-plugin-query-builder.trigger" />}
-      size="large"
-      contentClass={css.modalClass}
-      enforceFocus
-    >
-      <Headline size="medium" margin="none" tag="h3">
-        <FormattedMessage id="ui-plugin-query-builder.modal.query" />
-      </Headline>
-      <div className={css.queryArea}>
-        {queryStr}
-      </div>
+    <RootContext.Provider value={memoizedDataOptions}>
+      <Modal
+        open={isOpen}
+        footer={renderFooter()}
+        onClose={handleCloseModal}
+        dismissible
+        label={<FormattedMessage id="ui-plugin-query-builder.trigger" />}
+        size="large"
+        contentClass={css.modalClass}
+        enforceFocus
+      >
+        <Headline size="medium" margin="none" tag="h3">
+          <FormattedMessage id="ui-plugin-query-builder.modal.query" />
+        </Headline>
+        <div className={css.queryArea}>
+          {queryStr}
+        </div>
 
-      {isEntityTypeFetching ? (
-        <Row center="xs">
-          <Loading size="large" />
-        </Row>
-      ) : (
-        <StripesOverlayWrapper>
-          <RepeatableFields
-            source={source}
-            setSource={handleSetSource}
-            getParamsSource={getParamsSource}
-            columns={entityType?.columns}
-          />
-          <TestQuery
-            queryId={queryId}
-            testQuery={testQuery}
-            forcedVisibleValues={forcedVisibleValues}
-            isTestQueryLoading={isTestQueryLoading}
-            fqlQuery={fqlQuery}
-            recordColumns={recordColumns}
-            onSetDefaultVisibleColumns={onSetDefaultVisibleColumns}
-            testQueryDataSource={testQueryDataSource}
-            entityTypeDataSource={entityTypeDataSource}
-            queryDetailsDataSource={queryDetailsDataSource}
-            isQueryFilled={isQueryFilled}
-            onQueryRetrieved={handleQueryRetrieved}
-            entityTypeId={entityType?.id}
-            onQueryExecutionFail={onQueryExecutionFail}
-            onQueryExecutionSuccess={onQueryExecutionSuccess}
-            isPreviewLoading={isPreviewLoading}
-            setIsPreviewLoading={setIsPreviewLoading}
-            isTestQueryInProgress={isTestQueryInProgress}
-            setIsTestQueryInProgress={setIsTestQueryInProgress}
-            recordsLimitExceeded={recordsLimitExceeded}
-            setRecordsLimitExceeded={setRecordsLimitExceeded}
-            recordsLimit={recordsLimit}
-            additionalControls={additionalControls}
-          />
-        </StripesOverlayWrapper>
-      )}
+        {isEntityTypeFetching ? (
+          <Row center="xs">
+            <Loading size="large" />
+          </Row>
+        ) : (
+          <StripesOverlayWrapper>
+            <RepeatableFields
+              source={source}
+              setSource={handleSetSource}
+              getParamsSource={getParamsSource}
+              columns={entityType?.columns}
+            />
+            <TestQuery
+              queryId={queryId}
+              testQuery={testQuery}
+              forcedVisibleValues={forcedVisibleValues}
+              isTestQueryLoading={isTestQueryLoading}
+              fqlQuery={fqlQuery}
+              recordColumns={recordColumns}
+              onSetDefaultVisibleColumns={onSetDefaultVisibleColumns}
+              testQueryDataSource={testQueryDataSource}
+              entityTypeDataSource={entityTypeDataSource}
+              queryDetailsDataSource={queryDetailsDataSource}
+              isQueryFilled={isQueryFilled}
+              onQueryRetrieved={handleQueryRetrieved}
+              entityTypeId={entityType?.id}
+              onQueryExecutionFail={onQueryExecutionFail}
+              onQueryExecutionSuccess={onQueryExecutionSuccess}
+              isPreviewLoading={isPreviewLoading}
+              setIsPreviewLoading={setIsPreviewLoading}
+              isTestQueryInProgress={isTestQueryInProgress}
+              setIsTestQueryInProgress={setIsTestQueryInProgress}
+              recordsLimitExceeded={recordsLimitExceeded}
+              setRecordsLimitExceeded={setRecordsLimitExceeded}
+              recordsLimit={recordsLimit}
+              additionalControls={additionalControls}
+            />
+          </StripesOverlayWrapper>
+        )}
 
-    </Modal>
+      </Modal>
+    </RootContext.Provider>
   );
 };
 

@@ -28,7 +28,7 @@ export const getSourceValue = ({ initialValues, fieldOptions, intl, getParamsSou
   return [sourceTemplate(fieldOptions)];
 };
 
-export const useQuerySource = ({ initialValues, entityType, getParamsSource }) => {
+export const useQuerySource = ({ initialValues, entityType, getParamsSource, dataOptions }) => {
   const intl = useIntl();
   const [source, setSource] = useState([]);
 
@@ -36,7 +36,7 @@ export const useQuerySource = ({ initialValues, entityType, getParamsSource }) =
   const stringifiedFieldOptions = useMemo(() => JSON.stringify(fieldOptions), [fieldOptions]);
 
   const { tenantTimezone: timezone } = useTenantTimezone();
-  const queryStr = getQueryStr(source, fieldOptions, intl, timezone);
+  const queryStr = getQueryStr(source, fieldOptions, intl, timezone, dataOptions);
   const isQueryFilled = isQueryValid(source);
   const fqlQuery = sourceToMongoQuery(source);
 
