@@ -25,6 +25,7 @@ import { useFqmVersion } from '../../../hooks/useFqmVersion';
 import { useTestQuery } from '../../../hooks/useTestQuery';
 import { getFieldOptions } from '../helpers/selectOptions';
 import upgradeInitialValues from '../helpers/upgradeInitialValues';
+import { RootContext } from "../../../context/RootContext";
 
 export const QueryBuilderModal = ({
   isOpen,
@@ -51,6 +52,7 @@ export const QueryBuilderModal = ({
   const queryClient = useQueryClient();
   const [entityKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_ENTITY_TYPE });
   const [entityPreviewKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_PREVIEW_ENTITY_TYPE });
+  const [dataOptions, setDataOptions] = useState([])
 
   const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const showCallout = useShowCallout();
@@ -83,6 +85,7 @@ export const QueryBuilderModal = ({
     getParamsSource,
     initialValues,
     entityType,
+    dataOptions
   });
 
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
@@ -214,6 +217,7 @@ export const QueryBuilderModal = ({
   );
 
   return (
+      <RootContext.Provider value={{setDataOptions, dataOptions}}>
     <Modal
       open={isOpen}
       footer={renderFooter()}
@@ -272,6 +276,7 @@ export const QueryBuilderModal = ({
       )}
 
     </Modal>
+  </RootContext.Provider>
   );
 };
 

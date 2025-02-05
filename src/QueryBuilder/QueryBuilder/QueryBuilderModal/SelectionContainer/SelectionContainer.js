@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { useIntl } from 'react-intl';
 
 import { Loading } from '@folio/stripes/components';
 
 import { useParamsDataSource } from '../../../../hooks/useParamsDataSource';
+import { RootContext } from "../../../../context/RootContext";
 
 export const SelectionContainer = ({
   operator,
@@ -18,6 +19,7 @@ export const SelectionContainer = ({
   ...rest
 }) => {
   const intl = useIntl();
+  const { setDataOptions } = useContext(RootContext);
   const [searchValue, setSearchValue] = useState('');
   const getSelectOptionsWithPlaceholder = (options) => {
     return isMulti ? options : [
@@ -55,6 +57,12 @@ export const SelectionContainer = ({
 
   const dataOptions = getOptions(availableValues, data?.content);
 
+  const handleOnChange = (value) => {
+    setDataOptions(dataOptions)
+
+    if (onChange) onChange(value);
+  };
+
   if (isLoading) return <Loading size="large" />;
 
   return (
@@ -62,7 +70,7 @@ export const SelectionContainer = ({
       key={operator}
       {...rest}
       data-testid={testId}
-      onChange={onChange}
+      onChange={handleOnChange}
       filter={filterOptions}
       dataOptions={dataOptions}
     />);

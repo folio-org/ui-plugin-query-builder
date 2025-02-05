@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, {memo, useContext, useEffect, useRef, useState} from 'react';
 import {
   IconButton,
   RepeatableField,
@@ -26,11 +26,13 @@ import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 import { findMissingValues } from '../../helpers/query';
 import { retainValueOnOperatorChange } from '../../helpers/valueBuilder';
+import { RootContext } from "../../../../context/RootContext";
 
 export const RepeatableFields = memo(({ source, setSource, getParamsSource, columns }) => {
   const intl = useIntl();
   const callout = useShowCallout();
   const calloutCalledRef = useRef(false);
+  const { dataOptions} = useContext(RootContext);
 
   const fieldOptions = getFieldOptions(columns);
 
@@ -110,7 +112,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
           [COLUMN_KEYS.VALUE]: {
             options: memorizedField.values,
             source: memorizedField.source,
-            current: retainValueOnOperatorChange(memorizedOperator, value, memorizedValue, source[index].value),
+            current: retainValueOnOperatorChange(memorizedOperator, value, memorizedValue, dataOptions),
           },
         };
       }
