@@ -54,6 +54,9 @@ export const QueryBuilderModal = ({
   const [entityPreviewKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_PREVIEW_ENTITY_TYPE });
   const [dataOptions, setDataOptions] = useState([]);
 
+  const memoizedDataOptions = useMemo(() => ({ setDataOptions, dataOptions }), [setDataOptions, dataOptions]);
+
+
   const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const showCallout = useShowCallout();
 
@@ -217,7 +220,7 @@ export const QueryBuilderModal = ({
   );
 
   return (
-    <RootContext.Provider value={{ setDataOptions, dataOptions }}>
+    <RootContext.Provider value={memoizedDataOptions}>
       <Modal
         open={isOpen}
         footer={renderFooter()}

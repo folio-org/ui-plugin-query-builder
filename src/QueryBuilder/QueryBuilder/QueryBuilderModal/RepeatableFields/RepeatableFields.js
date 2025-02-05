@@ -1,4 +1,4 @@
-import React, { memo, useContext, useEffect, useRef, useState } from 'react';
+import React, { memo, useContext, useEffect, useRef } from 'react';
 import {
   IconButton,
   RepeatableField,
