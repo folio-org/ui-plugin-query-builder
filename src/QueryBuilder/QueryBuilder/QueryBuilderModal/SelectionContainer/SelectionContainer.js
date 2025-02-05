@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { Loading } from '@folio/stripes/components';
@@ -56,6 +56,10 @@ export const SelectionContainer = ({
   };
 
   const dataOptions = getOptions(availableValues, data?.content);
+
+  useEffect(() => {
+    setDataOptions(dataOptions);
+  }, []);
 
   const handleOnChange = (value) => {
     setDataOptions(dataOptions);

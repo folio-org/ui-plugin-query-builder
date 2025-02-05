@@ -80,6 +80,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
     const isField = fieldName === COLUMN_KEYS.FIELD;
     const isOperator = fieldName === COLUMN_KEYS.OPERATOR;
     const rowField = source[index].field.current;
+    const memorizedFieldDataType = source[index].field.dataType;
     const memorizedField = fieldOptions.find(o => o.value === rowField);
     const memorizedOperator = source[index].operator.current;
     const memorizedValue = source[index].value.current;
@@ -112,7 +113,13 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
           [COLUMN_KEYS.VALUE]: {
             options: memorizedField.values,
             source: memorizedField.source,
-            current: retainValueOnOperatorChange(memorizedOperator, value, memorizedValue, dataOptions),
+            current: retainValueOnOperatorChange(
+              memorizedOperator,
+              value,
+              memorizedValue,
+              dataOptions,
+              memorizedFieldDataType,
+            ),
           },
         };
       }

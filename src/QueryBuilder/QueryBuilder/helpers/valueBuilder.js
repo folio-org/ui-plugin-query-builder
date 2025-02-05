@@ -81,8 +81,9 @@ export const valueBuilder = ({ value, field, operator, fieldOptions, intl, timez
 export const retainValueOnOperatorChange = (
   prevOperator,
   newOperator,
-  prevValue,
+  prevValue = '',
   options = [],
+  memorizedFieldDataType,
 ) => {
   const prevType = getOperatorType(prevOperator);
   const newType = getOperatorType(newOperator);
@@ -96,6 +97,10 @@ export const retainValueOnOperatorChange = (
   }
 
   if (prevType === OPERATORS_GROUPS_NAME.COMPARISON && newType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON) {
+    if (memorizedFieldDataType === DATA_TYPES.RangedUUIDType) {
+      return prevValue;
+    }
+
     return [{ value: prevValue, label: options?.find(option => option.value === prevValue)?.label }];
   }
 

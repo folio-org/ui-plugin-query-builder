@@ -56,7 +56,6 @@ export const QueryBuilderModal = ({
 
   const memoizedDataOptions = useMemo(() => ({ setDataOptions, dataOptions }), [setDataOptions, dataOptions]);
 
-
   const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const showCallout = useShowCallout();
 

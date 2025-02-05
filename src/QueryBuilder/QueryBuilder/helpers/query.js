@@ -7,6 +7,10 @@ import { findLabelByValue } from '../../ResultViewer/utils';
 export const DEFAULT_PREVIEW_INTERVAL = 3000;
 
 const getLabeledValue = (value, dataOptions) => {
+  if (typeof value === 'boolean') {
+    return value;
+  }
+
   if (value === '') {
     return '';
   }
