@@ -216,7 +216,7 @@ const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOption
           current: '',
         },
         value: { current: '' },
-        deleted: true
+        deleted: true,
       };
     }
 
