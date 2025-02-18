@@ -229,8 +229,6 @@ describe('mongoQueryToSource()', () => {
       ],
     };
 
-    const defaultField = fieldOptions[0];
-
     const result = await mongoQueryToSource({
       initialValues: initialValuesUpdated,
       booleanOptions,
@@ -253,19 +251,6 @@ describe('mongoQueryToSource()', () => {
           current: '==',
         },
         value: { current: 'value', source: undefined, options: undefined },
-      },
-      {
-        boolean: { options: booleanOptions, current: '$and' },
-        field: {
-          options: fieldOptions,
-          dataType: defaultField?.dataType,
-        },
-        operator: {
-          current: '',
-        },
-        value: {
-          current: '',
-        },
       },
     ]);
   });
