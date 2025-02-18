@@ -8,6 +8,7 @@
 * [UIPQB-180](https://folio-org.atlassian.net/browse/UIPQB-180) Don't reset 'Value' when operator is changed
 * [UIPQB-183](https://folio-org.atlassian.net/browse/UIPQB-183) Show custom field labels in "Query" box of query builder.
 * [UIPQB-184](https://folio-org.atlassian.net/browse/UIPQB-184) Show array field labels in "Query" box of query builder.
+* [UIPQB-187](https://folio-org.atlassian.net/browse/UIPQB-187) Ignore/remove invalid values for dropdown fields when editing a query in the query builder.
 
 ## [1.2.9](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.9) (2025-01-22)
 

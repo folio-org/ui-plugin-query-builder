@@ -216,6 +216,7 @@ const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOption
           current: '',
         },
         value: { current: '' },
+        deleted: true
       };
     }
 
@@ -234,7 +235,7 @@ const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOption
         }).then((data) => data?.content);
       }
 
-      formattedValue = value.map(val => params?.find(param => param.value === val));
+      formattedValue = value.map(val => params?.find(param => param.value === val)).filter(val => val !== undefined);
     }
 
     return {
@@ -279,7 +280,9 @@ export const mongoQueryToSource = async ({
         ...sharedArgs,
       });
 
-      formattedSource.push(formattedItem);
+      if (!formattedItem?.deleted) {
+        formattedSource.push(formattedItem);
+      }
     }
 
     return formattedSource;
