@@ -129,6 +129,7 @@ export const TestQuery = ({
         total={total}
         limit={limit}
         isInProgress={isInProgress}
+        status={status}
       />
     );
   };
