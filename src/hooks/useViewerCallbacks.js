@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 export const useViewerCallbacks = ({
   onSetDefaultColumns,
@@ -11,9 +11,11 @@ export const useViewerCallbacks = ({
   forcedVisibleValues,
   visibleColumns,
 }) => {
+  const memoizedDefaultColumns = useMemo(() => defaultColumns, [JSON.stringify(defaultColumns)]);
+
   useEffect(() => {
     if (defaultColumns.length > 0) {
-      onSetDefaultColumns?.(defaultColumns);
+      onSetDefaultColumns?.(memoizedDefaultColumns);
 
       if (!visibleColumns?.length) {
         onSetDefaultVisibleColumns?.(Array.from(new Set([...defaultVisibleColumns, ...forcedVisibleValues || []])));
@@ -21,7 +23,7 @@ export const useViewerCallbacks = ({
         onSetDefaultVisibleColumns?.((prev) => Array.from(new Set([...prev, ...forcedVisibleValues || []])));
       }
     }
-  }, [currentRecordsCount]);
+  }, [currentRecordsCount, memoizedDefaultColumns]);
 
   useEffect(() => {
     if (currentRecordsCount) onPreviewShown?.({ currentRecordsCount, defaultLimit });
