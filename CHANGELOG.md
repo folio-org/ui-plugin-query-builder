@@ -11,6 +11,8 @@
 * [UIPQB-187](https://folio-org.atlassian.net/browse/UIPQB-187) Ignore/remove invalid values for dropdown fields when editing a query in the query builder.
 * [UIPQB-192](https://folio-org.atlassian.net/browse/UIPQB-192) Query builder shouldn't show 0 results when a query fails.
 * [UIPQB-198](https://folio-org.atlassian.net/browse/UIPQB-198) The columns are missing in the "Actions" dropdown, after modifying the list.
+* [UIPQB-190](https://folio-org.atlassian.net/browse/UIPQB-190) *BREAKING* migrate react-intl to v7.
+* [UIPQB-189](https://folio-org.atlassian.net/browse/UIPQB-189) *BREAKING* migrate stripes-* dependencies.
 
 ## [1.2.9](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.9) (2025-01-22)
 
