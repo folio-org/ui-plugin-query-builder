@@ -11,7 +11,7 @@ export const ViewerHeadline = memo(({ limit, total, isInProgress, status }) => {
 
   const title = useMemo(() => {
     if (hasFailed) {
-      return <FormattedMessage id="error.occurredMessage" />;
+      return <FormattedMessage id="ui-plugin-query-builder.error.occurredMessage" />;
     }
     if (isEmpty) {
       return <FormattedMessage id="ui-plugin-query-builder.modal.preview.title.empty" values={{ total }} />;
