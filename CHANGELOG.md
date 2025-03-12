@@ -13,6 +13,7 @@
 * [UIPQB-198](https://folio-org.atlassian.net/browse/UIPQB-198) The columns are missing in the "Actions" dropdown, after modifying the list.
 * [UIPQB-190](https://folio-org.atlassian.net/browse/UIPQB-190) *BREAKING* migrate react-intl to v7.
 * [UIPQB-189](https://folio-org.atlassian.net/browse/UIPQB-189) *BREAKING* migrate stripes-* dependencies.
+* [UIPQB-194](https://folio-org.atlassian.net/browse/UIPQB-194) The placeholder "Select value" appears as the selected option in the "Values" dropdown.
 
 ## [1.2.9](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.9) (2025-01-22)
 
