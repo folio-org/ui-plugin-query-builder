@@ -2,6 +2,8 @@
 
 ## IN PROGRESS
 
+## [2.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.0) (2025-03-12)
+
 * [UIPQB-164](https://folio-org.atlassian.net/browse/UIPQB-164) Columns are reset when user modifies query.
 * [UIPQB-182](https://folio-org.atlassian.net/browse/UIPQB-182) Add ability to remove first query parameter.
 * [UIPQB-181](https://folio-org.atlassian.net/browse/UIPQB-181) The user-friendly query contains random dates instead of true/false values.
