@@ -10,7 +10,7 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
     selected: cell.visibleByDefault,
     dataType: cell.dataType.dataType,
     properties: cell.dataType.itemDataType?.properties,
-  })) || []).sort((a, b) => a.label.localeCompare(b.label));
+  })) || []);
 
   const columnMapping = defaultColumns?.reduce((acc, { value, label }) => {
     acc[value] = label;
