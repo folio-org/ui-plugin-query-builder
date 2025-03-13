@@ -171,4 +171,10 @@ describe('retainValueOnOperatorChange', () => {
 
     expect(result).toBe('');
   });
+
+  test('should return an empty string when previous value is an empty string', () => {
+    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, DATA_TYPES.StringType, '');
+
+    expect(result).toBe('');
+  });
 });

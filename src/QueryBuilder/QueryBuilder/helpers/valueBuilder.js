@@ -96,6 +96,10 @@ export const retainValueOnOperatorChange = (
     return prevValue;
   }
 
+  if (prevValue === '') {
+    return '';
+  }
+
   if (prevType === OPERATORS_GROUPS_NAME.COMPARISON && newType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON) {
     if (memorizedFieldDataType === DATA_TYPES.RangedUUIDType) {
       return prevValue;
