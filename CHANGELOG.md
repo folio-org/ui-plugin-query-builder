@@ -15,6 +15,7 @@
 * [UIPQB-198](https://folio-org.atlassian.net/browse/UIPQB-198) The columns are missing in the "Actions" dropdown, after modifying the list.
 * [UIPQB-190](https://folio-org.atlassian.net/browse/UIPQB-190) *BREAKING* migrate react-intl to v7.
 * [UIPQB-189](https://folio-org.atlassian.net/browse/UIPQB-189) *BREAKING* migrate stripes-* dependencies.
+* [UIPQB-196](https://folio-org.atlassian.net/browse/UIPQB-196) Make the query builder display lists of columns in the order in which they come back from mod-fqm-manager.
 
 ## [1.2.9](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.9) (2025-01-22)
 
