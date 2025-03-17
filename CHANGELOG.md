@@ -2,6 +2,8 @@
 
 ## IN PROGRESS
 
+* [UIPQB-202](https://folio-org.atlassian.net/browse/UIPQB-202) Columns reset after editing and saving a query.
+
 ## [2.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.0) (2025-03-12)
 
 * [UIPQB-164](https://folio-org.atlassian.net/browse/UIPQB-164) Columns are reset when user modifies query.

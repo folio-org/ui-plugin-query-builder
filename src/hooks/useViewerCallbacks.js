@@ -20,7 +20,7 @@ export const useViewerCallbacks = ({
       if (!visibleColumns?.length) {
         onSetDefaultVisibleColumns?.(Array.from(new Set([...defaultVisibleColumns, ...forcedVisibleValues || []])));
       } else {
-        onSetDefaultVisibleColumns?.((prev) => Array.from(new Set([...prev, ...forcedVisibleValues || []])));
+        onSetDefaultVisibleColumns?.(Array.from(new Set([...visibleColumns, ...forcedVisibleValues || []])));
       }
     }
   }, [currentRecordsCount, memoizedDefaultColumns]);
