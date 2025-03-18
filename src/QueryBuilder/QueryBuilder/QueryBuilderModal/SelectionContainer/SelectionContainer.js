@@ -61,7 +61,7 @@ export const SelectionContainer = ({
     }
 
     return [];
-  }, [isLoading, data?.content, availableValues]);
+  }, [isLoading, data?.content, availableValues, isMulti]);
 
   useEffect(() => {
     setDataOptions(dataOptions);
