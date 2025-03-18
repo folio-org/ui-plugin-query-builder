@@ -109,6 +109,10 @@ export const retainValueOnOperatorChange = (
   }
 
   if (prevType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON && newType === OPERATORS_GROUPS_NAME.COMPARISON) {
+    if (prevValue.length === 0) {
+      return '';
+    }
+
     return Array.isArray(prevValue) ? prevValue[0]?.value : prevValue;
   }
 
