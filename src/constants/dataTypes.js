@@ -12,3 +12,9 @@ export const DATA_TYPES = {
   ArrayType: 'arrayType',
   JsonbArrayType: 'jsonbArrayType',
 };
+
+export const ORGANIZATIONS_TYPES = 'simple_organization';
+export const ORGANIZATIONS_FIELDS = {
+  NAME: 'name',
+  CODE: 'code'
+}

@@ -8,7 +8,11 @@ import { Select,
   Datepicker } from '@folio/stripes/components';
 
 import { FormattedMessage } from 'react-intl';
-import { DATA_TYPES } from '../../../../constants/dataTypes';
+import {
+  DATA_TYPES,
+  ORGANIZATIONS_FIELDS,
+  ORGANIZATIONS_TYPES
+} from '../../../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
 import { OPERATORS } from '../../../../constants/operators';
 import useTenantTimezone from '../../../../hooks/useTenantTimezone';
@@ -26,6 +30,7 @@ export const DataTypeInput = ({
   operator,
   getParamsSource,
   source,
+    typeOfRecord,
   ...rest
 }) => {
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
@@ -115,7 +120,7 @@ export const DataTypeInput = ({
 
   const stringTypeControls = () => {
     const { fieldName } = rest;
-    const isPluginOrganizationRequired = fieldName === 'name' || fieldName === 'code';
+    const isPluginOrganizationRequired = typeOfRecord === ORGANIZATIONS_TYPES && (fieldName === ORGANIZATIONS_FIELDS.CODE|| fieldName === ORGANIZATIONS_FIELDS.NAME);
     const isInRelatedWithOptions = isInRelatedOperator && hasSourceOrValues;
     const isEqualRelatedWithOptions = isEqualRelatedOperator && hasSourceOrValues;
 
@@ -283,4 +288,5 @@ DataTypeInput.propTypes = {
   source: PropTypes.object,
   getParamsSource: PropTypes.func,
   availableValues: PropTypes.arrayOf(PropTypes.oneOf([PropTypes.bool, PropTypes.object])),
+  typeOfRecord: PropTypes.string
 };
