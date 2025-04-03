@@ -23,11 +23,11 @@
     "result.inProgress": "Query in progress",
     "result.emptyMessage": "Lista nie zawiera żadnych pozycji",
     "error.sww": "Coś poszło nie tak",
-    "options.true": "True",
-    "options.false": "False",
+    "options.true": "Prawidłowy",
+    "options.false": "Nieprawidłowy",
     "modal.preview.title.empty": "Query would return {total} records.",
     "control.search.placeholder": "Przeszukaj nazwę kolumny",
     "ariaLabel.columnFilter": "Column filter input",
     "error.occurredMessage": "An error occurred.",
-    "warning.deletedField": "{value} in your query is unavailable. Please revise your query. "
+    "warning.deletedField": "{value} w Twoim zapytaniu jest niedostępna. Proszę poprawić swoje zapytanie."
 }
