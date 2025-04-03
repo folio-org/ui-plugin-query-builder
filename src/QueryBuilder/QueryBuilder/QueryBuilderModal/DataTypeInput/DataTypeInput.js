@@ -116,7 +116,7 @@ export const DataTypeInput = ({
   };
 
   const stringTypeControls = () => {
-    const isPluginOrganizationRequired = source.name === ORGANIZATIONS_TYPES;
+    const isPluginOrganizationRequired = source?.name === ORGANIZATIONS_TYPES;
     const isInRelatedWithOptions = isInRelatedOperator && hasSourceOrValues;
     const isEqualRelatedWithOptions = isEqualRelatedOperator && hasSourceOrValues;
 
