@@ -113,7 +113,7 @@ export const retainValueOnOperatorChange = (
       return '';
     }
 
-    return Array.isArray(prevValue) ? prevValue[0]?.value : prevValue;
+    return Array.isArray(prevValue) ? (prevValue[0]?.value ?? prevValue[0]?.id) : prevValue;
   }
 
   return '';

@@ -78,5 +78,8 @@
     "react-intl": "^7.1.5",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0"
+  },
+  "optionalDependencies": {
+    "@folio/plugin-find-organization": "^6.0.0"
   }
 }

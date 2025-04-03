@@ -221,6 +221,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
                     value={row.value.current}
                     getParamsSource={getParamsSource}
                     dataType={row.field.dataType}
+                    fieldName={row.field.current}
                     index={index}
                     availableValues={row.value.options}
                     source={row.value.source}
