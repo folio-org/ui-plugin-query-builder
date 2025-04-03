@@ -19,7 +19,7 @@
     "control.value.placeholder": "選擇值",
     "modal.preview.countingInProgress": "計數處理中",
     "control.operator.placeholder": "選擇運算子",
-    "modal.banner.limit": "警告：此查詢回傳的結果筆數超過允許的最大值。請修改查詢來縮小檢索結果。",
+    "modal.banner.limit": "警告 : 此查詢回傳的結果筆數超過允許的最大值。請修改查詢來縮小檢索結果。",
     "result.inProgress": "查詢中",
     "result.emptyMessage": "此清單無單件",
     "error.sww": "發生了一些問題 !",
