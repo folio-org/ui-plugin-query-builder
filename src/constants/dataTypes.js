@@ -13,8 +13,4 @@ export const DATA_TYPES = {
   JsonbArrayType: 'jsonbArrayType',
 };
 
-export const ORGANIZATIONS_TYPES = 'simple_organization';
-export const ORGANIZATIONS_FIELDS = {
-  NAME: 'name',
-  CODE: 'code'
-}
+export const ORGANIZATIONS_TYPES = 'organization';

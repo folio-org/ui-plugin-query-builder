@@ -10,7 +10,6 @@ import { Select,
 import { FormattedMessage } from 'react-intl';
 import {
   DATA_TYPES,
-  ORGANIZATIONS_FIELDS,
   ORGANIZATIONS_TYPES
 } from '../../../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
@@ -30,7 +29,6 @@ export const DataTypeInput = ({
   operator,
   getParamsSource,
   source,
-    typeOfRecord,
   ...rest
 }) => {
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
@@ -43,7 +41,6 @@ export const DataTypeInput = ({
     OPERATORS.NOT_CONTAINS_ALL,
   ].includes(operator);
   const hasSourceOrValues = source || availableValues;
-  console.log(rest.fieldName, dataType)
 
   const { tenantTimezone: timezone } = useTenantTimezone();
 
@@ -119,8 +116,7 @@ export const DataTypeInput = ({
   };
 
   const stringTypeControls = () => {
-    const { fieldName } = rest;
-    const isPluginOrganizationRequired = typeOfRecord === ORGANIZATIONS_TYPES && (fieldName === ORGANIZATIONS_FIELDS.CODE|| fieldName === ORGANIZATIONS_FIELDS.NAME);
+    const isPluginOrganizationRequired = source.name === ORGANIZATIONS_TYPES;
     const isInRelatedWithOptions = isInRelatedOperator && hasSourceOrValues;
     const isEqualRelatedWithOptions = isEqualRelatedOperator && hasSourceOrValues;
 
@@ -288,5 +284,4 @@ DataTypeInput.propTypes = {
   source: PropTypes.object,
   getParamsSource: PropTypes.func,
   availableValues: PropTypes.arrayOf(PropTypes.oneOf([PropTypes.bool, PropTypes.object])),
-  typeOfRecord: PropTypes.string
 };

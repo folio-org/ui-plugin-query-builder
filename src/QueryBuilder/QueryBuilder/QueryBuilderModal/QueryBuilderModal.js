@@ -93,7 +93,6 @@ export const QueryBuilderModal = ({
   const [isQueryRetrieved, setIsQueryRetrieved] = useState(false);
   const [recordsLimitExceeded, setRecordsLimitExceeded] = useState(false);
   const [isQueryEmpty, setIsQueryEmpty] = useState(false);
-  const typeOfRecord = entityType?.name;
 
   const {
     queryId,
@@ -249,7 +248,6 @@ export const QueryBuilderModal = ({
               setSource={handleSetSource}
               getParamsSource={getParamsSource}
               columns={entityType?.columns}
-              typeOfRecord={typeOfRecord}
             />
             <TestQuery
               queryId={queryId}
