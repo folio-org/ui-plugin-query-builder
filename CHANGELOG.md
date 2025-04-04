@@ -2,6 +2,8 @@
 
 ## IN PROGRESS
 
+* [UIPQB-204](https://folio-org.atlassian.net/browse/UIPQB-204) Add plugin-find-organization for "Organization — Name" and "Organization — Code"
+
 ## [2.0.1](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.0) (2025-03-26)
 
 * [UIPQB-202](https://folio-org.atlassian.net/browse/UIPQB-202) Columns reset after editing and saving a query.
