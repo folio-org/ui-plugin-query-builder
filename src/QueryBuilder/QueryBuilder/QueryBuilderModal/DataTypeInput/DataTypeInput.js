@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Pluggable } from '@folio/stripes/core'
+import { Pluggable } from '@folio/stripes/core';
 import { Select,
   TextField,
   MultiSelection,
@@ -10,7 +10,7 @@ import { Select,
 import { FormattedMessage } from 'react-intl';
 import {
   DATA_TYPES,
-  ORGANIZATIONS_TYPES
+  ORGANIZATIONS_TYPES,
 } from '../../../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
 import { OPERATORS } from '../../../../constants/operators';
@@ -122,34 +122,32 @@ export const DataTypeInput = ({
 
     if (isInRelatedWithOptions && isPluginOrganizationRequired) {
       return (
-          <div className={className} data-testid="data-input-select-multi-stringType">
-            {multiSelectControl({testId: "data-input-select-multi-stringType"})}
-            <Pluggable
-                id={`${fieldName}-plugin`}
-                aria-haspopup="true"
-                dataKey="organization"
-                searchButtonStyle="link"
-                searchLabel={<FormattedMessage id="stripes-acq-components.filter.organization.lookup"/>}
-                selectVendor={(selectedItems)=> {
-                  const normalizedItems = selectedItems.map(item => {
-                    if(fieldName === 'code') {
-                      return ({
-                        id: item.id,
-                        label: item.code,
-                      })
-                    } return ({
-                    id: item.id,
-                    label: item.name,
-                  })});
-                  onChange(normalizedItems, index, COLUMN_KEYS.VALUE)}
+        <div className={className} data-testid="data-input-select-multi-stringType">
+          {multiSelectControl({ testId: 'data-input-select-multi-stringType' })}
+          <Pluggable
+            id="organization-plugin"
+            aria-haspopup="true"
+            dataKey="organization"
+            searchButtonStyle="link"
+            searchLabel={<FormattedMessage id="stripes-acq-components.filter.organization.lookup" />}
+            selectVendor={(selectedItems) => {
+              const normalizedItems = selectedItems.map(item => {
+                return ({
+                  id: item.id,
+                  label: item.name,
+                });
+              });
+
+              onChange(normalizedItems, index, COLUMN_KEYS.VALUE);
+            }
                 }
-                type="find-organization"
-                usePortal={true}
-                isMultiSelect
-            >
-              <FormattedMessage id="stripes-acq-components.filter.organization.lookupNoSupport"/>
-            </Pluggable>
-          </div>
+            type="find-organization"
+            usePortal
+            isMultiSelect
+          >
+            <FormattedMessage id="stripes-acq-components.filter.organization.lookupNoSupport" />
+          </Pluggable>
+        </div>
       );
     }
 
@@ -163,50 +161,50 @@ export const DataTypeInput = ({
 
     if (isEqualRelatedWithOptions && isPluginOrganizationRequired) {
       return (
-          <div className={className}>
-            {selectControl({testId: 'data-input-select-single-stringType'})}
-            <Pluggable
-                id={`${fieldName}-plugin`}
-                aria-haspopup="true"
-                dataKey="organization"
-                searchButtonStyle="link"
-                searchLabel={<FormattedMessage id="stripes-acq-components.filter.organization.lookup"/>}
-                selectVendor={(e)=> onChange(e.id, index, COLUMN_KEYS.VALUE)}
-                type="find-organization"
-                usePortal={true}
-            >
-              <FormattedMessage id="stripes-acq-components.filter.organization.lookupNoSupport"/>
-            </Pluggable>
-          </div>
-      )
+        <div className={className}>
+          {selectControl({ testId: 'data-input-select-single-stringType' })}
+          <Pluggable
+            id="organization-plugin"
+            aria-haspopup="true"
+            dataKey="organization"
+            searchButtonStyle="link"
+            searchLabel={<FormattedMessage id="stripes-acq-components.filter.organization.lookup" />}
+            selectVendor={(e) => onChange(e.id, index, COLUMN_KEYS.VALUE)}
+            type="find-organization"
+            usePortal
+          >
+            <FormattedMessage id="stripes-acq-components.filter.organization.lookupNoSupport" />
+          </Pluggable>
+        </div>
+      );
     }
 
     if (isEqualRelatedWithOptions) {
       return (
-          <div className={className}>
-            {selectControl({testId: 'data-input-select-single-stringType'})}
-          </div>
+        <div className={className}>
+          {selectControl({ testId: 'data-input-select-single-stringType' })}
+        </div>
       );
     }
 
-    return textControl({testId: 'data-input-text-stringType'});
+    return textControl({ testId: 'data-input-text-stringType' });
   };
 
   const numericTypeControls = () => {
     return hasSourceOrValues
-        ? selectControl({testId: 'data-input-select-numeric'})
-        : textControl({type: 'number', textClass: css.NumberInput});
+      ? selectControl({ testId: 'data-input-select-numeric' })
+      : textControl({ type: 'number', textClass: css.NumberInput });
   };
 
   const booleanTypeControls = () => (
-      <div className={className}>
-        {selectControl({testId: 'data-input-select-boolType'})}
-      </div>
+    <div className={className}>
+      {selectControl({ testId: 'data-input-select-boolType' })}
+    </div>
   );
 
   const openUUIDTypeControls = () => {
     return isInRelatedOperator ? (
-        <>
+      <>
         {textAreaControl()}
         <FormattedMessage id="ui-plugin-query-builder.control.info.separateValues" />
       </>
