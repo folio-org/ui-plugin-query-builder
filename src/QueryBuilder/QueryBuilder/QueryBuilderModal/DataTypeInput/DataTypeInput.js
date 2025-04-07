@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Pluggable } from '@folio/stripes/core';
 import { Select,
   TextField,
   MultiSelection,
@@ -7,7 +8,10 @@ import { Select,
   Datepicker } from '@folio/stripes/components';
 
 import { FormattedMessage } from 'react-intl';
-import { DATA_TYPES } from '../../../../constants/dataTypes';
+import {
+  DATA_TYPES,
+  ORGANIZATIONS_TYPES,
+} from '../../../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
 import { OPERATORS } from '../../../../constants/operators';
 import useTenantTimezone from '../../../../hooks/useTenantTimezone';
@@ -112,13 +116,65 @@ export const DataTypeInput = ({
   };
 
   const stringTypeControls = () => {
+    const isPluginOrganizationRequired = source?.name === ORGANIZATIONS_TYPES;
     const isInRelatedWithOptions = isInRelatedOperator && hasSourceOrValues;
     const isEqualRelatedWithOptions = isEqualRelatedOperator && hasSourceOrValues;
+
+    if (isInRelatedWithOptions && isPluginOrganizationRequired) {
+      return (
+        <div className={className} data-testid="data-input-select-multi-stringType">
+          {multiSelectControl({ testId: 'data-input-select-multi-stringType' })}
+          <Pluggable
+            id="organization-plugin"
+            aria-haspopup="true"
+            dataKey="organization"
+            searchButtonStyle="link"
+            searchLabel={<FormattedMessage id="stripes-acq-components.filter.organization.lookup" />}
+            selectVendor={(selectedItems) => {
+              const normalizedItems = selectedItems.map(item => {
+                return ({
+                  id: item.id,
+                  label: item.name,
+                });
+              });
+
+              onChange(normalizedItems, index, COLUMN_KEYS.VALUE);
+            }
+                }
+            type="find-organization"
+            usePortal
+            isMultiSelect
+          >
+            <FormattedMessage id="stripes-acq-components.filter.organization.lookupNoSupport" />
+          </Pluggable>
+        </div>
+      );
+    }
 
     if (isInRelatedWithOptions) {
       return (
         <div className={className} data-testid="data-input-select-multi-stringType">
           {multiSelectControl()}
+        </div>
+      );
+    }
+
+    if (isEqualRelatedWithOptions && isPluginOrganizationRequired) {
+      return (
+        <div className={className}>
+          {selectControl({ testId: 'data-input-select-single-stringType' })}
+          <Pluggable
+            id="organization-plugin"
+            aria-haspopup="true"
+            dataKey="organization"
+            searchButtonStyle="link"
+            searchLabel={<FormattedMessage id="stripes-acq-components.filter.organization.lookup" />}
+            selectVendor={(e) => onChange(e.id, index, COLUMN_KEYS.VALUE)}
+            type="find-organization"
+            usePortal
+          >
+            <FormattedMessage id="stripes-acq-components.filter.organization.lookupNoSupport" />
+          </Pluggable>
         </div>
       );
     }
