@@ -69,3 +69,44 @@ export const valueBuilder = ({ value, field, operator, fieldOptions, intl, timez
 
   return valueMap[dataType]?.();
 };
+
+export const retainValueOnOperatorChange = (
+  prevOperator,
+  newOperator,
+  memorizedFieldDataType,
+  prevValue = '',
+  options = [],
+) => {
+  const prevType = getOperatorType(prevOperator);
+  const newType = getOperatorType(newOperator);
+
+  if (!prevType || !newType) {
+    return '';
+  }
+
+  if (prevType === newType) {
+    return prevValue;
+  }
+
+  if (prevValue === '') {
+    return '';
+  }
+
+  if (prevType === OPERATORS_GROUPS_NAME.COMPARISON && newType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON) {
+    if (memorizedFieldDataType === DATA_TYPES.RangedUUIDType) {
+      return prevValue;
+    }
+
+    return [{ value: prevValue, label: options?.find(option => option.value === prevValue)?.label }];
+  }
+
+  if (prevType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON && newType === OPERATORS_GROUPS_NAME.COMPARISON) {
+    if (prevValue.length === 0) {
+      return '';
+    }
+
+    return Array.isArray(prevValue) ? (prevValue[0]?.value ?? prevValue[0]?.id) : prevValue;
+  }
+
+  return '';
+};

@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import Intl from '../../../../../test/jest/__mock__/intlProvider.mock';
 import '../../../../../test/jest/__mock__/resizeObserver.mock';
 import { DataTypeInput } from './DataTypeInput';
-import { DATA_TYPES } from '../../../../constants/dataTypes';
+import { DATA_TYPES, ORGANIZATIONS_TYPES } from '../../../../constants/dataTypes';
 import { OPERATORS } from '../../../../constants/operators';
 
 jest.mock('../../../../hooks/useParamsDataSource', () => ({
@@ -16,6 +16,14 @@ jest.mock('../../../../hooks/useParamsDataSource', () => ({
       ],
     },
     isLoading: false,
+  }),
+}));
+
+jest.mock('@folio/stripes/core', () => ({
+  ...jest.requireActual('@folio/stripes/core'),
+  Pluggable: ({ children }) => <div>{children}</div>,
+  useOkapiKy: jest.fn().mockReturnValue({
+    okapi: 'test',
   }),
 }));
 
@@ -166,4 +174,46 @@ describe('DataTypeInput', () => {
       });
     });
   }
+});
+
+describe('DataTypeInput with Pluggable', () => {
+  it('should render multi select and Pluggable when operator is IN and source is ORGANIZATIONS_TYPES', async () => {
+    const onChangeMock = jest.fn();
+
+    const {
+      getByTestId,
+      getByText,
+    } = renderDataTypeInput({
+      dataType: DATA_TYPES.StringType,
+      operator: OPERATORS.IN,
+      source: { name: ORGANIZATIONS_TYPES },
+      onChange: onChangeMock,
+      availableValues: ['a', 'b'],
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('data-input-select-multi-stringType')).toBeVisible();
+      expect(getByText(/filter.organization.lookupNoSupport/)).toBeVisible();
+    });
+  });
+
+  it('should render single select and Pluggable when operator is EQUAL and source is ORGANIZATIONS_TYPES', async () => {
+    const onChangeMock = jest.fn();
+
+    const {
+      getByTestId,
+      getByText,
+    } = renderDataTypeInput({
+      dataType: DATA_TYPES.StringType,
+      operator: OPERATORS.EQUAL,
+      source: { name: ORGANIZATIONS_TYPES },
+      onChange: onChangeMock,
+      availableValues: ['a', 'b'],
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('data-input-select-single-stringType')).toBeVisible();
+      expect(getByText(/filter.organization.lookupNoSupport/)).toBeVisible();
+    });
+  });
 });

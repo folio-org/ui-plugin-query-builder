@@ -2,6 +2,8 @@
 
 ## IN PROGRESS
 
+* [UIPQB-204](https://folio-org.atlassian.net/browse/UIPQB-204) Add plugin-find-organization for "Organization — Name" and "Organization — Code"
+
 ## [1.2.9](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.9) (2025-01-22)
 
 * [UIPQB-185](https://folio-org.atlassian.net/browse/UIPQB-185) Missing spaces and pipe delimiter for some fields.
