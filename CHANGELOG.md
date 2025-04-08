@@ -3,6 +3,7 @@
 ## IN PROGRESS
 
 * [UIPQB-204](https://folio-org.atlassian.net/browse/UIPQB-204) Add plugin-find-organization for "Organization — Name" and "Organization — Code"
+* [UIPQB-206](https://folio-org.atlassian.net/browse/UIPQB-206) Expose `setIsModalShown` prop for consumers to know when the modal is open
 
 ## [2.0.1](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.0) (2025-03-26)
 
