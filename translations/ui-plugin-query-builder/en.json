@@ -6,11 +6,11 @@
   "modal.run": "Run query",
   "modal.query": "Query",
   "modal.test": "Test query",
-  "modal.preview.title": "Query would return {total} records. Preview of first {limit} records.",
-  "modal.preview.title.empty": "Query would return {total} records.",
-  "modal.preview.queryInProgress": "Test query in progress",
-  "modal.preview.countingInProgress": "Counting in progress",
-  "modal.banner.limit": "Warning: this query returns more records than the maximum allowed. Modify the query to limit your results.",
+  "modal.preview.title": "Query returns {total, plural, one {# record}, other {# records}}. Previewing the first {limit, plural, one {# record}, other {# records}}:",
+  "modal.preview.title.empty": "Query returns {total, plural, one {# record}, other {# records}}.",
+  "modal.preview.queryInProgress": "Executing test query...",
+  "modal.preview.countingInProgress": "Counting results...",
+  "modal.banner.limit": "This query returns more records than the maximum allowed; please modify the query to reduce the results.",
 
   "columns.boolean": "Boolean",
   "columns.field": "Field",
@@ -26,8 +26,9 @@
   "control.value.placeholder": "Select value",
   "control.operator.placeholder": "Select operator",
   "control.dropdown.showColumns": "Show columns",
-  "control.search.placeholder": "Search column name",
+  "control.search.placeholder": "Search fields",
 
+  "viewer.accordion.title.query": "Query: {query}",
   "viewer.retrieving": "Retrieving...",
   "result.inProgress": "Query in progress",
   "result.emptyMessage": "The list contains no items",
@@ -35,7 +36,9 @@
   "error.sww": "Something went wrong",
   "error.occurredMessage": "An error occurred.",
 
-  "warning.deletedField": "{value} in your query is unavailable. Please revise your query. ",
+  "warning.deletedField": "{value} in your query is no longer available. Please revise your query.",
 
-  "ariaLabel.columnFilter": "Column filter input"
+  "ariaLabel.columnFilter": "Column filter input",
+
+  "userFriendlyQuery.boolean.$and": "{query1} and {query2}"
 }

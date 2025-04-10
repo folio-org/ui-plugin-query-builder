@@ -29,5 +29,7 @@
     "control.search.placeholder": "搜尋欄名稱",
     "ariaLabel.columnFilter": "列過濾器輸入",
     "error.occurredMessage": "發生未知錯誤",
-    "warning.deletedField": "{value} in your query is unavailable. Please revise your query. "
+    "warning.deletedField": "{value} in your query is unavailable. Please revise your query. ",
+    "viewer.accordion.title.query": "Query: {query}",
+    "userFriendlyQuery.boolean.$and": "{query1} and {query2}"
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row, Accordion, MultiColumnList, Headline, Layout, Icon } from '@folio/stripes/components';
 import { PrevNextPagination } from '@folio/stripes-acq-components';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { isEmpty } from 'lodash';
 import { QueryLoader } from './QueryLoader';
 import { useAsyncDataSource } from '../../hooks/useAsyncDataSource';
@@ -10,6 +10,7 @@ import { usePagination } from '../../hooks/usePagination';
 import { useViewerRefresh } from '../../hooks/useViewerRefresh';
 import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
 import { useLastNotEmptyValue } from '../../hooks/useLastNotEmptyValue';
+import { useQueryStr } from '../QueryBuilder/helpers/query';
 
 export const ResultViewer = ({
   showPagination = true,
@@ -26,7 +27,9 @@ export const ResultViewer = ({
   visibleColumns,
   onSetDefaultVisibleColumns,
   onSetDefaultColumns,
-  accordionHeadline,
+  showQueryAccordion,
+  fqlQuery,
+  getParamsSource,
   height,
   refreshTrigger,
   onSuccess,
@@ -45,6 +48,7 @@ export const ResultViewer = ({
 
   const {
     contentData,
+    entityType,
     totalRecords,
     isContentDataLoading,
     isContentDataFetching,
@@ -94,6 +98,8 @@ export const ResultViewer = ({
     defaultOffset,
     offset,
   });
+
+  const queryStr = useQueryStr(showQueryAccordion, entityType, { fqlQuery }, getParamsSource);
 
   const renderHeader = () => {
     const localizedTotalRecords = intl.formatNumber(totalRecords);
@@ -203,7 +209,7 @@ export const ResultViewer = ({
   const renderWithAccordion = () => (
     <Accordion
       id="results-viewer-accordion"
-      label={accordionHeadline}
+      label={<FormattedMessage id="ui-plugin-query-builder.viewer.accordion.title.query" values={{ query: queryStr }} />}
     >
       {renderContent()}
     </Accordion>
@@ -211,13 +217,12 @@ export const ResultViewer = ({
 
   if (isPreviewLoading) return <QueryLoader />;
 
-  return accordionHeadline ? renderWithAccordion() : renderContent();
+  return showQueryAccordion ? renderWithAccordion() : renderContent();
 };
 ResultViewer.propTypes = {
-  accordionHeadline: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.string,
-  ]),
+  showQueryAccordion: PropTypes.bool,
+  fqlQuery: PropTypes.object,
+  getParamsSource: PropTypes.func,
   headline: PropTypes.func,
   headlineEnd: PropTypes.func,
   contentDataSource: PropTypes.func,

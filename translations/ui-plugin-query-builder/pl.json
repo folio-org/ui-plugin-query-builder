@@ -29,5 +29,7 @@
     "control.search.placeholder": "Przeszukaj nazwę kolumny",
     "ariaLabel.columnFilter": "Column filter input",
     "error.occurredMessage": "An error occurred.",
-    "warning.deletedField": "{value} w Twoim zapytaniu jest niedostępna. Proszę poprawić swoje zapytanie."
+    "warning.deletedField": "{value} w Twoim zapytaniu jest niedostępna. Proszę poprawić swoje zapytanie.",
+    "viewer.accordion.title.query": "Query: {query}",
+    "userFriendlyQuery.boolean.$and": "{query1} and {query2}"
 }
