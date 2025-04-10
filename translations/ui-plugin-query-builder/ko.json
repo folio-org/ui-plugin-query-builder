@@ -30,6 +30,5 @@
     "ariaLabel.columnFilter": "Column filter input",
     "error.occurredMessage": "오류가 발생했습니다.",
     "warning.deletedField": "{value} in your query is unavailable. Please revise your query. ",
-    "viewer.accordion.title.query": "Query: {query}",
-    "userFriendlyQuery.boolean.$and": "{query1} and {query2}"
+    "viewer.accordion.title.query": "Query: {query}"
 }

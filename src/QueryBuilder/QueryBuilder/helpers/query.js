@@ -53,12 +53,7 @@ export const getQueryStr = (rows, fieldOptions, intl, timezone, getDataOptions) 
 
     // if there is a boolean operator and it's not the first row - add it to the query
     if (bool && index > 0) {
-      str = intl.formatMessage({
-        id: `ui-plugin-query-builder.userFriendlyQuery.boolean.${bool}`,
-      }, {
-        query1: str,
-        query2: queryPiece,
-      });
+      str += ` ${BOOLEAN_OPERATORS_MAP[bool] || ''} ${baseQuery}`;
     } else {
       str += queryPiece;
     }

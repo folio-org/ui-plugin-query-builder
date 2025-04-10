@@ -30,6 +30,5 @@
     "ariaLabel.columnFilter": "列筛选输入",
     "error.occurredMessage": "发生错误。",
     "warning.deletedField": "查询中的{value}不可用。请修改查询。",
-    "viewer.accordion.title.query": "Query: {query}",
-    "userFriendlyQuery.boolean.$and": "{query1} and {query2}"
+    "viewer.accordion.title.query": "Query: {query}"
 }

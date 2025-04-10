@@ -30,6 +30,5 @@
     "modal.preview.title.empty": "Query returns {total, plural, one {# record}, other {# records}}.",
     "modal.preview.queryInProgress": "Executing test query...",
     "modal.preview.countingInProgress": "Counting results...",
-    "modal.banner.limit": "This query returns more records than the maximum allowed; please modify the query to reduce the results.",
-    "userFriendlyQuery.boolean.$and": "{query1} and {query2}"
+    "modal.banner.limit": "This query returns more records than the maximum allowed; please modify the query to reduce the results."
 }
