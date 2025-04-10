@@ -70,7 +70,8 @@ export const ResultViewer = ({
   });
   const lastNotEmptyContent = useLastNotEmptyValue(contentData, []);
   const currentRecordsCount = useLastNotEmptyValue(contentData?.length, 0);
-
+  // filter out columns that are not in the entity types mapping
+  const validVisibleColumns = visibleColumns.filter(column => columnMapping[column]);
   const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading || refreshInProgress;
 
   useViewerCallbacks({
@@ -82,7 +83,7 @@ export const ResultViewer = ({
     onPreviewShown,
     defaultLimit,
     forcedVisibleValues,
-    visibleColumns,
+    visibleColumns: validVisibleColumns,
   });
 
   // refresh functionality
@@ -163,7 +164,7 @@ export const ResultViewer = ({
               columnMapping={columnMapping}
               formatter={formatter}
               columnWidths={columnWidths}
-              visibleColumns={visibleColumns}
+              visibleColumns={validVisibleColumns}
               pagingType={null}
               onNeedMoreData={changePage}
               height={height}
