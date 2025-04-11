@@ -360,7 +360,7 @@ export const findMissingValues = (
 };
 
 // query can be passed in as source array or as a plain fqlQuery object
-export const useQueryStr = (enabled, entityType, { source, fqlQuery }, getParamsSource) => {
+export const useQueryStr = (entityType, { source, fqlQuery }, getParamsSource) => {
   const intl = useIntl();
   const { tenantTimezone: timezone } = useTenantTimezone();
   const { getDataOptions } = useContext(RootContext);
@@ -372,9 +372,7 @@ export const useQueryStr = (enabled, entityType, { source, fqlQuery }, getParams
   // there are async calls within getSourceValue, so we must use an effect :(
   useEffect(() => {
     const calculateRows = async () => {
-      if (!enabled) {
-        setRows([]);
-      } else if (source?.length) {
+      if (source?.length) {
         setRows(source);
       } else if (fqlQuery) {
         const upgraded = upgradeInitialValues(fqlQuery, entityType);
@@ -394,7 +392,7 @@ export const useQueryStr = (enabled, entityType, { source, fqlQuery }, getParams
     };
 
     calculateRows();
-  }, [source, fqlQuery, fieldOptions, intl, getParamsSource, enabled]);
+  }, [source, fqlQuery, fieldOptions, intl, getParamsSource]);
 
   return useMemo(() => {
     if (rows === null) {

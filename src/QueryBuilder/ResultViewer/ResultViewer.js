@@ -12,6 +12,13 @@ import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
 import { useLastNotEmptyValue } from '../../hooks/useLastNotEmptyValue';
 import { useQueryStr } from '../QueryBuilder/helpers/query';
 
+const AccordionHeaderLabel = ({ entityType, fqlQuery, getParamsSource }) => (
+  <FormattedMessage
+    id="ui-plugin-query-builder.viewer.accordion.title.query"
+    values={{ query: useQueryStr(entityType, { fqlQuery }, getParamsSource) }}
+  />
+);
+
 export const ResultViewer = ({
   showPagination = true,
   defaultLimit = 100,
@@ -98,8 +105,6 @@ export const ResultViewer = ({
     defaultOffset,
     offset,
   });
-
-  const queryStr = useQueryStr(showQueryAccordion, entityType, { fqlQuery }, getParamsSource);
 
   const renderHeader = () => {
     const localizedTotalRecords = intl.formatNumber(totalRecords);
@@ -209,7 +214,7 @@ export const ResultViewer = ({
   const renderWithAccordion = () => (
     <Accordion
       id="results-viewer-accordion"
-      label={<FormattedMessage id="ui-plugin-query-builder.viewer.accordion.title.query" values={{ query: queryStr }} />}
+      label={<AccordionHeaderLabel entityType={entityType} fqlQuery={fqlQuery} getParamsSource={getParamsSource} />}
     >
       {renderContent()}
     </Accordion>
@@ -219,6 +224,7 @@ export const ResultViewer = ({
 
   return showQueryAccordion ? renderWithAccordion() : renderContent();
 };
+
 ResultViewer.propTypes = {
   showQueryAccordion: PropTypes.bool,
   fqlQuery: PropTypes.object,
