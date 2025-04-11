@@ -19,7 +19,7 @@ describe('fqlQueryToSource()', () => {
   });
 
   const singleSource = [{
-    boolean: { options: [{ label: 'AND', value: '' }], current: '' },
+    boolean: { options: [{ label: 'AND', value: '$and' }], current: '' },
     field: { options: fieldOptions, current: 'user_first_name', dataType: 'stringType' },
     operator: { options: expect.any(Array), current: OPERATORS.EQUAL, dataType: 'stringType' },
     value: { current: 'value', options: undefined, source: undefined },
@@ -175,7 +175,7 @@ describe('fqlQueryToSource()', () => {
         return currentValue.split(',').map(item => item.trim());
       }
 
-      return Array.isArray(currentValue) ? currentValue.map(({ value }) => value) : currentValue;
+      return currentValue;
     };
 
     expect(result).toEqual(sourceFromBE.map(v => ({
