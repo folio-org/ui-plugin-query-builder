@@ -21,6 +21,10 @@ export const BOOLEAN_OPERATORS = {
   AND: '$and',
 };
 
+export const BOOLEAN_OPERATORS_MAP = {
+  [BOOLEAN_OPERATORS.AND]: 'AND',
+};
+
 export const OPERATORS_LABELS = {
   EQUAL: 'equals',
   NOT_EQUAL: 'not equal to',

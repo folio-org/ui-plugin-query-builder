@@ -2,7 +2,7 @@ import { Loading } from '@folio/stripes/components';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
-import { BOOLEAN_OPERATORS, OPERATORS } from '../../../constants/operators';
+import { BOOLEAN_OPERATORS, BOOLEAN_OPERATORS_MAP, OPERATORS } from '../../../constants/operators';
 import { RootContext } from '../../../context/RootContext';
 import useTenantTimezone from '../../../hooks/useTenantTimezone';
 import { findLabelByValue } from '../../ResultViewer/utils';
@@ -53,7 +53,7 @@ export const getQueryStr = (rows, fieldOptions, intl, timezone, getDataOptions) 
 
     // if there is a boolean operator and it's not the first row - add it to the query
     if (bool && index > 0) {
-      str += ` ${BOOLEAN_OPERATORS_MAP[bool] || ''} ${baseQuery}`;
+      str += ` ${BOOLEAN_OPERATORS_MAP[bool] || ''} ${queryPiece}`;
     } else {
       str += queryPiece;
     }
