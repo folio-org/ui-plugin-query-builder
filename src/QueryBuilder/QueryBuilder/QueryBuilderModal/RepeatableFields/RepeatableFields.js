@@ -32,7 +32,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
   const intl = useIntl();
   const callout = useShowCallout();
   const calloutCalledRef = useRef(false);
-  const { dataOptions } = useContext(RootContext);
+  const { getDataOptions } = useContext(RootContext);
 
   const fieldOptions = getFieldOptions(columns);
 
@@ -118,7 +118,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
               value,
               memorizedFieldDataType,
               memorizedValue,
-              dataOptions,
+              getDataOptions(memorizedField.value),
             ),
           },
         };
@@ -218,6 +218,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
               <Col sm={4} className={css.rowCell}>
                 {(row.operator.current) && (
                   <DataTypeInput
+                    fieldName={row.field.current}
                     value={row.value.current}
                     getParamsSource={getParamsSource}
                     dataType={row.field.dataType}

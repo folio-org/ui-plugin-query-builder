@@ -29,6 +29,7 @@ export const DataTypeInput = ({
   operator,
   getParamsSource,
   source,
+  fieldName,
   ...rest
 }) => {
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
@@ -74,6 +75,7 @@ export const DataTypeInput = ({
 
   const selectControl = ({ testId }) => (
     <SelectionContainer
+      fieldName={fieldName}
       component={Select}
       source={source}
       testId={testId}
@@ -86,6 +88,7 @@ export const DataTypeInput = ({
 
   const multiSelectControl = ({ testId } = {}) => (
     <SelectionContainer
+      fieldName={fieldName}
       operator={operator}
       testId={testId}
       component={MultiSelection}
@@ -224,6 +227,7 @@ export const DataTypeInput = ({
   if (isEmptyRelatedOperator) {
     return (
       <SelectionContainer
+        fieldName={fieldName}
         component={Select}
         testId="data-input-select-booleanType"
         availableValues={staticBooleanOptions}
@@ -275,6 +279,7 @@ export const DataTypeInput = ({
 
 DataTypeInput.propTypes = {
   dataType: PropTypes.string,
+  fieldName: PropTypes.string,
   className: PropTypes.string,
   operator: PropTypes.string,
   onChange: PropTypes.func,

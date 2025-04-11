@@ -23,7 +23,7 @@ export async function getConfigEntryTimezone(ky, query) {
           },
         })
         .json()
-    ).configs?.[0].value ?? '{}',
+    ).configs?.[0]?.value ?? '{}',
   ).timezone;
 }
 

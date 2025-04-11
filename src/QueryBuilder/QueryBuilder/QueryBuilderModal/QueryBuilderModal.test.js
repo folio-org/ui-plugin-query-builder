@@ -11,6 +11,7 @@ import {
   testQueryDataSource,
 } from '../../../../test/jest/data/sources';
 import { getFieldOptions } from '../helpers/selectOptions';
+import { RootContext } from '../../../context/RootContext';
 
 const queryClient = new QueryClient();
 
@@ -30,20 +31,22 @@ const renderQueryBuilderModal = ({
   ...rest
 }) => render(
   <QueryClientProvider client={queryClient}>
-    <QueryBuilderModal
-      setIsModalShown={setIsModalShown}
-      isOpen={isOpen}
-      saveBtnLabel={saveBtnLabel}
-      getParamsSource={getParamsSource}
-      entityTypeDataSource={entityTypeDataSource}
-      runQueryDataSource={runQueryDataSource}
-      queryDetailsDataSource={queryDetailsDataSource}
-      testQueryDataSource={testQueryDataSource}
-      cancelQueryDataSource={cancelQueryDataSource}
-      onQueryRunSuccess={onQueryRunSuccess}
-      onQueryRunFail={onQueryRunFail}
-      {...rest}
-    />
+    <RootContext.Provider value={{ setVisibleColumns: () => {}, getDataOptions: () => [] }}>
+      <QueryBuilderModal
+        setIsModalShown={setIsModalShown}
+        isOpen={isOpen}
+        saveBtnLabel={saveBtnLabel}
+        getParamsSource={getParamsSource}
+        entityTypeDataSource={entityTypeDataSource}
+        runQueryDataSource={runQueryDataSource}
+        queryDetailsDataSource={queryDetailsDataSource}
+        testQueryDataSource={testQueryDataSource}
+        cancelQueryDataSource={cancelQueryDataSource}
+        onQueryRunSuccess={onQueryRunSuccess}
+        onQueryRunFail={onQueryRunFail}
+        {...rest}
+      />
+    </RootContext.Provider>
   </QueryClientProvider>,
 );
 
@@ -63,6 +66,8 @@ const fillFormAndClickTestQuery = async () => {
   });
 
   userEvent.click(userFirstNameOption);
+
+  await waitFor(async () => expect(await screen.findByTestId('operator-option-0')).toBeVisible());
 
   fireEvent.change(screen.getByTestId('operator-option-0'), { target: { value: '==' } });
 

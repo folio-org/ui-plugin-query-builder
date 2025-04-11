@@ -29,5 +29,6 @@
     "control.search.placeholder": "Kolomnaam zoeken",
     "ariaLabel.columnFilter": "Invoer kolomfilter",
     "error.occurredMessage": "Er heeft zich een fout voorgedaan.",
-    "warning.deletedField": "{value} in uw zoekopdracht is niet beschikbaar. Herzie uw zoekopdracht. "
+    "warning.deletedField": "{value} in uw zoekopdracht is niet beschikbaar. Herzie uw zoekopdracht. ",
+    "viewer.accordion.title.query": "Query: {query}"
 }

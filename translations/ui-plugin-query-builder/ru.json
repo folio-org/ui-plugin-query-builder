@@ -29,5 +29,6 @@
     "control.search.placeholder": "Search column name",
     "ariaLabel.columnFilter": "Column filter input",
     "error.occurredMessage": "An error occurred.",
-    "warning.deletedField": "{value} in your query is unavailable. Please revise your query. "
+    "warning.deletedField": "{value} in your query is unavailable. Please revise your query. ",
+    "viewer.accordion.title.query": "Query: {query}"
 }

@@ -18,6 +18,7 @@ export const TestQuery = ({
   isQueryFilled,
   entityTypeDataSource,
   queryDetailsDataSource,
+  getParamsSource,
   onQueryExecutionSuccess,
   onQueryExecutionFail,
   onQueryRetrieved,
@@ -156,7 +157,9 @@ export const TestQuery = ({
 
       {queryId && (
         <ResultViewer
-          poolingMode
+          fqlQuery={fqlQuery}
+          getParamsSource={getParamsSource}
+          showQueryAccordion={false}
           onSuccess={handleQueryRetrieved}
           onPreviewShown={handlePreviewShown}
           forcedVisibleValues={forcedVisibleValues}
@@ -188,6 +191,7 @@ TestQuery.propTypes = {
   fqlQuery: PropTypes.object,
   entityTypeDataSource: PropTypes.func,
   queryDetailsDataSource: PropTypes.func,
+  getParamsSource: PropTypes.func,
   entityTypeId: PropTypes.string,
   isQueryFilled: PropTypes.bool,
   onQueryRetrieved: PropTypes.func,

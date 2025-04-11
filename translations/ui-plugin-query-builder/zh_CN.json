@@ -29,5 +29,6 @@
     "control.search.placeholder": "搜索栏名称",
     "ariaLabel.columnFilter": "列筛选输入",
     "error.occurredMessage": "发生错误。",
-    "warning.deletedField": "查询中的{value}不可用。请修改查询。"
+    "warning.deletedField": "查询中的{value}不可用。请修改查询。",
+    "viewer.accordion.title.query": "Query: {query}"
 }

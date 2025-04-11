@@ -4,9 +4,9 @@ import { OPERATORS, OPERATORS_GROUPS_NAME } from '../../../constants/operators';
 import { getOperatorType } from './selectOptions';
 
 export const getCommaSeparatedStr = (arr) => {
-  const str = arr?.map(el => `"${el?.label}"`).join(',');
+  const str = arr?.map(el => `${el?.label}`).join(', ');
 
-  return `(${str})`;
+  return `[${str}]`;
 };
 
 export const getQuotedStr = (value, isInRelatedOperator = false) => {
@@ -15,15 +15,15 @@ export const getQuotedStr = (value, isInRelatedOperator = false) => {
   }
 
   if (typeof value === 'string' && isInRelatedOperator) {
-    return `(${value.split(',').map(item => `"${item}"`).join(',')})`;
+    return `(${value.split(',').map(item => `${item}`).join(', ')})`;
   }
 
-  return value ? `"${value}"` : '';
+  return value ? `${value}` : '';
 };
 
 export const getFormattedUUID = (value, isInRelatedOperator) => {
   return isInRelatedOperator
-    ? `"${value.replace(/,\s?/g, '","')}"`
+    ? `"${value.replace(/,\s?/g, ', ')}"`
     : getQuotedStr(value);
 };
 
