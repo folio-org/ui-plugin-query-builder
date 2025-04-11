@@ -1,12 +1,12 @@
 # Change history for ui-plugin-query-builder
 
-## IN PROGRESS
+## [2.0.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.2) (2025-04-10)
 
 * [UIPQB-204](https://folio-org.atlassian.net/browse/UIPQB-204) Add plugin-find-organization for "Organization — Name" and "Organization — Code"
 * [UIPQB-206](https://folio-org.atlassian.net/browse/UIPQB-206) Expose `setIsModalShown` prop for consumers to know when the modal is open
 * [UIPQB-208](https://folio-org.atlassian.net/browse/UIPQB-208) Don't display invalid fields in lists
 
-## [2.0.1](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.0) (2025-03-26)
+## [2.0.1](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.1) (2025-03-26)
 
 * [UIPQB-202](https://folio-org.atlassian.net/browse/UIPQB-202) Columns reset after editing and saving a query.
 * [UIPQB-196](https://folio-org.atlassian.net/browse/UIPQB-196) Make the query builder display lists of columns in the order in which they come back from mod-fqm-manager.
