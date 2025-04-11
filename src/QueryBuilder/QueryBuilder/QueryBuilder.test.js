@@ -1,8 +1,9 @@
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { QueryBuilder } from './QueryBuilder';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import Intl from '../../../test/jest/__mock__/intlProvider.mock';
+import { RootContext } from '../../context/RootContext';
+import { QueryBuilder } from './QueryBuilder';
 
 const queryClient = new QueryClient();
 
@@ -15,16 +16,18 @@ const renderQueryBuilder = ({
   onQueryRun = jest.fn(),
 }) => render(
   <Intl>
-    <QueryClientProvider client={queryClient}>
-      <QueryBuilder
-        disabled={disabled}
-        saveBtnLabel={saveBtnLabel}
-        initialValues={initialValues}
-        runQuerySource={runQueryDataSource}
-        testQuerySource={testQuerySource}
-        onQueryRun={onQueryRun}
-      />
-    </QueryClientProvider>,
+    <RootContext.Provider value={{ getDataOptions: () => [], setDataOptions: () => {} }}>
+      <QueryClientProvider client={queryClient}>
+        <QueryBuilder
+          disabled={disabled}
+          saveBtnLabel={saveBtnLabel}
+          initialValues={initialValues}
+          runQuerySource={runQueryDataSource}
+          testQuerySource={testQuerySource}
+          onQueryRun={onQueryRun}
+        />
+      </QueryClientProvider>
+    </RootContext.Provider>
   </Intl>,
 );
 
