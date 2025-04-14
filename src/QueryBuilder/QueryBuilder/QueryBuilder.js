@@ -1,4 +1,5 @@
 import React, {
+  useCallback,
   useState,
 } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -10,13 +11,19 @@ import { queryBuilderModalPropTypes } from '../propTypes';
 export const QueryBuilder = ({
   disabled,
   triggerButtonLabel,
+  setIsModalShown: externalSetIsModalShown,
   ...modalProps
 }) => {
-  const [isModalShown, setIsModalShown] = useState(false);
+  const [isModalShown, internalSetIsModalShown] = useState(false);
 
-  const openModal = () => {
+  const setIsModalShown = useCallback((isShown) => {
+    externalSetIsModalShown?.(isShown);
+    internalSetIsModalShown(isShown);
+  }, [externalSetIsModalShown]);
+
+  const openModal = useCallback(() => {
     setIsModalShown(true);
-  };
+  }, [setIsModalShown]);
 
   return (
     <>
@@ -40,5 +47,6 @@ export const QueryBuilder = ({
 QueryBuilder.propTypes = {
   disabled: PropTypes.bool,
   triggerButtonLabel: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+  setIsModalShown: PropTypes.func,
   ...queryBuilderModalPropTypes,
 };
