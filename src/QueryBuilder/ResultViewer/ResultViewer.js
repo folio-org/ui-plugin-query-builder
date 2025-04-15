@@ -252,3 +252,9 @@ ResultViewer.propTypes = {
   refreshInProgress: PropTypes.bool,
   forcedVisibleValues: PropTypes.arrayOf(PropTypes.string),
 };
+
+AccordionHeaderLabel.propTypes = {
+  entityType: ResultViewer.propTypes.entityType,
+  fqlQuery: ResultViewer.propTypes.fqlQuery,
+  getParamsSource: ResultViewer.propTypes.getParamsSource,
+};
