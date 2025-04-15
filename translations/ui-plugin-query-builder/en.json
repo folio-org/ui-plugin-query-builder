@@ -40,5 +40,7 @@
 
   "ariaLabel.columnFilter": "Column filter input",
 
-  "userFriendlyQuery.boolean.$and": "{query1} and {query2}"
+  "userFriendlyQuery.boolean.$and": "{query1} and {query2}",
+
+  "noOptionsAvailable": "No matches! Try Organization look-up"
 }

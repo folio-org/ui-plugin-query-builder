@@ -81,7 +81,8 @@ export const ResultViewer = ({
   });
   const lastNotEmptyContent = useLastNotEmptyValue(contentData, []);
   const currentRecordsCount = useLastNotEmptyValue(contentData?.length, 0);
-
+  // filter out columns that are not in the entity types mapping
+  const validVisibleColumns = visibleColumns.filter(column => columnMapping[column]);
   const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading || refreshInProgress;
 
   useViewerCallbacks({
@@ -93,7 +94,7 @@ export const ResultViewer = ({
     onPreviewShown,
     defaultLimit,
     forcedVisibleValues,
-    visibleColumns,
+    visibleColumns: validVisibleColumns,
   });
 
   // refresh functionality
@@ -174,7 +175,7 @@ export const ResultViewer = ({
               columnMapping={columnMapping}
               formatter={formatter}
               columnWidths={columnWidths}
-              visibleColumns={visibleColumns}
+              visibleColumns={validVisibleColumns}
               pagingType={null}
               onNeedMoreData={changePage}
               height={height}
@@ -244,9 +245,13 @@ ResultViewer.propTypes = {
   refreshTrigger: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   onSuccess: PropTypes.func,
   onPreviewShown: PropTypes.func,
-  queryParams: PropTypes.object,
+  queryParams: PropTypes.objectOf(PropTypes.string),
   isPreviewLoading: PropTypes.bool,
-  contentQueryOptions: PropTypes.object,
+  contentQueryOptions: PropTypes.shape({
+    refetchInterval: PropTypes.func,
+    completeExecution: PropTypes.func,
+    keepPreviousData: PropTypes.bool,
+  }),
   contentQueryKeys: PropTypes.arrayOf(PropTypes.string),
   additionalControls: PropTypes.element,
   refreshInProgress: PropTypes.bool,
