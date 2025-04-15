@@ -37,5 +37,6 @@
 
   "warning.deletedField": "{value} in your query is unavailable. Please revise your query. ",
 
-  "ariaLabel.columnFilter": "Column filter input"
+  "ariaLabel.columnFilter": "Column filter input",
+  "noOptionsAvailable": "No matches! Try Organization look-up"
 }
