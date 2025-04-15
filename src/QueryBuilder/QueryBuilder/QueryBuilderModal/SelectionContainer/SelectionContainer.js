@@ -15,6 +15,7 @@ export const SelectionContainer = ({
   onChange,
   source,
   testId,
+  emptyMessage,
   ...rest
 }) => {
   const intl = useIntl();
@@ -65,7 +66,9 @@ export const SelectionContainer = ({
       onChange={onChange}
       filter={filterOptions}
       dataOptions={dataOptions}
-    />);
+      emptyMessage={emptyMessage}
+    />
+  );
 };
 
 SelectionContainer.propTypes = {
@@ -78,4 +81,8 @@ SelectionContainer.propTypes = {
   source: PropTypes.object,
   getParamsSource: PropTypes.func,
   availableValues: PropTypes.arrayOf(PropTypes.object),
+  emptyMessage: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node,
+  ]),
 };

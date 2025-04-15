@@ -84,7 +84,7 @@ export const DataTypeInput = ({
     />
   );
 
-  const multiSelectControl = ({ testId } = {}) => (
+  const multiSelectControl = ({ testId, emptyMessage = '' } = {}) => (
     <SelectionContainer
       operator={operator}
       testId={testId}
@@ -94,6 +94,7 @@ export const DataTypeInput = ({
       availableValues={availableValues}
       onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
       isMulti
+      emptyMessage={emptyMessage}
       {...rest}
     />
   );
@@ -123,7 +124,10 @@ export const DataTypeInput = ({
     if (isInRelatedWithOptions && isPluginOrganizationRequired) {
       return (
         <div className={className} data-testid="data-input-select-multi-stringType">
-          {multiSelectControl({ testId: 'data-input-select-multi-stringType' })}
+          {multiSelectControl({
+            testId: 'data-input-select-multi-stringType',
+            emptyMessage: <FormattedMessage id="ui-plugin-query-builder.noOptionsAvailable" />,
+          })}
           <Pluggable
             id="organization-plugin"
             aria-haspopup="true"
@@ -131,16 +135,13 @@ export const DataTypeInput = ({
             searchButtonStyle="link"
             searchLabel={<FormattedMessage id="stripes-acq-components.filter.organization.lookup" />}
             selectVendor={(selectedItems) => {
-              const normalizedItems = selectedItems.map(item => {
-                return ({
-                  id: item.id,
-                  label: item.name,
-                });
-              });
+              const normalizedItems = selectedItems.map(item => ({
+                id: item.id,
+                label: item.name,
+              }));
 
               onChange(normalizedItems, index, COLUMN_KEYS.VALUE);
-            }
-                }
+            }}
             type="find-organization"
             usePortal
             isMultiSelect
