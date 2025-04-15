@@ -19,7 +19,7 @@ export function useDataOptions() {
         // if we're provided a fetcher, atomically set it here and automatically put its value back
         if (fetchPromise) {
           dataOptions.current[field] = fetchPromise();
-          dataOptions.current[field].then(newValues => {
+          dataOptions.current[field].then((newValues) => {
             dataOptions.current = {
               ...dataOptions.current,
               [field]: newValues,

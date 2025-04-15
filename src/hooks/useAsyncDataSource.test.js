@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { useNamespace } from '@folio/stripes/core';
 import { useShowCallout } from '@folio/stripes-acq-components';
@@ -66,7 +66,7 @@ describe('useAsyncDataSource', () => {
       keepPreviousData: true,
     };
 
-    const { result, waitForNextUpdate } = renderHook(() => useAsyncDataSource({
+    const { result } = renderHook(() => useAsyncDataSource({
       contentDataSource,
       entityTypeDataSource: jest.fn(),
       offset: 0,
@@ -80,9 +80,10 @@ describe('useAsyncDataSource', () => {
 
     expect(result.current.isContentDataLoading).toBe(true);
 
-    await waitForNextUpdate();
+    await act(async () => {
+      await waitFor(() => expect(contentDataSource).toHaveBeenCalled());
+    });
 
-    expect(contentDataSource).toHaveBeenCalled();
     expect(onSuccess).toHaveBeenCalled();
     expect(result.current.contentData).toEqual([{ id: 1, name: 'Test Record' }]);
     expect(result.current.totalRecords).toBe(1);
