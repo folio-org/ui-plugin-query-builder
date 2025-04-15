@@ -1,8 +1,19 @@
+import { Loading } from '@folio/stripes/components';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { useIntl } from 'react-intl';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
-import { valueBuilder } from './valueBuilder';
 import { BOOLEAN_OPERATORS, BOOLEAN_OPERATORS_MAP, OPERATORS } from '../../../constants/operators';
-import { getOperatorOptions } from './selectOptions';
+import { RootContext } from '../../../context/RootContext';
+import useTenantTimezone from '../../../hooks/useTenantTimezone';
 import { findLabelByValue } from '../../ResultViewer/utils';
+import {
+  booleanOptions,
+  getFieldOptions,
+  getOperatorOptions,
+  sourceTemplate,
+} from './selectOptions';
+import upgradeInitialValues from './upgradeInitialValues';
+import { valueBuilder } from './valueBuilder';
 
 export const DEFAULT_PREVIEW_INTERVAL = 3000;
 
@@ -24,15 +35,16 @@ const getLabeledValue = (value, dataOptions) => {
   return matchedOption ? matchedOption.label : value;
 };
 
-export const getQueryStr = (rows, fieldOptions, intl, timezone, dataOptions = []) => {
+export const getQueryStr = (rows, fieldOptions, intl, timezone, getDataOptions) => {
   return rows.reduce((str, row, index) => {
     const bool = row[COLUMN_KEYS.BOOLEAN].current;
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
-    const labeledValue = getLabeledValue(value, dataOptions);
+    const labeledValue = getLabeledValue(value, getDataOptions(field));
     const builtValue = valueBuilder({ value: labeledValue, field, operator, fieldOptions, intl, timezone });
-    const baseQuery = `(${findLabelByValue(row[COLUMN_KEYS.FIELD], field)} ${operator} ${builtValue})`;
+
+    const queryPiece = `(${findLabelByValue(row[COLUMN_KEYS.FIELD], field)} ${operator} ${builtValue})`;
 
     // if there aren't values yet - return empty string
     if (![bool, field, operator, value].some(val => Boolean(val))) {
@@ -41,9 +53,9 @@ export const getQueryStr = (rows, fieldOptions, intl, timezone, dataOptions = []
 
     // if there is a boolean operator and it's not the first row - add it to the query
     if (bool && index > 0) {
-      str += ` ${BOOLEAN_OPERATORS_MAP[bool] || ''} ${baseQuery}`;
+      str += ` ${BOOLEAN_OPERATORS_MAP[bool] || ''} ${queryPiece}`;
     } else {
-      str += baseQuery;
+      str += queryPiece;
     }
 
     return str;
@@ -158,7 +170,7 @@ const getQueryOperand = (item) => {
   return queryOperand;
 };
 
-export const sourceToMongoQuery = (source) => {
+export const sourceToFqlQuery = (source) => {
   const query = {};
   // A temporary solution to searching for the first operand and its operator, since we only support one at the moment.
   const firstOperand = source.find(item => Boolean(item.boolean.current));
@@ -196,12 +208,19 @@ const getSourceFields = (field) => ({
   },
 }[field]);
 
-const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOptions, getParamsSource, boolean }) => {
+const getFormattedSourceField = async ({
+  item,
+  intl,
+  fieldOptions,
+  getParamsSource,
+  boolean,
+  getDataOptions,
+}) => {
   const [field, query] = Object.entries(item)[0];
-  const mongoOperator = Object.keys(query)[0];
-  const mongoValue = query[mongoOperator];
+  const fqlOperator = Object.keys(query)[0];
+  const fqlValue = query[fqlOperator];
 
-  const { operator, value } = getSourceFields(mongoOperator)(mongoValue);
+  const { operator, value } = getSourceFields(fqlOperator)(fqlValue);
 
   if (operator) {
     const fieldItem = fieldOptions.find(f => f.value === field);
@@ -222,20 +241,23 @@ const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOption
 
     const { dataType, values, source } = fieldItem;
     const hasSourceOrValues = values || source;
+
+    let possibleValues = values;
     let formattedValue;
 
-    if (Array.isArray(value) && hasSourceOrValues) {
-      let params = values;
+    if (source) {
+      possibleValues = await getDataOptions(field, true, () => getParamsSource({
+        entityTypeId: source?.entityTypeId,
+        columnName: source?.columnName,
+        searchValue: '',
+      }).then((data) => data?.content));
+    }
 
-      if (source) {
-        params = await getParamsSource?.({
-          entityTypeId: source?.entityTypeId,
-          columnName: source?.columnName,
-          searchValue: '',
-        }).then((data) => data?.content);
-      }
-
-      formattedValue = value.map(val => params?.find(param => param.value === val)).filter(val => val !== undefined);
+    if (Array.isArray(value)) {
+      formattedValue = value
+        .map(val => possibleValues?.find(param => param.value === val) || val);
+    } else {
+      formattedValue = possibleValues?.find(param => param.value === value)?.label;
     }
 
     return {
@@ -257,17 +279,17 @@ const getFormattedSourceField = async ({ item, intl, booleanOptions, fieldOption
   return null;
 };
 
-export const mongoQueryToSource = async ({
+export const fqlQueryToSource = async ({
   initialValues,
-  booleanOptions = [],
   fieldOptions,
   intl,
   getParamsSource,
+  getDataOptions,
 }) => {
   if (!fieldOptions?.length || !Object.keys(initialValues).length) return [];
 
   const key = Object.keys(initialValues)[0];
-  const sharedArgs = { intl, booleanOptions, getParamsSource, fieldOptions };
+  const sharedArgs = { intl, getParamsSource, fieldOptions, getDataOptions };
 
   // handle case when query contains boolean operators (AND, OR, etc.)
   if (Object.values(BOOLEAN_OPERATORS).includes(key)) {
@@ -297,6 +319,27 @@ export const mongoQueryToSource = async ({
   return [singleItem];
 };
 
+export const getSourceValue = ({
+  initialValues,
+  fieldOptions,
+  intl,
+  getParamsSource,
+  getDataOptions,
+}) => {
+  // if initial value provided, fill the source with it
+  if (initialValues) {
+    return fqlQueryToSource({
+      initialValues,
+      fieldOptions,
+      intl,
+      getParamsSource,
+      getDataOptions,
+    });
+  }
+
+  return [sourceTemplate(fieldOptions)];
+};
+
 export const findMissingValues = (
   mainArray,
   secondaryArray,
@@ -314,4 +357,48 @@ export const findMissingValues = (
   }
 
   return missingValues;
+};
+
+// query can be passed in as source array or as a plain fqlQuery object
+export const useQueryStr = (entityType, { source, fqlQuery }, getParamsSource) => {
+  const intl = useIntl();
+  const { tenantTimezone: timezone } = useTenantTimezone();
+  const { getDataOptions } = useContext(RootContext);
+
+  const [rows, setRows] = useState(null); // null is initial before we've set anything; displays loader
+
+  const fieldOptions = useMemo(() => getFieldOptions(entityType?.columns), [entityType]);
+
+  // there are async calls within getSourceValue, so we must use an effect :(
+  useEffect(() => {
+    const calculateRows = async () => {
+      if (source?.length) {
+        setRows(source);
+      } else if (fqlQuery) {
+        const upgraded = upgradeInitialValues(fqlQuery, entityType);
+
+        setRows(
+          await getSourceValue({
+            initialValues: upgraded,
+            fieldOptions,
+            intl,
+            getParamsSource,
+            getDataOptions,
+          }),
+        );
+      } else {
+        setRows([]);
+      }
+    };
+
+    calculateRows();
+  }, [source, fqlQuery, fieldOptions, intl, getParamsSource]);
+
+  return useMemo(() => {
+    if (rows === null) {
+      return <Loading />;
+    } else {
+      return getQueryStr(rows, fieldOptions, intl, timezone, getDataOptions);
+    }
+  }, [rows, fieldOptions, intl, timezone]);
 };

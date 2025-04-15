@@ -8,6 +8,7 @@ import { useParamsDataSource } from '../../../../hooks/useParamsDataSource';
 import { RootContext } from '../../../../context/RootContext';
 
 export const SelectionContainer = ({
+  fieldName,
   operator,
   component: Component,
   availableValues,
@@ -65,11 +66,11 @@ export const SelectionContainer = ({
   }, [isLoading, data?.content, availableValues, isMulti]);
 
   useEffect(() => {
-    setDataOptions(dataOptions);
+    setDataOptions(fieldName, dataOptions);
   }, [dataOptions]);
 
   const handleOnChange = (value) => {
-    setDataOptions(dataOptions);
+    setDataOptions(fieldName, dataOptions);
 
     if (onChange) onChange(value);
   };
@@ -90,6 +91,7 @@ export const SelectionContainer = ({
 };
 
 SelectionContainer.propTypes = {
+  fieldName: PropTypes.string,
   operator: PropTypes.string,
   component: PropTypes.elementType,
   testId: PropTypes.string,

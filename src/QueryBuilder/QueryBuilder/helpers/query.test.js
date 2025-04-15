@@ -1,13 +1,13 @@
-import { findMissingValues, getTransformedValue, isQueryValid, mongoQueryToSource, sourceToMongoQuery } from './query';
+import { findMissingValues, getTransformedValue, isQueryValid, fqlQueryToSource, sourceToFqlQuery } from './query';
 import { booleanOptions } from './selectOptions';
 import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
 
-describe('mongoQueryToSource()', () => {
+describe('fqlQueryToSource()', () => {
   test('should return empty array for empty query', async () => {
-    const result = await mongoQueryToSource({
+    const result = await fqlQueryToSource({
       initialValues: {},
       booleanOptions,
       fieldOptions,
@@ -19,7 +19,7 @@ describe('mongoQueryToSource()', () => {
   });
 
   const singleSource = [{
-    boolean: { options: [{ label: 'AND', value: '' }], current: '' },
+    boolean: { options: [{ label: 'AND', value: '$and' }], current: '' },
     field: { options: fieldOptions, current: 'user_first_name', dataType: 'stringType' },
     operator: { options: expect.any(Array), current: OPERATORS.EQUAL, dataType: 'stringType' },
     value: { current: 'value', options: undefined, source: undefined },
@@ -153,7 +153,7 @@ describe('mongoQueryToSource()', () => {
   };
 
   it('should convert simple query to source format', async () => {
-    const result = await mongoQueryToSource({
+    const result = await fqlQueryToSource({
       initialValues,
       booleanOptions,
       fieldOptions,
@@ -175,7 +175,7 @@ describe('mongoQueryToSource()', () => {
         return currentValue.split(',').map(item => item.trim());
       }
 
-      return Array.isArray(currentValue) ? currentValue.map(({ value }) => value) : currentValue;
+      return currentValue;
     };
 
     expect(result).toEqual(sourceFromBE.map(v => ({
@@ -197,7 +197,7 @@ describe('mongoQueryToSource()', () => {
   });
 
   it('should convert single query without operators to source format', async () => {
-    const result = await mongoQueryToSource({
+    const result = await fqlQueryToSource({
       initialValues: { user_first_name: { $eq: 'value' } },
       booleanOptions: [{ label: 'AND', value: '' }],
       fieldOptions,
@@ -208,7 +208,7 @@ describe('mongoQueryToSource()', () => {
   });
 
   it('should convert from source to simple query format', () => {
-    const result = sourceToMongoQuery(sourceFromUI);
+    const result = sourceToFqlQuery(sourceFromUI);
 
     expect(result).toEqual(initialValues);
   });
@@ -216,7 +216,7 @@ describe('mongoQueryToSource()', () => {
   it('should convert from SINGLE source to simple query format', () => {
     const initial = { user_first_name: { $eq: 'value' } };
 
-    const result = sourceToMongoQuery(singleSource);
+    const result = sourceToFqlQuery(singleSource);
 
     expect(result).toEqual(initial);
   });
@@ -229,7 +229,7 @@ describe('mongoQueryToSource()', () => {
       ],
     };
 
-    const result = await mongoQueryToSource({
+    const result = await fqlQueryToSource({
       initialValues: initialValuesUpdated,
       booleanOptions,
       fieldOptions,

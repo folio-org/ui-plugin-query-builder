@@ -7,6 +7,7 @@ import { content } from '../../../test/jest/data/content';
 import { delayedResponse } from '../../../test/jest/data/helpers';
 import * as pagination from '../../hooks/usePagination';
 import Intl from '../../../test/jest/__mock__/intlProvider.mock';
+import { RootContext } from '../../context/RootContext';
 
 const queryClient = new QueryClient();
 
@@ -19,24 +20,34 @@ const onSuccessMock = jest.fn();
 const renderResultViewer = (props) => (
   <Intl locale="en">
     <QueryClientProvider client={queryClient}>
-      <ResultViewer
-        accordionHeadline="Query: loan_status ='Open' and user_active = 'false'"
-        headline={({ totalRecords }) => `${totalRecords} records found`}
-        contentDataSource={() => delayedResponse(300, content)}
-        entityTypeDataSource={() => delayedResponse(300, entityType)}
-        visibleColumns={['user_id']}
-        onSetDefaultVisibleColumns={setVisibleColumns}
-        onSetDefaultColumns={setColumns}
-        height={300}
-        onSuccess={onSuccessMock}
-        refreshInProgress={false}
-        forcedVisibleValues={['username']}
-        contentQueryOptions={{
-          refetchInterval: refetchIntervalMock,
-          completeExecution: completeExecutionMock,
-        }}
-        {...props}
-      />
+      <RootContext.Provider value={{ setVisibleColumns: () => {}, getDataOptions: () => [] }}>
+        <ResultViewer
+          showQueryAccordion
+          fqlQuery={{
+            $and: [
+              { loan_status: { $eq: 'Open' } },
+              { user_active: { $eq: false } },
+            ],
+          }}
+          entityType={entityType}
+          getParamsSource={() => []}
+          headline={({ totalRecords }) => `${totalRecords} records found`}
+          contentDataSource={() => delayedResponse(300, content)}
+          entityTypeDataSource={() => delayedResponse(300, entityType)}
+          visibleColumns={['user_id']}
+          onSetDefaultVisibleColumns={setVisibleColumns}
+          onSetDefaultColumns={setColumns}
+          height={300}
+          onSuccess={onSuccessMock}
+          refreshInProgress={false}
+          forcedVisibleValues={['username']}
+          contentQueryOptions={{
+            refetchInterval: refetchIntervalMock,
+            completeExecution: completeExecutionMock,
+          }}
+          {...props}
+        />
+      </RootContext.Provider>
     </QueryClientProvider>
   </Intl>
 );
@@ -51,7 +62,7 @@ describe('ResultViewer', () => {
     render(renderResultViewer());
 
     await waitFor(() => {
-      expect(screen.getByText("Query: loan_status ='Open' and user_active = 'false'")).toBeVisible();
+      expect(screen.getByText('ui-plugin-query-builder.viewer.accordion.title.query')).toBeVisible();
     });
   });
 
@@ -105,7 +116,7 @@ describe('ResultViewer', () => {
     const changePage = jest.fn();
 
     it('should format language name shortcuts to full name', async () => {
-      const { debug } = render(renderResultViewer({ visibleColumns:
+      render(renderResultViewer({ visibleColumns:
           ['instance.languages', 'user_expiration_date', 'department_names', 'decimal_position', 'user_id'] }));
 
       await waitFor(() => {
@@ -113,8 +124,6 @@ describe('ResultViewer', () => {
 
         expect(screen.queryByText('Languages')).toBeVisible();
         expect(screen.queryByText('English | French')).toBeVisible();
-
-        debug(undefined, Infinity);
       });
     });
 

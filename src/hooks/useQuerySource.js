@@ -1,49 +1,41 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import useTenantTimezone from './useTenantTimezone';
 import {
   getQueryStr,
   isQueryValid,
-  mongoQueryToSource,
-  sourceToMongoQuery,
+  getSourceValue,
+  sourceToFqlQuery,
 } from '../QueryBuilder/QueryBuilder/helpers/query';
 import {
-  booleanOptions,
   getFieldOptions,
-  sourceTemplate,
 } from '../QueryBuilder/QueryBuilder/helpers/selectOptions';
+import { RootContext } from '../context/RootContext';
 
-export const getSourceValue = ({ initialValues, fieldOptions, intl, getParamsSource }) => {
-  // if initial value provided, fill the source with it
-  if (initialValues) {
-    return mongoQueryToSource({
-      initialValues,
-      fieldOptions,
-      booleanOptions,
-      intl,
-      getParamsSource,
-    });
-  }
-
-  return [sourceTemplate(fieldOptions)];
-};
-
-export const useQuerySource = ({ initialValues, entityType, getParamsSource, dataOptions }) => {
+export const useQuerySource = ({ initialValues, entityType, getParamsSource }) => {
   const intl = useIntl();
   const [source, setSource] = useState([]);
+
+  const { getDataOptions } = useContext(RootContext);
 
   const fieldOptions = useMemo(() => getFieldOptions(entityType?.columns), [entityType]);
   const stringifiedFieldOptions = useMemo(() => JSON.stringify(fieldOptions), [fieldOptions]);
 
   const { tenantTimezone: timezone } = useTenantTimezone();
-  const queryStr = getQueryStr(source, fieldOptions, intl, timezone, dataOptions);
+  const queryStr = getQueryStr(source, fieldOptions, intl, timezone, getDataOptions);
   const isQueryFilled = isQueryValid(source);
-  const fqlQuery = sourceToMongoQuery(source);
+  const fqlQuery = sourceToFqlQuery(source);
 
   useEffect(() => {
     if (stringifiedFieldOptions) {
       const setInitialValue = async () => {
-        const value = await getSourceValue({ initialValues, fieldOptions, intl, getParamsSource });
+        const value = await getSourceValue({
+          initialValues,
+          fieldOptions,
+          intl,
+          getParamsSource,
+          getDataOptions,
+        });
 
         setSource(value);
       };
