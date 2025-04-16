@@ -136,7 +136,7 @@ export const DataTypeInput = ({
             searchLabel={<FormattedMessage id="stripes-acq-components.filter.organization.lookup" />}
             selectVendor={(selectedItems) => {
               const normalizedItems = selectedItems.map(item => ({
-                id: item.id,
+                value: item.id,
                 label: item.name,
               }));
 
