@@ -30,5 +30,7 @@
     "ariaLabel.columnFilter": "Vstup filtru sloupců",
     "error.occurredMessage": "Došlo k chybě.",
     "warning.deletedField": "{value} ve vašem dotazu není k dispozici. Upravte svůj dotaz.",
-    "viewer.accordion.title.query": "Query: {query}"
+    "noOptionsAvailable": "Žádné shody! Vyzkoušejte vyhledávání organizace",
+    "viewer.accordion.title.query": "Dotaz: {query}",
+    "userFriendlyQuery.boolean.$and": "{query1} a {query2}"
 }
