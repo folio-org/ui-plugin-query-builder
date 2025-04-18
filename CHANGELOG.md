@@ -3,9 +3,9 @@
 ## [2.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.3) (2025-04-18)
 
 * [UIPQB-204](https://folio-org.atlassian.net/browse/UIPQB-204) Add plugin-find-organization for "Organization — Name" and "Organization — Code" (additional work)
-* [UIPQB-208](https://folio-org.atlassian.net/browse/UIPQB-207) Resolve an error where multiple dropdown values would result in invalid user-friendly queries
+* [UIPQB-207](https://folio-org.atlassian.net/browse/UIPQB-207) Resolve an error where multiple dropdown values would result in invalid user-friendly queries
 * [UIPQB-208](https://folio-org.atlassian.net/browse/UIPQB-208) Don't display invalid fields in lists
-* [UIPQB-206](https://folio-org.atlassian.net/browse/UIPQB-209) Add user-friendly query display to `ResultViewer`
+* [UIPQB-209](https://folio-org.atlassian.net/browse/UIPQB-209) Add user-friendly query display to `ResultViewer`
 
 ## [2.0.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.2) (2025-04-10)
 
