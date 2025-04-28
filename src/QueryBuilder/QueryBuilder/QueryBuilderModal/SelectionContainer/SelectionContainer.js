@@ -18,11 +18,19 @@ export const SelectionContainer = ({
   source,
   testId,
   emptyMessage,
+  value,
   ...rest
 }) => {
   const intl = useIntl();
   const { setDataOptions } = useContext(RootContext);
   const [searchValue, setSearchValue] = useState('');
+  const isBooleanField = availableValues?.every(opt => typeof opt.value === 'boolean');
+  let normalizedValue = value;
+
+  if (isBooleanField && typeof value === 'string') {
+    normalizedValue = value.toLowerCase() === 'true';
+  }
+
   const getSelectOptionsWithPlaceholder = (options) => {
     return isMulti ? options : [
       { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
@@ -69,10 +77,10 @@ export const SelectionContainer = ({
     setDataOptions(fieldName, dataOptions);
   }, [dataOptions]);
 
-  const handleOnChange = (value) => {
+  const handleOnChange = (selectedValue) => {
     setDataOptions(fieldName, dataOptions);
 
-    if (onChange) onChange(value);
+    if (onChange) onChange(selectedValue);
   };
 
   if (isLoading) return <Loading size="large" />;
@@ -82,6 +90,7 @@ export const SelectionContainer = ({
       key={operator}
       {...rest}
       data-testid={testId}
+      value={normalizedValue}
       onChange={handleOnChange}
       filter={filterOptions}
       dataOptions={dataOptions}
@@ -104,5 +113,12 @@ SelectionContainer.propTypes = {
   emptyMessage: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.node,
+  ]),
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool,
+    PropTypes.number,
+    PropTypes.array,
+    PropTypes.object,
   ]),
 };
