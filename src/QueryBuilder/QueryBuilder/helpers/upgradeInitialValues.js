@@ -1,4 +1,29 @@
 /**
+ * Filters the single array property in an `initialValues` object so that
+ * only entries whose keys match the given entity type column names are kept.
+ *
+ * This is needed for scenarios where values used to build a custom query
+ * during creation have since been removed from the available entity types.
+ * When editing an existing query, those obsolete values should be filtered out
+ * because they no longer exist in `entityTypes.columns`.
+ */
+export function filterInitialValues(initialValues, entityTypes) {
+  const [arrayProp] = Object.entries(initialValues)
+    .find(([, v]) => Array.isArray(v)) || [];
+
+  if (!arrayProp) return initialValues;
+
+  return {
+    ...initialValues,
+    [arrayProp]: initialValues[arrayProp].filter(item => {
+      const key = Object.keys(item)[0];
+
+      return entityTypes.columns.map(type => type.name).includes(key);
+    }),
+  };
+}
+
+/**
  * Upgrades initial values to indirectly reference id columns (e.g. vendor_code instead of vendor_id).
  * FQM used to previously require vendor_id, but this was changed in MODFQMMGR-151 to allow for better expression
  * and to allow for more flexibility in the future.
@@ -15,7 +40,8 @@ export default function upgradeInitialValues(initialValues, entityType) {
     return undefined;
   }
 
-  const withoutVersion = { ...initialValues };
+  const filteredInitialValues = filterInitialValues(initialValues, entityType);
+  const withoutVersion = { ...filteredInitialValues };
 
   delete withoutVersion._version;
 
