@@ -1,6 +1,6 @@
 # Change history for ui-plugin-query-builder
 
-In progress
+## In progress
 
 * [UIPQB-195](https://folio-org.atlassian.net/browse/UIPQB-195) Filter out deleted custom field values
 
