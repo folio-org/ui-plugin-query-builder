@@ -1,10 +1,10 @@
 {
     "meta.title": "منشئ الاستعلام",
-    "trigger": "Build query",
+    "trigger": "بناء الاستعلام",
     "modal.cancel": "إلغاء",
     "modal.run": "تشغيل الاستعلام",
     "modal.query": "استعلام",
-    "modal.test": "Test query",
+    "modal.test": "اختبار الاستعلام",
     "columns.boolean": "منطقي",
     "columns.field": "حقل",
     "columns.operator": "مشغل",
@@ -20,17 +20,17 @@
     "modal.preview.countingInProgress": "العد قيد التقدم",
     "control.operator.placeholder": "حدد المشغل",
     "modal.banner.limit": "تحذير: يقوم هذا الاستعلام بإرجاع تسجيلات أكثر من الحد الأقصى المسموح به. قم بتعديل الاستعلام للحد من النتائج.",
-    "result.inProgress": "Query in progress",
+    "result.inProgress": "الاستعلام قيد التقدم",
     "result.emptyMessage": "لا تحتوي القائمة على مواد",
     "error.sww": "لقد حدث خطأ ما",
     "options.true": "صحيح",
     "options.false": "غير صحيح",
     "modal.preview.title.empty": "سوف يقوم الاستعلام بإرجاع {total} تسجيلة.",
-    "control.search.placeholder": "بحث اسم العمود",
+    "control.search.placeholder": "حقول البحث",
     "ariaLabel.columnFilter": "مدخلات منقح العمود",
     "error.occurredMessage": "لقد حدث خطأ.",
     "warning.deletedField": "{value} في استعلامك غير متاحة. يرجى مراجعة استعلامك.",
     "noOptionsAvailable": "No matches! Try Organization look-up",
     "viewer.accordion.title.query": "الاستعلام: {query}",
-    "userFriendlyQuery.boolean.$and": "{query1} and {query2}"
+    "userFriendlyQuery.boolean.$and": "{query1} و {query2}"
 }
