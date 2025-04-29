@@ -1,4 +1,4 @@
-import upgradeInitialValues, { filterInitialValues } from './upgradeInitialValues';
+import upgradeInitialValues, { filterByEntityColumns } from './upgradeInitialValues';
 
 describe('initial values legacy conversion', () => {
   const ENTITY_TYPE = { columns: [{ name: 'foo', idColumnName: 'idColumn' }] };
@@ -40,7 +40,7 @@ describe('initial values legacy conversion', () => {
   });
 });
 
-describe('filterInitialValues', () => {
+describe('filterByEntityColumns', () => {
   const sampleColumns = [
     { name: 'field1' },
     { name: 'fieldA' },
@@ -49,7 +49,7 @@ describe('filterInitialValues', () => {
 
   test('returns original object when there is no array property', () => {
     const input = { foo: 123, bar: 'abc' };
-    const result = filterInitialValues(input, entityTypes);
+    const result = filterByEntityColumns(input, entityTypes);
 
     expect(result).toBe(input);
   });
@@ -72,7 +72,7 @@ describe('filterInitialValues', () => {
       otherProp: true,
     };
 
-    const result = filterInitialValues(initialValues, entityTypes);
+    const result = filterByEntityColumns(initialValues, entityTypes);
 
     expect(result).toEqual(expected);
   });
@@ -92,7 +92,7 @@ describe('filterInitialValues', () => {
       another: 5,
     };
 
-    const result = filterInitialValues(initialValues, { columns: [{ name: 'fieldA' }] });
+    const result = filterByEntityColumns(initialValues, { columns: [{ name: 'fieldA' }] });
 
     expect(result).toEqual(expected);
   });
@@ -104,7 +104,7 @@ describe('filterInitialValues', () => {
       ],
     };
 
-    const result = filterInitialValues(initialValues, { columns: [{ name: 'fieldA' }] });
+    const result = filterByEntityColumns(initialValues, { columns: [{ name: 'fieldA' }] });
 
     expect(result).toEqual(initialValues);
   });
@@ -119,14 +119,14 @@ describe('filterInitialValues', () => {
       secondArr: [{ field1: {} }],
     };
 
-    const result = filterInitialValues(initialValues, entityTypes);
+    const result = filterByEntityColumns(initialValues, entityTypes);
 
     expect(result).toEqual(expected);
   });
 
   test('handles empty array property gracefully', () => {
     const initialValues = { list: [] };
-    const result = filterInitialValues(initialValues, entityTypes);
+    const result = filterByEntityColumns(initialValues, entityTypes);
 
     expect(result).toEqual({ list: [] });
   });

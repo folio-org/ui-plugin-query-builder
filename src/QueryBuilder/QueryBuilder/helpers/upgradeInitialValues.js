@@ -7,7 +7,7 @@
  * When editing an existing query, those obsolete values should be filtered out
  * because they no longer exist in `entityTypes.columns`.
  */
-export function filterInitialValues(initialValues, entityTypes) {
+export function filterByEntityColumns(initialValues, entityTypes) {
   const [arrayProp] = Object.entries(initialValues)
     .find(([, v]) => Array.isArray(v)) || [];
 
@@ -40,7 +40,7 @@ export default function upgradeInitialValues(initialValues, entityType) {
     return undefined;
   }
 
-  const filteredInitialValues = filterInitialValues(initialValues, entityType);
+  const filteredInitialValues = filterByEntityColumns(initialValues, entityType);
   const withoutVersion = { ...filteredInitialValues };
 
   delete withoutVersion._version;
