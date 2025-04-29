@@ -18,7 +18,7 @@ export function filterByEntityColumns(initialValues, entityTypes) {
     [arrayProp]: initialValues[arrayProp].filter(item => {
       const key = Object.keys(item)[0];
 
-      return entityTypes.columns.map(type => type.name).includes(key);
+      return entityTypes?.columns.map(type => type.name).includes(key);
     }),
   };
 }
