@@ -1,6 +1,6 @@
 # Change history for ui-plugin-query-builder
 
-## IN PROGRESS
+## [1.2.10](https://github.com/folio-org/ui-plugin-query-builder/tree/v1.2.10) (2025-04-30)
 
 * [UIPQB-204](https://folio-org.atlassian.net/browse/UIPQB-204) Add plugin-find-organization for "Organization — Name" and "Organization — Code"
 
