@@ -326,8 +326,11 @@ export const getSourceValue = ({
   getParamsSource,
   getDataOptions,
 }) => {
-  // if initial value provided, fill the source with it
-  if (initialValues) {
+  // if initial value provided, and it has some items, fill the source with it
+  const hasInitialValues = Object.values(initialValues)
+    .some(item => item.length);
+
+  if (hasInitialValues) {
     return fqlQueryToSource({
       initialValues,
       fieldOptions,
