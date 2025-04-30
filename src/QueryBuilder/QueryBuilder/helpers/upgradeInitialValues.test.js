@@ -1,7 +1,12 @@
 import upgradeInitialValues, { filterByEntityColumns } from './upgradeInitialValues';
 
 describe('initial values legacy conversion', () => {
-  const ENTITY_TYPE = { columns: [{ name: 'foo', idColumnName: 'idColumn' }] };
+  const ENTITY_TYPE = { columns: [
+    { name: 'foo', idColumnName: 'idColumn' },
+    { name: 'bar' },
+    { name: 'baz' },
+    { name: 'idColumn' },
+  ] };
 
   it.each([
     [null, null],
@@ -51,7 +56,7 @@ describe('filterByEntityColumns', () => {
     const input = { foo: 123, bar: 'abc' };
     const result = filterByEntityColumns(input, entityTypes);
 
-    expect(result).toBe(input);
+    expect(result).toEqual({});
   });
 
   test('filters out entries whose keys are not in entityTypes.columns', () => {
