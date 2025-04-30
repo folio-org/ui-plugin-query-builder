@@ -20,6 +20,10 @@ jest.mock('@folio/stripes/components', () => ({
   Loading: () => <div>LOADING</div>,
 }));
 
+jest.mock('../../../hooks/useTenantTimezone', () => jest.fn(() => ({
+  tenantTimezone: 'UTC',
+})));
+
 const onRunSuccessMock = jest.fn();
 
 const renderQueryBuilderModal = ({

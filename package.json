@@ -1,6 +1,6 @@
 {
   "name": "@folio/plugin-query-builder",
-  "version": "2.0.3",
+  "version": "3.0.0",
   "description": "Create FQL query plugin for Stripes",
   "main": "index.js",
   "repository": "",
@@ -16,6 +16,7 @@
     "displayName": "ui-plugin-query-builder.meta.title",
     "okapiInterfaces": {
       "fqm-query": "2.0",
+      "settings": "1.0",
       "configuration": "2.0"
     },
     "stripesDeps": [

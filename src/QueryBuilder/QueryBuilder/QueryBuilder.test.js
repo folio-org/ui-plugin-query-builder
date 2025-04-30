@@ -5,6 +5,10 @@ import Intl from '../../../test/jest/__mock__/intlProvider.mock';
 import { RootContext } from '../../context/RootContext';
 import { QueryBuilder } from './QueryBuilder';
 
+jest.mock('../../hooks/useTenantTimezone', () => jest.fn(() => ({
+  tenantTimezone: 'UTC',
+})));
+
 const queryClient = new QueryClient();
 
 const renderQueryBuilder = ({

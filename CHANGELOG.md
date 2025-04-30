@@ -1,5 +1,9 @@
 # Change history for ui-plugin-query-builder
 
+## [3.0.0] IN PROGRESS
+
+* [UIPQB-217](https://folio-org.atlassian.net/browse/UIPQB-217) useTenantTimezone - use mod-settings API.
+
 ## [2.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.3) (2025-04-18)
 
 * [UIPQB-204](https://folio-org.atlassian.net/browse/UIPQB-204) Add plugin-find-organization for "Organization — Name" and "Organization — Code" (additional work)

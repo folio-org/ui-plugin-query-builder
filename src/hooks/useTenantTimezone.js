@@ -1,4 +1,10 @@
-import { userLocaleConfig, useStripes, useOkapiKy } from '@folio/stripes/core';
+import {
+  useStripes,
+  useTenantPreferences,
+  usePreferences,
+  userOwnLocaleConfig,
+  tenantLocaleConfig,
+} from '@folio/stripes/core';
 import { useQuery } from 'react-query';
 
 export function getQueryWarning(tenantTimezone, userTimezone) {
@@ -11,20 +17,6 @@ export function getQueryWarning(tenantTimezone, userTimezone) {
 
   // TODO: add a warning here!, and also use this...
   return 'a warning should go here! TODO [UIPQB-155]';
-}
-
-export async function getConfigEntryTimezone(ky, query) {
-  return JSON.parse(
-    (
-      await ky
-        .get('configurations/entries', {
-          searchParams: {
-            query,
-          },
-        })
-        .json()
-    ).configs?.[0]?.value ?? '{}',
-  ).timezone;
 }
 
 /**
@@ -50,29 +42,39 @@ export async function getConfigEntryTimezone(ky, query) {
  */
 export default function useTenantTimezone() {
   const stripes = useStripes();
-  const ky = useOkapiKy();
+  const { getTenantPreference } = useTenantPreferences();
+  const { getPreference } = usePreferences();
+  const userId = stripes.user.user.id;
+  const tenantId = stripes.okapi.tenant;
+  const userScope = userOwnLocaleConfig.SCOPE;
+  const tenantScope = tenantLocaleConfig.SCOPE;
+  const userKey = userOwnLocaleConfig.KEY;
+  const tenantKey = tenantLocaleConfig.KEY;
 
   const tenantTimezone = useQuery({
-    queryKey: ['@folio/plugin-query-builder', 'timezone-config', 'tenant'],
-    queryFn: () => getConfigEntryTimezone(
-      ky,
-      `(${[
-        'module==ORG',
-        'configName == localeSettings',
-        '(cql.allRecords=1 NOT userId="" NOT code="")',
-      ].join(' AND ')})`,
-    ),
+    queryKey: ['@folio/plugin-query-builder', 'timezone-config', 'tenant', tenantId, tenantScope, tenantKey],
+    queryFn: async () => {
+      const settings = await getTenantPreference({
+        scope: tenantScope,
+        key: tenantKey,
+      });
+
+      return settings?.timezone;
+    },
     refetchOnMount: false,
   });
 
   const userTimezone = useQuery({
-    queryKey: ['@folio/plugin-query-builder', 'timezone-config', 'user'],
-    queryFn: () => getConfigEntryTimezone(
-      ky,
-      `(${Object.entries({ ...userLocaleConfig, userId: stripes.user.user.id })
-        .map(([k, v]) => `"${k}"=="${v}"`)
-        .join(' AND ')})`,
-    ),
+    queryKey: ['@folio/plugin-query-builder', 'timezone-config', 'user', userId, tenantId, userScope, userKey],
+    queryFn: async () => {
+      const settings = await getPreference({
+        scope: userScope,
+        key: userKey,
+        userId: stripes.user.user.id,
+      });
+
+      return settings?.timezone;
+    },
     refetchOnMount: false,
   });
 
