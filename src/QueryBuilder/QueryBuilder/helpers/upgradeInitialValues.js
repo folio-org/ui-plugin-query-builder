@@ -1,4 +1,40 @@
 /**
+ * Filters the single array property in an `initialValues` object so that
+ * only entries whose keys match the given entity type column names are kept.
+ *
+ * This is needed for scenarios where values used to build a custom query
+ * during creation have since been removed from the available entity types.
+ * When editing an existing query, those obsolete values should be filtered out
+ * because they no longer exist in `entityTypes.columns`.
+ * there are 2 types of initial values:
+ * {$end: [{...}, {...}]} - when there are multiple rows selected
+ * {field: {...}} - when there is only one row selected
+ */
+export function filterByEntityColumns(initialValues, entityTypes) {
+  const entries = Object.entries(initialValues);
+  const allowedKeys = entityTypes?.columns?.map(type => type.name) || [];
+  const arrayEntry = entries
+    .find(([, value]) => Array.isArray(value));
+
+  if (arrayEntry) {
+    const [arrayProp] = arrayEntry;
+
+    return {
+      ...initialValues,
+      [arrayProp]: initialValues[arrayProp].filter(item => {
+        const key = Object.keys(item)[0];
+
+        return allowedKeys.includes(key);
+      }),
+    };
+  }
+
+  return Object.fromEntries(
+    entries.filter(([key]) => allowedKeys.includes(key)),
+  );
+}
+
+/**
  * Upgrades initial values to indirectly reference id columns (e.g. vendor_code instead of vendor_id).
  * FQM used to previously require vendor_id, but this was changed in MODFQMMGR-151 to allow for better expression
  * and to allow for more flexibility in the future.
@@ -30,6 +66,8 @@ export default function upgradeInitialValues(initialValues, entityType) {
     return withoutVersion;
   }
 
+  const filteredInitialValues = filterByEntityColumns(withoutVersion, entityType);
+
   const idColumnMapping = {};
 
   entityType.columns.forEach((column) => {
@@ -40,10 +78,10 @@ export default function upgradeInitialValues(initialValues, entityType) {
 
   const upgradedInitialValues = {};
 
-  Object.keys(withoutVersion).forEach((key) => {
+  Object.keys(filteredInitialValues).forEach((key) => {
     const newKey = idColumnMapping[key] || key;
 
-    upgradedInitialValues[newKey] = withoutVersion[key];
+    upgradedInitialValues[newKey] = filteredInitialValues[key];
   });
 
   return upgradedInitialValues;
