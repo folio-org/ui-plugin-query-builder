@@ -28,7 +28,11 @@ export const SelectionContainer = ({
   let normalizedValue = value;
 
   if (isBooleanField && typeof value === 'string') {
-    normalizedValue = value.toLowerCase() === 'true';
+    if (value.toLowerCase() === 'true') {
+      normalizedValue = true;
+    } else if (value.toLowerCase() === 'false') {
+      normalizedValue = false;
+    }
   }
 
   const getSelectOptionsWithPlaceholder = (options) => {
