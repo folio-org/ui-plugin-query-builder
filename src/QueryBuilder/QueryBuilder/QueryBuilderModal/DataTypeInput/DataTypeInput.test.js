@@ -44,6 +44,7 @@ const renderDataTypeInput = ({
   operator,
   source,
   availableValues,
+  value,
 }) => render(
   <Intl>
     <RootContext.Provider value={{ setDataOptions: setDataOptionsMock }}>
@@ -55,6 +56,7 @@ const renderDataTypeInput = ({
           source={source}
           availableValues={availableValues}
           getParamsSource={noop}
+          value={value}
         />
       </QueryClientProvider>,
     </RootContext.Provider>
@@ -148,6 +150,28 @@ const arr = [
     componentTestId: 'data-input-select-booleanType',
   },
   {
+    dataType: DATA_TYPES.BooleanType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-select-boolType',
+    onChange: jest.fn(),
+    value: 'False',
+    availableValues: [
+      { label: 'True', value: true },
+      { label: 'False', value: false },
+    ],
+  },
+  {
+    dataType: DATA_TYPES.BooleanType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-select-boolType',
+    onChange: jest.fn(),
+    value: 'True',
+    availableValues: [
+      { label: 'True', value: true },
+      { label: 'False', value: false },
+    ],
+  },
+  {
     dataType: 'DEFAULT',
     operator: OPERATORS.GREATER_THAN,
     componentTestId: 'data-input-text-default',
@@ -160,20 +184,21 @@ describe('DataTypeInput', () => {
     cleanup();
   });
 
-  for (const { dataType, operator, componentTestId, text, onChange, source, availableValues } of arr) {
+  for (const { dataType, operator, componentTestId, text, onChange, source, availableValues, value } of arr) {
     it(`should render correct component based on ${dataType} and ${operator}`, async () => {
       const {
         queryByTestId,
         queryByText,
-      } = renderDataTypeInput({ dataType, operator, onChange, source, availableValues });
+      } = renderDataTypeInput({ dataType, operator, onChange, source, availableValues, value });
       const el = queryByTestId(componentTestId || '') || queryByText(text || '');
 
       await waitFor(() => {
         expect(el).toBeVisible();
 
         if (onChange) {
-          fireEvent.change(el, { target: { value: 2 } });
+          const testValue = dataType === DATA_TYPES.BooleanType ? 'true' : 2;
 
+          fireEvent.change(el, { target: { value: testValue } });
           expect(onChange).toHaveBeenCalled();
         }
       });
