@@ -2,6 +2,7 @@
 
 ## [3.0.0] IN PROGRESS
 
+* [UIPQB-195](https://folio-org.atlassian.net/browse/UIPQB-195) Filter out deleted custom field values
 * [UIPQB-217](https://folio-org.atlassian.net/browse/UIPQB-217) *BREAKING* useTenantTimezone - use mod-settings API.
 
 ## [2.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.3) (2025-04-18)

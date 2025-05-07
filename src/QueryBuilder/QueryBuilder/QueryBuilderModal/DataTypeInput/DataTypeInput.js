@@ -30,6 +30,7 @@ export const DataTypeInput = ({
   getParamsSource,
   source,
   fieldName,
+  value,
   ...rest
 }) => {
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
@@ -45,7 +46,7 @@ export const DataTypeInput = ({
 
   const { tenantTimezone: timezone } = useTenantTimezone();
 
-  const textControl = ({ testId, type = 'text', textClass }) => {
+  const textControl = ({ testId, type = 'text', value: inputValue, textClass }) => {
     const onKeyDown = (event) => {
       // prevent typing e, +, - in number type
       if (type === 'number' && (event.keyCode === 69 || event.keyCode === 187 || event.keyCode === 189)) {
@@ -60,6 +61,7 @@ export const DataTypeInput = ({
         onKeyDown={onKeyDown}
         type={type}
         className={textClass}
+        value={inputValue}
         {...rest}
       />
     );
@@ -73,7 +75,7 @@ export const DataTypeInput = ({
     />
   );
 
-  const selectControl = ({ testId }) => (
+  const selectControl = ({ testId, value: inputValue }) => (
     <SelectionContainer
       fieldName={fieldName}
       component={Select}
@@ -81,12 +83,13 @@ export const DataTypeInput = ({
       testId={testId}
       getParamsSource={getParamsSource}
       availableValues={availableValues}
+      value={inputValue}
       onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
       {...rest}
     />
   );
 
-  const multiSelectControl = ({ testId, emptyMessage = '' } = {}) => (
+  const multiSelectControl = ({ testId, value: inputValue, emptyMessage = '' } = {}) => (
     <SelectionContainer
       fieldName={fieldName}
       operator={operator}
@@ -98,19 +101,20 @@ export const DataTypeInput = ({
       onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
       isMulti
       emptyMessage={emptyMessage}
+      value={inputValue}
       {...rest}
     />
   );
 
   const datePickerControl = () => {
-    const { value: selectedValue } = rest;
+    const selectedValue = value;
     const formattedSelectedDate = selectedValue ? `${selectedValue}Z` : selectedValue;
 
     return (
       <Datepicker
         timeZone={timezone}
         data-testid="data-input-dateType"
-        onChange={(e, value, formattedValue) => {
+        onChange={(e, _unusedValue, formattedValue) => {
           onChange(formattedValue.replace('Z', ''), index, COLUMN_KEYS.VALUE);
         }}
         {...rest}
@@ -129,6 +133,7 @@ export const DataTypeInput = ({
         <div className={className} data-testid="data-input-select-multi-stringType">
           {multiSelectControl({
             testId: 'data-input-select-multi-stringType',
+            value,
             emptyMessage: <FormattedMessage id="ui-plugin-query-builder.noOptionsAvailable" />,
           })}
           <Pluggable
@@ -158,7 +163,7 @@ export const DataTypeInput = ({
     if (isInRelatedWithOptions) {
       return (
         <div className={className} data-testid="data-input-select-multi-stringType">
-          {multiSelectControl()}
+          {multiSelectControl({ value })}
         </div>
       );
     }
@@ -166,7 +171,7 @@ export const DataTypeInput = ({
     if (isEqualRelatedWithOptions && isPluginOrganizationRequired) {
       return (
         <div className={className}>
-          {selectControl({ testId: 'data-input-select-single-stringType' })}
+          {selectControl({ testId: 'data-input-select-single-stringType', value })}
           <Pluggable
             id="organization-plugin"
             aria-haspopup="true"
@@ -186,25 +191,32 @@ export const DataTypeInput = ({
     if (isEqualRelatedWithOptions) {
       return (
         <div className={className}>
-          {selectControl({ testId: 'data-input-select-single-stringType' })}
+          {selectControl({ testId: 'data-input-select-single-stringType', value })}
         </div>
       );
     }
 
-    return textControl({ testId: 'data-input-text-stringType' });
+    return textControl({ testId: 'data-input-text-stringType', value });
   };
 
   const numericTypeControls = () => {
     return hasSourceOrValues
-      ? selectControl({ testId: 'data-input-select-numeric' })
-      : textControl({ type: 'number', textClass: css.NumberInput });
+      ? selectControl({ testId: 'data-input-select-numeric', value })
+      : textControl({ type: 'number', value, textClass: css.NumberInput });
   };
 
-  const booleanTypeControls = () => (
-    <div className={className}>
-      {selectControl({ testId: 'data-input-select-boolType' })}
-    </div>
-  );
+  const booleanTypeControls = () => {
+    availableValues = (availableValues ?? []).map(opt => ({
+      ...opt,
+      value: opt.value === 'true' || opt.value === true,
+    }));
+
+    return (
+      <div className={className}>
+        {selectControl({ testId: 'data-input-select-boolType', value })}
+      </div>
+    );
+  };
 
   const openUUIDTypeControls = () => {
     return isInRelatedOperator ? (
@@ -214,15 +226,16 @@ export const DataTypeInput = ({
       </>
     ) : (
       <div className={className}>
-        {textControl({ testId: 'data-input-text-openUUIDType' })}
+        {textControl({ testId: 'data-input-text-openUUIDType', value })}
       </div>
     );
   };
 
+  //
   const arrayLikeTypeControls = () => {
     return isInRelatedOperator
-      ? multiSelectControl({ testId: 'data-input-select-multi-arrayType' })
-      : selectControl({ testId: 'data-input-select-arrayType' });
+      ? multiSelectControl({ testId: 'data-input-select-multi-arrayType', value })
+      : selectControl({ testId: 'data-input-select-arrayType', value });
   };
 
   if (isEmptyRelatedOperator) {
@@ -233,6 +246,7 @@ export const DataTypeInput = ({
         testId="data-input-select-booleanType"
         availableValues={staticBooleanOptions}
         onChange={(e) => onChange(JSON.parse(e.target.value), index, COLUMN_KEYS.VALUE)}
+        value={value}
         {...rest}
       />
     );
@@ -250,10 +264,10 @@ export const DataTypeInput = ({
       return booleanTypeControls();
 
     case DATA_TYPES.RangedUUIDType:
-      return textControl({ testId: 'data-input-text-rangedUUIDType' });
+      return textControl({ testId: 'data-input-text-rangedUUIDType', value });
 
     case DATA_TYPES.StringUUIDType:
-      return textControl({ testId: 'data-input-text-stringUUIDType' });
+      return textControl({ testId: 'data-input-text-stringUUIDType', value });
 
     case DATA_TYPES.DateType:
       return datePickerControl();
@@ -263,18 +277,18 @@ export const DataTypeInput = ({
 
     case DATA_TYPES.ArrayType:
       return isContainsRelatedOperator && hasSourceOrValues
-        ? multiSelectControl({ testId: 'data-input-select-multi-arrayType' })
-        : textControl({ testId: 'data-input-text-arrayType' });
+        ? multiSelectControl({ testId: 'data-input-select-multi-arrayType', value })
+        : textControl({ testId: 'data-input-text-arrayType', value });
 
     case DATA_TYPES.JsonbArrayType:
       return isContainsRelatedOperator && hasSourceOrValues
-        ? multiSelectControl({ testId: 'data-input-select-multi-jsonbArrayType' })
-        : textControl({ testId: 'data-input-text-jsonbArrayType' });
+        ? multiSelectControl({ testId: 'data-input-select-multi-jsonbArrayType', value })
+        : textControl({ testId: 'data-input-text-jsonbArrayType', value });
 
     case DATA_TYPES.EnumType:
       return arrayLikeTypeControls();
     default:
-      return textControl({ testId: 'data-input-text-default' });
+      return textControl({ testId: 'data-input-text-default', value });
   }
 };
 
@@ -287,5 +301,19 @@ DataTypeInput.propTypes = {
   index: PropTypes.number,
   source: PropTypes.object,
   getParamsSource: PropTypes.func,
-  availableValues: PropTypes.arrayOf(PropTypes.oneOf([PropTypes.bool, PropTypes.object])),
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool,
+    PropTypes.number,
+    PropTypes.array,
+    PropTypes.object,
+  ]),
+  availableValues: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.bool,
+      PropTypes.object,
+    ]),
+  ),
 };
