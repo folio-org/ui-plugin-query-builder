@@ -28,6 +28,10 @@ jest.mock('@folio/stripes/core', () => ({
   }),
 }));
 
+jest.mock('../../../../hooks/useTenantTimezone', () => jest.fn(() => ({
+  tenantTimezone: 'UTC',
+})));
+
 const queryClient = new QueryClient();
 const mockSource = {
   source: {

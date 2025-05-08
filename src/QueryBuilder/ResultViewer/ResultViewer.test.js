@@ -9,6 +9,10 @@ import * as pagination from '../../hooks/usePagination';
 import Intl from '../../../test/jest/__mock__/intlProvider.mock';
 import { RootContext } from '../../context/RootContext';
 
+jest.mock('../../hooks/useTenantTimezone', () => jest.fn(() => ({
+  tenantTimezone: 'UTC',
+})));
+
 const queryClient = new QueryClient();
 
 const setVisibleColumns = jest.fn();
