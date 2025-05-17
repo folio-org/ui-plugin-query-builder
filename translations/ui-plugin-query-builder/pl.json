@@ -19,7 +19,7 @@
     "control.value.placeholder": "Wybierz wartość",
     "modal.preview.countingInProgress": "Counting results...",
     "control.operator.placeholder": "Wybierz operator",
-    "modal.banner.limit": "This query returns more records than the maximum allowed; please modify the query to reduce the results.",
+    "modal.banner.limit": "To zapytanie zwraca więcej rekordów niż dozwolone maksimum. Proszę zmodyfikować zapytanie, aby ograniczyć liczbę wyników.",
     "result.inProgress": "Query in progress",
     "result.emptyMessage": "Lista nie zawiera żadnych pozycji",
     "error.sww": "Coś poszło nie tak",
