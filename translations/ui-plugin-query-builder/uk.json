@@ -15,7 +15,7 @@
     "modal.preview.title": "Query returns {total, plural, =0 {no records} one {# record} other {# records}}. Previewing the first {limit, plural, one {# record} other {# records}}:",
     "modal.preview.queryInProgress": "Executing test query...",
     "control.dropdown.showColumns": "Show columns",
-    "viewer.retrieving": "Retrieving...",
+    "viewer.retrieving": "Отримання...",
     "control.value.placeholder": "Select value",
     "modal.preview.countingInProgress": "Counting results...",
     "control.operator.placeholder": "Select operator",
@@ -29,7 +29,7 @@
     "control.search.placeholder": "Search fields",
     "ariaLabel.columnFilter": "Column filter input",
     "error.occurredMessage": "An error occurred.",
-    "warning.deletedField": "{value} in your query is no longer available. Please revise your query.",
+    "warning.deletedField": "{value} у вашому запиті більше не доступно. Будь ласка, перегляньте свій запит.",
     "noOptionsAvailable": "Немає збігів! Спробуйте пошук організації",
     "viewer.accordion.title.query": "Запит: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} і {query2}"
