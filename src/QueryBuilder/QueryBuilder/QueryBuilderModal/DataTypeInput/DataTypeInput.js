@@ -34,8 +34,10 @@ export const DataTypeInput = ({
   ...rest
 }) => {
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
-  const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
+  const isEqualRelatedOperator = [OPERATORS.EQUAL].includes(operator);
+  const isNotEqualRelatedOperator = [OPERATORS.NOT_EQUAL].includes(operator);
   const isEmptyRelatedOperator = [OPERATORS.EMPTY].includes(operator);
+  const isContainsOperator = [OPERATORS.CONTAINS].includes(operator);
   const isContainsRelatedOperator = [
     OPERATORS.NOT_CONTAINS_ANY,
     OPERATORS.CONTAINS_ANY,
@@ -276,11 +278,29 @@ export const DataTypeInput = ({
       return openUUIDTypeControls();
 
     case DATA_TYPES.ArrayType:
+      if (isEqualRelatedOperator && hasSourceOrValues) {
+        return selectControl({ testId: 'data-input-select-single-arrayType', value });
+      }
+      if (isNotEqualRelatedOperator && hasSourceOrValues) {
+        return selectControl({ testId: 'data-input-select-single-arrayType', value });
+      }
+      if (isContainsOperator && hasSourceOrValues) {
+        return selectControl({ testId: 'data-input-select-single-arrayType', value });
+      }
       return isContainsRelatedOperator && hasSourceOrValues
         ? multiSelectControl({ testId: 'data-input-select-multi-arrayType', value })
         : textControl({ testId: 'data-input-text-arrayType', value });
 
     case DATA_TYPES.JsonbArrayType:
+      if (isEqualRelatedOperator && hasSourceOrValues) {
+        return selectControl({ testId: 'data-input-select-single-jsonbArrayType', value });
+      }
+      if (isNotEqualRelatedOperator && hasSourceOrValues) {
+        return selectControl({ testId: 'data-input-select-single-jsonbArrayType', value });
+      }
+      if (isContainsOperator && hasSourceOrValues) {
+        return selectControl({ testId: 'data-input-select-single-jsonbArrayType', value });
+      }
       return isContainsRelatedOperator && hasSourceOrValues
         ? multiSelectControl({ testId: 'data-input-select-multi-jsonbArrayType', value })
         : textControl({ testId: 'data-input-text-jsonbArrayType', value });
