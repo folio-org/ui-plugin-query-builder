@@ -34,8 +34,7 @@ export const DataTypeInput = ({
   ...rest
 }) => {
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
-  const isEqualRelatedOperator = [OPERATORS.EQUAL].includes(operator);
-  const isNotEqualRelatedOperator = [OPERATORS.NOT_EQUAL].includes(operator);
+  const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
   const isEmptyRelatedOperator = [OPERATORS.EMPTY].includes(operator);
   const isContainsOperator = [OPERATORS.CONTAINS].includes(operator);
   const isContainsRelatedOperator = [
@@ -281,9 +280,6 @@ export const DataTypeInput = ({
       if (isEqualRelatedOperator && hasSourceOrValues) {
         return selectControl({ testId: 'data-input-select-single-arrayType', value });
       }
-      if (isNotEqualRelatedOperator && hasSourceOrValues) {
-        return selectControl({ testId: 'data-input-select-single-arrayType', value });
-      }
       if (isContainsOperator && hasSourceOrValues) {
         return selectControl({ testId: 'data-input-select-single-arrayType', value });
       }
@@ -293,9 +289,6 @@ export const DataTypeInput = ({
 
     case DATA_TYPES.JsonbArrayType:
       if (isEqualRelatedOperator && hasSourceOrValues) {
-        return selectControl({ testId: 'data-input-select-single-jsonbArrayType', value });
-      }
-      if (isNotEqualRelatedOperator && hasSourceOrValues) {
         return selectControl({ testId: 'data-input-select-single-jsonbArrayType', value });
       }
       if (isContainsOperator && hasSourceOrValues) {
