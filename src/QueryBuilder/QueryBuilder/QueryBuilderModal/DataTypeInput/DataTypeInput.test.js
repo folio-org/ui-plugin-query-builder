@@ -259,6 +259,58 @@ const arr = [
     componentTestId: 'data-input-text-jsonbArrayType',
     onChange: jest.fn(),
   },
+  {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.IN,
+    componentTestId: 'data-input-select-multi-arrayType',
+    onChange: jest.fn(),
+    availableValues: [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }],
+  },
+  {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.IN,
+    componentTestId: 'data-input-text-arrayType',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: DATA_TYPES.JsonbArrayType,
+    operator: OPERATORS.IN,
+    componentTestId: 'data-input-select-multi-jsonbArrayType',
+    onChange: jest.fn(),
+    availableValues: [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }],
+  },
+  {
+    dataType: DATA_TYPES.JsonbArrayType,
+    operator: OPERATORS.IN,
+    componentTestId: 'data-input-text-jsonbArrayType',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.NOT_IN,
+    componentTestId: 'data-input-select-multi-arrayType',
+    onChange: jest.fn(),
+    availableValues: [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }],
+  },
+  {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.NOT_IN,
+    componentTestId: 'data-input-text-arrayType',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: DATA_TYPES.JsonbArrayType,
+    operator: OPERATORS.NOT_IN,
+    componentTestId: 'data-input-select-multi-jsonbArrayType',
+    onChange: jest.fn(),
+    availableValues: [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }],
+  },
+  {
+    dataType: DATA_TYPES.JsonbArrayType,
+    operator: OPERATORS.NOT_IN,
+    componentTestId: 'data-input-text-jsonbArrayType',
+    onChange: jest.fn(),
+  },
 ];
 
 describe('DataTypeInput', () => {

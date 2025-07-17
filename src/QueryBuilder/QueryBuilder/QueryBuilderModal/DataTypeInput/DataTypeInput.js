@@ -283,6 +283,9 @@ export const DataTypeInput = ({
       if (isContainsOperator && hasSourceOrValues) {
         return selectControl({ testId: 'data-input-select-single-arrayType', value });
       }
+      if (isInRelatedOperator && hasSourceOrValues) {
+        return multiSelectControl({ testId: 'data-input-select-multi-arrayType', value });
+      }
       return isContainsRelatedOperator && hasSourceOrValues
         ? multiSelectControl({ testId: 'data-input-select-multi-arrayType', value })
         : textControl({ testId: 'data-input-text-arrayType', value });
@@ -293,6 +296,9 @@ export const DataTypeInput = ({
       }
       if (isContainsOperator && hasSourceOrValues) {
         return selectControl({ testId: 'data-input-select-single-jsonbArrayType', value });
+      }
+      if (isInRelatedOperator && hasSourceOrValues) {
+        return multiSelectControl({ testId: 'data-input-select-multi-jsonbArrayType', value });
       }
       return isContainsRelatedOperator && hasSourceOrValues
         ? multiSelectControl({ testId: 'data-input-select-multi-jsonbArrayType', value })

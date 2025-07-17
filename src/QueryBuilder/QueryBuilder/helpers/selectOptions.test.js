@@ -234,6 +234,8 @@ describe('select options', () => {
         operators: [
           { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
           { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
+          { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
           { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
           { label: OPERATORS_LABELS.CONTAINS_ALL, value: OPERATORS.CONTAINS_ALL },
           { label: OPERATORS_LABELS.NOT_CONTAINS_ALL, value: OPERATORS.NOT_CONTAINS_ALL },
@@ -256,6 +258,8 @@ describe('select options', () => {
         operators: [
           { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
           { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
+          { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
           { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
           { label: OPERATORS_LABELS.CONTAINS_ALL, value: OPERATORS.CONTAINS_ALL },
           { label: OPERATORS_LABELS.NOT_CONTAINS_ALL, value: OPERATORS.NOT_CONTAINS_ALL },
