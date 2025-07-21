@@ -254,18 +254,18 @@ const getFormattedSourceField = async ({
       }).then((data) => data?.content));
     }
 
-    let key;
-
-    if (preserveQueryValue) {
-      key = 'value';
-    } else {
-      key = 'label';
-    }
-
     if (Array.isArray(value)) {
       formattedValue = value
-        .map(val => possibleValues?.find(param => param.value === val)?.[key] || val);
+        .map(val => possibleValues?.find(param => param.value === val) || val);
     } else {
+      let key;
+
+      if (preserveQueryValue) {
+        key = 'value';
+      } else {
+        key = 'label';
+      }
+
       formattedValue = possibleValues?.find(param => param.value === value)?.[key];
     }
 
