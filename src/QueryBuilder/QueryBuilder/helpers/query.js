@@ -215,6 +215,7 @@ const getFormattedSourceField = async ({
   getParamsSource,
   boolean,
   getDataOptions,
+  preserveQueryValue, // for enum values, preserves the value (used for initial value handling in QB)
 }) => {
   const [field, query] = Object.entries(item)[0];
   const fqlOperator = Object.keys(query)[0];
@@ -253,11 +254,19 @@ const getFormattedSourceField = async ({
       }).then((data) => data?.content));
     }
 
+    let key;
+
+    if (preserveQueryValue) {
+      key = 'value';
+    } else {
+      key = 'label';
+    }
+
     if (Array.isArray(value)) {
       formattedValue = value
-        .map(val => possibleValues?.find(param => param.value === val) || val);
+        .map(val => possibleValues?.find(param => param.value === val)?.[key] || val);
     } else {
-      formattedValue = possibleValues?.find(param => param.value === value)?.label;
+      formattedValue = possibleValues?.find(param => param.value === value)?.[key];
     }
 
     return {
@@ -285,11 +294,12 @@ export const fqlQueryToSource = async ({
   intl,
   getParamsSource,
   getDataOptions,
+  preserveQueryValue,
 }) => {
   if (!fieldOptions?.length || !Object.keys(initialValues).length) return [];
 
   const key = Object.keys(initialValues)[0];
-  const sharedArgs = { intl, getParamsSource, fieldOptions, getDataOptions };
+  const sharedArgs = { intl, getParamsSource, fieldOptions, getDataOptions, preserveQueryValue };
 
   // handle case when query contains boolean operators (AND, OR, etc.)
   if (Object.values(BOOLEAN_OPERATORS).includes(key)) {
@@ -325,6 +335,7 @@ export const getSourceValue = ({
   intl,
   getParamsSource,
   getDataOptions,
+  preserveQueryValue = true,
 }) => {
   // if initial value provided, and it has some items, fill the source with it
   const hasInitialValues = Object
@@ -338,6 +349,7 @@ export const getSourceValue = ({
       intl,
       getParamsSource,
       getDataOptions,
+      preserveQueryValue,
     });
   }
 
@@ -388,6 +400,7 @@ export const useQueryStr = (entityType, { source, fqlQuery }, getParamsSource) =
             intl,
             getParamsSource,
             getDataOptions,
+            preserveQueryValue: false, // pretty print
           }),
         );
       } else {
