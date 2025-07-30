@@ -231,9 +231,10 @@ export const DataTypeInput = ({
     );
   };
 
+  // Controls for ArrayType and JsonbArrayType
   const arrayTypeControls = (testIdPostfix) => {
+    // If a source or values are provided, use select or multiSelect based on the operator
     if (hasSourceOrValues) {
-      //
       if (isContainsRelatedOperator || isInRelatedOperator) {
         return multiSelectControl({ testId: `data-input-select-multi-${testIdPostfix}`, value });
       }
@@ -241,6 +242,7 @@ export const DataTypeInput = ({
       return selectControl({ testId: `data-input-select-single-${testIdPostfix}`, value });
     }
 
+    // If no source or values, use free text input for ArrayType and JsonbArrayType
     return textControl({ testId: `data-input-text-${testIdPostfix}`, value });
   };
 
