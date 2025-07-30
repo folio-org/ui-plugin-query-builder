@@ -22,7 +22,7 @@
     "modal.banner.limit": "Цей запит повертає більше записів, ніж максимально дозволено; будь ласка, змініть запит, щоб зменшити кількість результатів.",
     "result.inProgress": "Запит обробляється",
     "result.emptyMessage": "Список не містить примірників",
-    "error.sww": "Something went wrong",
+    "error.sww": "Щось пішло не так",
     "options.true": "Дійсне",
     "options.false": "Хибне",
     "modal.preview.title.empty": "Запит повертає {total, plural, =0 {записи відсутні} one {# запис} other {# записи}}.",
