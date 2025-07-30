@@ -311,6 +311,7 @@ DataTypeInput.propTypes = {
   onChange: PropTypes.func,
   index: PropTypes.number,
   source: PropTypes.shape({
+    name: PropTypes.string,
     entityTypeId: PropTypes.string,
     columnName: PropTypes.string,
   }),
