@@ -310,7 +310,10 @@ DataTypeInput.propTypes = {
   operator: PropTypes.string,
   onChange: PropTypes.func,
   index: PropTypes.number,
-  source: PropTypes.shape({}),
+  source: PropTypes.shape({
+    entityTypeId: PropTypes.string,
+    columnName: PropTypes.string,
+  }),
   getParamsSource: PropTypes.func,
   value: PropTypes.oneOfType([
     PropTypes.string,
