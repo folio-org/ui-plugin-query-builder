@@ -97,7 +97,7 @@ export const getOperatorOptions = ({
 
     case DATA_TYPES.ArrayType:
     case DATA_TYPES.JsonbArrayType:
-      return getOperatorsWithPlaceholder(ArrayOperators(), intl);
+      return getOperatorsWithPlaceholder(ArrayOperators(hasSourceOrValues), intl);
 
     case DATA_TYPES.DateType:
       return getOperatorsWithPlaceholder(extendedLogicalOperators(), intl);
