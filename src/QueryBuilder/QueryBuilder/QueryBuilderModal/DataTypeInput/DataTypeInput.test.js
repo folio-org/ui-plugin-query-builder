@@ -181,6 +181,84 @@ const arr = [
     componentTestId: 'data-input-text-default',
     onChange: jest.fn(),
   },
+  {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-select-single-arrayType',
+    onChange: jest.fn(),
+    availableValues: [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }],
+  },
+  {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-text-arrayType',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: DATA_TYPES.JsonbArrayType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-select-single-jsonbArrayType',
+    onChange: jest.fn(),
+    availableValues: [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }],
+  },
+  {
+    dataType: DATA_TYPES.JsonbArrayType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-text-jsonbArrayType',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.NOT_EQUAL,
+    componentTestId: 'data-input-select-single-arrayType',
+    onChange: jest.fn(),
+    availableValues: [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }],
+  },
+  {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.NOT_EQUAL,
+    componentTestId: 'data-input-text-arrayType',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.CONTAINS,
+    componentTestId: 'data-input-select-single-arrayType',
+    onChange: jest.fn(),
+    availableValues: [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }],
+  },
+  {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.CONTAINS,
+    componentTestId: 'data-input-text-arrayType',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: DATA_TYPES.JsonbArrayType,
+    operator: OPERATORS.NOT_EQUAL,
+    componentTestId: 'data-input-select-single-jsonbArrayType',
+    onChange: jest.fn(),
+    availableValues: [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }],
+  },
+  {
+    dataType: DATA_TYPES.JsonbArrayType,
+    operator: OPERATORS.NOT_EQUAL,
+    componentTestId: 'data-input-text-jsonbArrayType',
+    onChange: jest.fn(),
+  },
+  {
+    dataType: DATA_TYPES.JsonbArrayType,
+    operator: OPERATORS.CONTAINS,
+    componentTestId: 'data-input-select-single-jsonbArrayType',
+    onChange: jest.fn(),
+    availableValues: [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }],
+  },
+  {
+    dataType: DATA_TYPES.JsonbArrayType,
+    operator: OPERATORS.CONTAINS,
+    componentTestId: 'data-input-text-jsonbArrayType',
+    onChange: jest.fn(),
+  },
 ];
 
 describe('DataTypeInput', () => {
@@ -251,3 +329,5 @@ describe('DataTypeInput with Pluggable', () => {
     });
   });
 });
+
+
