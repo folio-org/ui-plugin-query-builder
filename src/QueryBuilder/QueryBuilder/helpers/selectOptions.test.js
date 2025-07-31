@@ -243,23 +243,31 @@ describe('select options', () => {
         dataType: DATA_TYPES.ArrayType,
         hasSourceOrValues: true,
         dynamicOperators: [
-          { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
-          { label: OPERATORS_LABELS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
+          { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
+          { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
+          { label: OPERATORS_LABELS.CONTAINS_ALL, value: OPERATORS.CONTAINS_ALL },
+          { label: OPERATORS_LABELS.NOT_CONTAINS_ALL, value: OPERATORS.NOT_CONTAINS_ALL },
+          { label: OPERATORS_LABELS.CONTAINS_ANY, value: OPERATORS.CONTAINS_ANY },
+          { label: OPERATORS_LABELS.NOT_CONTAINS_ANY, value: OPERATORS.NOT_CONTAINS_ANY },
         ],
       },
       {
         dataType: DATA_TYPES.JsonbArrayType,
         hasSourceOrValues: true,
         dynamicOperators: [
-          { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
-          { label: OPERATORS_LABELS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
+          { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
+          { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
+          { label: OPERATORS_LABELS.CONTAINS_ALL, value: OPERATORS.CONTAINS_ALL },
+          { label: OPERATORS_LABELS.NOT_CONTAINS_ALL, value: OPERATORS.NOT_CONTAINS_ALL },
+          { label: OPERATORS_LABELS.CONTAINS_ANY, value: OPERATORS.CONTAINS_ANY },
+          { label: OPERATORS_LABELS.NOT_CONTAINS_ANY, value: OPERATORS.NOT_CONTAINS_ANY },
         ],
       },
     ].forEach(({ dataType, hasSourceOrValues, dynamicOperators }) => {
       it(`should return operators with placeholder for ${dataType} type and hasSourceOrValues equals "${hasSourceOrValues}"`, () => {
         const options = getOperatorOptions({
-          dataType: DATA_TYPES.ArrayType,
-          hasSourceOrValues: false,
+          dataType,
+          hasSourceOrValues,
           intl: intlMock,
         });
 
@@ -269,10 +277,6 @@ describe('select options', () => {
             { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
             { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
             ...dynamicOperators,
-            { label: OPERATORS_LABELS.CONTAINS_ALL, value: OPERATORS.CONTAINS_ALL },
-            { label: OPERATORS_LABELS.NOT_CONTAINS_ALL, value: OPERATORS.NOT_CONTAINS_ALL },
-            { label: OPERATORS_LABELS.CONTAINS_ANY, value: OPERATORS.CONTAINS_ANY },
-            { label: OPERATORS_LABELS.NOT_CONTAINS_ANY, value: OPERATORS.NOT_CONTAINS_ANY },
             { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
           ],
         });
