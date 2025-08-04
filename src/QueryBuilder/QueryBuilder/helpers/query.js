@@ -140,10 +140,10 @@ const getQueryOperand = (item) => {
       queryOperand = { [field]: { $nin: getTransformedValue(value) } };
       break;
     case OPERATORS.STARTS_WITH:
-      queryOperand = { [field]: { $regex: new RegExp(`^${escapeRegex(value)}`).source } };
+      queryOperand = { [field]: { $starts_with: value } };
       break;
     case OPERATORS.CONTAINS:
-      queryOperand = { [field]: { $regex: new RegExp(escapeRegex(value)).source } };
+      queryOperand = { [field]: { $contains: value } };
       break;
     case OPERATORS.NOT_CONTAINS:
       queryOperand = { [field]: { $not_contains: value } };
@@ -195,12 +195,14 @@ const getSourceFields = (field) => ({
   $lte: (value) => ({ operator: OPERATORS.LESS_THAN_OR_EQUAL, value }),
   $in: (value) => ({ operator: OPERATORS.IN, value }),
   $nin: (value) => ({ operator: OPERATORS.NOT_IN, value }),
+  $starts_with: (value) => ({ operator: OPERATORS.STARTS_WITH, value }),
   $contains: (value) => ({ operator: OPERATORS.CONTAINS, value }),
   $contains_all: (value) => ({ operator: OPERATORS.CONTAINS_ALL, value }),
   $not_contains_all: (value) => ({ operator: OPERATORS.NOT_CONTAINS_ALL, value }),
   $contains_any: (value) => ({ operator: OPERATORS.CONTAINS_ANY, value }),
   $not_contains_any: (value) => ({ operator: OPERATORS.NOT_CONTAINS_ANY, value }),
   $empty: (value) => ({ operator: OPERATORS.EMPTY, value }),
+  // should be removed after implementation of https://folio-org.atlassian.net/browse/MODFQMMGR-614
   $regex: (value) => {
     return value?.includes('^')
       ? { operator: OPERATORS.STARTS_WITH, value: unescapeRegex(value) }
