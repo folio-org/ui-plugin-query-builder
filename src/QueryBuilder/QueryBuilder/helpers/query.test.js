@@ -64,6 +64,12 @@ describe('fqlQueryToSource()', () => {
     },
     {
       boolean: { options: booleanOptions, current: '$and' },
+      field: { options: fieldOptions, current: 'user_full_name' },
+      operator: { options: expect.any(Array), current: OPERATORS.STARTS_WITH },
+      value: { current: 'Jeff' },
+    },
+    {
+      boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'user_id' },
       operator: { options: expect.any(Array), current: OPERATORS.NOT_IN },
       value: { current: 'value, value2' },
@@ -139,7 +145,8 @@ describe('fqlQueryToSource()', () => {
       { user_last_name: { $gt: 'value' } },
       { user_last_name: { $lt: 10 } },
       { user_last_name: { $gte: 'value' } },
-      { user_full_name: { $regex: 'abc' } },
+      { user_full_name: { $contains: 'abc' } },
+      { user_full_name: { $starts_with: 'Jeff' } },
       { user_id: { $nin: ['value', 'value2'] } },
       { user_id: { $in: ['value', 'value2'] } },
       { department_names: { $contains_all: ['value'] } },
