@@ -172,6 +172,8 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
         onAdd={() => {}}
         hasMargin={false}
         renderField={(row, index) => {
+          const filteredOptions = row.boolean.options.filter(option => !option.hidden);
+
           return (
             <Row
               key={index}
@@ -182,7 +184,7 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
                 <Col sm={1} className={css.rowCell}>
                   {index > 0 && (
                     <Select
-                      dataOptions={row.boolean.options}
+                      dataOptions={filteredOptions}
                       value={row.boolean.current}
                       onChange={(e) => handleChange(e.target.value, index, COLUMN_KEYS.BOOLEAN)}
                       data-testid={`boolean-option-${index}`}
