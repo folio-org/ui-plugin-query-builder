@@ -5,6 +5,7 @@
 * [UIPQB-195](https://folio-org.atlassian.net/browse/UIPQB-195) Filter out deleted custom field values
 * [UIPQB-217](https://folio-org.atlassian.net/browse/UIPQB-217) *BREAKING* useTenantTimezone - use mod-settings API.
 * [UIPQB-229](https://folio-org.atlassian.net/browse/UIPQB-229) Handling repeatable fields in Query builder.
+* [UIPQB-238](https://folio-org.atlassian.net/browse/UIPQB-238) Filter out hidden nested properties.
 
 ## [2.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.3) (2025-04-18)
 
