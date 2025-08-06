@@ -36,7 +36,9 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
       const val = item[value];
 
       if (properties?.length) {
-        return <DynamicTable properties={properties} values={val} />;
+        const filteredProperties = properties.filter(prop => !prop.hidden);
+
+        return <DynamicTable properties={filteredProperties} values={val} />;
       }
 
       return formatValueByDataType(

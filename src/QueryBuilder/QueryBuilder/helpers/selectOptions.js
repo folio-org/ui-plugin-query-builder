@@ -128,7 +128,7 @@ export const getFieldOptions = (options) => {
 
       if (item.dataType.itemDataType?.properties) {
         const nestedNamedFields = item.dataType.itemDataType?.properties
-          .filter((child) => child.queryable)
+          .filter((child) => child.queryable && !child.hidden)
           .map((child) => ({
             ...child,
             name: `${item.name}[*]->${child.name}`,
