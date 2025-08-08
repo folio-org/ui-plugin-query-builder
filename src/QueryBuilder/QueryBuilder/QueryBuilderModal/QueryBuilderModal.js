@@ -44,7 +44,6 @@ export const QueryBuilderModal = ({
   onQueryExecutionFail,
   onSetDefaultVisibleColumns,
   recordColumns,
-  getParamsSource,
   recordsLimit,
   additionalControls,
   canRunEmptyQuery = true,
@@ -82,7 +81,6 @@ export const QueryBuilderModal = ({
     isQueryFilled,
     queryStr,
   } = useQuerySource({
-    getParamsSource,
     initialValues,
     entityType,
   });
@@ -126,7 +124,7 @@ export const QueryBuilderModal = ({
     onQueryRunFail,
   });
 
-  const { getDataOptions } = useContext(RootContext);
+  const { getDataOptionsWithFetching } = useContext(RootContext);
 
   const handleSetSource = (src) => {
     setIsQueryRetrieved(false); // invalidate flag if form value was changed
@@ -156,8 +154,7 @@ export const QueryBuilderModal = ({
       initialValues,
       fieldOptions: getFieldOptions(entityType?.columns),
       intl,
-      getParamsSource,
-      getDataOptions,
+      getDataOptionsWithFetching,
     });
 
     queryClient.removeQueries({ queryKey: [entityKey] });
@@ -245,12 +242,10 @@ export const QueryBuilderModal = ({
           <RepeatableFields
             source={source}
             setSource={handleSetSource}
-            getParamsSource={getParamsSource}
             columns={entityType?.columns}
           />
           <TestQuery
             queryId={queryId}
-            getParamsSource={getParamsSource}
             testQuery={testQuery}
             forcedVisibleValues={forcedVisibleValues}
             isTestQueryLoading={isTestQueryLoading}

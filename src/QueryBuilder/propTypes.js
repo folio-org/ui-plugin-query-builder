@@ -13,6 +13,7 @@ export const queryBuilderModalPropTypes = {
   onSetDefaultVisibleColumns: PropTypes.func,
   entityTypeDataSource: PropTypes.func,
   getParamsSource: PropTypes.func,
+  getOrganizations: PropTypes.func,
   onQueryRunSuccess: PropTypes.func,
   onQueryRunFail: PropTypes.func,
   onQueryExecutionSuccess: PropTypes.func,

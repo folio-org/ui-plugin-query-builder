@@ -14,6 +14,7 @@ import {
 } from './selectOptions';
 import upgradeInitialValues from './upgradeInitialValues';
 import { valueBuilder } from './valueBuilder';
+import { ORGANIZATIONS_TYPES } from '../../../constants/dataTypes';
 
 export const DEFAULT_PREVIEW_INTERVAL = 3000;
 
@@ -214,9 +215,8 @@ const getFormattedSourceField = async ({
   item,
   intl,
   fieldOptions,
-  getParamsSource,
   boolean,
-  getDataOptions,
+  getDataOptionsWithFetching,
   preserveQueryValue, // for enum values, preserves the value (used for initial value handling in QB)
 }) => {
   const [field, query] = Object.entries(item)[0];
@@ -249,11 +249,7 @@ const getFormattedSourceField = async ({
     let formattedValue;
 
     if (source) {
-      possibleValues = await getDataOptions(field, true, () => getParamsSource({
-        entityTypeId: source?.entityTypeId,
-        columnName: source?.columnName,
-        searchValue: '',
-      }).then((data) => data?.content));
+      possibleValues = await getDataOptionsWithFetching(field, source, '', Array.isArray(value) ? value : [value]);
     }
 
     if (Array.isArray(value)) {
@@ -294,14 +290,13 @@ export const fqlQueryToSource = async ({
   initialValues,
   fieldOptions,
   intl,
-  getParamsSource,
-  getDataOptions,
+  getDataOptionsWithFetching,
   preserveQueryValue,
 }) => {
   if (!fieldOptions?.length || !Object.keys(initialValues).length) return [];
 
   const key = Object.keys(initialValues)[0];
-  const sharedArgs = { intl, getParamsSource, fieldOptions, getDataOptions, preserveQueryValue };
+  const sharedArgs = { intl, fieldOptions, getDataOptionsWithFetching, preserveQueryValue };
 
   // handle case when query contains boolean operators (AND, OR, etc.)
   if (Object.values(BOOLEAN_OPERATORS).includes(key)) {
@@ -335,8 +330,7 @@ export const getSourceValue = ({
   initialValues,
   fieldOptions,
   intl,
-  getParamsSource,
-  getDataOptions,
+  getDataOptionsWithFetching,
   preserveQueryValue = true,
 }) => {
   // if initial value provided, and it has some items, fill the source with it
@@ -349,8 +343,7 @@ export const getSourceValue = ({
       initialValues,
       fieldOptions,
       intl,
-      getParamsSource,
-      getDataOptions,
+      getDataOptionsWithFetching,
       preserveQueryValue,
     });
   }
@@ -378,10 +371,10 @@ export const findMissingValues = (
 };
 
 // query can be passed in as source array or as a plain fqlQuery object
-export const useQueryStr = (entityType, { source, fqlQuery }, getParamsSource) => {
+export const useQueryStr = (entityType, { source, fqlQuery }) => {
   const intl = useIntl();
   const { tenantTimezone: timezone } = useTenantTimezone();
-  const { getDataOptions } = useContext(RootContext);
+  const { getDataOptions, getDataOptionsWithFetching } = useContext(RootContext);
 
   const [rows, setRows] = useState(null); // null is initial before we've set anything; displays loader
 
@@ -400,8 +393,7 @@ export const useQueryStr = (entityType, { source, fqlQuery }, getParamsSource) =
             initialValues: upgraded,
             fieldOptions,
             intl,
-            getParamsSource,
-            getDataOptions,
+            getDataOptionsWithFetching,
             preserveQueryValue: false, // pretty print
           }),
         );
@@ -411,7 +403,7 @@ export const useQueryStr = (entityType, { source, fqlQuery }, getParamsSource) =
     };
 
     calculateRows();
-  }, [source, fqlQuery, fieldOptions, intl, getParamsSource]);
+  }, [source, fqlQuery, fieldOptions, intl]);
 
   return useMemo(() => {
     if (rows === null) {
@@ -419,5 +411,5 @@ export const useQueryStr = (entityType, { source, fqlQuery }, getParamsSource) =
     } else {
       return getQueryStr(rows, fieldOptions, intl, timezone, getDataOptions);
     }
-  }, [rows, fieldOptions, intl, timezone]);
+  }, [rows, fieldOptions, intl, timezone, getDataOptions]);
 };

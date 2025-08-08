@@ -27,7 +27,6 @@ export const DataTypeInput = ({
   className,
   index,
   operator,
-  getParamsSource,
   source,
   fieldName,
   value,
@@ -81,7 +80,6 @@ export const DataTypeInput = ({
       component={Select}
       source={source}
       testId={testId}
-      getParamsSource={getParamsSource}
       availableValues={availableValues}
       value={inputValue}
       onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
@@ -96,7 +94,6 @@ export const DataTypeInput = ({
       testId={testId}
       component={MultiSelection}
       source={source}
-      getParamsSource={getParamsSource}
       availableValues={availableValues}
       onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
       isMulti
@@ -300,7 +297,6 @@ DataTypeInput.propTypes = {
   onChange: PropTypes.func,
   index: PropTypes.number,
   source: PropTypes.object,
-  getParamsSource: PropTypes.func,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.bool,

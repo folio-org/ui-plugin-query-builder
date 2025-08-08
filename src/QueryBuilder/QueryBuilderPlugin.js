@@ -8,7 +8,10 @@ const VIEWER = 'viewer';
 const BUILDER = 'builder';
 
 export const QueryBuilderPlugin = ({ componentType, ...rest }) => {
-  const dataOptions = useDataOptions();
+  const dataOptions = useDataOptions({
+    getParamsSource: rest.getParamsSource,
+    getOrganizations: rest.getOrganizations,
+  });
 
   return (
     <RootContext.Provider value={dataOptions}>
