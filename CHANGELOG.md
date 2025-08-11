@@ -6,6 +6,7 @@
 * [UIPQB-217](https://folio-org.atlassian.net/browse/UIPQB-217) *BREAKING* useTenantTimezone - use mod-settings API.
 * [UIPQB-229](https://folio-org.atlassian.net/browse/UIPQB-229) Handling repeatable fields in Query builder.
 * [UIPQB-238](https://folio-org.atlassian.net/browse/UIPQB-238) Filter out hidden nested properties.
+* [UIPQB-232](https://folio-org.atlassian.net/browse/UIPQB-232) Show label aliases for inherited custom fields
 
 ## [2.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.3) (2025-04-18)
 
