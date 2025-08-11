@@ -44,6 +44,7 @@ describe('findLabelByValue', () => {
       { value: 'opt_1', label: 'Option 1' },
       { value: 'opt_2', label: 'Option 2' },
       { value: '_custom_field_123', label: 'Custom Field 123' },
+      { value: 'nested._custom_field_456', label: 'Nested - Custom Field 456' },
     ],
   };
 
