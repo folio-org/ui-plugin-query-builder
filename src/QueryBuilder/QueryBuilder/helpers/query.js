@@ -14,7 +14,6 @@ import {
 } from './selectOptions';
 import upgradeInitialValues from './upgradeInitialValues';
 import { valueBuilder } from './valueBuilder';
-import { ORGANIZATIONS_TYPES } from '../../../constants/dataTypes';
 
 export const DEFAULT_PREVIEW_INTERVAL = 3000;
 
