@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ORGANIZATIONS_TYPES } from '../constants/dataTypes';
 
 function getUniqueValues(a, b) {
