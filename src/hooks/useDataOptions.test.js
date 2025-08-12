@@ -3,46 +3,38 @@ import { useDataOptions } from './useDataOptions';
 
 describe('useDataOptions', () => {
   it('returns empty array for getting unknown fields', () => {
-    const { result } = renderHook(() => useDataOptions());
+    const { result } = renderHook(() => useDataOptions({}));
 
     expect(result.current.getDataOptions('unknownField')).toEqual([]);
     expect(result.current.getDataOptions('unknownField', true)).toEqual([]);
   });
 
-  it('sets with regular data', () => {
-    const { result } = renderHook(() => useDataOptions());
-
-    expect(result.current.getDataOptions('field')).toEqual([]);
-
-    result.current.setDataOptions('field', ['foo']);
-
-    expect(result.current.getDataOptions('field')).toEqual(['foo']);
-  });
-
   it('only returns promises when requested', () => {
-    const { result } = renderHook(() => useDataOptions());
+    const { result, rerender } = renderHook(() => useDataOptions({}));
 
-    const promise = Promise.resolve(['foo']);
+    const promise = new Promise(() => {});
 
-    result.current.setDataOptions('field', promise);
-
-    expect(result.current.getDataOptions('field')).toEqual([]);
+    expect(result.current.getDataOptions('field', true, () => promise)).toEqual(promise);
+    rerender();
     expect(result.current.getDataOptions('field', true)).toEqual(promise);
+    expect(result.current.getDataOptions('field')).toEqual([]);
   });
 
-  it('does not call fetch promise if data already exists', () => {
-    const { result } = renderHook(() => useDataOptions());
+  it('does not call fetch promise if data already exists', async () => {
+    const { result, rerender } = renderHook(() => useDataOptions({}));
 
     const fetcher = jest.fn(() => fail('should not be called'));
 
-    result.current.setDataOptions('field', ['foo']);
+    result.current.getDataOptions('field', true, () => Promise.resolve(['foo']));
 
-    result.current.getDataOptions('field', true, fetcher);
+    rerender();
+
+    await waitFor(() => expect(result.current.getDataOptions('field', false, fetcher)).toEqual(['foo']));
     expect(fetcher).not.toHaveBeenCalled();
   });
 
   it('calls fetch promise if data does not exist', async () => {
-    const { result } = renderHook(() => useDataOptions());
+    const { result, rerender } = renderHook(() => useDataOptions({}));
 
     let resolver;
     const promise = new Promise((r) => {
@@ -53,6 +45,7 @@ describe('useDataOptions', () => {
     result.current.getDataOptions('field', true, fetcher);
 
     expect(fetcher).toHaveBeenCalled();
+    rerender();
     expect(result.current.getDataOptions('field')).toEqual([]);
     expect(result.current.getDataOptions('field', true)).toEqual(promise);
 
