@@ -5,6 +5,7 @@ import { useIntl } from 'react-intl';
 import { Loading } from '@folio/stripes/components';
 
 import { RootContext } from '../../../../context/RootContext';
+import { ORGANIZATIONS_TYPES } from '../../../../constants/dataTypes';
 
 export const SelectionContainer = ({
   fieldName,
@@ -33,16 +34,17 @@ export const SelectionContainer = ({
     }
   }
 
-  const getSelectOptionsWithPlaceholder = (options) => {
+  const getSelectOptionsWithPlaceholder = (options, isOrganizations) => {
     return isMulti ? options : [
       { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
+      ...(isOrganizations ? [{ value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder.organizations' }), disabled: true }] : []),
       ...options,
     ];
   };
 
-  const getOptions = (staticValues, sourceValues) => {
-    if (staticValues) return getSelectOptionsWithPlaceholder(staticValues);
-    if (sourceValues) return getSelectOptionsWithPlaceholder(sourceValues);
+  const getOptions = (staticValues, sourceValues, isOrganizations) => {
+    if (staticValues) return getSelectOptionsWithPlaceholder(staticValues, isOrganizations);
+    if (sourceValues) return getSelectOptionsWithPlaceholder(sourceValues, isOrganizations);
 
     return [];
   };
@@ -70,11 +72,11 @@ export const SelectionContainer = ({
 
   const dataOptions = useMemo(() => {
     if (Array.isArray(optionsPromise)) {
-      return getOptions(availableValues, optionsPromise);
+      return getOptions(availableValues, optionsPromise, source?.name === ORGANIZATIONS_TYPES);
     }
 
     return [];
-  }, [optionsPromise, availableValues, isMulti]);
+  }, [optionsPromise, availableValues, isMulti, source]);
 
   const handleOnChange = (selectedValue) => {
     if (onChange) onChange(selectedValue);

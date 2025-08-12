@@ -145,7 +145,7 @@ export const DataTypeInput = ({
                 label: item.name,
               }));
 
-              onChange(normalizedItems, index, COLUMN_KEYS.VALUE);
+              onChange([...(Array.isArray(value) ? value : []), ...normalizedItems], index, COLUMN_KEYS.VALUE);
             }}
             type="find-organization"
             usePortal

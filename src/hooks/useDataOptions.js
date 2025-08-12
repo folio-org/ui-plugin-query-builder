@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ORGANIZATIONS_TYPES } from '../constants/dataTypes';
 
 function getUniqueValues(a, b) {
@@ -11,45 +11,50 @@ function getUniqueValues(a, b) {
 }
 
 export function useDataOptions({ getParamsSource, getOrganizations }) {
-  const dataOptions = useRef({});
+  const [dataOptions, setDataOptions] = useState({});
 
   // helper methods to prevent redundant digging through our raw dataOptions
   const getDataOptions = useCallback(
     (field, allowPromises = false, fetchPromise = undefined, fetchIfValuesMissing = []) => {
       if (
-        Array.isArray(dataOptions.current[field]) &&
+        Array.isArray(dataOptions[field]) &&
         // check that all specially requested values are present
-        fetchIfValuesMissing.every((v) => !!dataOptions.current[field].find((o) => o.value === v))
+        fetchIfValuesMissing.every((v) => !!dataOptions[field].find((o) => o.value === v))
       ) {
-        return dataOptions.current[field];
+        return dataOptions[field];
       }
 
       // only return promises if requested, to prevent non-async code from exploding here
       // we don't need to worry about fetchIfValuesMissing here as we will re-render once this promise is resolved,
       // and any missing ones will then be checked
-      if (
-        typeof dataOptions.current[field] === 'object' &&
-        !Array.isArray(dataOptions.current[field])
-      ) {
-        return allowPromises ? dataOptions.current[field] : [];
+      if (typeof dataOptions[field] === 'object' && !Array.isArray(dataOptions[field])) {
+        return allowPromises ? dataOptions[field] : [];
       }
 
       // if we're provided a fetcher, atomically set it here and automatically put its value back
       if (fetchPromise) {
-        const existingValues = dataOptions.current[field] ?? [];
+        const existingValues = dataOptions[field] ?? [];
 
-        dataOptions.current[field] = fetchPromise();
-        dataOptions.current[field].then((newValues) => {
-          dataOptions.current = {
-            ...dataOptions.current,
+        const promise = fetchPromise();
+
+        setDataOptions((prev) => ({
+          ...prev,
+          [field]: promise,
+        }));
+
+        promise.then((newValues) => {
+          setDataOptions((prev) => ({
+            ...prev,
             [field]: getUniqueValues(existingValues, newValues),
-          };
+          }));
         });
+
+        return promise;
       }
 
-      return dataOptions.current[field] ?? [];
+      return dataOptions[field] ?? [];
     },
-    [dataOptions.current],
+    [dataOptions],
   );
 
   const getDataOptionsWithFetching = useCallback(
@@ -61,7 +66,7 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
         return getDataOptions(
           fieldName,
           true,
-          () => getOrganizations(usedIds, source.columnName),
+          !usedIds.length ? undefined : () => getOrganizations(usedIds, source.columnName),
           usedIds,
         );
       } else {
@@ -75,11 +80,8 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
     [getDataOptions],
   );
 
-  return useMemo(
-    () => ({
-      getDataOptions,
-      getDataOptionsWithFetching,
-    }),
-    [dataOptions.current],
-  );
+  return {
+    getDataOptions,
+    getDataOptionsWithFetching,
+  };
 }
