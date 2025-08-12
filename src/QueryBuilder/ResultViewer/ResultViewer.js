@@ -13,7 +13,10 @@ import { useLastNotEmptyValue } from '../../hooks/useLastNotEmptyValue';
 import { useQueryStr } from '../QueryBuilder/helpers/query';
 
 const AccordionHeaderLabel = ({ entityType, fqlQuery }) => (
-  useQueryStr(entityType, { fqlQuery })
+  <FormattedMessage
+    id="ui-plugin-query-builder.viewer.accordion.title.query"
+    values={{ query: useQueryStr(entityType, { fqlQuery }) }}
+  />
 );
 
 export const ResultViewer = ({
