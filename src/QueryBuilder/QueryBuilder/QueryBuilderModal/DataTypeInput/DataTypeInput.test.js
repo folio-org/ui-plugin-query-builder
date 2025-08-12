@@ -123,6 +123,13 @@ const arr = [
     onChange: jest.fn(),
   },
   {
+    dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.STARTS_WITH,
+    componentTestId: 'data-input-select-single-arrayType',
+    onChange: jest.fn(),
+    source: mockSource,
+  },
+  {
     dataType: DATA_TYPES.JsonbArrayType,
     operator: OPERATORS.CONTAINS,
     componentTestId: 'data-input-text-jsonbArrayType',

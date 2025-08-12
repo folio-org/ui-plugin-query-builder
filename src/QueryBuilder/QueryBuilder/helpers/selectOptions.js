@@ -28,11 +28,20 @@ const extendedLogicalOperators = () => [
   { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
 ];
 
-const ArrayOperators = () => [
-  { label: OPERATORS_LABELS.CONTAINS_ALL, value: OPERATORS.CONTAINS_ALL },
-  { label: OPERATORS_LABELS.NOT_CONTAINS_ALL, value: OPERATORS.NOT_CONTAINS_ALL },
-  { label: OPERATORS_LABELS.CONTAINS_ANY, value: OPERATORS.CONTAINS_ANY },
-  { label: OPERATORS_LABELS.NOT_CONTAINS_ANY, value: OPERATORS.NOT_CONTAINS_ANY },
+const ArrayOperators = (hasSourceOrValues) => [
+  { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+  { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+  ...(hasSourceOrValues ? [
+    { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
+    { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
+    { label: OPERATORS_LABELS.CONTAINS_ALL, value: OPERATORS.CONTAINS_ALL },
+    { label: OPERATORS_LABELS.NOT_CONTAINS_ALL, value: OPERATORS.NOT_CONTAINS_ALL },
+    { label: OPERATORS_LABELS.CONTAINS_ANY, value: OPERATORS.CONTAINS_ANY },
+    { label: OPERATORS_LABELS.NOT_CONTAINS_ANY, value: OPERATORS.NOT_CONTAINS_ANY },
+  ] : [
+    { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
+    { label: OPERATORS_LABELS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
+  ]),
   { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
 ];
 
@@ -88,7 +97,7 @@ export const getOperatorOptions = ({
 
     case DATA_TYPES.ArrayType:
     case DATA_TYPES.JsonbArrayType:
-      return getOperatorsWithPlaceholder(ArrayOperators(), intl);
+      return getOperatorsWithPlaceholder(ArrayOperators(hasSourceOrValues), intl);
 
     case DATA_TYPES.DateType:
       return getOperatorsWithPlaceholder(extendedLogicalOperators(), intl);
@@ -119,7 +128,7 @@ export const getFieldOptions = (options) => {
 
       if (item.dataType.itemDataType?.properties) {
         const nestedNamedFields = item.dataType.itemDataType?.properties
-          .filter((child) => child.queryable)
+          .filter((child) => child.queryable && !child.hidden)
           .map((child) => ({
             ...child,
             name: `${item.name}[*]->${child.name}`,

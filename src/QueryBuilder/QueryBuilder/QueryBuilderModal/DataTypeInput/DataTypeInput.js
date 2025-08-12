@@ -228,8 +228,22 @@ export const DataTypeInput = ({
     );
   };
 
-  //
-  const arrayLikeTypeControls = () => {
+  // Controls for ArrayType and JsonbArrayType
+  const arrayTypeControls = (testIdPostfix) => {
+    // If a source or values are provided, use select or multiSelect based on the operator
+    if (hasSourceOrValues) {
+      if (isContainsRelatedOperator || isInRelatedOperator) {
+        return multiSelectControl({ testId: `data-input-select-multi-${testIdPostfix}`, value });
+      }
+
+      return selectControl({ testId: `data-input-select-single-${testIdPostfix}`, value });
+    }
+
+    // If no source or values, use free text input for ArrayType and JsonbArrayType
+    return textControl({ testId: `data-input-text-${testIdPostfix}`, value });
+  };
+
+  const enumTypeControls = () => {
     return isInRelatedOperator
       ? multiSelectControl({ testId: 'data-input-select-multi-arrayType', value })
       : selectControl({ testId: 'data-input-select-arrayType', value });
@@ -273,17 +287,14 @@ export const DataTypeInput = ({
       return openUUIDTypeControls();
 
     case DATA_TYPES.ArrayType:
-      return isContainsRelatedOperator && hasSourceOrValues
-        ? multiSelectControl({ testId: 'data-input-select-multi-arrayType', value })
-        : textControl({ testId: 'data-input-text-arrayType', value });
+      return arrayTypeControls('arrayType');
 
     case DATA_TYPES.JsonbArrayType:
-      return isContainsRelatedOperator && hasSourceOrValues
-        ? multiSelectControl({ testId: 'data-input-select-multi-jsonbArrayType', value })
-        : textControl({ testId: 'data-input-text-jsonbArrayType', value });
+      return arrayTypeControls('jsonbArrayType');
 
     case DATA_TYPES.EnumType:
-      return arrayLikeTypeControls();
+      return enumTypeControls();
+
     default:
       return textControl({ testId: 'data-input-text-default', value });
   }
@@ -296,7 +307,11 @@ DataTypeInput.propTypes = {
   operator: PropTypes.string,
   onChange: PropTypes.func,
   index: PropTypes.number,
-  source: PropTypes.object,
+  source: PropTypes.shape({
+    name: PropTypes.string,
+    entityTypeId: PropTypes.string,
+    columnName: PropTypes.string,
+  }),
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.bool,
