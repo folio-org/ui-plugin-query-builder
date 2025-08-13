@@ -31,9 +31,7 @@ describe('useDataOptions', () => {
 
       rerender();
 
-      await waitFor(() =>
-        expect(result.current.getDataOptions('field', false, fetcher)).toEqual(['foo']),
-      );
+      await waitFor(() => expect(result.current.getDataOptions('field', false, fetcher)).toEqual(['foo']));
       expect(fetcher).not.toHaveBeenCalled();
     });
 
@@ -62,13 +60,9 @@ describe('useDataOptions', () => {
     it('calls fetch promise if data exists but more is needed', async () => {
       const { result, rerender } = renderHook(() => useDataOptions({}));
 
-      result.current.getDataOptions('field', true, () =>
-        Promise.resolve([{ value: 'foo', label: 'foo' }]),
-      );
+      result.current.getDataOptions('field', true, () => Promise.resolve([{ value: 'foo', label: 'foo' }]));
       rerender();
-      await waitFor(() =>
-        expect(result.current.getDataOptions('field')).toEqual([{ value: 'foo', label: 'foo' }]),
-      );
+      await waitFor(() => expect(result.current.getDataOptions('field')).toEqual([{ value: 'foo', label: 'foo' }]));
 
       const fetcher = jest.fn(() => Promise.resolve([{ value: 'bar', label: 'bar' }]));
 
@@ -76,12 +70,10 @@ describe('useDataOptions', () => {
       rerender();
       await waitFor(() => expect(fetcher).toHaveBeenCalled());
       rerender();
-      await waitFor(() =>
-        expect(result.current.getDataOptions('field')).toEqual([
-          { value: 'bar', label: 'bar' },
-          { value: 'foo', label: 'foo' },
-        ]),
-      );
+      await waitFor(() => expect(result.current.getDataOptions('field')).toEqual([
+        { value: 'bar', label: 'bar' },
+        { value: 'foo', label: 'foo' },
+      ]));
     });
   });
 

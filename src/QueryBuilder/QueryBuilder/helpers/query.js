@@ -95,10 +95,6 @@ export const getTransformedValue = (val) => {
   return val;
 };
 
-const escapeRegex = (value) => {
-  return value?.toString().replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
-};
-
 const unescapeRegex = (value) => {
   // remove leading '^' and trailing '/' from regex
   const cleanerRegex = /((^\^?)|(\/$))/g;
