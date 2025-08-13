@@ -1,18 +1,17 @@
 import PropTypes from 'prop-types';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { Loading } from '@folio/stripes/components';
 
-import { useParamsDataSource } from '../../../../hooks/useParamsDataSource';
 import { RootContext } from '../../../../context/RootContext';
+import { ORGANIZATIONS_TYPES } from '../../../../constants/dataTypes';
 
 export const SelectionContainer = ({
   fieldName,
   operator,
   component: Component,
   availableValues,
-  getParamsSource,
   isMulti,
   onChange,
   source,
@@ -22,7 +21,7 @@ export const SelectionContainer = ({
   ...rest
 }) => {
   const intl = useIntl();
-  const { setDataOptions } = useContext(RootContext);
+  const { getDataOptionsWithFetching } = useContext(RootContext);
   const [searchValue, setSearchValue] = useState('');
   const isBooleanField = availableValues?.every(opt => typeof opt.value === 'boolean');
   let normalizedValue = value;
@@ -35,21 +34,23 @@ export const SelectionContainer = ({
     }
   }
 
-  const getSelectOptionsWithPlaceholder = (options) => {
+  const getSelectOptionsWithPlaceholder = (options, isOrganizations) => {
     return isMulti ? options : [
       { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
+      ...(isOrganizations ? [{ value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder.organizations' }), disabled: true }] : []),
       ...options,
     ];
   };
 
-  const getOptions = (staticValues, sourceValues) => {
-    if (staticValues) return getSelectOptionsWithPlaceholder(staticValues);
-    if (sourceValues) return getSelectOptionsWithPlaceholder(sourceValues);
+  const getOptions = (staticValues, sourceValues, isOrganizations) => {
+    if (staticValues) return getSelectOptionsWithPlaceholder(staticValues, isOrganizations);
+    if (sourceValues) return getSelectOptionsWithPlaceholder(sourceValues, isOrganizations);
 
     return [];
   };
 
-  const { data, isLoading } = useParamsDataSource({ source, searchValue, getParamsSource });
+  const usedIds = (Array.isArray(value) ? value : [value]).map(item => item?.value || item).filter(Boolean);
+  const optionsPromise = getDataOptionsWithFetching(fieldName, source, searchValue, usedIds);
 
   const filterOptions = (filterText, list) => {
     const lowerCaseFilterText = filterText?.toLowerCase() || '';
@@ -70,24 +71,18 @@ export const SelectionContainer = ({
   };
 
   const dataOptions = useMemo(() => {
-    if (!isLoading) {
-      return getOptions(availableValues, data?.content);
+    if (Array.isArray(optionsPromise)) {
+      return getOptions(availableValues, optionsPromise, source?.name === ORGANIZATIONS_TYPES);
     }
 
     return [];
-  }, [isLoading, data?.content, availableValues, isMulti]);
-
-  useEffect(() => {
-    setDataOptions(fieldName, dataOptions);
-  }, [dataOptions]);
+  }, [optionsPromise, availableValues, isMulti, source]);
 
   const handleOnChange = (selectedValue) => {
-    setDataOptions(fieldName, dataOptions);
-
     if (onChange) onChange(selectedValue);
   };
 
-  if (isLoading) return <Loading size="large" />;
+  if (!Array.isArray(optionsPromise)) return <Loading size="large" />;
 
   return (
     <Component
@@ -112,7 +107,6 @@ SelectionContainer.propTypes = {
   onChange: PropTypes.func,
   index: PropTypes.number,
   source: PropTypes.object,
-  getParamsSource: PropTypes.func,
   availableValues: PropTypes.arrayOf(PropTypes.object),
   emptyMessage: PropTypes.oneOfType([
     PropTypes.string,

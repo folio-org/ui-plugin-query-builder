@@ -27,7 +27,6 @@ export const DataTypeInput = ({
   className,
   index,
   operator,
-  getParamsSource,
   source,
   fieldName,
   value,
@@ -81,7 +80,6 @@ export const DataTypeInput = ({
       component={Select}
       source={source}
       testId={testId}
-      getParamsSource={getParamsSource}
       availableValues={availableValues}
       value={inputValue}
       onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
@@ -96,7 +94,6 @@ export const DataTypeInput = ({
       testId={testId}
       component={MultiSelection}
       source={source}
-      getParamsSource={getParamsSource}
       availableValues={availableValues}
       onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
       isMulti
@@ -148,7 +145,7 @@ export const DataTypeInput = ({
                 label: item.name,
               }));
 
-              onChange(normalizedItems, index, COLUMN_KEYS.VALUE);
+              onChange([...(Array.isArray(value) ? value : []), ...normalizedItems], index, COLUMN_KEYS.VALUE);
             }}
             type="find-organization"
             usePortal
@@ -315,7 +312,6 @@ DataTypeInput.propTypes = {
     entityTypeId: PropTypes.string,
     columnName: PropTypes.string,
   }),
-  getParamsSource: PropTypes.func,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.bool,

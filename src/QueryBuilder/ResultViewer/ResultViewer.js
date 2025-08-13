@@ -12,10 +12,10 @@ import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
 import { useLastNotEmptyValue } from '../../hooks/useLastNotEmptyValue';
 import { useQueryStr } from '../QueryBuilder/helpers/query';
 
-const AccordionHeaderLabel = ({ entityType, fqlQuery, getParamsSource }) => (
+const AccordionHeaderLabel = ({ entityType, fqlQuery }) => (
   <FormattedMessage
     id="ui-plugin-query-builder.viewer.accordion.title.query"
-    values={{ query: useQueryStr(entityType, { fqlQuery }, getParamsSource) }}
+    values={{ query: useQueryStr(entityType, { fqlQuery }) }}
   />
 );
 
@@ -36,7 +36,6 @@ export const ResultViewer = ({
   onSetDefaultColumns,
   showQueryAccordion,
   fqlQuery,
-  getParamsSource,
   height,
   refreshTrigger,
   onSuccess,
@@ -215,7 +214,12 @@ export const ResultViewer = ({
   const renderWithAccordion = () => (
     <Accordion
       id="results-viewer-accordion"
-      label={<AccordionHeaderLabel entityType={entityType} fqlQuery={fqlQuery} getParamsSource={getParamsSource} />}
+      label={
+        <AccordionHeaderLabel
+          entityType={entityType}
+          fqlQuery={fqlQuery}
+        />
+      }
     >
       {renderContent()}
     </Accordion>
@@ -229,7 +233,6 @@ export const ResultViewer = ({
 ResultViewer.propTypes = {
   showQueryAccordion: PropTypes.bool,
   fqlQuery: PropTypes.object,
-  getParamsSource: PropTypes.func,
   headline: PropTypes.func,
   headlineEnd: PropTypes.func,
   contentDataSource: PropTypes.func,
@@ -261,5 +264,4 @@ ResultViewer.propTypes = {
 AccordionHeaderLabel.propTypes = {
   entityType: ResultViewer.propTypes.entityType,
   fqlQuery: ResultViewer.propTypes.fqlQuery,
-  getParamsSource: ResultViewer.propTypes.getParamsSource,
 };

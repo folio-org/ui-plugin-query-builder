@@ -28,7 +28,7 @@ import { findMissingValues } from '../../helpers/query';
 import { retainValueOnOperatorChange } from '../../helpers/valueBuilder';
 import { RootContext } from '../../../../context/RootContext';
 
-export const RepeatableFields = memo(({ source, setSource, getParamsSource, columns }) => {
+export const RepeatableFields = memo(({ source, setSource, columns }) => {
   const intl = useIntl();
   const callout = useShowCallout();
   const calloutCalledRef = useRef(false);
@@ -220,7 +220,6 @@ export const RepeatableFields = memo(({ source, setSource, getParamsSource, colu
                   <DataTypeInput
                     fieldName={row.field.current}
                     value={row.value.current}
-                    getParamsSource={getParamsSource}
                     dataType={row.field.dataType}
                     index={index}
                     availableValues={row.value.options}
@@ -259,5 +258,4 @@ RepeatableFields.propTypes = {
   source: PropTypes.arrayOf(PropTypes.object),
   columns: PropTypes.arrayOf(PropTypes.object),
   setSource: PropTypes.func,
-  getParamsSource: PropTypes.func,
 };

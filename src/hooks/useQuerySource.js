@@ -12,11 +12,11 @@ import {
 } from '../QueryBuilder/QueryBuilder/helpers/selectOptions';
 import { RootContext } from '../context/RootContext';
 
-export const useQuerySource = ({ initialValues, entityType, getParamsSource }) => {
+export const useQuerySource = ({ initialValues, entityType }) => {
   const intl = useIntl();
   const [source, setSource] = useState([]);
 
-  const { getDataOptions } = useContext(RootContext);
+  const { getDataOptions, getDataOptionsWithFetching } = useContext(RootContext);
 
   const fieldOptions = useMemo(() => getFieldOptions(entityType?.columns), [entityType]);
   const stringifiedFieldOptions = useMemo(() => JSON.stringify(fieldOptions), [fieldOptions]);
@@ -33,8 +33,7 @@ export const useQuerySource = ({ initialValues, entityType, getParamsSource }) =
           initialValues,
           fieldOptions,
           intl,
-          getParamsSource,
-          getDataOptions,
+          getDataOptionsWithFetching,
         });
 
         setSource(value);

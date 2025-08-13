@@ -24,6 +24,7 @@
   "control.info.separateValues": "Separate multiple values with a comma.",
   "control.selection.placeholder": "Select field",
   "control.value.placeholder": "Select value",
+  "control.value.placeholder.organizations": "Use the “Organization look-up” below to add organizations",
   "control.operator.placeholder": "Select operator",
   "control.dropdown.showColumns": "Show columns",
   "control.search.placeholder": "Search fields",
@@ -42,5 +43,5 @@
 
   "userFriendlyQuery.boolean.$and": "{query1} and {query2}",
 
-  "noOptionsAvailable": "No matches! Try Organization look-up"
+  "noOptionsAvailable": "No matches! Use the “Organization look-up” below to add organizations"
 }

@@ -8,18 +8,6 @@ import { DATA_TYPES, ORGANIZATIONS_TYPES } from '../../../../constants/dataTypes
 import { OPERATORS } from '../../../../constants/operators';
 import { RootContext } from '../../../../context/RootContext';
 
-jest.mock('../../../../hooks/useParamsDataSource', () => ({
-  useParamsDataSource: jest.fn().mockReturnValue({
-    data: {
-      content: [
-        { label: 'Available', value: 'available' },
-        { label: 'Checked out', value: 'checked' },
-      ],
-    },
-    isLoading: false,
-  }),
-}));
-
 jest.mock('@folio/stripes/core', () => ({
   ...jest.requireActual('@folio/stripes/core'),
   Pluggable: ({ children }) => <div>{children}</div>,
@@ -40,8 +28,6 @@ const mockSource = {
   },
 };
 
-const setDataOptionsMock = jest.fn();
-
 const renderDataTypeInput = ({
   onChange,
   dataType,
@@ -51,7 +37,14 @@ const renderDataTypeInput = ({
   value,
 }) => render(
   <Intl>
-    <RootContext.Provider value={{ setDataOptions: setDataOptionsMock }}>
+    <RootContext.Provider
+      value={{
+        getDataOptionsWithFetching: () => [
+          { label: 'Available', value: 'available' },
+          { label: 'Checked out', value: 'checked' },
+        ],
+      }}
+    >
       <QueryClientProvider client={queryClient}>
         <DataTypeInput
           onChange={onChange}
