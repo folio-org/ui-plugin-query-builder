@@ -35,15 +35,15 @@ export const SelectionContainer = ({
   }
 
   const getSelectOptionsWithPlaceholder = (options, isOrganizations) => {
+    if (isMulti) {
+      return options;
+    }
+
     if (isOrganizations) {
       return [
         { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder.organizations' }), disabled: true },
         ...options,
       ];
-    }
-
-    if (isMulti) {
-      return options;
     }
 
     return [
