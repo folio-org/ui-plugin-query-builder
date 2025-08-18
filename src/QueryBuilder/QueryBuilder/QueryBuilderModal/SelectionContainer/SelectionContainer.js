@@ -35,9 +35,19 @@ export const SelectionContainer = ({
   }
 
   const getSelectOptionsWithPlaceholder = (options, isOrganizations) => {
-    return isMulti ? options : [
+    if (isOrganizations) {
+      return [
+        { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder.organizations' }), disabled: true },
+        ...options,
+      ];
+    }
+
+    if (isMulti) {
+      return options;
+    }
+
+    return [
       { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
-      ...(isOrganizations ? [{ value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder.organizations' }), disabled: true }] : []),
       ...options,
     ];
   };
@@ -70,9 +80,11 @@ export const SelectionContainer = ({
     return { renderedItems, exactMatch };
   };
 
+  const isOrganizations = useMemo(() => source?.name === ORGANIZATIONS_TYPES, [source]);
+
   const dataOptions = useMemo(() => {
     if (Array.isArray(optionsPromise)) {
-      return getOptions(availableValues, optionsPromise, source?.name === ORGANIZATIONS_TYPES);
+      return getOptions(availableValues, optionsPromise, isOrganizations);
     }
 
     return [];
@@ -94,6 +106,7 @@ export const SelectionContainer = ({
       filter={filterOptions}
       dataOptions={dataOptions}
       emptyMessage={emptyMessage}
+      disabled={isOrganizations && !isMulti}
     />
   );
 };
