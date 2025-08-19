@@ -32,5 +32,6 @@
     "warning.deletedField": "{value} у вашому запиті більше не доступно. Будь ласка, перегляньте свій запит.",
     "noOptionsAvailable": "Немає відповідностей! Спробуйте пошук організації",
     "viewer.accordion.title.query": "Запит: {query}",
-    "userFriendlyQuery.boolean.$and": "{query1} і {query2}"
+    "userFriendlyQuery.boolean.$and": "{query1} і {query2}",
+    "control.value.placeholder.organizations": "Скористайтеся функцією \"Пошук організацій\" нижче, щоб додати організації"
 }

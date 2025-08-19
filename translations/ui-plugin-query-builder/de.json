@@ -30,7 +30,8 @@
     "ariaLabel.columnFilter": "Column filter input",
     "error.occurredMessage": "Ein Fehler ist aufgetreten.",
     "warning.deletedField": "{value} in your query is no longer available. Please revise your query.",
-    "noOptionsAvailable": "No matches! Try Organization look-up",
+    "noOptionsAvailable": "No matches! Use the “Organization look-up” below to add organizations",
     "viewer.accordion.title.query": "Query: {query}",
-    "userFriendlyQuery.boolean.$and": "{query1} and {query2}"
+    "userFriendlyQuery.boolean.$and": "{query1} and {query2}",
+    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add organizations"
 }

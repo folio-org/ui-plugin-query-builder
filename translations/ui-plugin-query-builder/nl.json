@@ -32,5 +32,6 @@
     "warning.deletedField": "{value} in uw zoekopdracht is niet beschikbaar. Herzie uw zoekopdracht. ",
     "noOptionsAvailable": "Geen overeenkomsten! Probeer Organisatie opzoeken",
     "viewer.accordion.title.query": "Query: {query}",
-    "userFriendlyQuery.boolean.$and": "{zoekopdracht1} en {zoekopdracht2}"
+    "userFriendlyQuery.boolean.$and": "{zoekopdracht1} en {zoekopdracht2}",
+    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add organizations"
 }

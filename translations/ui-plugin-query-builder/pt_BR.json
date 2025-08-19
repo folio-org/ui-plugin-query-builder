@@ -32,5 +32,6 @@
     "warning.deletedField": "{value} em sua consulta não está mais disponível. Por favor, revise sua consulta.",
     "noOptionsAvailable": "Nenhuma correspondência! Tente a pesquisa de organização",
     "viewer.accordion.title.query": "Consulta: {query}",
-    "userFriendlyQuery.boolean.$and": "{query1} e {query2}"
+    "userFriendlyQuery.boolean.$and": "{query1} e {query2}",
+    "control.value.placeholder.organizations": "Use a “Pesquisa de organização” abaixo para adicionar organizações"
 }
