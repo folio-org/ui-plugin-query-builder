@@ -32,5 +32,6 @@
     "warning.deletedField": "{value} w Twoim zapytaniu jest niedostępna. Proszę poprawić swoje zapytanie.",
     "noOptionsAvailable": "Brak wyników! Spróbuj znaleźć organizację",
     "viewer.accordion.title.query": "Zapytanie: {query}",
-    "userFriendlyQuery.boolean.$and": "{query1} i {query2}"
+    "userFriendlyQuery.boolean.$and": "{query1} i {query2}",
+    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add organizations"
 }

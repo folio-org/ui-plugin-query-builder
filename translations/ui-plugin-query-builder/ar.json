@@ -30,7 +30,8 @@
     "ariaLabel.columnFilter": "مدخلات منقح العمود",
     "error.occurredMessage": "لقد حدث خطأ.",
     "warning.deletedField": "{value} في استعلامك غير متاحة. يرجى مراجعة استعلامك.",
-    "noOptionsAvailable": "No matches! Try Organization look-up",
+    "noOptionsAvailable": "No matches! Use the “Organization look-up” below to add organizations",
     "viewer.accordion.title.query": "الاستعلام: {query}",
-    "userFriendlyQuery.boolean.$and": "{query1} و {query2}"
+    "userFriendlyQuery.boolean.$and": "{query1} و {query2}",
+    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add organizations"
 }
