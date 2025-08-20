@@ -12,6 +12,8 @@ import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
 import { useLastNotEmptyValue } from '../../hooks/useLastNotEmptyValue';
 import { useQueryStr } from '../QueryBuilder/helpers/query';
 
+import css from '../QueryBuilder.css';
+
 const AccordionHeaderLabel = ({ entityType, fqlQuery }) => (
   <FormattedMessage
     id="ui-plugin-query-builder.viewer.accordion.title.query"
@@ -180,6 +182,7 @@ export const ResultViewer = ({
               height={height}
               loading={isListLoading}
               isEmptyMessage={emptyResultMessage}
+              getCellClass={(defaultClass) => `${defaultClass} ${css.ViewerTableCell}`}
             />
           )}
           {showPagination && (

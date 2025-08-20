@@ -17,3 +17,7 @@ input.NumberInput::-webkit-inner-spin-button {
 input.NumberInput[type=number] {
     -moz-appearance: textfield;
 }
+
+.ViewerTableCell {
+    align-items: flex-start;
+}
