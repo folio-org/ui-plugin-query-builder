@@ -15,7 +15,7 @@ export const DynamicTable = ({ properties, values }) => {
   if (!tableBodyRows?.length) return null;
 
   return (
-    <table className={css.DynamicTable}>
+    <table className={css.NestedTable}>
       <thead>
         <tr>
           {properties?.map((cell) => (

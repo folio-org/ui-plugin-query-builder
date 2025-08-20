@@ -1,25 +1,25 @@
-.DynamicTable {
+.NestedTable {
     width: calc(100% + calc (2 * var(--gutter-static-two-thirds)));
     margin: calc(-1 * var(--gutter-static-one-third)) calc(-1 * var(--gutter-static-two-thirds));
     border-collapse: collapse;
     flex-grow: 1;
 }
 
-.DynamicTable th {
+.NestedTable th {
     white-space: nowrap;
     background-color: #ccc;
 }
 
-.DynamicTable th, .DynamicTable td {
+.NestedTable th, .NestedTable td {
     border: 1px solid var(--color-border-p2);
     padding: var(--gutter-static-one-third) var(--gutter-static-two-thirds);
     vertical-align: top;
 }
 
-.DynamicTable th:first-of-type, .DynamicTable td:first-of-type {
+.NestedTable th:first-of-type, .NestedTable td:first-of-type {
     border-left: none;
 }
 
-.DynamicTable th:last-of-type, .DynamicTable td:last-of-type {
+.NestedTable th:last-of-type, .NestedTable td:last-of-type {
     border-right: none;
 }
