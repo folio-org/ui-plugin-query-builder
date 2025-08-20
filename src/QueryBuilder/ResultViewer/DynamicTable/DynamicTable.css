@@ -1,14 +1,25 @@
 .DynamicTable {
+    width: calc(100% + calc (2 * var(--gutter-static-two-thirds)));
     margin: calc(-1 * var(--gutter-static-one-third)) calc(-1 * var(--gutter-static-two-thirds));
     border-collapse: collapse;
-    align-self: flex-start;
+    flex-grow: 1;
 }
 
-.DynamicTable td {
+.DynamicTable th {
+    white-space: nowrap;
+    background-color: #ccc;
+}
+
+.DynamicTable th, .DynamicTable td {
+    border: 1px solid var(--color-border-p2);
+    padding: var(--gutter-static-one-third) var(--gutter-static-two-thirds);
     vertical-align: top;
 }
 
+.DynamicTable th:first-of-type, .DynamicTable td:first-of-type {
+    border-left: none;
+}
 
-.DynamicTable th, .DynamicTable td {
-    padding: var(--gutter-static-one-third) var(--gutter-static-two-thirds);
+.DynamicTable th:last-of-type, .DynamicTable td:last-of-type {
+    border-right: none;
 }
