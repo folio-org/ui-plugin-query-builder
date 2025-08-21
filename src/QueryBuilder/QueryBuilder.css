@@ -18,6 +18,6 @@ input.NumberInput[type=number] {
     -moz-appearance: textfield;
 }
 
-.ViewerTableCell {
+#results-viewer-table [role="gridcell"] {
     align-items: flex-start;
 }

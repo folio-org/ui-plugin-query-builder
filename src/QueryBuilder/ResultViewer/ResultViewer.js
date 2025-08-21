@@ -12,8 +12,6 @@ import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
 import { useLastNotEmptyValue } from '../../hooks/useLastNotEmptyValue';
 import { useQueryStr } from '../QueryBuilder/helpers/query';
 
-import css from '../QueryBuilder.css';
-
 const AccordionHeaderLabel = ({ entityType, fqlQuery }) => (
   <FormattedMessage
     id="ui-plugin-query-builder.viewer.accordion.title.query"
@@ -171,6 +169,7 @@ export const ResultViewer = ({
             />
           ) : (
             <MultiColumnList
+              id="results-viewer-table"
               data-testid="results-viewer-table"
               contentData={pollingMode ? lastNotEmptyContent : contentData}
               columnMapping={columnMapping}
@@ -182,7 +181,6 @@ export const ResultViewer = ({
               height={height}
               loading={isListLoading}
               isEmptyMessage={emptyResultMessage}
-              getCellClass={(defaultClass) => `${defaultClass} ${css.ViewerTableCell}`}
             />
           )}
           {showPagination && (
