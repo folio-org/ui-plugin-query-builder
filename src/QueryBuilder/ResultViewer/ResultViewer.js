@@ -169,6 +169,7 @@ export const ResultViewer = ({
             />
           ) : (
             <MultiColumnList
+              id="results-viewer-table"
               data-testid="results-viewer-table"
               contentData={pollingMode ? lastNotEmptyContent : contentData}
               columnMapping={columnMapping}
@@ -232,7 +233,10 @@ export const ResultViewer = ({
 
 ResultViewer.propTypes = {
   showQueryAccordion: PropTypes.bool,
-  fqlQuery: PropTypes.object,
+  fqlQuery: PropTypes.shape({
+    query: PropTypes.string,
+    params: PropTypes.objectOf(PropTypes.string),
+  }),
   headline: PropTypes.func,
   headlineEnd: PropTypes.func,
   contentDataSource: PropTypes.func,

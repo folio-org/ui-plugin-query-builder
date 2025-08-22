@@ -45,6 +45,12 @@ export const DynamicTable = ({ properties, values }) => {
 };
 
 DynamicTable.propTypes = {
-  properties: PropTypes.arrayOf(PropTypes.object),
+  properties: PropTypes.arrayOf(PropTypes.shape({
+    property: PropTypes.string.isRequired,
+    labelAlias: PropTypes.string.isRequired,
+    dataType: PropTypes.shape({
+      dataType: PropTypes.string.isRequired,
+    }).isRequired,
+  })),
   values: PropTypes.string,
 };
