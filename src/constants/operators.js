@@ -9,10 +9,6 @@ export const OPERATORS = {
   NOT_IN: 'not in',
   CONTAINS: 'contains',
   NOT_CONTAINS: 'not contains',
-  CONTAINS_ALL: 'contains all',
-  NOT_CONTAINS_ALL: 'not contains all',
-  CONTAINS_ANY: 'contains any',
-  NOT_CONTAINS_ANY: 'not contains any',
   STARTS_WITH: 'starts with',
   EMPTY: ' is null/empty',
 };
@@ -36,10 +32,6 @@ export const OPERATORS_LABELS = {
   NOT_IN: 'not in',
   CONTAINS: 'contains',
   NOT_CONTAINS: 'not contains',
-  CONTAINS_ALL: 'contains all',
-  NOT_CONTAINS_ALL: 'not contains all',
-  CONTAINS_ANY: 'contains any',
-  NOT_CONTAINS_ANY: 'not contains any',
   STARTS_WITH: 'starts with',
   EMPTY: ' is null/empty',
 };
@@ -58,10 +50,6 @@ export const OPERATOR_GROUPS = {
   arrayComparison: [
     OPERATORS.IN,
     OPERATORS.NOT_IN,
-    OPERATORS.CONTAINS_ALL,
-    OPERATORS.CONTAINS_ANY,
-    OPERATORS.NOT_CONTAINS_ANY,
-    OPERATORS.NOT_CONTAINS_ALL,
     OPERATORS.NOT_CONTAINS,
   ],
 };
