@@ -33,5 +33,5 @@
     "noOptionsAvailable": "没有匹配！尝试查找组织",
     "viewer.accordion.title.query": "查询 :  {query}",
     "userFriendlyQuery.boolean.$and": "{query1}和{query2}",
-    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add organizations"
+    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add values"
 }
