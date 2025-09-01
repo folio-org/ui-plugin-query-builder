@@ -35,12 +35,6 @@ export const DataTypeInput = ({
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
   const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
   const isEmptyRelatedOperator = [OPERATORS.EMPTY].includes(operator);
-  const isContainsRelatedOperator = [
-    OPERATORS.NOT_CONTAINS_ANY,
-    OPERATORS.CONTAINS_ANY,
-    OPERATORS.CONTAINS_ALL,
-    OPERATORS.NOT_CONTAINS_ALL,
-  ].includes(operator);
   const hasSourceOrValues = source || availableValues;
 
   const { tenantTimezone: timezone } = useTenantTimezone();
@@ -232,7 +226,7 @@ export const DataTypeInput = ({
   const arrayTypeControls = (testIdPostfix) => {
     // If a source or values are provided, use select or multiSelect based on the operator
     if (hasSourceOrValues) {
-      if (isContainsRelatedOperator || isInRelatedOperator) {
+      if (isInRelatedOperator) {
         return multiSelectControl({ testId: `data-input-select-multi-${testIdPostfix}`, value });
       }
 
