@@ -33,5 +33,5 @@
     "noOptionsAvailable": "Geen overeenkomsten! Probeer Organisatie opzoeken",
     "viewer.accordion.title.query": "Query: {query}",
     "userFriendlyQuery.boolean.$and": "{zoekopdracht1} en {zoekopdracht2}",
-    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add organizations"
+    "control.value.placeholder.organizations": "Gebruik de \"Organisatie opzoeken\" hieronder om waarden toe te voegen"
 }

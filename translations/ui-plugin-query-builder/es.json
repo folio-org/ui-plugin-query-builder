@@ -33,5 +33,5 @@
     "noOptionsAvailable": "No matches! Use the “Organization look-up” below to add organizations",
     "viewer.accordion.title.query": "Consulta: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} and {query2}",
-    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add organizations"
+    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add values"
 }
