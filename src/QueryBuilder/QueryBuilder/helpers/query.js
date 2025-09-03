@@ -144,18 +144,6 @@ const getQueryOperand = (item) => {
     case OPERATORS.NOT_CONTAINS:
       queryOperand = { [field]: { $not_contains: value } };
       break;
-    case OPERATORS.CONTAINS_ANY:
-      queryOperand = { [field]: { $contains_any: getTransformedValue(value) } };
-      break;
-    case OPERATORS.NOT_CONTAINS_ANY:
-      queryOperand = { [field]: { $not_contains_any: getTransformedValue(value) } };
-      break;
-    case OPERATORS.CONTAINS_ALL:
-      queryOperand = { [field]: { $contains_all: getTransformedValue(value) } };
-      break;
-    case OPERATORS.NOT_CONTAINS_ALL:
-      queryOperand = { [field]: { $not_contains_all: getTransformedValue(value) } };
-      break;
     case OPERATORS.EMPTY:
       queryOperand = { [field]: { $empty: value } };
       break;
@@ -193,10 +181,6 @@ const getSourceFields = (field) => ({
   $nin: (value) => ({ operator: OPERATORS.NOT_IN, value }),
   $starts_with: (value) => ({ operator: OPERATORS.STARTS_WITH, value }),
   $contains: (value) => ({ operator: OPERATORS.CONTAINS, value }),
-  $contains_all: (value) => ({ operator: OPERATORS.CONTAINS_ALL, value }),
-  $not_contains_all: (value) => ({ operator: OPERATORS.NOT_CONTAINS_ALL, value }),
-  $contains_any: (value) => ({ operator: OPERATORS.CONTAINS_ANY, value }),
-  $not_contains_any: (value) => ({ operator: OPERATORS.NOT_CONTAINS_ANY, value }),
   $empty: (value) => ({ operator: OPERATORS.EMPTY, value }),
   // should be removed after implementation of https://folio-org.atlassian.net/browse/MODFQMMGR-614
   $regex: (value) => {
