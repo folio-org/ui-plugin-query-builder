@@ -24,7 +24,7 @@ import { useCancelQuery } from '../../../hooks/useCancelQuery';
 import { useEntityType } from '../../../hooks/useEntityType';
 import { useFqmVersion } from '../../../hooks/useFqmVersion';
 import { useTestQuery } from '../../../hooks/useTestQuery';
-import { getFieldOptions } from '../helpers/selectOptions';
+import { getFieldOptions, REPEATABLE_FIELD_DELIMITER } from '../helpers/selectOptions';
 import upgradeInitialValues from '../helpers/upgradeInitialValues';
 import { RootContext } from '../../../context/RootContext';
 
@@ -182,7 +182,13 @@ export const QueryBuilderModal = ({
     setIsQueryRetrieved(completed);
   };
 
-  const forcedVisibleValues = source?.map(el => el?.field.current);
+  const forcedVisibleValues = source?.map(el => {
+    // take the value before the delimiter, we should show parent field value in the table
+    // e.g. "field1[*]->subfieldA" => "field1"
+    const [value] = el?.field.current?.split(REPEATABLE_FIELD_DELIMITER) || [];
+
+    return value;
+  });
 
   const getSaveBtnLabel = () => (saveBtnLabel || <FormattedMessage id="ui-plugin-query-builder.modal.run" />);
 
