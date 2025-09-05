@@ -124,7 +124,7 @@ export const getColumnsWithProperties = (columns = []) => {
         acc.push(item);
       }
 
-      if (item.dataType.itemDataType?.properties) {
+      if (item.dataType?.itemDataType?.properties) {
         const nestedNamedFields = item.dataType.itemDataType?.properties
           .filter((child) => child.queryable && !child.hidden)
           .map((child) => ({
