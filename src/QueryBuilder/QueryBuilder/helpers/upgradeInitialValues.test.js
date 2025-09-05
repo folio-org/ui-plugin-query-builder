@@ -1,12 +1,14 @@
 import upgradeInitialValues, { filterByEntityColumns } from './upgradeInitialValues';
 
 describe('initial values legacy conversion', () => {
-  const ENTITY_TYPE = { columns: [
-    { name: 'foo', idColumnName: 'idColumn' },
-    { name: 'bar' },
-    { name: 'baz' },
-    { name: 'idColumn' },
-  ] };
+  const ENTITY_TYPE = {
+    columns: [
+      { name: 'foo', idColumnName: 'idColumn', queryable: true },
+      { name: 'bar', queryable: true },
+      { name: 'baz', queryable: true },
+      { name: 'idColumn' },
+    ],
+  };
 
   it.each([
     [null, null],
@@ -34,12 +36,8 @@ describe('initial values legacy conversion', () => {
   );
 
   it.each([
-    [{ _version: '1', foo: '' }, { foo: '' }],
-    [{ _version: '1', idColumn: '' }, { foo: '' }],
-    [
-      { idColumn: '', bar: '' },
-      { foo: '', bar: '' },
-    ],
+    [{ _version: '1', idColumn: '' }, {}],
+    [{ idColumn: '', bar: '' }, { bar: '' }],
   ])('converts %s to %s', (input, expected) => {
     expect(upgradeInitialValues(input, ENTITY_TYPE)).toStrictEqual(expected);
   });
@@ -47,8 +45,8 @@ describe('initial values legacy conversion', () => {
 
 describe('filterByEntityColumns', () => {
   const sampleColumns = [
-    { name: 'field1' },
-    { name: 'fieldA' },
+    { name: 'field1', queryable: true },
+    { name: 'fieldA', queryable: true },
   ];
   const entityTypes = { columns: sampleColumns };
 
@@ -97,7 +95,7 @@ describe('filterByEntityColumns', () => {
       another: 5,
     };
 
-    const result = filterByEntityColumns(initialValues, { columns: [{ name: 'fieldA' }] });
+    const result = filterByEntityColumns(initialValues, { columns: [{ name: 'fieldA', queryable: true }] });
 
     expect(result).toEqual(expected);
   });
@@ -109,7 +107,7 @@ describe('filterByEntityColumns', () => {
       ],
     };
 
-    const result = filterByEntityColumns(initialValues, { columns: [{ name: 'fieldA' }] });
+    const result = filterByEntityColumns(initialValues, { columns: [{ name: 'fieldA', queryable: true }] });
 
     expect(result).toEqual(initialValues);
   });

@@ -1,3 +1,5 @@
+import { getColumnsWithProperties } from './selectOptions';
+
 /**
  * Filters the single array property in an `initialValues` object so that
  * only entries whose keys match the given entity type column names are kept.
@@ -12,7 +14,7 @@
  */
 export function filterByEntityColumns(initialValues, entityTypes) {
   const entries = Object.entries(initialValues);
-  const allowedKeys = entityTypes?.columns?.map(type => type.name) || [];
+  const allowedKeys = getColumnsWithProperties(entityTypes?.columns).map(type => type.name) || [];
   const arrayEntry = entries
     .find(([, value]) => Array.isArray(value));
 
@@ -70,7 +72,7 @@ export default function upgradeInitialValues(initialValues, entityType) {
 
   const idColumnMapping = {};
 
-  entityType.columns.forEach((column) => {
+  getColumnsWithProperties(entityType.columns).forEach((column) => {
     if (column.idColumnName) {
       idColumnMapping[column.idColumnName] = column.name;
     }

@@ -8,6 +8,7 @@
 * [UIPQB-238](https://folio-org.atlassian.net/browse/UIPQB-238) Filter out hidden nested properties.
 * [UIPQB-232](https://folio-org.atlassian.net/browse/UIPQB-232) Show label aliases for inherited custom fields
 * [UIPQB-236](https://folio-org.atlassian.net/browse/UIPQB-236) Remove unsupported operators for predefined repeatable fields
+* [UIPQB-241](https://folio-org.atlassian.net/browse/UIPQB-241) Make UI behavior on search by repeatable fields consistent with search by other fields in “Build query” form, “Lists“ app
 
 ## [2.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.3) (2025-04-18)
 
