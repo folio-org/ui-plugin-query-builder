@@ -3,6 +3,8 @@ import { DATA_TYPES } from '../../../constants/dataTypes';
 import { BOOLEAN_OPERATORS, OPERATOR_GROUPS, OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
 
+export const REPEATABLE_FIELD_DELIMITER = '[*]->';
+
 const getOperatorsWithPlaceholder = (options, intl) => {
   return [
     {
@@ -112,29 +114,33 @@ export const getOperatorOptions = ({
   }
 };
 
-export const getFieldOptions = (options) => {
-  const ids = options?.filter(o => Boolean(o.idColumnName)).map(o => o.idColumnName) || [];
+export const getColumnsWithProperties = (columns = []) => {
+  const ids = columns.filter(o => Boolean(o.idColumnName)).map(o => o.idColumnName) || [];
 
-  return options
-    ?.filter((o) => !ids.includes(o.name))
+  return columns
+    .filter((o) => !ids.includes(o.name))
     .reduce((acc, item) => {
       if (item.queryable) {
         acc.push(item);
       }
 
-      if (item.dataType.itemDataType?.properties) {
+      if (item.dataType?.itemDataType?.properties) {
         const nestedNamedFields = item.dataType.itemDataType?.properties
           .filter((child) => child.queryable && !child.hidden)
           .map((child) => ({
             ...child,
-            name: `${item.name}[*]->${child.name}`,
+            name: `${item.name}${REPEATABLE_FIELD_DELIMITER}${child.name}`,
           }));
 
         acc.push(...nestedNamedFields);
       }
 
       return acc;
-    }, [])
+    }, []);
+};
+
+export const getFieldOptions = (options) => {
+  return getColumnsWithProperties(options)
     .map((o) => ({
       label: o.labelAliasFullyQualified || o.labelAlias,
       value: o.name,
