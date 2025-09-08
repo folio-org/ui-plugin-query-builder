@@ -66,18 +66,17 @@ describe('useAsyncDataSource', () => {
     };
 
     const { result } = renderHook(
-      () =>
-        useAsyncDataSource({
-          contentDataSource,
-          entityTypeDataSource: jest.fn(),
-          offset: 0,
-          limit: 10,
-          queryParams: {},
-          onSuccess,
-          contentQueryOptions,
-          contentQueryKeys: [],
-          forcedVisibleValues: [],
-        }),
+      () => useAsyncDataSource({
+        contentDataSource,
+        entityTypeDataSource: jest.fn(),
+        offset: 0,
+        limit: 10,
+        queryParams: {},
+        onSuccess,
+        contentQueryOptions,
+        contentQueryKeys: [],
+        forcedVisibleValues: [],
+      }),
       { wrapper },
     );
 
@@ -95,10 +94,9 @@ describe('useAsyncDataSource', () => {
     const contentDataSource = () => {
       throw Object.assign(new Error(), {
         response: {
-          json: () =>
-            Promise.resolve({
-              code: 'read-list.contents.request.failed',
-            }),
+          json: () => Promise.resolve({
+            code: 'read-list.contents.request.failed',
+          }),
         },
       });
     };
@@ -106,22 +104,21 @@ describe('useAsyncDataSource', () => {
     const completeExecution = jest.fn();
 
     const { result } = renderHook(
-      () =>
-        useAsyncDataSource({
-          contentDataSource,
-          entityTypeDataSource: jest.fn(),
-          offset: 0,
-          limit: 10,
-          queryParams: {},
-          onSuccess: jest.fn(),
-          contentQueryOptions: {
-            refetchInterval: jest.fn(() => 1000),
-            completeExecution,
-            keepPreviousData: true,
-          },
-          contentQueryKeys: [],
-          forcedVisibleValues: [],
-        }),
+      () => useAsyncDataSource({
+        contentDataSource,
+        entityTypeDataSource: jest.fn(),
+        offset: 0,
+        limit: 10,
+        queryParams: {},
+        onSuccess: jest.fn(),
+        contentQueryOptions: {
+          refetchInterval: jest.fn(() => 1000),
+          completeExecution,
+          keepPreviousData: true,
+        },
+        contentQueryKeys: [],
+        forcedVisibleValues: [],
+      }),
       { wrapper },
     );
 
@@ -147,22 +144,21 @@ describe('useAsyncDataSource', () => {
     const completeExecution = jest.fn();
 
     const { result } = renderHook(
-      () =>
-        useAsyncDataSource({
-          contentDataSource,
-          entityTypeDataSource: jest.fn(),
-          offset: 0,
-          limit: 10,
-          queryParams: {},
-          onSuccess: jest.fn(),
-          contentQueryOptions: {
-            refetchInterval: jest.fn(() => 1),
-            completeExecution,
-            keepPreviousData: true,
-          },
-          contentQueryKeys: [],
-          forcedVisibleValues: [],
-        }),
+      () => useAsyncDataSource({
+        contentDataSource,
+        entityTypeDataSource: jest.fn(),
+        offset: 0,
+        limit: 10,
+        queryParams: {},
+        onSuccess: jest.fn(),
+        contentQueryOptions: {
+          refetchInterval: jest.fn(() => 1),
+          completeExecution,
+          keepPreviousData: true,
+        },
+        contentQueryKeys: [],
+        forcedVisibleValues: [],
+      }),
       { wrapper },
     );
 
