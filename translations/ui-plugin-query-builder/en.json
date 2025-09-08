@@ -35,6 +35,7 @@
   "result.emptyMessage": "The list contains no items",
 
   "error.sww": "Something went wrong",
+  "error.needsRefresh": "The record type used by this list has changed; please refresh the list.",
   "error.occurredMessage": "An error occurred.",
 
   "warning.deletedField": "{value} in your query is no longer available. Please revise your query.",

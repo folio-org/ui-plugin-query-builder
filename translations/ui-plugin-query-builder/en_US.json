@@ -33,5 +33,6 @@
     "noOptionsAvailable": "No matches! Use the “Organization look-up” below to add organizations",
     "viewer.accordion.title.query": "Query: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} and {query2}",
-    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add values"
+    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add values",
+    "error.needsRefresh": "The record type used by this list has changed; please refresh the list."
 }

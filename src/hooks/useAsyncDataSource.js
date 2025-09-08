@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { useIntl } from 'react-intl';
 import { noop } from 'lodash';
@@ -50,6 +50,7 @@ export const useAsyncDataSource = ({
   const [retryCount, setRetryCount] = useState(0);
   const [hasShownError, setHasShownError] = useState(false);
   const [isErrorOccurred, setIsErrorOccurred] = useState(false);
+  const [needsRefresh, setNeedsRefresh] = useState(false);
   const maxRetries = 3;
   const { refetchInterval = noop, completeExecution = noop, keepPreviousData = false } = contentQueryOptions;
 
@@ -60,6 +61,19 @@ export const useAsyncDataSource = ({
 
   const sharedOptions = { refetchOnWindowFocus: false, keepPreviousData: true };
   const queryKey = [namespaceKey, contentDataKey, debouncedOffset, debouncedLimit, ...debouncedContentQueryKeys];
+
+  const showError = useCallback((translation) => {
+    if (!hasShownError) {
+      completeExecution();
+      showCallout({
+        type: 'error',
+        message: intl.formatMessage({ id: translation }),
+        timeout: DEFAULT_TIMEOUT,
+      });
+      setHasShownError(true);
+      setIsErrorOccurred(true);
+    }
+  }, [completeExecution, showCallout, hasShownError]);
 
   const {
     data: recordsData,
@@ -79,17 +93,12 @@ export const useAsyncDataSource = ({
         return structuralSharing(queryClient, queryKey, data);
       },
       refetchInterval: (query) => {
-        if (retryCount === maxRetries) {
-          if (!hasShownError) {
-            completeExecution();
-            showCallout({
-              type: 'error',
-              message: intl.formatMessage({ id: 'ui-plugin-query-builder.error.sww' }),
-              timeout: DEFAULT_TIMEOUT,
-            });
-            setHasShownError(true);
-            setIsErrorOccurred(true);
-          }
+        if (needsRefresh) {
+          showError('ui-plugin-query-builder.error.needsRefresh');
+
+          return 0;
+        } else if (retryCount === maxRetries) {
+          showError('ui-plugin-query-builder.error.sww');
 
           return 0;
         }
@@ -100,10 +109,15 @@ export const useAsyncDataSource = ({
         setRetryCount(0);
         setHasShownError(false);
         setIsErrorOccurred(false);
+        setNeedsRefresh(false);
         onSuccess(data);
       },
-      onError: () => {
-        setRetryCount((prev) => prev + 1);
+      onError: async (e) => {
+        if ((await e.response.json()).code === 'read-list.contents.request.failed') {
+          setNeedsRefresh(true);
+        } else {
+          setRetryCount((prev) => prev + 1);
+        }
       },
       keepPreviousData,
       ...sharedOptions,
