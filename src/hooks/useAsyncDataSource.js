@@ -12,6 +12,7 @@ import { useEntityType } from './useEntityType';
 import { QUERY_KEYS } from '../constants/query';
 
 const DEFAULT_TIMEOUT = 6000;
+const DEFAULT_MAX_RETRIES = 3;
 
 // temporary solution to emulate structuralSharing before migrating to react-query v4+
 const structuralSharing = (queryClient, key, newData) => {
@@ -47,43 +48,56 @@ export const useAsyncDataSource = ({
   const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
   const debouncedContentQueryKeys = useDebounce(contentQueryKeys, 500);
-  const [retryCount, setRetryCount] = useState(0);
+  const [retry, setRetry] = useState(DEFAULT_MAX_RETRIES);
   const [hasShownError, setHasShownError] = useState(false);
   const [isErrorOccurred, setIsErrorOccurred] = useState(false);
-  const [needsRefresh, setNeedsRefresh] = useState(false);
-  const maxRetries = 3;
-  const { refetchInterval = noop, completeExecution = noop, keepPreviousData = false } = contentQueryOptions;
+  const {
+    refetchInterval = noop,
+    completeExecution = noop,
+    keepPreviousData = false,
+  } = contentQueryOptions;
 
   const { entityType, isContentTypeFetchedAfterMount, isEntityTypeLoading } = useEntityType({
     entityTypeDataSource,
     queryKey: entityKey,
   });
 
-  const sharedOptions = { refetchOnWindowFocus: false, keepPreviousData: true };
-  const queryKey = [namespaceKey, contentDataKey, debouncedOffset, debouncedLimit, ...debouncedContentQueryKeys];
+  const queryKey = [
+    namespaceKey,
+    contentDataKey,
+    debouncedOffset,
+    debouncedLimit,
+    ...debouncedContentQueryKeys,
+  ];
 
-  const showError = useCallback((translation) => {
-    if (!hasShownError) {
-      completeExecution();
-      showCallout({
-        type: 'error',
-        message: intl.formatMessage({ id: translation }),
-        timeout: DEFAULT_TIMEOUT,
+  const showError = useCallback(
+    (translation) => {
+      setHasShownError((h) => {
+        if (!h) {
+          completeExecution();
+          showCallout({
+            type: 'error',
+            message: intl.formatMessage({ id: translation }),
+            timeout: DEFAULT_TIMEOUT,
+          });
+          setIsErrorOccurred(true);
+        }
+
+        return true;
       });
-      setHasShownError(true);
-      setIsErrorOccurred(true);
-    }
-  }, [completeExecution, showCallout, hasShownError]);
+    },
+    [completeExecution, showCallout, hasShownError],
+  );
 
   const {
     data: recordsData,
     isLoading: isContentDataLoading,
     isFetching: isContentDataFetching,
     refetch,
-  } = useQuery(
-    {
-      queryKey,
-      queryFn: async () => {
+  } = useQuery({
+    queryKey,
+    queryFn: async () => {
+      try {
         const data = await contentDataSource({
           offset: debouncedOffset,
           limit: debouncedLimit,
@@ -91,48 +105,34 @@ export const useAsyncDataSource = ({
         });
 
         return structuralSharing(queryClient, queryKey, data);
-      },
-      refetchInterval: (query) => {
-        if (needsRefresh) {
-          showError('ui-plugin-query-builder.error.needsRefresh');
-
-          return 0;
-        } else if (retryCount === maxRetries) {
-          showError('ui-plugin-query-builder.error.sww');
-
-          return 0;
-        }
-
-        return refetchInterval(query);
-      },
-      onSuccess: (data) => {
-        setRetryCount(0);
-        setHasShownError(false);
-        setIsErrorOccurred(false);
-        setNeedsRefresh(false);
-        onSuccess(data);
-      },
-      onError: async (e) => {
+      } catch (e) {
         if ((await e.response.json()).code === 'read-list.contents.request.failed') {
-          setNeedsRefresh(true);
-        } else {
-          setRetryCount((prev) => prev + 1);
+          showError('ui-plugin-query-builder.error.needsRefresh');
+          setRetry(false);
         }
-      },
-      keepPreviousData,
-      ...sharedOptions,
+        throw e;
+      }
     },
-  );
+    refetchInterval,
+    onSuccess: (data) => {
+      setRetry(DEFAULT_MAX_RETRIES);
+      setHasShownError(false);
+      setIsErrorOccurred(false);
+      onSuccess(data);
+    },
+    onError: () => {
+      showError('ui-plugin-query-builder.error.sww');
+    },
+    refetchOnWindowFocus: false,
+    keepPreviousData,
+    retry,
+    retryDelay: 100,
+  });
 
   const { content: contentData, totalRecords, status } = recordsData || {};
 
-  const {
-    columnMapping,
-    defaultColumns,
-    defaultVisibleColumns,
-    formatter,
-    columnWidths,
-  } = getTableMetadata(entityType, forcedVisibleValues, intl);
+  const { columnMapping, defaultColumns, defaultVisibleColumns, formatter, columnWidths } =
+    getTableMetadata(entityType, forcedVisibleValues, intl);
 
   return {
     contentData,
