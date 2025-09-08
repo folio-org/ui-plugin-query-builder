@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Row, Accordion, MultiColumnList, Headline, Layout, Icon } from '@folio/stripes/components';
 import { PrevNextPagination } from '@folio/stripes-acq-components';
@@ -149,9 +149,13 @@ export const ResultViewer = ({
     return isErrorOccurred ? renderErrorMessage() : renderSuccessMessage();
   };
 
-  const emptyResultMessage = intl.formatMessage(
-    { id: 'ui-plugin-query-builder.result.emptyMessage' },
-  );
+  const emptyResultMessage = useMemo(() => {
+    if (isErrorOccurred) {
+      return intl.formatMessage({ id: 'ui-plugin-query-builder.error.occurredMessage' });
+    } else {
+      return intl.formatMessage({ id: 'ui-plugin-query-builder.result.emptyMessage' });
+    }
+  }, [isErrorOccurred, intl]);
 
   const renderTable = () => {
     const showSpinner =
