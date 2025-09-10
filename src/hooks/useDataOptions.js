@@ -66,7 +66,22 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
         return getDataOptions(
           fieldName,
           true,
-          !usedIds.length ? undefined : () => getOrganizations(usedIds, source.columnName),
+          !usedIds.length
+            ? undefined
+            : async () => {
+              // API calls get fussy when packing too many orgs into one URL
+              const buckets = [];
+
+              for (let i = 0; i < usedIds.length; i += 50) {
+                buckets.push(usedIds.slice(i, i + 50));
+              }
+
+              const results = await Promise.all(
+                buckets.map((bucket) => getOrganizations(bucket, source.columnName)),
+              );
+
+              return results.flat();
+            },
           usedIds,
         );
       } else {
