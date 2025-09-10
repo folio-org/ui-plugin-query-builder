@@ -90,12 +90,13 @@ describe('useAsyncDataSource', () => {
     expect(result.current.totalRecords).toBe(1);
   });
 
-  it('should handle needs refresh case (error === read-list.contents.request.failed)', async () => {
+  it('should handle needs refresh case (error === read-list.contents.request.failed, message ≠ schema is invalid)', async () => {
     const contentDataSource = () => {
       throw Object.assign(new Error(), {
         response: {
           json: () => Promise.resolve({
             code: 'read-list.contents.request.failed',
+            message: 'Failed to retrieve list contents for list 843d1fc5-aba2-4502-beb6-011bc3b18df3. The upstream data schema changed. This can usually be fixed by refreshing the list.',
           }),
         },
       });
@@ -128,6 +129,49 @@ describe('useAsyncDataSource', () => {
     expect(mockShowCallout).toHaveBeenCalledWith({
       type: 'error',
       message: 'ui-plugin-query-builder.error.needsRefresh',
+      timeout: 6000,
+    });
+  });
+
+  it('should handle invalid entity case (error === read-list.contents.request.failed, message = schema is invalid)', async () => {
+    const contentDataSource = () => {
+      throw Object.assign(new Error(), {
+        response: {
+          json: () => Promise.resolve({
+            code: 'read-list.contents.request.failed',
+            message: 'Failed to retrieve list contents for list dec75055-7db8-410e-b3db-1b6ebd340472. The upstream data schema is invalid.',
+          }),
+        },
+      });
+    };
+
+    const completeExecution = jest.fn();
+
+    const { result } = renderHook(
+      () => useAsyncDataSource({
+        contentDataSource,
+        entityTypeDataSource: jest.fn(),
+        offset: 0,
+        limit: 10,
+        queryParams: {},
+        onSuccess: jest.fn(),
+        contentQueryOptions: {
+          refetchInterval: jest.fn(() => 1000),
+          completeExecution,
+          keepPreviousData: true,
+        },
+        contentQueryKeys: [],
+        forcedVisibleValues: [],
+      }),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(completeExecution).toHaveBeenCalled());
+
+    expect(result.current.isErrorOccurred).toBe(true);
+    expect(mockShowCallout).toHaveBeenCalledWith({
+      type: 'error',
+      message: 'ui-plugin-query-builder.error.invalidEntity',
       timeout: 6000,
     });
   });

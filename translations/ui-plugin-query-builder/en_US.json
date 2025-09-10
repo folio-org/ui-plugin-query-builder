@@ -34,5 +34,6 @@
     "viewer.accordion.title.query": "Query: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} and {query2}",
     "control.value.placeholder.organizations": "Use the “Organization look-up” below to add values",
-    "error.needsRefresh": "The record type used by this list has changed; please refresh the list."
+    "error.needsRefresh": "The record type used by this list has changed; please refresh the list.",
+    "error.invalidEntity": "The record type used by this list is currently unable to be used; please verify its definition."
 }
