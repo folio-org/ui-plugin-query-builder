@@ -106,8 +106,14 @@ export const useAsyncDataSource = ({
 
         return structuralSharing(queryClient, queryKey, data);
       } catch (e) {
-        if ((await e.response.json()).code === 'read-list.contents.request.failed') {
-          showError('ui-plugin-query-builder.error.needsRefresh');
+        const response = await e.response.json();
+
+        if (response.code === 'read-list.contents.request.failed') {
+          if (response.message.includes('schema is invalid')) {
+            showError('ui-plugin-query-builder.error.invalidEntity');
+          } else {
+            showError('ui-plugin-query-builder.error.needsRefresh');
+          }
           setRetry(false);
         }
         throw e;
