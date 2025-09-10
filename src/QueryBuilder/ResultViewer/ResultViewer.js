@@ -1,8 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Row, Accordion, MultiColumnList, Headline, Layout, Icon } from '@folio/stripes/components';
+import {
+  Col,
+  Row,
+  Accordion,
+  MultiColumnList,
+  Headline,
+  Layout,
+  Icon,
+  Button,
+} from '@folio/stripes/components';
 import { PrevNextPagination } from '@folio/stripes-acq-components';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { isEmpty } from 'lodash';
 import { QueryLoader } from './QueryLoader';
 import { useAsyncDataSource } from '../../hooks/useAsyncDataSource';
@@ -12,12 +21,111 @@ import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
 import { useLastNotEmptyValue } from '../../hooks/useLastNotEmptyValue';
 import { useQueryStr } from '../QueryBuilder/helpers/query';
 
-const AccordionHeaderLabel = ({ entityType, fqlQuery }) => (
-  <FormattedMessage
-    id="ui-plugin-query-builder.viewer.accordion.title.query"
-    values={{ query: useQueryStr(entityType, { fqlQuery }) }}
-  />
-);
+const AccordionHeaderLabel = ({ entityType, fqlQuery }) => {
+  const [queryIsTooLong, setQueryIsTooLong] = useState(false);
+  const [showFull, setShowFull] = useState(false);
+
+  const textRef = useRef(null);
+
+  const intl = useIntl();
+  const queryStr = useQueryStr(entityType, { fqlQuery });
+
+  const queryFormatted = useMemo(
+    () => intl.formatMessage(
+      {
+        id: 'ui-plugin-query-builder.viewer.accordion.title.query',
+      },
+      {
+        query: queryStr,
+      },
+    ),
+    [intl, queryStr],
+  );
+
+  const buttonStr = useMemo(() => {
+    if (showFull) {
+      return intl.formatMessage({
+        id: 'ui-plugin-query-builder.viewer.accordion.title.query.showLess',
+      });
+    } else {
+      return intl.formatMessage({
+        id: 'ui-plugin-query-builder.viewer.accordion.title.query.showMore',
+      });
+    }
+  }, [intl, showFull]);
+
+  useLayoutEffect(() => {
+    function checkTruncation() {
+      if (showFull === true) {
+        // we can't check width if the text is wrapped
+        // and, to get to this state, it must have already overflowed and the user clicked "show more"
+        return;
+      }
+
+      // 2px padding for ± weirdness
+      setQueryIsTooLong(
+        textRef.current !== null && textRef.current.offsetWidth + 2 < textRef.current.scrollWidth,
+      );
+    }
+
+    if (textRef.current) {
+      const observer = new ResizeObserver(checkTruncation);
+
+      observer.observe(textRef.current); // handle query string updates (values loading in, etc)
+      window.addEventListener('resize', checkTruncation); // handle window resizes
+
+      checkTruncation();
+
+      return () => {
+        observer.disconnect();
+        window.removeEventListener('resize', checkTruncation);
+      };
+    }
+
+    return () => ({});
+  }, [showFull, queryFormatted, textRef.current]);
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        gap: '0.25em',
+        justifyContent: 'space-between',
+        width: '100%',
+        // 3.5 is a bit arbitrary, but covers the chevron and scrollbar in my testing.
+        // it's not really possible to get the true width due to how nested this element is :(
+        maxWidth: 'calc(100vw - 3.5em)',
+      }}
+    >
+      <span
+        ref={textRef}
+        style={
+          !showFull && {
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }
+        }
+      >
+        {queryFormatted}
+      </span>
+
+      {queryIsTooLong && (
+        <Button
+          ariaLabel={buttonStr}
+          buttonStyle="link"
+          style={{ alignSelf: 'start' }}
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowFull((s) => !s);
+          }}
+        >
+          {buttonStr}
+        </Button>
+      )}
+    </div>
+  );
+};
 
 export const ResultViewer = ({
   showPagination = true,
@@ -81,8 +189,9 @@ export const ResultViewer = ({
   const lastNotEmptyContent = useLastNotEmptyValue(contentData, []);
   const currentRecordsCount = useLastNotEmptyValue(contentData?.length, 0);
   // filter out columns that are not in the entity types mapping
-  const validVisibleColumns = visibleColumns.filter(column => columnMapping[column]);
-  const isListLoading = isContentDataFetching || isContentDataLoading || isEntityTypeLoading || refreshInProgress;
+  const validVisibleColumns = visibleColumns.filter((column) => columnMapping[column]);
+  const isListLoading =
+    isContentDataFetching || isContentDataLoading || isEntityTypeLoading || refreshInProgress;
 
   useViewerCallbacks({
     onSetDefaultColumns,
@@ -127,10 +236,9 @@ export const ResultViewer = ({
         <Row between="xs">
           <Col xs={10}>
             <Headline size="large" margin="none" tag="h3">
-              {isListLoading && !totalRecords ?
-                intl.formatMessage({ id: 'ui-plugin-query-builder.result.inProgress' })
-                :
-                headline?.({
+              {isListLoading && !totalRecords
+                ? intl.formatMessage({ id: 'ui-plugin-query-builder.result.inProgress' })
+                : headline?.({
                   totalRecords: localizedTotalRecords,
                   currentRecordsCount: localizedCurrentRecordsCount,
                   defaultLimit,
@@ -159,18 +267,16 @@ export const ResultViewer = ({
 
   const renderTable = () => {
     const showSpinner =
-        refreshInProgress
-        ||
-        (isEmpty(lastNotEmptyContent) && (isListLoading || isContentDataLoading) && isEmpty(contentData));
+      refreshInProgress ||
+      (isEmpty(lastNotEmptyContent) &&
+        (isListLoading || isContentDataLoading) &&
+        isEmpty(contentData));
 
     return (
       <Row center="xs">
         <Col xs={12}>
           {showSpinner ? (
-            <Icon
-              icon="spinner-ellipsis"
-              size="large"
-            />
+            <Icon icon="spinner-ellipsis" size="large" />
           ) : (
             <MultiColumnList
               id="results-viewer-table"
@@ -201,9 +307,7 @@ export const ResultViewer = ({
   };
 
   const renderAdditionalControls = () => additionalControls && (
-    <Layout className="padding-bottom-gutter padding-top-gutter">
-      {additionalControls}
-    </Layout>
+  <Layout className="padding-bottom-gutter padding-top-gutter">{additionalControls}</Layout>
   );
 
   const renderContent = () => {
@@ -219,12 +323,7 @@ export const ResultViewer = ({
   const renderWithAccordion = () => (
     <Accordion
       id="results-viewer-accordion"
-      label={
-        <AccordionHeaderLabel
-          entityType={entityType}
-          fqlQuery={fqlQuery}
-        />
-      }
+      label={<AccordionHeaderLabel entityType={entityType} fqlQuery={fqlQuery} />}
     >
       {renderContent()}
     </Accordion>
