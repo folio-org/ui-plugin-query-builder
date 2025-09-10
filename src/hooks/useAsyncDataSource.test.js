@@ -41,6 +41,8 @@ const mockShowCallout = jest.fn();
 describe('useAsyncDataSource', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    queryClient.resetQueries();
+    queryClient.clear();
     useNamespace.mockImplementation(() => ['test-namespace']);
     useShowCallout.mockReturnValue(mockShowCallout);
     useDebounce.mockImplementation((value) => value);
@@ -207,8 +209,8 @@ describe('useAsyncDataSource', () => {
     );
 
     await waitFor(() => expect(contentDataSource.mock.calls.length).toBeGreaterThanOrEqual(3));
+    await waitFor(() => expect(completeExecution).toHaveBeenCalled());
 
-    expect(completeExecution).toHaveBeenCalled();
     expect(result.current.isErrorOccurred).toBe(true);
     expect(mockShowCallout).toHaveBeenCalledWith({
       type: 'error',
