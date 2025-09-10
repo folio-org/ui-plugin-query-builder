@@ -21,6 +21,8 @@ import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
 import { useLastNotEmptyValue } from '../../hooks/useLastNotEmptyValue';
 import { useQueryStr } from '../QueryBuilder/helpers/query';
 
+import css from './ResultViewer.css';
+
 const AccordionHeaderLabel = ({ entityType, fqlQuery }) => {
   const [queryIsTooLong, setQueryIsTooLong] = useState(false);
   const [showFull, setShowFull] = useState(false);
@@ -87,25 +89,11 @@ const AccordionHeaderLabel = ({ entityType, fqlQuery }) => {
 
   return (
     <div
-      style={{
-        display: 'flex',
-        gap: '0.25em',
-        justifyContent: 'space-between',
-        width: '100%',
-        // 3.5 is a bit arbitrary, but covers the chevron and scrollbar in my testing.
-        // it's not really possible to get the true width due to how nested this element is :(
-        maxWidth: 'calc(100vw - 3.5em)',
-      }}
+      className={css.ResultViewerAccordionHeader}
     >
       <span
         ref={textRef}
-        style={
-          !showFull && {
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }
-        }
+        className={!showFull ? css.truncate : ''}
       >
         {queryFormatted}
       </span>
@@ -114,7 +102,7 @@ const AccordionHeaderLabel = ({ entityType, fqlQuery }) => {
         <Button
           ariaLabel={buttonStr}
           buttonStyle="link"
-          style={{ alignSelf: 'start' }}
+          className={css.showButton}
           onClick={(e) => {
             e.stopPropagation();
             setShowFull((s) => !s);
