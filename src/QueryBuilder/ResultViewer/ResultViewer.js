@@ -100,9 +100,8 @@ const AccordionHeaderLabel = ({ entityType, fqlQuery }) => {
 
       {queryIsTooLong && (
         <Button
-          ariaLabel={buttonStr}
+          aria-label={buttonStr}
           buttonStyle="link"
-          className={css.showButton}
           onClick={(e) => {
             e.stopPropagation();
             setShowFull((s) => !s);
