@@ -30,12 +30,15 @@
   "control.search.placeholder": "Search fields",
 
   "viewer.accordion.title.query": "Query: {query}",
+  "viewer.accordion.title.query.showMore": "Show more",
+  "viewer.accordion.title.query.showLess": "Show less",
   "viewer.retrieving": "Retrieving...",
   "result.inProgress": "Query in progress",
   "result.emptyMessage": "The list contains no items",
 
   "error.sww": "Something went wrong",
   "error.needsRefresh": "The record type used by this list has changed; please refresh the list.",
+  "error.invalidEntity": "The record type used by this list is currently unable to be used; please verify its definition.",
   "error.occurredMessage": "An error occurred.",
 
   "warning.deletedField": "{value} in your query is no longer available. Please revise your query.",
