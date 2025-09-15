@@ -98,6 +98,7 @@ export const getOperatorOptions = ({
       return getOperatorsWithPlaceholder(ArrayOperators(hasSourceOrValues), intl);
 
     case DATA_TYPES.DateType:
+    case DATA_TYPES.DateTimeType:
       return getOperatorsWithPlaceholder(extendedLogicalOperators(), intl);
 
     case DATA_TYPES.ObjectType:

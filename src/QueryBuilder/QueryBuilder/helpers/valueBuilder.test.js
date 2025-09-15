@@ -62,13 +62,35 @@ describe('valueBuilder', () => {
 
   test('should return an empty string if value is falsy for DateType', () => {
     const value = null;
+    const field = 'loan_checkout_date';
+    const operator = OPERATORS.EQUAL;
+
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe('');
+  });
+
+  test('should return raw YYYY-MM-DD string for DateType if value is truthy', () => {
+    const value = '2024-11-06';
+    const field = 'loan_checkout_date';
+    const operator = OPERATORS.EQUAL;
+
+    // intl/timezone should have no effect on DateType
+    const intl = {
+      formatDate: () => jest.fn(() => fail('should not be used')),
+    };
+
+    expect(valueBuilder({ value, field, operator, fieldOptions, intl, timezone: 'Narnia' }))
+      .toBe('2024-11-06');
+  });
+
+  test('should return an empty string if value is falsy for DateTimeType', () => {
+    const value = null;
     const field = 'user_expiration_date';
     const operator = OPERATORS.EQUAL;
 
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe('');
   });
 
-  test('should return a string for DateType if value is truthy', () => {
+  test('should return formatted string for DateTimeType if value is truthy (timezone aware)', () => {
     const value = '2024-11-06';
     const field = 'user_expiration_date';
     const operator = OPERATORS.EQUAL;
