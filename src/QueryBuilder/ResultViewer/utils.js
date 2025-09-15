@@ -27,6 +27,7 @@ export const formatValueByDataType = (value, dataType, intl, additionalParams = 
       }
 
     case DATA_TYPES.DateType:
+    case DATA_TYPES.DateTimeType:
       return <FormattedDate value={value} />;
 
     case DATA_TYPES.JsonbArrayType:

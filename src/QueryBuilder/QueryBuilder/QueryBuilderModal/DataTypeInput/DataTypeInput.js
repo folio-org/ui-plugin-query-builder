@@ -114,6 +114,23 @@ export const DataTypeInput = ({
     );
   };
 
+  const dateTimePickerControl = () => {
+    const selectedValue = value;
+    const formattedSelectedDate = selectedValue ? `${selectedValue}Z` : selectedValue;
+
+    return (
+      <Datepicker
+        timeZone={timezone}
+        data-testid="data-input-dateType"
+        onChange={(e, _unusedValue, formattedValue) => {
+          onChange(formattedValue.replace('Z', ''), index, COLUMN_KEYS.VALUE);
+        }}
+        {...rest}
+        value={formattedSelectedDate}
+      />
+    );
+  };
+
   const stringTypeControls = () => {
     const isPluginOrganizationRequired = source?.name === ORGANIZATIONS_TYPES;
     const isInRelatedWithOptions = isInRelatedOperator && hasSourceOrValues;
@@ -275,6 +292,9 @@ export const DataTypeInput = ({
       return textControl({ testId: 'data-input-text-stringUUIDType', value });
 
     case DATA_TYPES.DateType:
+      return datePickerControl();
+
+    case DATA_TYPES.DateTimeType:
       return datePickerControl();
 
     case DATA_TYPES.OpenUUIDType:

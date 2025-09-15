@@ -17,6 +17,7 @@ describe('formatValueByDataType returns correct value', () => {
     ['2024-01-01T12:30:00Z', DATA_TYPES.StringType, '2024-01-01T12:30:00Z'],
     ['2024-01-01T12:30:00Z', DATA_TYPES.DateType, '1/1/2024'],
     ['2024-01-01T12:30:00Z', DATA_TYPES.DateType, '1/1/2024'],
+    ['2024-01-01T12:30:00Z', DATA_TYPES.DateTimeType, '1/1/2024'],
 
     [[], DATA_TYPES.ArrayType, ''],
     [['a'], DATA_TYPES.ArrayType, 'a'],

@@ -69,6 +69,8 @@ export const valueBuilder = ({ value, field, operator, fieldOptions, intl, timez
     [DATA_TYPES.ObjectType]: () => getQuotedStr(value, isInRelatedOperator),
 
     [DATA_TYPES.DateType]: () => getQuotedStr(formatDateToPreview(value, intl, timezone), isInRelatedOperator),
+    
+    [DATA_TYPES.DateTimeType]: () => getQuotedStr(formatDateToPreview(value, intl, timezone), isInRelatedOperator),
 
     [DATA_TYPES.OpenUUIDType]: () => getFormattedUUID(value, isInRelatedOperator),
 

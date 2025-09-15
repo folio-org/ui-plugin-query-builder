@@ -93,6 +93,30 @@ describe('DynamicTable component', () => {
       labelAlias: 'Empty date column',
       property: 'emptyDate',
     },
+    {
+      name: 'cool_datetime',
+      dataType: {
+        dataType: 'dateTimeType',
+      },
+      labelAlias: 'Datetime column',
+      property: 'coolDatetime',
+    },
+    {
+      name: 'less_cool_datetime',
+      dataType: {
+        dataType: 'dateTimeType',
+      },
+      labelAlias: 'Datetime column 2',
+      property: 'lessCoolDatetime',
+    },
+    {
+      name: 'empty_datetime',
+      dataType: {
+        dataType: 'dateTimeType',
+      },
+      labelAlias: 'Empty datetime column',
+      property: 'emptyDatetime',
+    },
   ];
 
   it.each(['[]', undefined, null])(

@@ -80,6 +80,27 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions, intl, timezone: 'Narnia' }))
       .toBe('Wed, 06 Nov 2024 00:00:00 GMT in Narnia');
   });
+  
+  test('should return an empty string if value is falsy for DateTimeType', () => {
+    const value = null;
+    const field = 'user_expiration_date';
+    const operator = OPERATORS.EQUAL;
+
+    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe('');
+  });
+
+  test('should return a string for DateTimeType if value is truthy', () => {
+    const value = '2024-11-06';
+    const field = 'user_expiration_date';
+    const operator = OPERATORS.EQUAL;
+
+    const intl = {
+      formatDate: (val, { timeZone }) => `${val.toUTCString()} in ${timeZone}`,
+    };
+
+    expect(valueBuilder({ value, field, operator, fieldOptions, intl, timezone: 'Narnia' }))
+      .toBe('Wed, 06 Nov 2024 00:00:00 GMT in Narnia');
+  });
 
   test('should return the original string for an invalid date', () => {
     const value = 'invalid-date';

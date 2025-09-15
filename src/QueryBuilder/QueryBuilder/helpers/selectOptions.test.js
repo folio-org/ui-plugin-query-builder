@@ -314,6 +314,27 @@ describe('select options', () => {
       });
     });
 
+    it('should return extended logical operators with placeholder for datetime type', () => {
+      const options = getOperatorOptions({
+        dataType: DATA_TYPES.DateTimeType,
+        hasSourceOrValues: false,
+        intl: intlMock,
+      });
+
+      expectFn({
+        options,
+        operators: [
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
+          { label: OPERATORS_LABELS.LESS_THAN, value: OPERATORS.LESS_THAN },
+          { label: OPERATORS_LABELS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
+          { label: OPERATORS_LABELS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+        ],
+      });
+    });
+
     it('should return an empty array for unknown data type', () => {
       const options = getOperatorOptions({
         dataType: 'UnknownType',
