@@ -33,5 +33,9 @@
     "noOptionsAvailable": "No matches! Use the “Organization look-up” below to add organizations",
     "viewer.accordion.title.query": "クエリ: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} and {query2}",
-    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add values"
+    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add values",
+    "error.needsRefresh": "The record type used by this list has changed; please refresh the list, and if needed, modify the query.",
+    "error.invalidEntity": "The record type used by this list is currently unable to be used; please verify its definition.",
+    "viewer.accordion.title.query.showMore": "もっと表示",
+    "viewer.accordion.title.query.showLess": "表示を減らす"
 }
