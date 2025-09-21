@@ -30,8 +30,12 @@
     "ariaLabel.columnFilter": "Entrada de filtro de coluna",
     "error.occurredMessage": "Ocorreu um erro.",
     "warning.deletedField": "{value} em sua consulta não está mais disponível. Por favor, revise sua consulta.",
-    "noOptionsAvailable": "Nenhuma correspondência! Tente a pesquisa de organização",
+    "noOptionsAvailable": "Nenhuma correspondência! Use a \"Pesquisa de organização\" abaixo para adicionar organizações",
     "viewer.accordion.title.query": "Consulta: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} e {query2}",
-    "control.value.placeholder.organizations": "Use a “Pesquisa de organização” abaixo para adicionar organizações"
+    "control.value.placeholder.organizations": "Use a \"Pesquisa de organização\" abaixo para adicionar valores",
+    "error.needsRefresh": "O tipo de registro usado por esta lista foi alterado; atualize a lista e, se necessário, modifique a consulta.",
+    "error.invalidEntity": "O tipo de registro usado por esta lista não pode ser usado no momento; verifique sua definição.",
+    "viewer.accordion.title.query.showMore": "Mostrar mais",
+    "viewer.accordion.title.query.showLess": "Mostrar menos"
 }

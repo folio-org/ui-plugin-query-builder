@@ -33,5 +33,9 @@
     "noOptionsAvailable": "Немає відповідностей! Спробуйте пошук організації",
     "viewer.accordion.title.query": "Запит: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} і {query2}",
-    "control.value.placeholder.organizations": "Скористайтеся функцією \"Пошук організацій\" нижче, щоб додати організації"
+    "control.value.placeholder.organizations": "Скористайтеся функцією \"Пошук організацій\" нижче, щоб додати організації",
+    "error.needsRefresh": "Тип запису, який використовується цим списком, змінився; будь ласка, оновіть список.",
+    "error.invalidEntity": "Тип запису, який використовується цим списком, наразі не може бути використаний; будь ласка, перевірте його визначення.",
+    "viewer.accordion.title.query.showMore": "Показати більше",
+    "viewer.accordion.title.query.showLess": "Показувати менше"
 }

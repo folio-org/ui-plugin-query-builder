@@ -33,5 +33,9 @@
     "noOptionsAvailable": "Žádné shody! Pro přidání organizací použijte níže uvedený \"Vyhledávač organizací\"",
     "viewer.accordion.title.query": "Dotaz: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} a {query2}",
-    "control.value.placeholder.organizations": "Pro přidání organizací použijte níže uvedený \"Vyhledávač organizací\""
+    "control.value.placeholder.organizations": "Pro přidání organizací použijte níže uvedený \"Vyhledávač organizací\"",
+    "error.needsRefresh": "Typ záznamu používaný v tomto seznamu se změnil; obnovte prosím seznam, případně upravte dotaz.",
+    "error.invalidEntity": "Typ záznamu, který tento seznam používá, nelze v současné době použít; ověřte prosím jeho definici.",
+    "viewer.accordion.title.query.showMore": "Zobrazit více",
+    "viewer.accordion.title.query.showLess": "Zobrazit méně"
 }
