@@ -149,6 +149,12 @@ const arr = [
     onChange: jest.fn(),
   },
   {
+    dataType: DATA_TYPES.DateTimeType,
+    operator: OPERATORS.GREATER_THAN,
+    componentTestId: 'data-input-dateTimeType',
+    onChange: jest.fn(),
+  },
+  {
     dataType: DATA_TYPES.BooleanType,
     operator: OPERATORS.EMPTY,
     componentTestId: 'data-input-select-booleanType',

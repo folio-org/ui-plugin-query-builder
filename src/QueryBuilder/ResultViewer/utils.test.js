@@ -15,8 +15,11 @@ describe('formatValueByDataType returns correct value', () => {
     ['false', DATA_TYPES.BooleanType, 'ui-plugin-query-builder.options.false'],
 
     ['2024-01-01T12:30:00Z', DATA_TYPES.StringType, '2024-01-01T12:30:00Z'],
-    ['2024-01-01T12:30:00Z', DATA_TYPES.DateType, '1/1/2024'],
-    ['2024-01-01T12:30:00Z', DATA_TYPES.DateType, '1/1/2024'],
+    // DateType: raw YYYY-MM-DD preserved
+    ['2024-01-01', DATA_TYPES.DateType, '2024-01-01'],
+    ['2024-01-1', DATA_TYPES.DateType, '2024-01-1'],
+    // DateTimeType: formatted (locale dependent). Our test env default shows M/D/YYYY
+    ['2024-01-01T12:30:00Z', DATA_TYPES.DateTimeType, '1/1/2024'],
 
     [[], DATA_TYPES.ArrayType, ''],
     [['a'], DATA_TYPES.ArrayType, 'a'],

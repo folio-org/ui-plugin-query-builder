@@ -6,6 +6,7 @@ export const DATA_TYPES = {
   NumberType: 'numberType',
   IntegerType: 'integerType',
   DateType: 'dateType',
+  DateTimeType: 'dateTimeType',
   BooleanType: 'booleanType',
   EnumType: 'enumType',
   ObjectType: 'objectType',
