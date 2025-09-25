@@ -9,6 +9,7 @@
 * [UIPQB-232](https://folio-org.atlassian.net/browse/UIPQB-232) Show label aliases for inherited custom fields
 * [UIPQB-236](https://folio-org.atlassian.net/browse/UIPQB-236) Remove unsupported operators for predefined repeatable fields
 * [UIPQB-241](https://folio-org.atlassian.net/browse/UIPQB-241) Make UI behavior on search by repeatable fields consistent with search by other fields in “Build query” form, “Lists“ app
+* [UIPQB-234](https://folio-org.atlassian.net/browse/UIPQB-234) Fix displaying NaN instead of 1K+ localized numbers in Query plugin for some session locales
 
 ## [2.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.3) (2025-04-18)
 
