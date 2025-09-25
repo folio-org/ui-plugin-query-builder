@@ -4,6 +4,11 @@
   justify-content: space-between;
   width: 100%;
 
+  [dir='rtl'] & {
+    /* [show more/less] ...query string [chevron] */
+    flex-direction: row-reverse;
+  }
+
   &.truncate {
     --truncate-to: 100%; /* will be overridden by JS */
     max-width: var(--truncate-to);
@@ -18,9 +23,4 @@
   & button {
     align-self: start; /* anchor vertically to top of header */
   }
-}
-
-[dir='rtl'] .ResultViewerAccordionHeader {
-  /* [show more/less] ...query string [chevron] */
-  flex-direction: row-reverse;
 }
