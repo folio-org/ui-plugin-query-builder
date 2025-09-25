@@ -34,7 +34,7 @@ export const ViewerHeadline = memo(({ limit, total, isInProgress, status }) => {
 });
 
 ViewerHeadline.propTypes = {
-  limit: PropTypes.string,
+  limit: PropTypes.number,
   total: PropTypes.number,
   isInProgress: PropTypes.bool,
   status: PropTypes.string,
