@@ -75,9 +75,9 @@ const AccordionHeaderLabel = ({ entityType, fqlQuery, headerRef }) => {
         return;
       }
 
-      if (headerRef.current === null || querySpanRef.current === null) return;
+      if (!headerRef.current || !querySpanRef.current) return;
 
-      const iconWidth = headerRef.current.querySelector('svg').parentNode.parentNode.clientWidth;
+      const iconWidth = headerRef.current.querySelector('svg')?.parentNode.parentNode.clientWidth ?? 0;
       const queryFontSize = parseFloat(window.getComputedStyle(querySpanRef.current).fontSize); // guaranteed to be px
 
       // These are the properties available to us in JS-land. They're not the
