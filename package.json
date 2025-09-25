@@ -66,10 +66,11 @@
   },
   "dependencies": {
     "@folio/stripes-acq-components": "^7.0.0",
-    "react-query": "^3.6.0",
+    "classnames": "^2.5.1",
     "ky": "^0.33.2",
     "lodash": "^4.17.5",
-    "prop-types": "^15.5.10"
+    "prop-types": "^15.5.10",
+    "react-query": "^3.6.0"
   },
   "peerDependencies": {
     "@folio/stripes": "^10.0.0",
