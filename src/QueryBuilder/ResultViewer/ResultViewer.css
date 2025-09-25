@@ -3,17 +3,24 @@
   gap: 0.25em;
   justify-content: space-between;
   width: 100%;
-  /* 3.5 is a bit arbitrary, but covers the chevron and scrollbar in my testing. */
-  /* it's not really possible to get the true width due to how nested this element is :( */
-  max-width: calc(100vw - 3.5em);
-}
 
-.ResultViewerAccordionHeader .truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  [dir='rtl'] & {
+    /* [show more/less] ...query string [chevron] */
+    flex-direction: row-reverse;
+  }
 
-.ResultViewerAccordionHeader button {
-  align-self: start;
+  &.truncate {
+    --truncate-to: 100%; /* will be overridden by JS */
+    max-width: var(--truncate-to);
+
+    & span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  & button {
+    align-self: start; /* anchor vertically to top of header */
+  }
 }
