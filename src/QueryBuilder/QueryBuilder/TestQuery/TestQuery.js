@@ -122,7 +122,7 @@ export const TestQuery = ({
 
   const renderHeadline = ({ totalRecords: total = 0, currentRecordsCount = 0, defaultLimit, status }) => {
     const isInProgress = status === QUERY_DETAILS_STATUSES.IN_PROGRESS && !recordsLimitExceeded;
-    const limit = currentRecordsCount < defaultLimit ? currentRecordsCount : defaultLimit;
+    const limit = Math.min(currentRecordsCount, defaultLimit);
 
     return (
       <ViewerHeadline
