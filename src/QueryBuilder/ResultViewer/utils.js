@@ -27,6 +27,19 @@ export const formatValueByDataType = (value, dataType, intl, additionalParams = 
       }
 
     case DATA_TYPES.DateType:
+      // DateType is timezone agnostic; value expected as YYYY-MM-DD. Return as-is (string) so table renders raw/localizable text.
+      // If BE ever sends full ISO, fall back to trimming time part.
+      if (typeof value === 'string') {
+        const dateOnlyMatch = value.match(/^(\d{4}-\d{2}-\d{2})/);
+
+        if (dateOnlyMatch) {
+          return dateOnlyMatch[1];
+        }
+      }
+
+      return value;
+
+    case DATA_TYPES.DateTimeType:
       return <FormattedDate value={value} />;
 
     case DATA_TYPES.JsonbArrayType:

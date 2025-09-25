@@ -37,7 +37,7 @@
   "result.emptyMessage": "The list contains no items",
 
   "error.sww": "Something went wrong",
-  "error.needsRefresh": "The record type used by this list has changed; please refresh the list.",
+  "error.needsRefresh": "The record type used by this list has changed; please refresh the list, and if needed, modify the query.",
   "error.invalidEntity": "The record type used by this list is currently unable to be used; please verify its definition.",
   "error.occurredMessage": "An error occurred.",
 

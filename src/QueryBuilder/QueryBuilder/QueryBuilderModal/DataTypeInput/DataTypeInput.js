@@ -97,14 +97,27 @@ export const DataTypeInput = ({
     />
   );
 
-  const datePickerControl = () => {
+  // DateType: treat value as plain YYYY-MM-DD (timezone agnostic) by setting the timezone to UTC and setting the backendDateStandard to YYYY-MM-DD
+  const datePickerControl = () => (
+    <Datepicker
+      timeZone="UTC"
+      backendDateStandard="YYYY-MM-DD"
+      data-testid="data-input-dateType"
+      onChange={(e, _unusedValue, formattedValue) => onChange(formattedValue, index, COLUMN_KEYS.VALUE)}
+      {...rest}
+      value={value || ''}
+    />
+  );
+
+  // DateTimeType: timezone logic (store value without trailing Z after user selection)
+  const dateTimePickerControl = () => {
     const selectedValue = value;
     const formattedSelectedDate = selectedValue ? `${selectedValue}Z` : selectedValue;
 
     return (
       <Datepicker
         timeZone={timezone}
-        data-testid="data-input-dateType"
+        data-testid="data-input-dateTimeType"
         onChange={(e, _unusedValue, formattedValue) => {
           onChange(formattedValue.replace('Z', ''), index, COLUMN_KEYS.VALUE);
         }}
@@ -276,6 +289,9 @@ export const DataTypeInput = ({
 
     case DATA_TYPES.DateType:
       return datePickerControl();
+
+    case DATA_TYPES.DateTimeType:
+      return dateTimePickerControl();
 
     case DATA_TYPES.OpenUUIDType:
       return openUUIDTypeControls();

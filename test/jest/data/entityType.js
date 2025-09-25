@@ -65,7 +65,7 @@ export const entityType = {
       'name': 'user_expiration_date',
       'queryable': true,
       'dataType': {
-        'dataType': 'dateType',
+        'dataType': 'dateTimeType',
       },
       'labelAlias': 'User expiration date',
       'visibleByDefault': true,
