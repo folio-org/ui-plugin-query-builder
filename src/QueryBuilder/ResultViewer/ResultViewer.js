@@ -36,17 +36,18 @@ const AccordionHeaderLabel = ({ entityType, fqlQuery, headerRef }) => {
   const intl = useIntl();
   const queryStr = useQueryStr(entityType, { fqlQuery });
 
-  const queryFormatted = useMemo(
-    () => intl.formatMessage(
-      {
-        id: 'ui-plugin-query-builder.viewer.accordion.title.query',
-      },
-      {
-        query: queryStr,
-      },
-    ),
-    [intl, queryStr],
-  );
+  const queryFormatted = queryStr;
+  // const queryFormatted = useMemo(
+  //   () => intl.formatMessage(
+  //     {
+  //       id: 'ui-plugin-query-builder.viewer.accordion.title.query',
+  //     },
+  //     {
+  //       query: queryStr,
+  //     },
+  //   ),
+  //   [intl, queryStr],
+  // );
 
   const buttonStr = useMemo(() => {
     if (showFull) {
@@ -160,6 +161,7 @@ const AccordionHeaderLabel = ({ entityType, fqlQuery, headerRef }) => {
         <Button
           aria-label={buttonStr}
           buttonStyle="link"
+          buttonClass={css.showMoreLessButton}
           onClick={(e) => {
             e.stopPropagation();
             setShowFull((s) => !s);
