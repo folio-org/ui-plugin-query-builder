@@ -112,7 +112,7 @@ export const TestQuery = ({
     onSetDefaultVisibleColumns(values);
   };
 
-  const renderDropdown = ({ currentRecordsCount }) => !!Number(currentRecordsCount) && (
+  const renderDropdown = ({ currentRecordsCount = 0 }) => currentRecordsCount > 0 && (
     <ColumnsDropdown
       columns={columns}
       visibleColumns={visibleColumns}
@@ -120,9 +120,9 @@ export const TestQuery = ({
     />
   );
 
-  const renderHeadline = ({ totalRecords: total = '0', currentRecordsCount = '0', defaultLimit, status }) => {
+  const renderHeadline = ({ totalRecords: total = 0, currentRecordsCount = 0, defaultLimit, status }) => {
     const isInProgress = status === QUERY_DETAILS_STATUSES.IN_PROGRESS && !recordsLimitExceeded;
-    const limit = currentRecordsCount < defaultLimit ? currentRecordsCount : defaultLimit;
+    const limit = Math.min(currentRecordsCount, defaultLimit);
 
     return (
       <ViewerHeadline
@@ -186,7 +186,7 @@ export const TestQuery = ({
 
 TestQuery.propTypes = {
   queryId: PropTypes.string,
-  fqlQuery: PropTypes.object,
+  fqlQuery: PropTypes.string,
   entityTypeDataSource: PropTypes.func,
   queryDetailsDataSource: PropTypes.func,
   entityTypeId: PropTypes.string,

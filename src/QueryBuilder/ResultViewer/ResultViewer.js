@@ -263,9 +263,6 @@ export const ResultViewer = ({
   const headerRef = useRef(null);
 
   const renderHeader = () => {
-    const localizedTotalRecords = intl.formatNumber(totalRecords);
-    const localizedCurrentRecordsCount = intl.formatNumber(currentRecordsCount);
-
     const renderErrorMessage = () => {
       return (
         <Row between="xs">
@@ -286,15 +283,15 @@ export const ResultViewer = ({
               {isListLoading && !totalRecords
                 ? intl.formatMessage({ id: 'ui-plugin-query-builder.result.inProgress' })
                 : headline?.({
-                  totalRecords: localizedTotalRecords,
-                  currentRecordsCount: localizedCurrentRecordsCount,
+                  totalRecords,
+                  currentRecordsCount,
                   defaultLimit,
                   status,
                 })}
             </Headline>
           </Col>
           {headlineEnd?.({
-            currentRecordsCount: localizedCurrentRecordsCount,
+            currentRecordsCount,
             status,
           })}
         </Row>
