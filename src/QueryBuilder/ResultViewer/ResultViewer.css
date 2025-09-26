@@ -20,7 +20,8 @@
     }
   }
 
-  & button {
+  & .showMoreLessButton {
     align-self: start; /* anchor vertically to top of header */
+    font-size: 1rem;
   }
 }
