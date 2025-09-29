@@ -160,6 +160,7 @@ const AccordionHeaderLabel = ({ entityType, fqlQuery, headerRef }) => {
         <Button
           aria-label={buttonStr}
           buttonStyle="link"
+          buttonClass={css.showMoreLessButton}
           onClick={(e) => {
             e.stopPropagation();
             setShowFull((s) => !s);
