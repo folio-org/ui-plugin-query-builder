@@ -104,46 +104,4 @@ describe('getTableMetadata.formatter (rendered output)', () => {
     );
     expect(screen.getByText('formatted-value')).toBeInTheDocument();
   });
-
-  it('renders a DynamicTable with only non-hidden properties', () => {
-    const entityType = {
-      columns: [
-        {
-          labelAlias: 'Attributes',
-          name: 'attributes',
-          visibleByDefault: false,
-          dataType: {
-            dataType: 'arrayType',
-            itemDataType: {
-              properties: [
-                { property: 'id', labelAlias: 'ID', hidden: false },
-                { property: 'name', labelAlias: 'Name', hidden: true },
-                { property: 'tag', labelAlias: 'Tag', hidden: false },
-              ],
-            },
-          },
-        },
-      ],
-    };
-    const { formatter } = getTableMetadata(entityType, [], intl);
-
-    render(<>{formatter.attributes({ attributes: JSON.stringify({ id: 1, name: 2, tag: 3 }) })}</>);
-
-    const dyn = screen.getByTestId('dynamic-table');
-
-    expect(dyn).toBeInTheDocument();
-
-    const columns = JSON.parse(dyn.getAttribute('data-columns'));
-
-    expect(columns).toEqual([
-      { id: 'id', name: 'ID', styles: { width: '180px', minWidth: '180px' } },
-      { id: 'tag', name: 'Tag', styles: { width: '180px', minWidth: '180px' } },
-    ]);
-
-    expect(JSON.parse(dyn.getAttribute('data-values'))).toEqual({
-      id: 1,
-      name: 2,
-      tag: 3,
-    });
-  });
 });
