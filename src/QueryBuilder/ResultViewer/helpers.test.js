@@ -7,8 +7,8 @@ import { formatValueByDataType } from './utils';
 
 jest.mock('./DynamicTable/DynamicTable', () => ({
   __esModule: true,
-  DynamicTable: jest.fn(({ properties, values }) => (
-    <div data-testid="dynamic-table" data-properties={JSON.stringify(properties)} data-values={JSON.stringify(values)} />
+  DynamicTable: jest.fn(({ columns, values }) => (
+    <div data-testid="dynamic-table" data-columns={JSON.stringify(columns)} data-values={JSON.stringify(values)} />
   )),
 }));
 
@@ -51,8 +51,8 @@ describe('getTableMetadata (pure metadata)', () => {
             dataType: 'arrayType',
             itemDataType: {
               properties: [
-                { name: 'id', hidden: false },
-                { name: 'name', hidden: true },
+                { property: 'id', labelAlias: 'ID', hidden: false },
+                { property: 'name', labelAlias: 'Name', hidden: true },
               ],
             },
           },
@@ -116,9 +116,9 @@ describe('getTableMetadata.formatter (rendered output)', () => {
             dataType: 'arrayType',
             itemDataType: {
               properties: [
-                { name: 'id', hidden: false },
-                { name: 'name', hidden: true },
-                { name: 'tag', hidden: false },
+                { property: 'id', labelAlias: 'ID', hidden: false },
+                { property: 'name', labelAlias: 'Name', hidden: true },
+                { property: 'tag', labelAlias: 'Tag', hidden: false },
               ],
             },
           },
@@ -127,17 +127,17 @@ describe('getTableMetadata.formatter (rendered output)', () => {
     };
     const { formatter } = getTableMetadata(entityType, [], intl);
 
-    render(<>{formatter.attributes({ attributes: { id: 1, name: 2, tag: 3 } })}</>);
+    render(<>{formatter.attributes({ attributes: JSON.stringify({ id: 1, name: 2, tag: 3 }) })}</>);
 
     const dyn = screen.getByTestId('dynamic-table');
 
     expect(dyn).toBeInTheDocument();
 
-    const props = JSON.parse(dyn.getAttribute('data-properties'));
+    const columns = JSON.parse(dyn.getAttribute('data-columns'));
 
-    expect(props).toEqual([
-      { name: 'id', hidden: false },
-      { name: 'tag', hidden: false },
+    expect(columns).toEqual([
+      { id: 'id', name: 'ID', styles: { width: '180px', minWidth: '180px' } },
+      { id: 'tag', name: 'Tag', styles: { width: '180px', minWidth: '180px' } },
     ]);
 
     expect(JSON.parse(dyn.getAttribute('data-values'))).toEqual({

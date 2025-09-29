@@ -4,16 +4,16 @@ import { useIntl } from 'react-intl';
 import css from './DynamicTable.css';
 import { formatValueByDataType } from '../utils';
 
-export const DynamicTable = ({ columns, values = [] }) => {
+export const DynamicTable = ({ columns = [], values = [] }) => {
   const intl = useIntl();
 
-  if (!values?.length) return null;
+  if (!values?.length || !columns?.length) return null;
 
   return (
     <table className={css.DynamicTable}>
       <thead>
         <tr>
-          {columns?.map((column) => (
+          {columns.map((column) => (
             <th key={column.id} style={column.styles}>
               {column.name}
             </th>
@@ -23,7 +23,7 @@ export const DynamicTable = ({ columns, values = [] }) => {
       <tbody>
         {values.map((row, rowIndex) => (
           <tr key={rowIndex}>
-            {columns?.map((column) => (
+            {columns.map((column) => (
               <td key={column.id} style={column.styles}>
                 {formatValueByDataType(
                   row[column.id],
@@ -44,7 +44,7 @@ DynamicTable.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     dataType: PropTypes.string,
-    cssStyles: PropTypes.shape({}),
+    styles: PropTypes.shape({}),
   })),
-  values: PropTypes.string,
+  values: PropTypes.arrayOf(PropTypes.shape({})),
 };

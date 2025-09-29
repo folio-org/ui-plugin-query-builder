@@ -4,156 +4,114 @@ import { IntlProvider } from 'react-intl';
 import { DynamicTable } from './DynamicTable';
 
 describe('DynamicTable component', () => {
-  const properties = [
+  const columns = [
     {
-      name: 'code',
-      dataType: {
-        dataType: 'stringType',
-      },
-      labelAlias: 'Code',
-      property: 'code',
+      id: 'code',
+      name: 'Code',
+      dataType: 'stringType',
     },
     {
-      name: 'distribution_type',
-      dataType: {
-        dataType: 'stringType',
-      },
-      labelAlias: 'Distribution type',
-      property: 'distributionType',
+      id: 'distributionType',
+      name: 'Distribution type',
+      dataType: 'stringType',
     },
     {
-      name: 'encumbrance',
-      dataType: {
-        dataType: 'rangedUUIDType',
-      },
-      labelAlias: 'Encumbrance',
-      property: 'encumbrance',
+      id: 'encumbrance',
+      name: 'Encumbrance',
+      dataType: 'rangedUUIDType',
     },
     {
-      name: 'fund_id',
-      dataType: {
-        dataType: 'rangedUUIDType',
-      },
-      labelAlias: 'Fund ID',
-      property: 'fundId',
+      id: 'fundId',
+      name: 'Fund ID',
+      dataType: 'rangedUUIDType',
     },
     {
-      name: 'value',
-      dataType: {
-        dataType: 'numberType',
-      },
-      labelAlias: 'Value',
-      property: 'value',
+      id: 'value',
+      name: 'Value',
+      dataType: 'numberType',
     },
     {
-      name: 'is_cool',
-      dataType: {
-        dataType: 'booleanType',
-      },
-      labelAlias: 'Is cool',
-      property: 'isCool',
+      id: 'isCool',
+      name: 'Is cool',
+      dataType: 'booleanType',
     },
     {
-      name: 'is_not_cool',
-      dataType: {
-        dataType: 'booleanType',
-      },
-      labelAlias: 'Is not cool',
-      property: 'isNotCool',
+      id: 'isNotCool',
+      name: 'Is not cool',
+      dataType: 'booleanType',
     },
     {
-      name: 'is_empty_bool',
-      dataType: {
-        dataType: 'booleanType',
-      },
-      labelAlias: 'Empty bool column',
-      property: 'isEmptyBool',
+      id: 'isEmptyBool',
+      name: 'Empty bool column',
+      dataType: 'booleanType',
     },
     {
-      name: 'cool_date',
-      dataType: {
-        dataType: 'dateType',
-      },
-      labelAlias: 'Date column',
-      property: 'coolDate',
+      id: 'coolDate',
+      name: 'Date column',
+      dataType: 'dateType',
     },
     {
-      name: 'less_cool_date',
-      dataType: {
-        dataType: 'dateType',
-      },
-      labelAlias: 'Date column 2',
-      property: 'lessCoolDate',
+      id: 'lessCoolDate',
+      name: 'Date column 2',
+      dataType: 'dateType',
     },
     {
-      name: 'empty_date',
-      dataType: {
-        dataType: 'dateType',
-      },
-      labelAlias: 'Empty date column',
-      property: 'emptyDate',
+      id: 'emptyDate',
+      name: 'Empty date column',
+      dataType: 'dateType',
     },
     {
-      name: 'cool_datetime',
-      dataType: {
-        dataType: 'dateTimeType',
-      },
-      labelAlias: 'Datetime column',
-      property: 'coolDatetime',
+      id: 'coolDatetime',
+      name: 'Datetime column',
+      dataType: 'dateTimeType',
     },
     {
-      name: 'less_cool_datetime',
-      dataType: {
-        dataType: 'dateTimeType',
-      },
-      labelAlias: 'Datetime column 2',
-      property: 'lessCoolDatetime',
+      id: 'lessCoolDatetime',
+      name: 'Datetime column 2',
+      dataType: 'dateTimeType',
     },
     {
-      name: 'empty_datetime',
-      dataType: {
-        dataType: 'dateTimeType',
-      },
-      labelAlias: 'Empty datetime column',
-      property: 'emptyDatetime',
+      id: 'emptyDatetime',
+      name: 'Empty datetime column',
+      dataType: 'dateTimeType',
     },
   ];
 
-  it.each(['[]', undefined, null])(
+  it.each([[], undefined, null])(
     'renders null value for empty/invalid input %s',
     (v) => {
-      const { container } = render(<DynamicTable properties={properties} values={v} />);
+      const { container } = render(<DynamicTable columns={columns} values={v} />);
 
       expect(container).toBeEmptyDOMElement();
     },
   );
 
-  const values = `
+  const values =
     [
       {
-        "code": "STATE-MONOSER",
-        "value": 100.0,
-        "fundId": "bbd4a5e1-c9f3-44b9-bfdf-d184e04f0ba0",
-        "encumbrance": "eb506834-6c70-4239-8d1a-6414a5b08010",
-        "distributionType": "percentage",
-        "isCool": true,
-        "isNotCool": false,
-        "isEmptyBool": null,
-        "coolDate": "2021-01-01T05:00:00.000Z",
-        "lessCoolDate": "2021-01-01T04:59:00.000Z",
-        "emptyDate": null
-      }
-    ]`;
+        code: 'STATE-MONOSER',
+        value: 100.0,
+        fundId: 'bbd4a5e1-c9f3-44b9-bfdf-d184e04f0ba0',
+        encumbrance: 'eb506834-6c70-4239-8d1a-6414a5b08010',
+        distributionType: 'percentage',
+        isCool: true,
+        isNotCool: false,
+        isEmptyBool: null,
+        coolDate: '2021-01-01T05:00:00.000Z',
+        lessCoolDate: '2021-01-01T04:59:00.000Z',
+        emptyDate: null,
+      },
+    ];
 
   it('renders table with correct properties and values', () => {
     const { getByText } = render(
-      <IntlProvider timeZone="America/New_York">
-        <DynamicTable properties={properties} values={values} />
+      <IntlProvider locale="en" timeZone="America/New_York">
+        <DynamicTable columns={columns} values={values} />
       </IntlProvider>,
     );
 
-    properties.forEach((property) => {
-      const label = getByText(property.labelAlias);
+    columns.forEach((column) => {
+      const label = getByText(column.name);
 
       expect(label).toBeInTheDocument();
     });

@@ -38,10 +38,10 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
       if (properties?.length) {
         const values = JSON.parse(val ?? null);
         const columns = properties
-          .filter(prop => !prop.hidden)
           .map(prop => ({
             id: prop.property,
             name: prop.labelAlias,
+            dataType: prop.dataType.dataType,
             styles: { width: '180px', minWidth: '180px' },
           }));
 
