@@ -1,4 +1,4 @@
-import { DynamicTable } from './DynamicTable/DynamicTable';
+import { DynamicTable } from './DynamicTable';
 import { formatValueByDataType } from './utils';
 
 export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
@@ -36,9 +36,16 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
       const val = item[value];
 
       if (properties?.length) {
-        const filteredProperties = properties.filter(prop => !prop.hidden);
+        const values = JSON.parse(val ?? null);
+        const columns = properties
+          .filter(prop => !prop.hidden)
+          .map(prop => ({
+            id: prop.property,
+            name: prop.labelAlias,
+            styles: { width: '180px', minWidth: '180px' },
+          }));
 
-        return <DynamicTable properties={filteredProperties} values={val} />;
+        return <DynamicTable columns={columns} values={values} />;
       }
 
       return formatValueByDataType(
