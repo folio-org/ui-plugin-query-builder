@@ -1,2 +1,1 @@
-export * from './ResultViewer';
 export * from './DynamicTable';

@@ -1,3 +1,2 @@
-import QueryBuilderPlugin from './src';
-
-export default props => <QueryBuilderPlugin {...props} />;
+export { default } from './src';
+export * from './src';

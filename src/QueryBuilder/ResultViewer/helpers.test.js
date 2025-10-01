@@ -7,8 +7,12 @@ import { formatValueByDataType } from './utils';
 
 jest.mock('./DynamicTable/DynamicTable', () => ({
   __esModule: true,
-  DynamicTable: jest.fn(({ properties, values }) => (
-    <div data-testid="dynamic-table" data-properties={JSON.stringify(properties)} data-values={JSON.stringify(values)} />
+  DynamicTable: jest.fn(({ columns, values }) => (
+    <div
+      data-testid="dynamic-table"
+      data-columns={JSON.stringify(columns)}
+      data-values={JSON.stringify(values)}
+    />
   )),
 }));
 
@@ -51,8 +55,8 @@ describe('getTableMetadata (pure metadata)', () => {
             dataType: 'arrayType',
             itemDataType: {
               properties: [
-                { name: 'id', hidden: false },
-                { name: 'name', hidden: true },
+                { property: 'id', labelAlias: 'ID', hidden: false },
+                { property: 'name', labelAlias: 'Name', hidden: true },
               ],
             },
           },
@@ -71,6 +75,50 @@ describe('getTableMetadata (pure metadata)', () => {
     expect(columnMapping).toEqual({ languages: 'Languages', tags: 'Tags' });
     expect(columnWidths).toEqual({ tags: '360px' });
     expect(defaultVisibleColumns.sort()).toEqual(['languages', 'tags'].sort());
+  });
+
+  it('does not set a width when there are no nested properties', () => {
+    const entityType = {
+      columns: [
+        {
+          labelAlias: 'Title',
+          name: 'title',
+          visibleByDefault: false,
+          dataType: { dataType: 'stringType', itemDataType: null },
+        },
+      ],
+    };
+
+    const { columnWidths } = getTableMetadata(entityType, [], intl);
+
+    expect(columnWidths).toEqual({});
+  });
+
+  it('creates a mapping entry for every column', () => {
+    const entityType = {
+      columns: [
+        { labelAlias: 'A', name: 'a', visibleByDefault: false, dataType: { dataType: 'stringType' } },
+        { labelAlias: 'B', name: 'b', visibleByDefault: false, dataType: { dataType: 'stringType' } },
+        { labelAlias: 'C', name: 'c', visibleByDefault: true, dataType: { dataType: 'stringType' } },
+      ],
+    };
+
+    const { columnMapping } = getTableMetadata(entityType, [], intl);
+
+    expect(columnMapping).toEqual({ a: 'A', b: 'B', c: 'C' });
+  });
+
+  it('merges forced visible columns with visibleByDefault (no duplicates)', () => {
+    const entityType = {
+      columns: [
+        { labelAlias: 'X', name: 'x', visibleByDefault: true, dataType: { dataType: 'stringType' } },
+        { labelAlias: 'Y', name: 'y', visibleByDefault: false, dataType: { dataType: 'stringType' } },
+      ],
+    };
+
+    const { defaultVisibleColumns } = getTableMetadata(entityType, ['y', 'x'], intl);
+
+    expect(defaultVisibleColumns.sort()).toEqual(['x', 'y'].sort());
   });
 });
 
@@ -105,45 +153,125 @@ describe('getTableMetadata.formatter (rendered output)', () => {
     expect(screen.getByText('formatted-value')).toBeInTheDocument();
   });
 
-  it('renders a DynamicTable with only non-hidden properties', () => {
+  it('passes undefined through to formatter when value is missing', () => {
     const entityType = {
       columns: [
         {
-          labelAlias: 'Attributes',
-          name: 'attributes',
+          labelAlias: 'Score',
+          name: 'score',
+          visibleByDefault: true,
+          dataType: { dataType: 'numberType', itemDataType: null },
+        },
+      ],
+    };
+    const { formatter } = getTableMetadata(entityType, [], intl);
+    const TestComponent = () => <>{formatter.score({})}</>;
+
+    render(<TestComponent />);
+    expect(formatValueByDataType).toHaveBeenCalledWith(
+      undefined,
+      'numberType',
+      intl,
+      { isInstanceLanguages: false },
+    );
+    expect(screen.getByText('formatted-value')).toBeInTheDocument();
+  });
+
+  it('sets isInstanceLanguages=true only for "instance.languages"', () => {
+    const entityType = {
+      columns: [
+        {
+          labelAlias: 'Instance Languages',
+          name: 'instance.languages',
+          visibleByDefault: false,
+          dataType: { dataType: 'arrayType', itemDataType: null },
+        },
+      ],
+    };
+    const { formatter } = getTableMetadata(entityType, [], intl);
+    const TestComponent = () => <>{formatter['instance.languages']({ 'instance.languages': ['en', 'hr'] })}</>;
+
+    render(<TestComponent />);
+    expect(formatValueByDataType).toHaveBeenCalledWith(
+      ['en', 'hr'],
+      'arrayType',
+      intl,
+      { isInstanceLanguages: true },
+    );
+    expect(screen.getByText('formatted-value')).toBeInTheDocument();
+  });
+
+  it('renders a DynamicTable for columns with nested properties and parses JSON values', () => {
+    const entityType = {
+      columns: [
+        {
+          labelAlias: 'Tags',
+          name: 'tags',
           visibleByDefault: false,
           dataType: {
             dataType: 'arrayType',
             itemDataType: {
               properties: [
-                { name: 'id', hidden: false },
-                { name: 'name', hidden: true },
-                { name: 'tag', hidden: false },
+                { property: 'id', labelAlias: 'ID', dataType: { dataType: 'stringType' } },
+                { property: 'name', labelAlias: 'Name', dataType: { dataType: 'stringType' } },
+                { property: 'active', labelAlias: 'Active', dataType: { dataType: 'booleanType' } },
               ],
             },
           },
         },
       ],
     };
-    const { formatter } = getTableMetadata(entityType, [], intl);
 
-    render(<>{formatter.attributes({ attributes: { id: 1, name: 2, tag: 3 } })}</>);
-
-    const dyn = screen.getByTestId('dynamic-table');
-
-    expect(dyn).toBeInTheDocument();
-
-    const props = JSON.parse(dyn.getAttribute('data-properties'));
-
-    expect(props).toEqual([
-      { name: 'id', hidden: false },
-      { name: 'tag', hidden: false },
+    const valuesJSON = JSON.stringify([
+      { id: 't1', name: 'alpha', active: true },
+      { id: 't2', name: 'beta', active: false },
     ]);
 
-    expect(JSON.parse(dyn.getAttribute('data-values'))).toEqual({
-      id: 1,
-      name: 2,
-      tag: 3,
-    });
+    const { formatter } = getTableMetadata(entityType, [], intl);
+    const TestComponent = () => <>{formatter.tags({ tags: valuesJSON })}</>;
+
+    render(<TestComponent />);
+
+    const table = screen.getByTestId('dynamic-table');
+    const passedColumns = JSON.parse(table.getAttribute('data-columns') || '[]');
+    const passedValues = JSON.parse(table.getAttribute('data-values') || '[]');
+
+    expect(passedColumns).toEqual([
+      { id: 'id', name: 'ID', dataType: 'stringType', styles: { width: '180px', minWidth: '180px' } },
+      { id: 'name', name: 'Name', dataType: 'stringType', styles: { width: '180px', minWidth: '180px' } },
+      { id: 'active', name: 'Active', dataType: 'booleanType', styles: { width: '180px', minWidth: '180px' } },
+    ]);
+
+    expect(passedValues).toEqual([
+      { id: 't1', name: 'alpha', active: true },
+      { id: 't2', name: 'beta', active: false },
+    ]);
+  });
+
+  it('computes columnWidths based on the number of nested properties (180px each)', () => {
+    const entityType = {
+      columns: [
+        {
+          labelAlias: 'Meta',
+          name: 'meta',
+          visibleByDefault: false,
+          dataType: {
+            dataType: 'arrayType',
+            itemDataType: {
+              properties: [
+                { property: 'k', labelAlias: 'Key', dataType: { dataType: 'stringType' } },
+                { property: 'v', labelAlias: 'Value', dataType: { dataType: 'stringType' } },
+                { property: 't', labelAlias: 'Type', dataType: { dataType: 'stringType' } },
+                { property: 'n', labelAlias: 'Note', dataType: { dataType: 'stringType' } },
+              ],
+            },
+          },
+        },
+      ],
+    };
+
+    const { columnWidths } = getTableMetadata(entityType, [], intl);
+
+    expect(columnWidths).toEqual({ meta: '720px' });
   });
 });
