@@ -12,6 +12,7 @@
 * [UIPQB-239](https://folio-org.atlassian.net/browse/UIPQB-239) Add support for the new DateTimeType data type and update the behavior of the older DateType.
 * [UIPQB-234](https://folio-org.atlassian.net/browse/UIPQB-234) Fix displaying NaN instead of 1K+ localized numbers in Query plugin for some session locales
 * [UIPQB-246](https://folio-org.atlassian.net/browse/UIPQB-246) Unify and export DynamicTable component
+* [UIPQB-244](https://folio-org.atlassian.net/browse/UIPQB-244) Sort repeatable fields alphabetically in dropdown with options on "Build query" form
 
 ## [2.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.3) (2025-04-18)
 

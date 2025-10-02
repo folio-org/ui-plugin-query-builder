@@ -1,4 +1,10 @@
-import { getFieldOptions, getFilteredOptions, getOperatorOptions, getOperatorType } from './selectOptions';
+import {
+  getColumnsWithProperties,
+  getFieldOptions,
+  getFilteredOptions,
+  getOperatorOptions,
+  getOperatorType,
+} from './selectOptions';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS, OPERATORS_GROUPS_NAME, OPERATORS_LABELS } from '../../../constants/operators';
 
@@ -525,5 +531,69 @@ describe('getOperatorType', () => {
 
   test('should return undefined if the operator is not found in any group', () => {
     expect(getOperatorType('NON_EXISTENT_OPERATOR')).toBeUndefined();
+  });
+});
+
+describe('getColumnsWithProperties', () => {
+  test('returns empty array for empty input', () => {
+    expect(getColumnsWithProperties()).toEqual([]);
+    expect(getColumnsWithProperties([])).toEqual([]);
+  });
+
+  test('filters out columns whose name is listed as some item’s idColumnName', () => {
+    const columns = [
+      { name: 'meta', idColumnName: 'userId' },
+      { name: 'userId', queryable: true },
+      { name: 'displayName', queryable: true },
+    ];
+
+    const res = getColumnsWithProperties(columns);
+
+    expect(res.map((i) => i.name)).toEqual(['displayName']);
+  });
+
+  test('includes only top-level items with queryable === true', () => {
+    const columns = [
+      { name: 'visible', queryable: true },
+      { name: 'notQueryable', queryable: false },
+      { name: 'missingQueryableFlag' },
+    ];
+
+    const res = getColumnsWithProperties(columns);
+
+    expect(res.map((i) => i.name)).toEqual(['visible']);
+  });
+
+  test('nested properties are sorted by labelAliasFullyQualified, falling back to labelAlias', () => {
+    const columns = [
+      {
+        name: 'item',
+        dataType: {
+          itemDataType: {
+            properties: [
+              { name: 'b', queryable: true, hidden: false, labelAliasFullyQualified: 'B Key' },
+              { name: 'a', queryable: true, hidden: false, labelAlias: 'A Key' },
+              { name: 'z1', queryable: true, hidden: false }, // no labels
+              { name: 'z2', queryable: true, hidden: false }, // no labels
+            ],
+          },
+        },
+      },
+    ];
+
+    const res = getColumnsWithProperties(columns);
+
+    expect(res.map((i) => i.name)).toEqual(['item[*]->z1', 'item[*]->z2', 'item[*]->a', 'item[*]->b']);
+  });
+
+  test('does not blow up if item.dataType.itemDataType.properties is missing', () => {
+    const columns = [
+      { name: 'noItemDataType', queryable: true, dataType: {} },
+      { name: 'noDataType', queryable: true },
+    ];
+
+    const res = getColumnsWithProperties(columns);
+
+    expect(res.map((i) => i.name)).toEqual(['noItemDataType', 'noDataType']);
   });
 });
