@@ -133,8 +133,8 @@ export const getColumnsWithProperties = (columns = []) => {
             name: `${item.name}${REPEATABLE_FIELD_DELIMITER}${child.name}`,
           }))
           .toSorted((a, b) => {
-            const ka = a.labelAliasFullyQualified ?? a.labelAlias ?? '';
-            const kb = b.labelAliasFullyQualified ?? b.labelAlias ?? '';
+            const ka = a.labelAliasFullyQualified ?? a.labelAlias;
+            const kb = b.labelAliasFullyQualified ?? b.labelAlias;
 
             return ka.localeCompare(kb);
           });

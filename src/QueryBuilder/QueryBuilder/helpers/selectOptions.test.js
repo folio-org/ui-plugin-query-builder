@@ -573,8 +573,8 @@ describe('getColumnsWithProperties', () => {
             properties: [
               { name: 'b', queryable: true, hidden: false, labelAliasFullyQualified: 'B Key' },
               { name: 'a', queryable: true, hidden: false, labelAlias: 'A Key' },
-              { name: 'z1', queryable: true, hidden: false }, // no labels
-              { name: 'z2', queryable: true, hidden: false }, // no labels
+              { name: 'd', queryable: true, hidden: false, labelAliasFullyQualified: 'D Key' },
+              { name: 'c', queryable: true, hidden: false, labelAlias: 'C Key' },
             ],
           },
         },
@@ -583,7 +583,7 @@ describe('getColumnsWithProperties', () => {
 
     const res = getColumnsWithProperties(columns);
 
-    expect(res.map((i) => i.name)).toEqual(['item[*]->z1', 'item[*]->z2', 'item[*]->a', 'item[*]->b']);
+    expect(res.map((i) => i.name)).toEqual(['item[*]->a', 'item[*]->b', 'item[*]->c', 'item[*]->d']);
   });
 
   test('does not blow up if item.dataType.itemDataType.properties is missing', () => {
