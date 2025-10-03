@@ -199,4 +199,20 @@ describe('retainValueOnOperatorChange', () => {
 
     expect(result).toBe('');
   });
+
+  test('should fallback to prevValue as label when option label is not found', () => {
+    const result = retainValueOnOperatorChange(
+      OPERATORS.EQUAL,
+      OPERATORS.IN,
+      DATA_TYPES.StringType,
+      'Previous value',
+      [
+        { label: 'Some Label', value: 'Some value' },
+      ]
+    );
+
+    expect(result).toEqual([
+      { label: 'Previous value', value: 'Previous value' },
+    ]);
+  });
 });
