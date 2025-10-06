@@ -208,7 +208,7 @@ describe('retainValueOnOperatorChange', () => {
       'Previous value',
       [
         { label: 'Some Label', value: 'Some value' },
-      ]
+      ],
     );
 
     expect(result).toEqual([
