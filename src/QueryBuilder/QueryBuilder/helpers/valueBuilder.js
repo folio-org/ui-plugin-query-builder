@@ -107,7 +107,7 @@ export const retainValueOnOperatorChange = (
       return prevValue;
     }
 
-    return [{ value: prevValue, label: options?.find(option => option.value === prevValue)?.label }];
+    return [{ value: prevValue, label: options?.find(option => option.value === prevValue)?.label ?? prevValue }];
   }
 
   if (prevType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON && newType === OPERATORS_GROUPS_NAME.COMPARISON) {
