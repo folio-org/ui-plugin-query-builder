@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 
 export const queryBuilderModalPropTypes = {
   isOpen: PropTypes.bool,
+  paneSub: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.node]),
+  getEntityTypeLabel: PropTypes.string,
   setIsModalShown: PropTypes.func,
   runQueryDataSource: PropTypes.func,
   testQueryDataSource: PropTypes.func,

@@ -9,6 +9,11 @@ jest.mock('../../hooks/useTenantTimezone', () => jest.fn(() => ({
   tenantTimezone: 'UTC',
 })));
 
+jest.mock('@folio/stripes/components', () => ({
+  ...jest.requireActual('@folio/stripes/components'),
+  Layer: ({ children, isOpen }) => (isOpen ? <div role="dialog">{children}</div> : null),
+}));
+
 const queryClient = new QueryClient();
 
 const renderQueryBuilder = ({

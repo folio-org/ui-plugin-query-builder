@@ -17,6 +17,7 @@ const queryClient = new QueryClient();
 
 jest.mock('@folio/stripes/components', () => ({
   ...jest.requireActual('@folio/stripes/components'),
+  Layer: ({ children, isOpen }) => (isOpen ? <div role="dialog">{children}</div> : null),
   Loading: () => <div>LOADING</div>,
 }));
 

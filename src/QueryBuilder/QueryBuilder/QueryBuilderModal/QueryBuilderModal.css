@@ -43,8 +43,9 @@
     box-shadow: none;
     resize: vertical;
     overflow-y: auto;
+    line-height: 1.5;
 }
 
-.modalClass {
-    min-height: 400px;
+.regularFont {
+    font-weight: var(--text-weight-regular);
 }

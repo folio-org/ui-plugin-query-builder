@@ -191,6 +191,7 @@ export const ResultViewer = ({
   showQueryAccordion,
   fqlQuery,
   height,
+  autosize,
   refreshTrigger,
   onSuccess,
   onPreviewShown,
@@ -318,7 +319,7 @@ export const ResultViewer = ({
         isEmpty(contentData));
 
     return (
-      <Row center="xs">
+      <Row center="xs" className={css.ResultViewerRowWrapper}>
         <Col xs={12}>
           {showSpinner ? (
             <Icon icon="spinner-ellipsis" size="large" />
@@ -334,6 +335,7 @@ export const ResultViewer = ({
               pagingType={null}
               onNeedMoreData={changePage}
               height={height}
+              autosize={autosize}
               loading={isListLoading}
               isEmptyMessage={emptyResultMessage}
             />
@@ -399,6 +401,7 @@ ResultViewer.propTypes = {
   defaultOffset: PropTypes.number,
   pollingMode: PropTypes.bool,
   height: PropTypes.number,
+  autosize: PropTypes.bool,
   showPagination: PropTypes.bool,
   refreshTrigger: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
   onSuccess: PropTypes.func,
