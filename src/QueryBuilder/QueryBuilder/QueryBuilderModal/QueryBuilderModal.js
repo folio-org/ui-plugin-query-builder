@@ -231,6 +231,14 @@ export const QueryBuilderModal = ({
     />
   );
 
+  if (isEntityTypeFetching) {
+    return (
+      <Row center="xs">
+        <Loading size="large" />
+      </Row>
+    );
+  }
+
   return (
     <Layer isOpen={isOpen}>
       <Pane
@@ -253,44 +261,38 @@ export const QueryBuilderModal = ({
             {queryStr}
           </div>
 
-          {isEntityTypeFetching ? (
-            <Row center="xs">
-              <Loading size="large" />
-            </Row>
-          ) : (
-            <StripesOverlayWrapper>
-              <RepeatableFields
-                source={source}
-                setSource={handleSetSource}
-                columns={entityType?.columns}
-              />
-              <TestQuery
-                queryId={queryId}
-                testQuery={testQuery}
-                forcedVisibleValues={forcedVisibleValues}
-                isTestQueryLoading={isTestQueryLoading}
-                fqlQuery={fqlQuery}
-                recordColumns={recordColumns}
-                onSetDefaultVisibleColumns={onSetDefaultVisibleColumns}
-                testQueryDataSource={testQueryDataSource}
-                entityTypeDataSource={entityTypeDataSource}
-                queryDetailsDataSource={queryDetailsDataSource}
-                isQueryFilled={isQueryFilled}
-                onQueryRetrieved={handleQueryRetrieved}
-                entityTypeId={entityType?.id}
-                onQueryExecutionFail={onQueryExecutionFail}
-                onQueryExecutionSuccess={onQueryExecutionSuccess}
-                isPreviewLoading={isPreviewLoading}
-                setIsPreviewLoading={setIsPreviewLoading}
-                isTestQueryInProgress={isTestQueryInProgress}
-                setIsTestQueryInProgress={setIsTestQueryInProgress}
-                recordsLimitExceeded={recordsLimitExceeded}
-                setRecordsLimitExceeded={setRecordsLimitExceeded}
-                recordsLimit={recordsLimit}
-                additionalControls={additionalControls}
-              />
-            </StripesOverlayWrapper>
-          )}
+          <StripesOverlayWrapper>
+            <RepeatableFields
+              source={source}
+              setSource={handleSetSource}
+              columns={entityType?.columns}
+            />
+            <TestQuery
+              queryId={queryId}
+              testQuery={testQuery}
+              forcedVisibleValues={forcedVisibleValues}
+              isTestQueryLoading={isTestQueryLoading}
+              fqlQuery={fqlQuery}
+              recordColumns={recordColumns}
+              onSetDefaultVisibleColumns={onSetDefaultVisibleColumns}
+              testQueryDataSource={testQueryDataSource}
+              entityTypeDataSource={entityTypeDataSource}
+              queryDetailsDataSource={queryDetailsDataSource}
+              isQueryFilled={isQueryFilled}
+              onQueryRetrieved={handleQueryRetrieved}
+              entityTypeId={entityType?.id}
+              onQueryExecutionFail={onQueryExecutionFail}
+              onQueryExecutionSuccess={onQueryExecutionSuccess}
+              isPreviewLoading={isPreviewLoading}
+              setIsPreviewLoading={setIsPreviewLoading}
+              isTestQueryInProgress={isTestQueryInProgress}
+              setIsTestQueryInProgress={setIsTestQueryInProgress}
+              recordsLimitExceeded={recordsLimitExceeded}
+              setRecordsLimitExceeded={setRecordsLimitExceeded}
+              recordsLimit={recordsLimit}
+              additionalControls={additionalControls}
+            />
+          </StripesOverlayWrapper>
         </Layout>
       </Pane>
     </Layer>
