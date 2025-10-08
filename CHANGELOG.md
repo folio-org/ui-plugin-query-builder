@@ -13,6 +13,7 @@
 * [UIPQB-234](https://folio-org.atlassian.net/browse/UIPQB-234) Fix displaying NaN instead of 1K+ localized numbers in Query plugin for some session locales
 * [UIPQB-246](https://folio-org.atlassian.net/browse/UIPQB-246) Unify and export DynamicTable component
 * [UIPQB-244](https://folio-org.atlassian.net/browse/UIPQB-244) Sort repeatable fields alphabetically in dropdown with options on "Build query" form
+* [UIPQB-65](https://folio-org.atlassian.net/browse/UIPQB-65) Change Query build modal to full screen layer
 
 ## [2.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.3) (2025-04-18)
 

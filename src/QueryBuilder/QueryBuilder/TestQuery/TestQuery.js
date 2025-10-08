@@ -150,7 +150,9 @@ export const TestQuery = ({
 
   return (
     <>
-      {renderTestButton()}
+      <Layout className="display-flex flex-direction-column flex-align-items-start">
+        {renderTestButton()}
+      </Layout>
 
       {renderMessageBanner()}
 
@@ -176,7 +178,7 @@ export const TestQuery = ({
           queryParams={{ queryId, includeContent }}
           visibleColumns={visibleColumns}
           showPagination={false}
-          height={200}
+          autosize
           isPreviewLoading={isPreviewLoading}
         />
       )}

@@ -4,10 +4,22 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import Intl from '../../../test/jest/__mock__/intlProvider.mock';
 import { RootContext } from '../../context/RootContext';
 import { QueryBuilder } from './QueryBuilder';
+import { entityType } from '../../../test/jest/data/entityType';
 
 jest.mock('../../hooks/useTenantTimezone', () => jest.fn(() => ({
   tenantTimezone: 'UTC',
 })));
+
+const mockEntityType = entityType;
+
+jest.mock('../../hooks/useEntityType', () => ({
+  useEntityType: () => ({ entityType: mockEntityType, isEntityTypeFetching: false, isEntityTypeLoading: false }),
+}));
+
+jest.mock('@folio/stripes/components', () => ({
+  ...jest.requireActual('@folio/stripes/components'),
+  Layer: ({ children, isOpen }) => (isOpen ? <div role="dialog">{children}</div> : null),
+}));
 
 const queryClient = new QueryClient();
 

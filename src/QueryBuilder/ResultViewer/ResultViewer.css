@@ -25,3 +25,8 @@
     font-size: 1rem;
   }
 }
+
+.ResultViewerRowWrapper {
+  flex-grow: 1;
+  min-height: 200px;
+}
