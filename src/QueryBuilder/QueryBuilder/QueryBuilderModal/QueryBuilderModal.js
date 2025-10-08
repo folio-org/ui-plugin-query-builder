@@ -231,14 +231,6 @@ export const QueryBuilderModal = ({
     />
   );
 
-  if (isEntityTypeFetching) {
-    return (
-      <Row center="xs">
-        <Loading size="large" />
-      </Row>
-    );
-  }
-
   return (
     <Layer isOpen={isOpen}>
       <Pane
@@ -248,52 +240,58 @@ export const QueryBuilderModal = ({
         footer={renderFooter()}
         onClose={handleCloseModal}
       >
-        <Layout className="display-flex flex-direction-column" style={{ minHeight: '100%' }}>
-          <Headline size="medium" margin="small" tag="h3">
-            <FormattedMessage id="ui-plugin-query-builder.modal.entityType" />
-            {' '}
-            <span className={css.regularFont}>{entityTypeLabel}</span>
-          </Headline>
-          <Headline size="medium" margin="none" tag="h3">
-            <FormattedMessage id="ui-plugin-query-builder.modal.query" />
-          </Headline>
-          <div className={css.queryArea}>
-            {queryStr}
-          </div>
+        {isEntityTypeFetching ? (
+          <Row center="xs">
+            <Loading size="large" />
+          </Row>
+        ) : (
+          <Layout className="display-flex flex-direction-column" style={{ minHeight: '100%' }}>
+            <Headline size="medium" margin="small" tag="h3">
+              <FormattedMessage id="ui-plugin-query-builder.modal.entityType" />
+              {' '}
+              <span className={css.regularFont}>{entityTypeLabel}</span>
+            </Headline>
+            <Headline size="medium" margin="none" tag="h3">
+              <FormattedMessage id="ui-plugin-query-builder.modal.query" />
+            </Headline>
+            <div className={css.queryArea}>
+              {queryStr}
+            </div>
 
-          <StripesOverlayWrapper>
-            <RepeatableFields
-              source={source}
-              setSource={handleSetSource}
-              columns={entityType?.columns}
-            />
-            <TestQuery
-              queryId={queryId}
-              testQuery={testQuery}
-              forcedVisibleValues={forcedVisibleValues}
-              isTestQueryLoading={isTestQueryLoading}
-              fqlQuery={fqlQuery}
-              recordColumns={recordColumns}
-              onSetDefaultVisibleColumns={onSetDefaultVisibleColumns}
-              testQueryDataSource={testQueryDataSource}
-              entityTypeDataSource={entityTypeDataSource}
-              queryDetailsDataSource={queryDetailsDataSource}
-              isQueryFilled={isQueryFilled}
-              onQueryRetrieved={handleQueryRetrieved}
-              entityTypeId={entityType?.id}
-              onQueryExecutionFail={onQueryExecutionFail}
-              onQueryExecutionSuccess={onQueryExecutionSuccess}
-              isPreviewLoading={isPreviewLoading}
-              setIsPreviewLoading={setIsPreviewLoading}
-              isTestQueryInProgress={isTestQueryInProgress}
-              setIsTestQueryInProgress={setIsTestQueryInProgress}
-              recordsLimitExceeded={recordsLimitExceeded}
-              setRecordsLimitExceeded={setRecordsLimitExceeded}
-              recordsLimit={recordsLimit}
-              additionalControls={additionalControls}
-            />
-          </StripesOverlayWrapper>
-        </Layout>
+            <StripesOverlayWrapper>
+              <RepeatableFields
+                source={source}
+                setSource={handleSetSource}
+                columns={entityType?.columns}
+              />
+              <TestQuery
+                queryId={queryId}
+                testQuery={testQuery}
+                forcedVisibleValues={forcedVisibleValues}
+                isTestQueryLoading={isTestQueryLoading}
+                fqlQuery={fqlQuery}
+                recordColumns={recordColumns}
+                onSetDefaultVisibleColumns={onSetDefaultVisibleColumns}
+                testQueryDataSource={testQueryDataSource}
+                entityTypeDataSource={entityTypeDataSource}
+                queryDetailsDataSource={queryDetailsDataSource}
+                isQueryFilled={isQueryFilled}
+                onQueryRetrieved={handleQueryRetrieved}
+                entityTypeId={entityType?.id}
+                onQueryExecutionFail={onQueryExecutionFail}
+                onQueryExecutionSuccess={onQueryExecutionSuccess}
+                isPreviewLoading={isPreviewLoading}
+                setIsPreviewLoading={setIsPreviewLoading}
+                isTestQueryInProgress={isTestQueryInProgress}
+                setIsTestQueryInProgress={setIsTestQueryInProgress}
+                recordsLimitExceeded={recordsLimitExceeded}
+                setRecordsLimitExceeded={setRecordsLimitExceeded}
+                recordsLimit={recordsLimit}
+                additionalControls={additionalControls}
+              />
+            </StripesOverlayWrapper>
+          </Layout>
+        )}
       </Pane>
     </Layer>
   );
