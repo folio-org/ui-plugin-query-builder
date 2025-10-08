@@ -21,6 +21,12 @@ jest.mock('@folio/stripes/components', () => ({
   Loading: () => <div>LOADING</div>,
 }));
 
+const mockEntityType = entityType;
+
+jest.mock('../../../hooks/useEntityType', () => ({
+  useEntityType: () => ({ entityType: mockEntityType, isEntityTypeFetching: false, isEntityTypeLoading: false }),
+}));
+
 jest.mock('../../../hooks/useTenantTimezone', () => jest.fn(() => ({
   tenantTimezone: 'UTC',
 })));
