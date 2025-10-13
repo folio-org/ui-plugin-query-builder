@@ -39,5 +39,7 @@
     "error.needsRefresh": "The record type used by this list has changed; please refresh the list, and if needed, modify the query.",
     "error.invalidEntity": "The record type used by this list is currently unable to be used; please verify its definition.",
     "viewer.accordion.title.query.showMore": "Show more",
-    "viewer.accordion.title.query.showLess": "Show less"
+    "viewer.accordion.title.query.showLess": "Show less",
+    "control.search.button.organization": "Organization look-up",
+    "control.search.button.donor_organization": "Donor organization look-up"
 }

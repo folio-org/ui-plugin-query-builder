@@ -70,7 +70,7 @@ function getOrganizationPluginButton(source, multi, onChange, value, index) {
         selectVendor={(e) => onChange(e.id, index, COLUMN_KEYS.VALUE)}
         {...extraProps}
       >
-        <FormattedMessage id="stripes-acq-components.filter.organization.lookupNoSupport" />
+        <FormattedMessage id={`ui-plugin-query-builder.control.search.button.${source.name}`} />
       </Pluggable>
     ),
     multiSelectionEmptyMessage: (

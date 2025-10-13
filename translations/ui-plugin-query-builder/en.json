@@ -30,6 +30,8 @@
   "control.operator.placeholder": "Select operator",
   "control.dropdown.showColumns": "Show columns",
   "control.search.placeholder": "Search fields",
+  "control.search.button.organization": "Organization look-up",
+  "control.search.button.donor_organization": "Donor organization look-up",
 
   "viewer.accordion.title.query": "Query: {query}",
   "viewer.accordion.title.query.showMore": "Show more",
