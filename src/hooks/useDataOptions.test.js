@@ -100,7 +100,7 @@ describe('useDataOptions', () => {
       const getOrganizations = jest.fn(() => Promise.resolve([]));
       const { result } = renderHook(() => useDataOptions({ getOrganizations }));
 
-      result.current.getDataOptionsWithFetching('field', { name: ORGANIZATIONS_TYPES }, '', ['a']);
+      result.current.getDataOptionsWithFetching('field', { name: ORGANIZATIONS_TYPES[0] }, '', ['a']);
 
       expect(getOrganizations).toHaveBeenCalled();
     });
@@ -109,7 +109,7 @@ describe('useDataOptions', () => {
       const getOrganizations = jest.fn(() => fail('should not be called'));
       const { result } = renderHook(() => useDataOptions({ getOrganizations }));
 
-      result.current.getDataOptionsWithFetching('field', { name: ORGANIZATIONS_TYPES }, '', []);
+      result.current.getDataOptionsWithFetching('field', { name: ORGANIZATIONS_TYPES[0] }, '', []);
 
       expect(getOrganizations).not.toHaveBeenCalled();
     });

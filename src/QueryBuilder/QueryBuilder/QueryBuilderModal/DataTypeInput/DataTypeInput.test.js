@@ -217,7 +217,7 @@ describe('DataTypeInput', () => {
 });
 
 describe('DataTypeInput with Pluggable', () => {
-  it('should render multi select and Pluggable when operator is IN and source is ORGANIZATIONS_TYPES', async () => {
+  it('should render multi select and Pluggable when operator is IN and source is in ORGANIZATIONS_TYPES', async () => {
     const onChangeMock = jest.fn();
 
     const {
@@ -226,7 +226,7 @@ describe('DataTypeInput with Pluggable', () => {
     } = renderDataTypeInput({
       dataType: DATA_TYPES.StringType,
       operator: OPERATORS.IN,
-      source: { name: ORGANIZATIONS_TYPES },
+      source: { name: ORGANIZATIONS_TYPES[0] },
       onChange: onChangeMock,
       availableValues: ['a', 'b'],
     });
@@ -237,7 +237,7 @@ describe('DataTypeInput with Pluggable', () => {
     });
   });
 
-  it('should render single select and Pluggable when operator is EQUAL and source is ORGANIZATIONS_TYPES', async () => {
+  it('should render single select and Pluggable when operator is EQUAL and source is in ORGANIZATIONS_TYPES', async () => {
     const onChangeMock = jest.fn();
 
     const {
@@ -246,7 +246,7 @@ describe('DataTypeInput with Pluggable', () => {
     } = renderDataTypeInput({
       dataType: DATA_TYPES.StringType,
       operator: OPERATORS.EQUAL,
-      source: { name: ORGANIZATIONS_TYPES },
+      source: { name: ORGANIZATIONS_TYPES[0] },
       onChange: onChangeMock,
       availableValues: ['a', 'b'],
     });
