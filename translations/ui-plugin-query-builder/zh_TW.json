@@ -37,5 +37,6 @@
     "error.needsRefresh": "The record type used by this list has changed; please refresh the list, and if needed, modify the query.",
     "error.invalidEntity": "The record type used by this list is currently unable to be used; please verify its definition.",
     "viewer.accordion.title.query.showMore": "顯示更多",
-    "viewer.accordion.title.query.showLess": "顯示較少"
+    "viewer.accordion.title.query.showLess": "顯示較少",
+    "modal.entityType": "Record type:"
 }

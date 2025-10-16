@@ -37,5 +37,6 @@
     "error.needsRefresh": "Тип запису, який використовується цим списком, змінився; будь ласка, оновіть список.",
     "error.invalidEntity": "Тип запису, який використовується цим списком, наразі не може бути використаний; будь ласка, перевірте його визначення.",
     "viewer.accordion.title.query.showMore": "Показати більше",
-    "viewer.accordion.title.query.showLess": "Показувати менше"
+    "viewer.accordion.title.query.showLess": "Показувати менше",
+    "modal.entityType": "Record type:"
 }
