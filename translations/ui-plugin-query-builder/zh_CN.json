@@ -37,5 +37,6 @@
     "error.needsRefresh": "此列表使用的记录类型已更改；请刷新列表，如果需要，请修改查询。",
     "error.invalidEntity": "此列表使用的记录类型目前无法使用；请验证其定义。",
     "viewer.accordion.title.query.showMore": "显示更多",
-    "viewer.accordion.title.query.showLess": "显示更少"
+    "viewer.accordion.title.query.showLess": "显示更少",
+    "modal.entityType": "Record type:"
 }

@@ -41,5 +41,6 @@
     "viewer.accordion.title.query.showMore": "Show more",
     "viewer.accordion.title.query.showLess": "Show less",
     "control.search.button.organization": "Organization look-up",
-    "control.search.button.donor_organization": "Donor organization look-up"
+    "control.search.button.donor_organization": "Donor organization look-up",
+    "modal.entityType": "Record type:"
 }
