@@ -4,13 +4,18 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import Intl from '../../../../../test/jest/__mock__/intlProvider.mock';
 import '../../../../../test/jest/__mock__/resizeObserver.mock';
 import { DataTypeInput } from './DataTypeInput';
-import { DATA_TYPES, ORGANIZATIONS_TYPES } from '../../../../constants/dataTypes';
+import { DATA_TYPES } from '../../../../constants/dataTypes';
 import { OPERATORS } from '../../../../constants/operators';
 import { RootContext } from '../../../../context/RootContext';
 
 jest.mock('@folio/stripes/core', () => ({
   ...jest.requireActual('@folio/stripes/core'),
-  Pluggable: ({ children }) => <div>{children}</div>,
+  Pluggable: ({ children, initialFilters, hiddenFilters }) => (
+    <div>
+      {children}
+      <span data-testid="pluggable-props">{JSON.stringify({ initialFilters, hiddenFilters })}</span>
+    </div>
+  ),
   useOkapiKy: jest.fn().mockReturnValue({
     okapi: 'test',
   }),
@@ -216,8 +221,8 @@ describe('DataTypeInput', () => {
   }
 });
 
-describe('DataTypeInput with Pluggable', () => {
-  it('should render multi select and Pluggable when operator is IN and source is organization', async () => {
+describe('DataTypeInput with organization Pluggable', () => {
+  it('renders multi select and organization Pluggable when operator is IN and source is organization', async () => {
     const onChangeMock = jest.fn();
 
     const {
@@ -234,10 +239,11 @@ describe('DataTypeInput with Pluggable', () => {
     await waitFor(() => {
       expect(getByTestId('data-input-select-multi-stringType')).toBeVisible();
       expect(getByText(/control.search.button.organization/)).toBeVisible();
+      expect(JSON.parse(getByTestId('pluggable-props').innerHTML)).toEqual({});
     });
   });
 
-  it('should render single select and Pluggable when operator is EQUAL and source is organization', async () => {
+  it('should render single select and donor Pluggable when operator is EQUAL and source is donor_organization', async () => {
     const onChangeMock = jest.fn();
 
     const {
@@ -246,14 +252,18 @@ describe('DataTypeInput with Pluggable', () => {
     } = renderDataTypeInput({
       dataType: DATA_TYPES.StringType,
       operator: OPERATORS.EQUAL,
-      source: { name: 'organization' },
+      source: { name: 'donor_organization' },
       onChange: onChangeMock,
       availableValues: ['a', 'b'],
     });
 
     await waitFor(() => {
       expect(getByTestId('data-input-select-single-stringType')).toBeVisible();
-      expect(getByText(/control.search.button.organization/)).toBeVisible();
+      expect(getByText(/control.search.button.donor_organization/)).toBeVisible();
+      expect(JSON.parse(getByTestId('pluggable-props').innerHTML)).toEqual({
+        initialFilters: { isDonor: 'true' },
+        hiddenFilters: ['isDonor'],
+      });
     });
   });
 });
