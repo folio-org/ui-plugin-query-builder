@@ -37,5 +37,6 @@
     "error.needsRefresh": "O tipo de registro usado por esta lista foi alterado; atualize a lista e, se necessário, modifique a consulta.",
     "error.invalidEntity": "O tipo de registro usado por esta lista não pode ser usado no momento; verifique sua definição.",
     "viewer.accordion.title.query.showMore": "Mostrar mais",
-    "viewer.accordion.title.query.showLess": "Mostrar menos"
+    "viewer.accordion.title.query.showLess": "Mostrar menos",
+    "modal.entityType": "Tipo de registro:"
 }

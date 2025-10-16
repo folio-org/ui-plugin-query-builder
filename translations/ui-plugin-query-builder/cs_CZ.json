@@ -37,5 +37,6 @@
     "error.needsRefresh": "Typ záznamu používaný v tomto seznamu se změnil; obnovte prosím seznam, případně upravte dotaz.",
     "error.invalidEntity": "Typ záznamu, který tento seznam používá, nelze v současné době použít; ověřte prosím jeho definici.",
     "viewer.accordion.title.query.showMore": "Zobrazit více",
-    "viewer.accordion.title.query.showLess": "Zobrazit méně"
+    "viewer.accordion.title.query.showLess": "Zobrazit méně",
+    "modal.entityType": "Record type:"
 }
