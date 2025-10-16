@@ -217,7 +217,7 @@ describe('DataTypeInput', () => {
 });
 
 describe('DataTypeInput with Pluggable', () => {
-  it('should render multi select and Pluggable when operator is IN and source is in ORGANIZATIONS_TYPES', async () => {
+  it('should render multi select and Pluggable when operator is IN and source is organization', async () => {
     const onChangeMock = jest.fn();
 
     const {
@@ -226,18 +226,18 @@ describe('DataTypeInput with Pluggable', () => {
     } = renderDataTypeInput({
       dataType: DATA_TYPES.StringType,
       operator: OPERATORS.IN,
-      source: { name: ORGANIZATIONS_TYPES[0] },
+      source: { name: 'organization' },
       onChange: onChangeMock,
       availableValues: ['a', 'b'],
     });
 
     await waitFor(() => {
       expect(getByTestId('data-input-select-multi-stringType')).toBeVisible();
-      expect(getByText(/filter.organization.lookupNoSupport/)).toBeVisible();
+      expect(getByText(/control.search.button.organization/)).toBeVisible();
     });
   });
 
-  it('should render single select and Pluggable when operator is EQUAL and source is in ORGANIZATIONS_TYPES', async () => {
+  it('should render single select and Pluggable when operator is EQUAL and source is organization', async () => {
     const onChangeMock = jest.fn();
 
     const {
@@ -246,14 +246,14 @@ describe('DataTypeInput with Pluggable', () => {
     } = renderDataTypeInput({
       dataType: DATA_TYPES.StringType,
       operator: OPERATORS.EQUAL,
-      source: { name: ORGANIZATIONS_TYPES[0] },
+      source: { name: 'organization' },
       onChange: onChangeMock,
       availableValues: ['a', 'b'],
     });
 
     await waitFor(() => {
       expect(getByTestId('data-input-select-single-stringType')).toBeVisible();
-      expect(getByText(/filter.organization.lookupNoSupport/)).toBeVisible();
+      expect(getByText(/control.search.button.organization/)).toBeVisible();
     });
   });
 });

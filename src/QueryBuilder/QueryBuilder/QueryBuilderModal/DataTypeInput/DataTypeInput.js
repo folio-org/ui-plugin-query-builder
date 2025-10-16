@@ -53,7 +53,7 @@ function getOrganizationPluginButton(source, multi, onChange, value, index) {
     extraProps = {
       ...extraProps,
       initialFilters: { isDonor: 'true' },
-      hideFilters: ['isDonor'],
+      hiddenFilters: ['isDonor'],
     };
   }
 
