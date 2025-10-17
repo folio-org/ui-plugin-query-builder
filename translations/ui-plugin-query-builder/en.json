@@ -25,10 +25,13 @@
   "control.info.separateValues": "Separate multiple values with a comma.",
   "control.selection.placeholder": "Select field",
   "control.value.placeholder": "Select value",
-  "control.value.placeholder.organizations": "Use the “Organization look-up” below to add values",
+  "control.value.placeholder.organization": "Use the “Organization look-up” below to add values",
+  "control.value.placeholder.donor_organization": "Use the “Donor organization look-up” below to add values",
   "control.operator.placeholder": "Select operator",
   "control.dropdown.showColumns": "Show columns",
   "control.search.placeholder": "Search fields",
+  "control.search.button.organization": "Organization look-up",
+  "control.search.button.donor_organization": "Donor organization look-up",
 
   "viewer.accordion.title.query": "Query: {query}",
   "viewer.accordion.title.query.showMore": "Show more",
@@ -48,5 +51,6 @@
 
   "userFriendlyQuery.boolean.$and": "{query1} and {query2}",
 
-  "noOptionsAvailable": "No matches! Use the “Organization look-up” below to add organizations"
+  "noOptionsAvailable.organization": "No matches! Use the “Organization look-up” below to add organizations",
+  "noOptionsAvailable.donor_organization": "No matches! Use the “Donor organization look-up” below to add organizations"
 }

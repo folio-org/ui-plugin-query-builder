@@ -62,7 +62,7 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
     (fieldName, source, searchValue, usedIds) => {
       if (!source) {
         return getDataOptions(fieldName);
-      } else if (source.name === ORGANIZATIONS_TYPES) {
+      } else if (ORGANIZATIONS_TYPES.includes(source.name)) {
         return getDataOptions(
           fieldName,
           true,

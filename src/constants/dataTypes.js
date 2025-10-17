@@ -14,4 +14,5 @@ export const DATA_TYPES = {
   JsonbArrayType: 'jsonbArrayType',
 };
 
-export const ORGANIZATIONS_TYPES = 'organization';
+export const ORGANIZATIONS_TYPES = ['organization', 'donor_organization'];
+export const ORGANIZATIONS_TYPE_DONOR = 'donor_organization';

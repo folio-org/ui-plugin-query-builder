@@ -34,17 +34,17 @@ export const SelectionContainer = ({
     }
   }
 
-  const getSelectOptionsWithPlaceholder = (options, isOrganizations) => {
+  const getSelectOptionsWithPlaceholder = (options, sourceName) => {
     return isMulti ? options : [
       { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
-      ...(isOrganizations ? [{ value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder.organizations' }), disabled: true }] : []),
+      ...(ORGANIZATIONS_TYPES.includes(sourceName) ? [{ value: '', label: intl.formatMessage({ id: `ui-plugin-query-builder.control.value.placeholder.${sourceName}` }), disabled: true }] : []),
       ...options,
     ];
   };
 
-  const getOptions = (staticValues, sourceValues, isOrganizations) => {
-    if (staticValues) return getSelectOptionsWithPlaceholder(staticValues, isOrganizations);
-    if (sourceValues) return getSelectOptionsWithPlaceholder(sourceValues, isOrganizations);
+  const getOptions = (staticValues, sourceValues, sourceName) => {
+    if (staticValues) return getSelectOptionsWithPlaceholder(staticValues, sourceName);
+    if (sourceValues) return getSelectOptionsWithPlaceholder(sourceValues, sourceName);
 
     return [];
   };
@@ -72,7 +72,7 @@ export const SelectionContainer = ({
 
   const dataOptions = useMemo(() => {
     if (Array.isArray(optionsPromise)) {
-      return getOptions(availableValues, optionsPromise, source?.name === ORGANIZATIONS_TYPES);
+      return getOptions(availableValues, optionsPromise, source?.name);
     }
 
     return [];
