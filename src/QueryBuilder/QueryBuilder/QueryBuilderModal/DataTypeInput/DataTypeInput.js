@@ -65,7 +65,7 @@ function getOrganizationPluginButton(source, multi, onChange, value, index) {
         aria-haspopup="true"
         dataKey="organization"
         searchButtonStyle="link"
-        searchLabel={`ui-plugin-query-builder.control.search.button.${source.name}`}
+        searchLabel={<FormattedMessage id={`ui-plugin-query-builder.control.search.button.${source.name}`} />}
         selectVendor={(e) => onChange(e.id, index, COLUMN_KEYS.VALUE)}
         {...extraProps}
       >
