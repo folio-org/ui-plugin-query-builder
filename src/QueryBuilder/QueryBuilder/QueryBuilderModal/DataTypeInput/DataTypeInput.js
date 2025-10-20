@@ -32,7 +32,6 @@ function getOrganizationPluginButton(source, multi, onChange, value, index) {
   if (multi) {
     extraProps = {
       ...extraProps,
-      searchLabel: <FormattedMessage id="stripes-acq-components.filter.organization.lookup" />,
       selectVendor: (selectedItems) => {
         const normalizedItems = selectedItems.map((item) => ({
           value: item.id,
@@ -66,7 +65,7 @@ function getOrganizationPluginButton(source, multi, onChange, value, index) {
         aria-haspopup="true"
         dataKey="organization"
         searchButtonStyle="link"
-        searchLabel={<FormattedMessage id="stripes-acq-components.filter.organization.lookup" />}
+        searchLabel={`ui-plugin-query-builder.control.search.button.${source.name}`}
         selectVendor={(e) => onChange(e.id, index, COLUMN_KEYS.VALUE)}
         {...extraProps}
       >
@@ -186,7 +185,7 @@ export const DataTypeInput = ({
     );
   };
 
-  const stringTypeControls = () => {
+  const stringTypeControls = (testIdPostfix = 'stringType') => {
     const isInRelatedWithOptions = isInRelatedOperator && hasSourceOrValues;
     const isEqualRelatedWithOptions = isEqualRelatedOperator && hasSourceOrValues;
 
@@ -200,7 +199,7 @@ export const DataTypeInput = ({
 
     if (isInRelatedWithOptions) {
       return (
-        <div className={className} data-testid="data-input-select-multi-stringType">
+        <div className={className} data-testid={`data-input-select-multi-${testIdPostfix}`}>
           {multiSelectControl({ value, emptyMessage: multiSelectionEmptyMessage })}
           {organizationPluginButton}
         </div>
@@ -210,13 +209,13 @@ export const DataTypeInput = ({
     if (isEqualRelatedWithOptions) {
       return (
         <div className={className}>
-          {selectControl({ testId: 'data-input-select-single-stringType', value })}
+          {selectControl({ testId: `data-input-select-single-${testIdPostfix}`, value })}
           {organizationPluginButton}
         </div>
       );
     }
 
-    return textControl({ testId: 'data-input-text-stringType', value });
+    return textControl({ testId: `data-input-text-${testIdPostfix}`, value });
   };
 
   const numericTypeControls = () => {
@@ -251,21 +250,6 @@ export const DataTypeInput = ({
     );
   };
 
-  // Controls for ArrayType and JsonbArrayType
-  const arrayTypeControls = (testIdPostfix) => {
-    // If a source or values are provided, use select or multiSelect based on the operator
-    if (hasSourceOrValues) {
-      if (isInRelatedOperator) {
-        return multiSelectControl({ testId: `data-input-select-multi-${testIdPostfix}`, value });
-      }
-
-      return selectControl({ testId: `data-input-select-single-${testIdPostfix}`, value });
-    }
-
-    // If no source or values, use free text input for ArrayType and JsonbArrayType
-    return textControl({ testId: `data-input-text-${testIdPostfix}`, value });
-  };
-
   const enumTypeControls = () => {
     return isInRelatedOperator
       ? multiSelectControl({ testId: 'data-input-select-multi-arrayType', value })
@@ -288,7 +272,9 @@ export const DataTypeInput = ({
 
   switch (dataType) {
     case DATA_TYPES.StringType:
-      return stringTypeControls();
+    case DATA_TYPES.ArrayType:
+    case DATA_TYPES.JsonbArrayType:
+      return stringTypeControls(dataType);
 
     case DATA_TYPES.IntegerType:
     case DATA_TYPES.NumberType:
@@ -311,12 +297,6 @@ export const DataTypeInput = ({
 
     case DATA_TYPES.OpenUUIDType:
       return openUUIDTypeControls();
-
-    case DATA_TYPES.ArrayType:
-      return arrayTypeControls('arrayType');
-
-    case DATA_TYPES.JsonbArrayType:
-      return arrayTypeControls('jsonbArrayType');
 
     case DATA_TYPES.EnumType:
       return enumTypeControls();

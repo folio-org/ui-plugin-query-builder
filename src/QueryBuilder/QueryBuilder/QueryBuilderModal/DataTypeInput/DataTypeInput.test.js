@@ -116,6 +116,13 @@ const arr = [
   },
   {
     dataType: DATA_TYPES.ArrayType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-select-single-arrayType',
+    onChange: jest.fn(),
+    source: mockSource,
+  },
+  {
+    dataType: DATA_TYPES.ArrayType,
     operator: OPERATORS.CONTAINS,
     componentTestId: 'data-input-text-arrayType',
     onChange: jest.fn(),
@@ -123,9 +130,8 @@ const arr = [
   {
     dataType: DATA_TYPES.ArrayType,
     operator: OPERATORS.STARTS_WITH,
-    componentTestId: 'data-input-select-single-arrayType',
+    componentTestId: 'data-input-text-arrayType',
     onChange: jest.fn(),
-    source: mockSource,
   },
   {
     dataType: DATA_TYPES.JsonbArrayType,
@@ -229,7 +235,7 @@ describe('DataTypeInput with organization Pluggable', () => {
       getByTestId,
       getByText,
     } = renderDataTypeInput({
-      dataType: DATA_TYPES.StringType,
+      dataType: DATA_TYPES.ArrayType,
       operator: OPERATORS.IN,
       source: { name: 'organization' },
       onChange: onChangeMock,
@@ -237,7 +243,7 @@ describe('DataTypeInput with organization Pluggable', () => {
     });
 
     await waitFor(() => {
-      expect(getByTestId('data-input-select-multi-stringType')).toBeVisible();
+      expect(getByTestId('data-input-select-multi-arrayType')).toBeVisible();
       expect(getByText(/control.search.button.organization/)).toBeVisible();
       expect(JSON.parse(getByTestId('pluggable-props').innerHTML)).toEqual({});
     });
