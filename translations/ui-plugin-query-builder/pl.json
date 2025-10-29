@@ -30,13 +30,17 @@
     "ariaLabel.columnFilter": "Column filter input",
     "error.occurredMessage": "Wystąpił błąd.",
     "warning.deletedField": "{value} w Twoim zapytaniu jest niedostępna. Proszę poprawić swoje zapytanie.",
-    "noOptionsAvailable": "Brak wyników! Spróbuj znaleźć organizację",
     "viewer.accordion.title.query": "Zapytanie: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} i {query2}",
-    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add values",
-    "error.needsRefresh": "The record type used by this list has changed; please refresh the list, and if needed, modify the query.",
+    "error.needsRefresh": "Typ rekordu używany na tej liście uległ zmianie. Odśwież listę i w razie potrzeby zmodyfikuj zapytanie.",
     "error.invalidEntity": "The record type used by this list is currently unable to be used; please verify its definition.",
     "viewer.accordion.title.query.showMore": "Pokaż więcej",
     "viewer.accordion.title.query.showLess": "Pokaż mniej",
-    "modal.entityType": "Record type:"
+    "modal.entityType": "Record type:",
+    "control.value.placeholder.organization": "Use the “Organization look-up” below to add values",
+    "control.value.placeholder.donor_organization": "Use the “Donor organization look-up” below to add values",
+    "control.search.button.organization": "Znajdź organizację",
+    "control.search.button.donor_organization": "Donor organization look-up",
+    "noOptionsAvailable.organization": "No matches! Use the “Organization look-up” below to add organizations",
+    "noOptionsAvailable.donor_organization": "No matches! Use the “Donor organization look-up” below to add organizations"
 }
