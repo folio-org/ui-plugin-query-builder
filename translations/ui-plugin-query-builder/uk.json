@@ -30,13 +30,17 @@
     "ariaLabel.columnFilter": "Введення фільтра колонки",
     "error.occurredMessage": "Сталася помилка.",
     "warning.deletedField": "{value} у вашому запиті більше не доступно. Будь ласка, перегляньте свій запит.",
-    "noOptionsAvailable": "Немає відповідностей! Спробуйте пошук організації",
     "viewer.accordion.title.query": "Запит: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} і {query2}",
-    "control.value.placeholder.organizations": "Скористайтеся функцією \"Пошук організацій\" нижче, щоб додати організації",
     "error.needsRefresh": "Тип запису, який використовується цим списком, змінився; будь ласка, оновіть список.",
     "error.invalidEntity": "Тип запису, який використовується цим списком, наразі не може бути використаний; будь ласка, перевірте його визначення.",
     "viewer.accordion.title.query.showMore": "Показати більше",
     "viewer.accordion.title.query.showLess": "Показувати менше",
-    "modal.entityType": "Record type:"
+    "modal.entityType": "Record type:",
+    "control.value.placeholder.organization": "Use the “Organization look-up” below to add values",
+    "control.value.placeholder.donor_organization": "Use the “Donor organization look-up” below to add values",
+    "control.search.button.organization": "Пошук організації",
+    "control.search.button.donor_organization": "Пошук організації-дарувальника",
+    "noOptionsAvailable.organization": "No matches! Use the “Organization look-up” below to add organizations",
+    "noOptionsAvailable.donor_organization": "No matches! Use the “Donor organization look-up” below to add organizations"
 }

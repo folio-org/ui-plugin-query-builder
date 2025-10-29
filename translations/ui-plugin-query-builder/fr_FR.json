@@ -30,13 +30,17 @@
     "ariaLabel.columnFilter": "Column filter input",
     "error.occurredMessage": "Une erreur s'est produite.",
     "warning.deletedField": "{value} in your query is no longer available. Please revise your query.",
-    "noOptionsAvailable": "No matches! Use the “Organization look-up” below to add organizations",
     "viewer.accordion.title.query": "Query: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} and {query2}",
-    "control.value.placeholder.organizations": "Use the “Organization look-up” below to add values",
     "error.needsRefresh": "The record type used by this list has changed; please refresh the list, and if needed, modify the query.",
     "error.invalidEntity": "The record type used by this list is currently unable to be used; please verify its definition.",
     "viewer.accordion.title.query.showMore": "Afficher plus",
     "viewer.accordion.title.query.showLess": "Afficher moins",
-    "modal.entityType": "Record type:"
+    "modal.entityType": "Record type:",
+    "control.value.placeholder.organization": "Use the “Organization look-up” below to add values",
+    "control.value.placeholder.donor_organization": "Use the “Donor organization look-up” below to add values",
+    "control.search.button.organization": "Recherche d'organisation",
+    "control.search.button.donor_organization": "Donor organization look-up",
+    "noOptionsAvailable.organization": "No matches! Use the “Organization look-up” below to add organizations",
+    "noOptionsAvailable.donor_organization": "No matches! Use the “Donor organization look-up” below to add organizations"
 }
