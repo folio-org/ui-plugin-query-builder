@@ -22,7 +22,7 @@ export const TestQuery = ({
   onQueryExecutionFail,
   onQueryRetrieved,
   recordColumns = [],
-  onSetDefaultVisibleColumns = () => {},
+  onSetDefaultVisibleColumns = () => { },
   fqlQuery,
   entityTypeId,
   isPreviewLoading,
@@ -188,7 +188,7 @@ export const TestQuery = ({
 
 TestQuery.propTypes = {
   queryId: PropTypes.string,
-  fqlQuery: PropTypes.string,
+  fqlQuery: PropTypes.object,
   entityTypeDataSource: PropTypes.func,
   queryDetailsDataSource: PropTypes.func,
   entityTypeId: PropTypes.string,

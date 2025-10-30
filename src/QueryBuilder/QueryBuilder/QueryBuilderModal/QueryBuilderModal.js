@@ -232,13 +232,14 @@ export const QueryBuilderModal = ({
   );
 
   return (
-    <Layer isOpen={isOpen}>
+    <Layer isOpen={isOpen} contentLabel={intl.formatMessage({ id: 'ui-plugin-query-builder.trigger' })}>
       <Pane
         dismissible
         paneSub={paneSub}
         paneTitle={<FormattedMessage id="ui-plugin-query-builder.trigger" />}
         footer={renderFooter()}
         onClose={handleCloseModal}
+        defaultWidth="fill"
       >
         {isEntityTypeFetching ? (
           <Row center="xs">
