@@ -30,13 +30,17 @@
     "ariaLabel.columnFilter": "列筛选输入",
     "error.occurredMessage": "发生错误。",
     "warning.deletedField": "查询中的{value}不可用。请修改查询。",
-    "noOptionsAvailable": "没有匹配！使用下方的“组织查找”添加组织",
     "viewer.accordion.title.query": "查询 :  {query}",
     "userFriendlyQuery.boolean.$and": "{query1}和{query2}",
-    "control.value.placeholder.organizations": "使用下面的“组织查找”添加值",
     "error.needsRefresh": "此列表使用的记录类型已更改；请刷新列表，如果需要，请修改查询。",
     "error.invalidEntity": "此列表使用的记录类型目前无法使用；请验证其定义。",
     "viewer.accordion.title.query.showMore": "显示更多",
     "viewer.accordion.title.query.showLess": "显示更少",
-    "modal.entityType": "Record type:"
+    "modal.entityType": "Record type:",
+    "control.value.placeholder.organization": "使用下面的“组织查找”添加值",
+    "control.value.placeholder.donor_organization": "Use the “Donor organization look-up” below to add values",
+    "control.search.button.organization": "组织查询",
+    "control.search.button.donor_organization": "Donor organization look-up",
+    "noOptionsAvailable.organization": "没有匹配！使用下方的“组织查找”添加组织",
+    "noOptionsAvailable.donor_organization": "No matches! Use the “Donor organization look-up” below to add organizations"
 }

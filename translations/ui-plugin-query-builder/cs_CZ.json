@@ -30,13 +30,17 @@
     "ariaLabel.columnFilter": "Vstup filtru sloupců",
     "error.occurredMessage": "Došlo k chybě.",
     "warning.deletedField": "{value} ve vašem dotazu již není nadále k dispozici. Upravte svůj dotaz.",
-    "noOptionsAvailable": "Žádné shody! Pro přidání organizací použijte níže uvedený \"Vyhledávač organizací\"",
     "viewer.accordion.title.query": "Dotaz: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} a {query2}",
-    "control.value.placeholder.organizations": "Pro přidání organizací použijte níže uvedený \"Vyhledávač organizací\"",
     "error.needsRefresh": "Typ záznamu používaný v tomto seznamu se změnil; obnovte prosím seznam, případně upravte dotaz.",
     "error.invalidEntity": "Typ záznamu, který tento seznam používá, nelze v současné době použít; ověřte prosím jeho definici.",
     "viewer.accordion.title.query.showMore": "Zobrazit více",
     "viewer.accordion.title.query.showLess": "Zobrazit méně",
-    "modal.entityType": "Record type:"
+    "modal.entityType": "Record type:",
+    "control.value.placeholder.organization": "Use the “Organization look-up” below to add values",
+    "control.value.placeholder.donor_organization": "Use the “Donor organization look-up” below to add values",
+    "control.search.button.organization": "Vyhledat organizace",
+    "control.search.button.donor_organization": "Donor organization look-up",
+    "noOptionsAvailable.organization": "Žádné shody! Pro přidání organizací použijte níže uvedený \"Vyhledávač organizací\"",
+    "noOptionsAvailable.donor_organization": "No matches! Use the “Donor organization look-up” below to add organizations"
 }

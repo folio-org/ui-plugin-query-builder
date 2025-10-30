@@ -30,13 +30,17 @@
     "ariaLabel.columnFilter": "Invoer kolomfilter",
     "error.occurredMessage": "Er heeft zich een fout voorgedaan.",
     "warning.deletedField": "{value} in uw zoekopdracht is niet beschikbaar. Herzie uw zoekopdracht. ",
-    "noOptionsAvailable": "Geen overeenkomsten! Probeer Organisatie opzoeken",
     "viewer.accordion.title.query": "Query: {query}",
     "userFriendlyQuery.boolean.$and": "{query1} en {query2}",
-    "control.value.placeholder.organizations": "Gebruik de \"Organisatie opzoeken\" hieronder om waarden toe te voegen",
     "error.needsRefresh": "Het type Record dat door deze lijst wordt gebruikt is veranderd; vernieuw de lijst.",
     "error.invalidEntity": "Het type Record dat door deze lijst wordt gebruikt, kan momenteel niet worden gebruikt; controleer de definitie ervan.",
     "viewer.accordion.title.query.showMore": "Meer tonen",
     "viewer.accordion.title.query.showLess": "Minder tonen",
-    "modal.entityType": "Record type:"
+    "modal.entityType": "Type record:",
+    "control.value.placeholder.organization": "Gebruik de \"Organisatie opzoeken\" hieronder om waarden toe te voegen",
+    "control.value.placeholder.donor_organization": "Gebruik de \"Donor Organisatie opzoeken\" hieronder om waarden toe te voegen",
+    "control.search.button.organization": "Organisatie opzoeken",
+    "control.search.button.donor_organization": "Donor Organisatie opzoeken",
+    "noOptionsAvailable.organization": "Geen overeenkomsten! Gebruik de \"Organization look-up\" hieronder om Organisaties toe te voegen",
+    "noOptionsAvailable.donor_organization": "Geen overeenkomsten! Gebruik de \"Donor organisatie opzoeken\" hieronder om organisaties toe te voegen"
 }
