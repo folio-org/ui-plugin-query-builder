@@ -1,6 +1,8 @@
 import { DynamicTable } from './DynamicTable';
 import { formatValueByDataType } from './utils';
 
+const INSTANCE_LANGUAGE_FIELDS = new Set(['instance.languages', 'instances.languages']);
+
 export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
   const defaultColumns = (entityType?.columns?.map((cell) => ({
     label: cell.labelAlias,
@@ -52,7 +54,7 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
         val,
         dataType,
         intl,
-        { isInstanceLanguages: value === 'instance.languages' },
+        { isInstanceLanguages: INSTANCE_LANGUAGE_FIELDS.has(value) },
       );
     };
 
