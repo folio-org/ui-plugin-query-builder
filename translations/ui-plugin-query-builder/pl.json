@@ -4,7 +4,7 @@
     "modal.cancel": "Anuluj",
     "modal.run": "Uruchom zapytanie",
     "modal.query": "Zapytanie",
-    "modal.test": "Test query",
+    "modal.test": "Zapytanie testowe",
     "columns.boolean": "Boolean",
     "columns.field": "Pole",
     "columns.operator": "Operator",
