@@ -30,6 +30,8 @@ describe('formatValueByDataType returns correct value', () => {
 
     [false, DATA_TYPES.StringType, ''],
     ['foo', DATA_TYPES.StringType, 'foo'],
+
+    [<div>value</div>, DATA_TYPES.BooleanType, '<div>value</div>'],
   ])('value=%j of type=%p renders to %p', (value, type, expected) => {
     const formatted = formatValueByDataType(value, type, null);
 

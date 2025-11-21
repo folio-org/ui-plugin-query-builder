@@ -23,6 +23,7 @@ import { useQueryStr } from '../QueryBuilder/helpers/query';
 import { QueryLoader } from './QueryLoader';
 
 import css from './ResultViewer.css';
+import { handleDeletedRecords } from './helpers';
 
 const AccordionHeaderLabel = ({ entityType, fqlQuery, headerRef }) => {
   const [showFull, setShowFull] = useState(false);
@@ -311,6 +312,11 @@ export const ResultViewer = ({
     }
   }, [isErrorOccurred, intl]);
 
+  const tableData = useMemo(
+    () => handleDeletedRecords(pollingMode ? lastNotEmptyContent : contentData, validVisibleColumns),
+    [pollingMode, lastNotEmptyContent, contentData, validVisibleColumns],
+  );
+
   const renderTable = () => {
     const showSpinner =
       refreshInProgress ||
@@ -327,7 +333,7 @@ export const ResultViewer = ({
             <MultiColumnList
               id="results-viewer-table"
               data-testid="results-viewer-table"
-              contentData={pollingMode ? lastNotEmptyContent : contentData}
+              contentData={tableData}
               columnMapping={columnMapping}
               formatter={formatter}
               columnWidths={columnWidths}

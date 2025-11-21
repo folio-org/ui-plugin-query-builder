@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
-import { getTableMetadata } from './helpers';
+import { getTableMetadata, handleDeletedRecords } from './helpers';
 import { formatValueByDataType } from './utils';
 
 jest.mock('./DynamicTable/DynamicTable', () => ({
@@ -19,6 +19,10 @@ jest.mock('./DynamicTable/DynamicTable', () => ({
 jest.mock('./utils', () => ({
   __esModule: true,
   formatValueByDataType: jest.fn(() => 'formatted-value'),
+}));
+
+jest.mock('react-intl', () => ({
+  FormattedMessage: ({ id }) => id,
 }));
 
 describe('getTableMetadata (pure metadata)', () => {
@@ -273,5 +277,95 @@ describe('getTableMetadata.formatter (rendered output)', () => {
     const { columnWidths } = getTableMetadata(entityType, [], intl);
 
     expect(columnWidths).toEqual({ meta: '720px' });
+  });
+});
+
+describe('handleDeletedRecords', () => {
+  it.each([[], null, undefined])('does nothing when data=%p', (data) => {
+    const result = handleDeletedRecords(data, []);
+
+    expect(result).toEqual(data);
+  });
+
+  it('does nothing without deleted records', () => {
+    const data = [
+      { id: 1, name: 'Alice' },
+      { id: 2, name: 'Bob' },
+    ];
+    const result = handleDeletedRecords(data, ['id', 'name']);
+
+    expect(result).toEqual(data);
+  });
+
+  describe('deleted row transformations', () => {
+    let testData;
+    let input;
+
+    beforeEach(() => {
+      testData = [
+        { id: 1, name: 'Alice', username: 'alice1', active: true },
+        { id: 2, _deleted: true },
+      ];
+      // clone to prevent assertions against modified sources
+      input = JSON.parse(JSON.stringify(testData));
+    });
+
+    it('only alters deleted records', () => {
+      const result = handleDeletedRecords(input, [
+        'id',
+        'name',
+        'something_else',
+      ]);
+
+      console.log(result, testData);
+
+      expect(result[0]).toEqual(testData[0]);
+      expect(result[1]).not.toEqual(testData[1]);
+    });
+
+    it('leaves existing fields in place ([ID] only)', () => {
+      const result = handleDeletedRecords(input, ['id']);
+
+      expect(result[0]).toEqual(testData[0]);
+      expect(result[1]).toEqual(testData[1]); // no empty fields to decorate
+    });
+
+    it('adds deleted field indicators: ([ID, missing, missing])', () => {
+      const result = handleDeletedRecords(input, ['id', 'name', 'something_else']);
+
+      expect(result[0]).toEqual(testData[0]);
+      expect(render(result[1].name).container).toHaveTextContent('deletedRecord.rowLabel');
+      expect(render(result[1].something_else).container).toHaveTextContent('deletedRecord.emptyField');
+    });
+
+    it('adds deleted field indicators: ([ID, missing])', () => {
+      const result = handleDeletedRecords(input, ['id', 'name']);
+
+      expect(result[0]).toEqual(testData[0]);
+      expect(render(result[1].name).container).toHaveTextContent('deletedRecord.rowLabel');
+    });
+
+    it('adds deleted field indicators: ([missing])', () => {
+      const result = handleDeletedRecords(input, ['name']);
+
+      expect(result[0]).toEqual(testData[0]);
+      expect(render(result[1].name).container).toHaveTextContent('deletedRecord.rowLabel');
+    });
+
+    it('adds deleted field indicators: ([missing, missing])', () => {
+      const result = handleDeletedRecords(input, ['name', 'something_else']);
+
+      expect(result[0]).toEqual(testData[0]);
+      expect(render(result[1].name).container).toHaveTextContent('deletedRecord.rowLabel');
+      expect(render(result[1].something_else).container).toHaveTextContent('deletedRecord.emptyField');
+    });
+
+    it('adds deleted field indicators: ([missing, ID, missing])', () => {
+      const result = handleDeletedRecords(input, ['name', 'id', 'something_else']);
+
+      expect(result[0]).toEqual(testData[0]);
+      expect(render(result[1].name).container).toHaveTextContent('deletedRecord.rowLabel');
+      expect(render(result[1].something_else).container).toHaveTextContent('deletedRecord.emptyField');
+    });
   });
 });
