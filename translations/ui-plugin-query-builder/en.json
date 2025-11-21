@@ -37,6 +37,11 @@
   "viewer.accordion.title.query.showMore": "Show more",
   "viewer.accordion.title.query.showLess": "Show less",
   "viewer.retrieving": "Retrieving...",
+
+  "viewer.deletedRecord.emptyField": "—",
+  "viewer.deletedRecord.rowLabel": "Deleted",
+  "viewer.deletedRecord.tooltip": "This record has been deleted; refresh the list to remove it from the results.",
+
   "result.inProgress": "Query in progress",
   "result.emptyMessage": "The list contains no items",
 

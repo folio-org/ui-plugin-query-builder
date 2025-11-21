@@ -1,3 +1,4 @@
+import React from 'react';
 import { FormattedMessage, FormattedDate } from 'react-intl';
 
 import { formattedLanguageName } from '@folio/stripes/components';
@@ -7,6 +8,11 @@ import { DATA_TYPES } from '../../constants/dataTypes';
 export const formatValueByDataType = (value, dataType, intl, additionalParams = {}) => {
   if (value === undefined || value === null) {
     return '';
+  }
+
+  // some values may already be formatted and show as this (e.g. deleted records placeholders)
+  if (React.isValidElement(value)) {
+    return value;
   }
 
   switch (dataType) {

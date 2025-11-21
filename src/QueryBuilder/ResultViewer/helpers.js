@@ -1,3 +1,5 @@
+import { Icon, Tooltip } from '@folio/stripes/components';
+import { FormattedMessage } from 'react-intl';
 import { DynamicTable } from './DynamicTable';
 import { formatValueByDataType } from './utils';
 
@@ -69,3 +71,45 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
     columnWidths,
   };
 };
+
+export function handleDeletedRecords(data, columns) {
+  if (!data) {
+    return data;
+  }
+
+  return data.map((row, i) => {
+    if (row._deleted !== true) {
+      return row;
+    }
+
+    // must iterate through columns to get the first non-filled column as we
+    // want to add a special "Deleted" marker only once, and some columns (IDs)
+    // will still exist even on deleted records
+    let firstEmptyColumnMarked = false;
+
+    for (const col of columns) {
+      if (!(col in row) && !firstEmptyColumnMarked) {
+        row[col] = (
+          <div>
+            <FormattedMessage id="ui-plugin-query-builder.viewer.deletedRecord.rowLabel" />
+            &nbsp;
+            <Tooltip
+              id={`query-builder-deleted-record-tooltip-${i}`}
+              text={<FormattedMessage id="ui-plugin-query-builder.viewer.deletedRecord.tooltip" />}
+            >
+              {({ ref, ariaIds }) => (
+                <Icon ref={ref} aria-labelledby={ariaIds.text} readOnly icon="info" size="small" />
+              )}
+            </Tooltip>
+          </div>
+        );
+        firstEmptyColumnMarked = true;
+      }
+      row[col] = row[col] ?? (
+        <FormattedMessage id="ui-plugin-query-builder.viewer.deletedRecord.emptyField" />
+      );
+    }
+
+    return row;
+  });
+}
