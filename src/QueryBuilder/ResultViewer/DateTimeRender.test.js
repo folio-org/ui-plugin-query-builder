@@ -14,14 +14,14 @@ describe('Date vs DateTime rendering behavior', () => {
   const rawDate = '2024-07-01';
 
   test('DateType returns raw date string (no <FormattedDate> wrapping)', () => {
-    const rendered = formatValueByDataType(rawDate, DATA_TYPES.DateType, null);
+    const rendered = formatValueByDataType(rawDate, DATA_TYPES.DateType, null, null);
 
     expect(typeof rendered).toBe('string');
     expect(rendered).toBe(rawDate);
   });
 
   test('DateTimeType returns a FormattedDate react element localized', () => {
-    const rendered = formatValueByDataType(isoDateTime, DATA_TYPES.DateTimeType, null);
+    const rendered = formatValueByDataType(isoDateTime, DATA_TYPES.DateTimeType, null, null);
 
     // Should be a react element (object) not a plain string
     expect(typeof rendered).toBe('object');
@@ -37,7 +37,7 @@ describe('Date vs DateTime rendering behavior', () => {
   });
 
   test('DateType trims ISO to date-only if unexpectedly provided full ISO', () => {
-    const rendered = formatValueByDataType(isoDateTime, DATA_TYPES.DateType, null);
+    const rendered = formatValueByDataType(isoDateTime, DATA_TYPES.DateType, null, null);
 
     expect(rendered).toBe(rawDate);
   });

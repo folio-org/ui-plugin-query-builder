@@ -1,11 +1,12 @@
 import React from 'react';
-import { FormattedMessage, FormattedDate } from 'react-intl';
+import { FormattedDate, FormattedMessage } from 'react-intl';
 
 import { formattedLanguageName } from '@folio/stripes/components';
 
 import { DATA_TYPES } from '../../constants/dataTypes';
+import { DynamicTable } from './DynamicTable';
 
-export const formatValueByDataType = (value, dataType, intl, additionalParams = {}) => {
+export const formatValueByDataType = (value, dataType, properties, intl, additionalParams = {}) => {
   if (value === undefined || value === null) {
     return '';
   }
@@ -13,6 +14,19 @@ export const formatValueByDataType = (value, dataType, intl, additionalParams = 
   // some values may already be formatted and show as this (e.g. deleted records placeholders)
   if (React.isValidElement(value)) {
     return value;
+  }
+
+  if (properties?.length) {
+    const values = JSON.parse(value ?? null);
+    const columns = properties
+      .map(prop => ({
+        id: prop.property,
+        name: prop.labelAlias,
+        dataType: prop.dataType?.dataType,
+        styles: { width: '180px', minWidth: '180px' },
+      }));
+
+    return <DynamicTable columns={columns} values={values} formatter={formatValueByDataType} />;
   }
 
   switch (dataType) {

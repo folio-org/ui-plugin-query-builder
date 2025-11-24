@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 import { DynamicTable } from './DynamicTable';
+import { formatValueByDataType } from '../utils';
 
 describe('DynamicTable component', () => {
   const columns = [
@@ -80,7 +81,7 @@ describe('DynamicTable component', () => {
   it.each([[], undefined, null])(
     'renders null value for empty/invalid input %s',
     (v) => {
-      const { container } = render(<DynamicTable columns={columns} values={v} />);
+      const { container } = render(<DynamicTable columns={columns} values={v} formatter={formatValueByDataType} />);
 
       expect(container).toBeEmptyDOMElement();
     },
@@ -106,7 +107,7 @@ describe('DynamicTable component', () => {
   it('renders table with correct properties and values', () => {
     const { getByText } = render(
       <IntlProvider locale="en" timeZone="America/New_York">
-        <DynamicTable columns={columns} values={values} />
+        <DynamicTable columns={columns} values={values} formatter={formatValueByDataType} />
       </IntlProvider>,
     );
 
