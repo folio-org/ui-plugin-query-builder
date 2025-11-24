@@ -137,4 +137,19 @@ describe('DynamicTable component', () => {
     expect(dateCells[0]).toBeInTheDocument();
     expect(dateCells[1]).toBeInTheDocument();
   });
+
+  it.each([
+    [[], []],
+    [[], null],
+    [null, []],
+    [null, null],
+    [[], [{}]],
+    [[{}], []],
+  ])('renders nothing if given empty columns/values', (c, v) => {
+    const { container } = render(
+      <DynamicTable columns={c} values={v} />,
+    );
+
+    expect(container.innerHTML).toBe('');
+  });
 });

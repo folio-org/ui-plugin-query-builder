@@ -17,14 +17,13 @@ export const formatValueByDataType = (value, dataType, properties, intl, additio
   }
 
   if (properties?.length) {
-    const values = JSON.parse(value ?? null);
-    const columns = properties
-      .map(prop => ({
-        id: prop.property,
-        name: prop.labelAlias,
-        dataType: prop.dataType?.dataType,
-        styles: { width: '180px', minWidth: '180px' },
-      }));
+    const values = JSON.parse(value);
+    const columns = properties.map((prop) => ({
+      id: prop.property,
+      name: prop.labelAlias,
+      dataType: prop.dataType?.dataType,
+      styles: { width: '180px', minWidth: '180px' },
+    }));
 
     return <DynamicTable columns={columns} values={values} formatter={formatValueByDataType} />;
   }
@@ -84,5 +83,5 @@ export const findLabelByValue = (options, value) => {
   // that comes from JSONB
   if (!/(_custom_field|opt_)/.test(value) || Array.isArray(value)) return value;
 
-  return options?.options.find(option => option.value === value)?.label;
+  return options?.options.find((option) => option.value === value)?.label;
 };

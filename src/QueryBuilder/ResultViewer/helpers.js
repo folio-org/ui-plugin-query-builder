@@ -1,6 +1,5 @@
 import { Icon, Tooltip } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
-import { DynamicTable } from './DynamicTable';
 import { formatValueByDataType } from './utils';
 
 const INSTANCE_LANGUAGE_FIELDS = new Set(['instance.languages', 'instances.languages']);
