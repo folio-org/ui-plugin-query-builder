@@ -1,8 +1,19 @@
 import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { DATA_TYPES } from '../../constants/dataTypes';
 import { findLabelByValue, formatValueByDataType } from './utils';
+
+jest.mock('./DynamicTable/DynamicTable', () => ({
+  __esModule: true,
+  DynamicTable: jest.fn(({ columns, values }) => (
+    <div
+      data-testid="dynamic-table"
+      data-columns={JSON.stringify(columns)}
+      data-values={JSON.stringify(values)}
+    />
+  )),
+}));
 
 describe('formatValueByDataType returns correct value', () => {
   test.each([
@@ -33,13 +44,81 @@ describe('formatValueByDataType returns correct value', () => {
 
     [<div>value</div>, DATA_TYPES.BooleanType, '<div>value</div>'],
   ])('value=%j of type=%p renders to %p', (value, type, expected) => {
-    const formatted = formatValueByDataType(value, type, null);
+    const formatted = formatValueByDataType(value, type, null, null);
 
     if (typeof formatted === 'string') {
       expect(formatted).toBe(expected);
     } else {
-      expect(render(<IntlProvider>{formatted}</IntlProvider>).container.innerHTML).toBe(expected);
+      expect(render(<IntlProvider locale="en">{formatted}</IntlProvider>).container.innerHTML).toBe(
+        expected,
+      );
     }
+  });
+
+  it('renders a DynamicTable for columns with nested properties and parses JSON values', () => {
+    const column = {
+      labelAlias: 'Tags',
+      name: 'tags',
+      visibleByDefault: false,
+      dataType: {
+        dataType: 'arrayType',
+        itemDataType: {
+          properties: [
+            { property: 'id', labelAlias: 'ID', dataType: { dataType: 'stringType' } },
+            { property: 'name', labelAlias: 'Name', dataType: { dataType: 'stringType' } },
+            { property: 'active', labelAlias: 'Active', dataType: { dataType: 'booleanType' } },
+          ],
+        },
+      },
+    };
+
+    const valuesJSON = JSON.stringify([
+      { id: 't1', name: 'alpha', active: true },
+      { id: 't2', name: 'beta', active: false },
+    ]);
+
+    const TestComponent = () => (
+      <>
+        {formatValueByDataType(
+          valuesJSON,
+          'objectType',
+          column.dataType.itemDataType.properties,
+          null,
+        )}
+      </>
+    );
+
+    render(<TestComponent />);
+
+    const table = screen.getByTestId('dynamic-table');
+    const passedColumns = JSON.parse(table.getAttribute('data-columns') || '[]');
+    const passedValues = JSON.parse(table.getAttribute('data-values') || '[]');
+
+    expect(passedColumns).toEqual([
+      {
+        id: 'id',
+        name: 'ID',
+        dataType: 'stringType',
+        styles: { width: '180px', minWidth: '180px' },
+      },
+      {
+        id: 'name',
+        name: 'Name',
+        dataType: 'stringType',
+        styles: { width: '180px', minWidth: '180px' },
+      },
+      {
+        id: 'active',
+        name: 'Active',
+        dataType: 'booleanType',
+        styles: { width: '180px', minWidth: '180px' },
+      },
+    ]);
+
+    expect(passedValues).toEqual([
+      { id: 't1', name: 'alpha', active: true },
+      { id: 't2', name: 'beta', active: false },
+    ]);
   });
 });
 

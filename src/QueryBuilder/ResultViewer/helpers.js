@@ -1,6 +1,5 @@
 import { Icon, Tooltip } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
-import { DynamicTable } from './DynamicTable';
 import { formatValueByDataType } from './utils';
 
 const INSTANCE_LANGUAGE_FIELDS = new Set(['instance.languages', 'instances.languages']);
@@ -39,22 +38,10 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
     formatted[value] = (item) => {
       const val = item[value];
 
-      if (properties?.length) {
-        const values = JSON.parse(val ?? null);
-        const columns = properties
-          .map(prop => ({
-            id: prop.property,
-            name: prop.labelAlias,
-            dataType: prop.dataType?.dataType,
-            styles: { width: '180px', minWidth: '180px' },
-          }));
-
-        return <DynamicTable columns={columns} values={values} />;
-      }
-
       return formatValueByDataType(
         val,
         dataType,
+        properties,
         intl,
         { isInstanceLanguages: INSTANCE_LANGUAGE_FIELDS.has(value) },
       );
