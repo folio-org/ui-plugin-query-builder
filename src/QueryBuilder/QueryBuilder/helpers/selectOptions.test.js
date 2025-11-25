@@ -196,6 +196,7 @@ describe('select options', () => {
     it('should return boolean operators with placeholder', () => {
       const options = getOperatorOptions({
         dataType: DATA_TYPES.BooleanType,
+        isFromNestedField: false,
         hasSourceOrValues: false,
         intl: intlMock,
       });
@@ -205,6 +206,23 @@ describe('select options', () => {
         operators: [
           { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
           { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+        ],
+      });
+    });
+
+    it('should return proper array boolean operators', () => {
+      const options = getOperatorOptions({
+        dataType: DATA_TYPES.BooleanType,
+        isFromNestedField: true,
+        hasSourceOrValues: false,
+        intl: intlMock,
+      });
+
+      expectFn({
+        options,
+        operators: [
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
           { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
         ],
       });

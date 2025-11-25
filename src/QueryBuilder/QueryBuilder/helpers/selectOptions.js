@@ -69,15 +69,16 @@ const stringOperators = (hasSourceOrValues) => {
   ];
 };
 
-const booleanOperators = () => [
+const booleanOperators = (isFromNestedField) => [
   { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
-  { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+  ...(isFromNestedField ? [] : [{ label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL }]),
   { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
 ];
 
 export const getOperatorOptions = ({
   dataType,
   hasSourceOrValues,
+  isFromNestedField,
   intl,
 }) => {
   switch (dataType) {
@@ -108,7 +109,7 @@ export const getOperatorOptions = ({
       return getOperatorsWithPlaceholder(UUIDOperators(), intl);
 
     case DATA_TYPES.BooleanType:
-      return getOperatorsWithPlaceholder(booleanOperators(), intl);
+      return getOperatorsWithPlaceholder(booleanOperators(isFromNestedField), intl);
 
     default:
       return [];
