@@ -2,9 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useIntl } from 'react-intl';
 import css from './DynamicTable.css';
-import { formatValueByDataType } from '../utils';
 
-export const DynamicTable = ({ columns = [], values = [] }) => {
+export const DynamicTable = ({ columns = [], values = [], formatter }) => {
   const intl = useIntl();
 
   if (!values?.length || !columns?.length) return null;
@@ -25,9 +24,10 @@ export const DynamicTable = ({ columns = [], values = [] }) => {
           <tr key={rowIndex}>
             {columns.map((column) => (
               <td key={column.id} style={column.styles}>
-                {formatValueByDataType(
+                {formatter(
                   row[column.id],
                   column.dataType,
+                  undefined,
                   intl,
                 )}
               </td>
@@ -47,4 +47,5 @@ DynamicTable.propTypes = {
     styles: PropTypes.shape({}),
   })),
   values: PropTypes.arrayOf(PropTypes.shape({})),
+  formatter: PropTypes.func.isRequired,
 };

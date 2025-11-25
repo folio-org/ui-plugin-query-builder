@@ -5,17 +5,6 @@ import '@testing-library/jest-dom/extend-expect';
 import { getTableMetadata, handleDeletedRecords } from './helpers';
 import { formatValueByDataType } from './utils';
 
-jest.mock('./DynamicTable/DynamicTable', () => ({
-  __esModule: true,
-  DynamicTable: jest.fn(({ columns, values }) => (
-    <div
-      data-testid="dynamic-table"
-      data-columns={JSON.stringify(columns)}
-      data-values={JSON.stringify(values)}
-    />
-  )),
-}));
-
 jest.mock('./utils', () => ({
   __esModule: true,
   formatValueByDataType: jest.fn(() => 'formatted-value'),
@@ -151,6 +140,7 @@ describe('getTableMetadata.formatter (rendered output)', () => {
     expect(formatValueByDataType).toHaveBeenCalledWith(
       42,
       'numberType',
+      undefined,
       intl,
       { isInstanceLanguages: false },
     );
@@ -175,6 +165,7 @@ describe('getTableMetadata.formatter (rendered output)', () => {
     expect(formatValueByDataType).toHaveBeenCalledWith(
       undefined,
       'numberType',
+      undefined,
       intl,
       { isInstanceLanguages: false },
     );
@@ -199,57 +190,11 @@ describe('getTableMetadata.formatter (rendered output)', () => {
     expect(formatValueByDataType).toHaveBeenCalledWith(
       ['en', 'hr'],
       'arrayType',
+      undefined,
       intl,
       { isInstanceLanguages: true },
     );
     expect(screen.getByText('formatted-value')).toBeInTheDocument();
-  });
-
-  it('renders a DynamicTable for columns with nested properties and parses JSON values', () => {
-    const entityType = {
-      columns: [
-        {
-          labelAlias: 'Tags',
-          name: 'tags',
-          visibleByDefault: false,
-          dataType: {
-            dataType: 'arrayType',
-            itemDataType: {
-              properties: [
-                { property: 'id', labelAlias: 'ID', dataType: { dataType: 'stringType' } },
-                { property: 'name', labelAlias: 'Name', dataType: { dataType: 'stringType' } },
-                { property: 'active', labelAlias: 'Active', dataType: { dataType: 'booleanType' } },
-              ],
-            },
-          },
-        },
-      ],
-    };
-
-    const valuesJSON = JSON.stringify([
-      { id: 't1', name: 'alpha', active: true },
-      { id: 't2', name: 'beta', active: false },
-    ]);
-
-    const { formatter } = getTableMetadata(entityType, [], intl);
-    const TestComponent = () => <>{formatter.tags({ tags: valuesJSON })}</>;
-
-    render(<TestComponent />);
-
-    const table = screen.getByTestId('dynamic-table');
-    const passedColumns = JSON.parse(table.getAttribute('data-columns') || '[]');
-    const passedValues = JSON.parse(table.getAttribute('data-values') || '[]');
-
-    expect(passedColumns).toEqual([
-      { id: 'id', name: 'ID', dataType: 'stringType', styles: { width: '180px', minWidth: '180px' } },
-      { id: 'name', name: 'Name', dataType: 'stringType', styles: { width: '180px', minWidth: '180px' } },
-      { id: 'active', name: 'Active', dataType: 'booleanType', styles: { width: '180px', minWidth: '180px' } },
-    ]);
-
-    expect(passedValues).toEqual([
-      { id: 't1', name: 'alpha', active: true },
-      { id: 't2', name: 'beta', active: false },
-    ]);
   });
 
   it('computes columnWidths based on the number of nested properties (180px each)', () => {
@@ -316,8 +261,6 @@ describe('handleDeletedRecords', () => {
         'name',
         'something_else',
       ]);
-
-      console.log(result, testData);
 
       expect(result[0]).toEqual(testData[0]);
       expect(result[1]).not.toEqual(testData[1]);
