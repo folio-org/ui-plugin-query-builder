@@ -20,6 +20,7 @@ import {
   getFieldOptions,
   getFilteredOptions,
   getOperatorOptions,
+  REPEATABLE_FIELD_DELIMITER,
   sourceTemplate,
 } from '../../helpers/selectOptions';
 import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
@@ -96,6 +97,7 @@ export const RepeatableFields = memo(({ source, setSource, columns }) => {
             options: getOperatorOptions({
               dataType: field.dataType,
               hasSourceOrValues: field.values || field.source,
+              isFromNestedField: field.value.includes(REPEATABLE_FIELD_DELIMITER),
               intl,
             }),
             current: '',

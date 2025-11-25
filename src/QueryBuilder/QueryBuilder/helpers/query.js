@@ -10,6 +10,7 @@ import {
   booleanOptions,
   getFieldOptions,
   getOperatorOptions,
+  REPEATABLE_FIELD_DELIMITER,
   sourceTemplate,
 } from './selectOptions';
 import upgradeInitialValues from './upgradeInitialValues';
@@ -254,6 +255,7 @@ const getFormattedSourceField = async ({
         options: getOperatorOptions({
           dataType,
           hasSourceOrValues,
+          isFromNestedField: fieldItem.value.includes(REPEATABLE_FIELD_DELIMITER),
           intl,
         }),
         current: operator,
