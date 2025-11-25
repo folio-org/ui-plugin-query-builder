@@ -3,10 +3,9 @@ import {
   getFieldOptions,
   getFilteredOptions,
   getOperatorOptions,
-  getOperatorType,
 } from './selectOptions';
 import { DATA_TYPES } from '../../../constants/dataTypes';
-import { OPERATORS, OPERATORS_GROUPS_NAME, OPERATORS_LABELS } from '../../../constants/operators';
+import { OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
 
 const entityType = {
   columns: [
@@ -533,22 +532,6 @@ describe('getFilteredOptions', () => {
     const res = getFilteredOptions('持股', mockDataOptionsChina);
 
     expect(res).toEqual([{ label: '項目 - 持股 - 報表' }]);
-  });
-});
-
-describe('getOperatorType', () => {
-  test('should return the correct operator group for an operator', () => {
-    expect(getOperatorType(OPERATORS.EQUAL)).toBe(OPERATORS_GROUPS_NAME.COMPARISON);
-    expect(getOperatorType(OPERATORS.NOT_EQUAL)).toBe(OPERATORS_GROUPS_NAME.COMPARISON);
-    expect(getOperatorType(OPERATORS.CONTAINS)).toBe(OPERATORS_GROUPS_NAME.LIKE);
-    expect(getOperatorType(OPERATORS.STARTS_WITH)).toBe(OPERATORS_GROUPS_NAME.LIKE);
-    expect(getOperatorType(OPERATORS.EMPTY)).toBe(OPERATORS_GROUPS_NAME.NULL);
-    expect(getOperatorType(OPERATORS.IN)).toBe(OPERATORS_GROUPS_NAME.ARRAY_COMPARISON);
-    expect(getOperatorType(OPERATORS.NOT_IN)).toBe(OPERATORS_GROUPS_NAME.ARRAY_COMPARISON);
-  });
-
-  test('should return undefined if the operator is not found in any group', () => {
-    expect(getOperatorType('NON_EXISTENT_OPERATOR')).toBeUndefined();
   });
 });
 

@@ -164,55 +164,321 @@ describe('valueBuilder', () => {
 });
 
 describe('retainValueOnOperatorChange', () => {
-  test('should return the previous value when the operator type is the same', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.EQUAL, DATA_TYPES.StringType, 'someValue');
+  test('should return prevValue when control type does not change (EQUAL to NOT_EQUAL on StringType)', () => {
+    const prevValue = 'test';
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.NOT_EQUAL;
 
-    expect(result).toBe('someValue');
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
   });
 
-  test('should return the previous value when switching between comparison and comparison array', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, DATA_TYPES.StringType, 'someValue', [{
-      label: 'someLabel', value: 'someValue',
-    }]);
+  test('should return prevValue when control type does not change (EQUAL to IN on StringType without options - both TEXT)', () => {
+    const prevValue = 'test';
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
 
-    expect(result).toEqual([{ label: 'someLabel', value: 'someValue' }]);
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
   });
 
-  test('should return the first value of the array when switching from comparison array to comparison', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.IN, OPERATORS.EQUAL, DATA_TYPES.StringType, [
-      { value: 1, label: 'First value' },
-      { value: 2, label: 'Second value' },
-      { value: 3, label: 'Third value' },
-    ]);
+  test('should return empty string when control type changes (EQUAL to IN on StringType with options)', () => {
+    const prevValue = 'test';
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+    const source = [{ label: 'Option 1', value: 'opt1' }];
 
-    expect(result).toBe(1);
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      source,
+      prevValue,
+    })).toBe('');
   });
 
-  test('should return an empty string when operator types are different and incompatible', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.STARTS_WITH, DATA_TYPES.StringType, 'someValue');
+  test('should return prevValue when control type does not change (IN to NOT_IN on StringType with options)', () => {
+    const prevValue = [{ label: 'Option 1', value: 'opt1' }];
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.IN;
+    const newOperator = OPERATORS.NOT_IN;
+    const source = [{ label: 'Option 1', value: 'opt1' }];
 
-    expect(result).toBe('');
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      source,
+      prevValue,
+    })).toBe(prevValue);
   });
 
-  test('should return an empty string when previous value is an empty string', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, DATA_TYPES.StringType, '');
+  test('should return prevValue when control type does not change (EQUAL to NOT_EQUAL on IntegerType without options)', () => {
+    const prevValue = 42;
+    const dataType = DATA_TYPES.IntegerType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.NOT_EQUAL;
 
-    expect(result).toBe('');
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
   });
 
-  test('should fallback to prevValue as label when option label is not found', () => {
-    const result = retainValueOnOperatorChange(
-      OPERATORS.EQUAL,
-      OPERATORS.IN,
-      DATA_TYPES.StringType,
-      'Previous value',
-      [
-        { label: 'Some Label', value: 'Some value' },
-      ],
-    );
+  test('should return prevValue when control type does not change (EQUAL to NOT_EQUAL on NumberType without options)', () => {
+    const prevValue = 42.5;
+    const dataType = DATA_TYPES.NumberType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.NOT_EQUAL;
 
-    expect(result).toEqual([
-      { label: 'Previous value', value: 'Previous value' },
-    ]);
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
+  });
+
+  test('should return empty string when control type changes (ArrayType EQUAL to IN with options)', () => {
+    const prevValue = 'opt1';
+    const dataType = DATA_TYPES.ArrayType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+    const source = [{ label: 'Option 1', value: 'opt1' }];
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      source,
+      prevValue,
+    })).toBe('');
+  });
+
+  test('should return prevValue when control type does not change (BooleanType EQUAL to NOT_EQUAL)', () => {
+    const prevValue = true;
+    const dataType = DATA_TYPES.BooleanType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.NOT_EQUAL;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
+  });
+
+  test('should return prevValue when control type does not change (DateType EQUAL to NOT_EQUAL)', () => {
+    const prevValue = '2024-11-06';
+    const dataType = DATA_TYPES.DateType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.NOT_EQUAL;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
+  });
+
+  test('should return empty string when control type changes (DateType to EMPTY operator)', () => {
+    const prevValue = '2024-11-06';
+    const dataType = DATA_TYPES.DateType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.EMPTY;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe('');
+  });
+
+  test('should return prevValue when control type does not change (DateTimeType EQUAL to NOT_EQUAL)', () => {
+    const prevValue = '2024-11-06T12:00:00Z';
+    const dataType = DATA_TYPES.DateTimeType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.NOT_EQUAL;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
+  });
+
+  test('should return prevValue when control type does not change (OpenUUIDType EQUAL to NOT_EQUAL)', () => {
+    const prevValue = 'uuid-value';
+    const dataType = DATA_TYPES.OpenUUIDType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.NOT_EQUAL;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
+  });
+
+  test('should return empty string when control type changes (OpenUUIDType EQUAL to IN)', () => {
+    const prevValue = 'uuid-value';
+    const dataType = DATA_TYPES.OpenUUIDType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe('');
+  });
+
+  test('should return prevValue when control type does not change (OpenUUIDType IN to NOT_IN)', () => {
+    const prevValue = 'uuid1, uuid2';
+    const dataType = DATA_TYPES.OpenUUIDType;
+    const operator = OPERATORS.IN;
+    const newOperator = OPERATORS.NOT_IN;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
+  });
+
+  test('should return prevValue when control type does not change (EnumType EQUAL to NOT_EQUAL)', () => {
+    const prevValue = 'active';
+    const dataType = DATA_TYPES.EnumType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.NOT_EQUAL;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
+  });
+
+  test('should return empty string when control type changes (EnumType EQUAL to IN)', () => {
+    const prevValue = 'active';
+    const dataType = DATA_TYPES.EnumType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe('');
+  });
+
+  test('should return prevValue when control type does not change (EnumType IN to NOT_IN)', () => {
+    const prevValue = ['active', 'inactive'];
+    const dataType = DATA_TYPES.EnumType;
+    const operator = OPERATORS.IN;
+    const newOperator = OPERATORS.NOT_IN;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
+  });
+
+  test('should return empty string when operator becomes EMPTY', () => {
+    const prevValue = 'test-value';
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.EMPTY;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe('');
+  });
+
+  test('should return prevValue when unknown dataType defaults to TEXT control type', () => {
+    const prevValue = 'test-value';
+    const dataType = 'UnknownDataType';
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.NOT_EQUAL;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
+  });
+
+  test('should return prevValue when unknown operator defaults to TEXT control type', () => {
+    const prevValue = 'test-value';
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = 'unknownOperator';
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe(prevValue);
+  });
+
+  test('should return prevValue when control type does not change with availableValues', () => {
+    const prevValue = 'opt1';
+    const dataType = DATA_TYPES.ArrayType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.NOT_EQUAL;
+    const availableValues = [{ label: 'Option 1', value: 'opt1' }];
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      availableValues,
+      prevValue,
+    })).toBe(prevValue);
+  });
+
+  test('should return empty string when control type changes with availableValues', () => {
+    const prevValue = 'opt1';
+    const dataType = DATA_TYPES.ArrayType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+    const availableValues = [{ label: 'Option 1', value: 'opt1' }];
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      availableValues,
+      prevValue,
+    })).toBe('');
   });
 });
