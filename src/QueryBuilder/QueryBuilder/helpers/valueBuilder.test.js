@@ -205,7 +205,7 @@ describe('retainValueOnOperatorChange', () => {
       newOperator,
       source,
       prevValue,
-    })).toBe('');
+    })).toStrictEqual([{ 'label': 'test', 'value': 'test' }]);
   });
 
   test('should return prevValue when control type does not change (IN to NOT_IN on StringType with options)', () => {
@@ -265,7 +265,7 @@ describe('retainValueOnOperatorChange', () => {
       newOperator,
       source,
       prevValue,
-    })).toBe('');
+    })).toStrictEqual([{ 'label': 'opt1', 'value': 'opt1' }]);
   });
 
   test('should return prevValue when control type does not change (BooleanType EQUAL to NOT_EQUAL)', () => {
@@ -391,7 +391,7 @@ describe('retainValueOnOperatorChange', () => {
       operator,
       newOperator,
       prevValue,
-    })).toBe('');
+    })).toStrictEqual([{ 'label': 'active', 'value': 'active' }]);
   });
 
   test('should return prevValue when control type does not change (EnumType IN to NOT_IN)', () => {
@@ -479,6 +479,192 @@ describe('retainValueOnOperatorChange', () => {
       newOperator,
       availableValues,
       prevValue,
-    })).toBe('');
+    })).toStrictEqual([{ 'label': 'Option 1', 'value': 'opt1' }]);
+  });
+
+  // Tests for select multi to single conversion
+  test('should convert SELECT_MULTI to SELECT_SINGLE using value property', () => {
+    const prevValue = [
+      { label: 'Option 1', value: 'opt1' },
+      { label: 'Option 2', value: 'opt2' },
+    ];
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.IN;
+    const newOperator = OPERATORS.EQUAL;
+    const source = [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }];
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      source,
+      prevValue,
+    })).toBe('opt1');
+  });
+
+  test('should convert SELECT_MULTI to SELECT_SINGLE using id property when value is not available', () => {
+    const prevValue = [
+      { label: 'Option 1', id: 'id1' },
+      { label: 'Option 2', id: 'id2' },
+    ];
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.IN;
+    const newOperator = OPERATORS.EQUAL;
+    const source = [{ label: 'Option 1', id: 'id1' }, { label: 'Option 2', id: 'id2' }];
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      source,
+      prevValue,
+    })).toBe('id1');
+  });
+
+  test('should return prevValue when converting SELECT_MULTI to SELECT_SINGLE with non-array value', () => {
+    const prevValue = 'opt1';
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.IN;
+    const newOperator = OPERATORS.EQUAL;
+    const source = [{ label: 'Option 1', value: 'opt1' }];
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      source,
+      prevValue,
+    })).toBe('opt1');
+  });
+
+  test('should convert SELECT_MULTI to SELECT_SINGLE with empty array', () => {
+    const prevValue = [];
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.IN;
+    const newOperator = OPERATORS.EQUAL;
+    const source = [{ label: 'Option 1', value: 'opt1' }];
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      source,
+      prevValue,
+    })).toBe(undefined);
+  });
+
+  // Tests for select single to multi conversion
+  test('should convert SELECT_SINGLE to SELECT_MULTI with label lookup', () => {
+    const prevValue = 'opt1';
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+    const source = [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }];
+    const availableValues = [{ label: 'Option 1', value: 'opt1' }, { label: 'Option 2', value: 'opt2' }];
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      source,
+      availableValues,
+      prevValue,
+    })).toEqual([{
+      value: 'opt1',
+      label: 'Option 1',
+    }]);
+  });
+
+  test('should convert SELECT_SINGLE to SELECT_MULTI using prevValue as fallback label', () => {
+    const prevValue = 'opt1';
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+    const source = [{ label: 'Option 1', value: 'opt1' }];
+    const availableValues = [{ label: 'Option 1', value: 'opt1' }];
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      source,
+      availableValues,
+      prevValue,
+    })).toEqual([{
+      value: 'opt1',
+      label: 'Option 1',
+    }]);
+  });
+
+  test('should convert SELECT_SINGLE to SELECT_MULTI with fallback when label not found', () => {
+    const prevValue = 'opt1';
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+    const source = [{ label: 'Option 2', value: 'opt2' }];
+    const availableValues = [{ label: 'Option 2', value: 'opt2' }];
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      source,
+      availableValues,
+      prevValue,
+    })).toEqual([{
+      value: 'opt1',
+      label: 'opt1',
+    }]);
+  });
+
+  test('should return prevValue when converting SELECT_SINGLE to SELECT_MULTI with falsy value', () => {
+    const prevValue = null;
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+    const source = [{ label: 'Option 1', value: 'opt1' }];
+    const availableValues = [{ label: 'Option 1', value: 'opt1' }];
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      source,
+      availableValues,
+      prevValue,
+    })).toBe(null);
+  });
+
+  test('should convert SELECT_SINGLE to SELECT_MULTI with EnumType', () => {
+    const prevValue = 'active';
+    const dataType = DATA_TYPES.EnumType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+    const availableValues = [{ label: 'Active', value: 'active' }, { label: 'Inactive', value: 'inactive' }];
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      availableValues,
+      prevValue,
+    })).toEqual([{
+      value: 'active',
+      label: 'Active',
+    }]);
+  });
+
+  test('should convert SELECT_MULTI to SELECT_SINGLE with EnumType', () => {
+    const prevValue = [{ label: 'Active', value: 'active' }, { label: 'Inactive', value: 'inactive' }];
+    const dataType = DATA_TYPES.EnumType;
+    const operator = OPERATORS.IN;
+    const newOperator = OPERATORS.EQUAL;
+
+    expect(retainValueOnOperatorChange({
+      dataType,
+      operator,
+      newOperator,
+      prevValue,
+    })).toBe('active');
   });
 });

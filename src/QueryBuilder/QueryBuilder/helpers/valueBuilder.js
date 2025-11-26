@@ -1,7 +1,7 @@
 import { dayjs } from '@folio/stripes/components';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS } from '../../../constants/operators';
-import { getControlType } from './getControlTypes';
+import { CONTROL_TYPES, getControlType } from './getControlTypes';
 
 export const getCommaSeparatedStr = (arr) => {
   const str = arr?.map(el => `${el?.label}`).join(', ');
@@ -95,8 +95,22 @@ export const retainValueOnOperatorChange = ({
     return '';
   }
 
+  // If control types are the same, retain previous value
   if (prevType === newType) {
     return prevValue;
+  }
+
+  // Handle select single/multi conversions
+  if (prevType === CONTROL_TYPES.SELECT_MULTI && newType === CONTROL_TYPES.SELECT_SINGLE) {
+    return Array.isArray(prevValue) ? (prevValue[0]?.value ?? prevValue[0]?.id) : prevValue;
+  }
+
+  // Handle select multi/single conversions
+  if (prevType === CONTROL_TYPES.SELECT_SINGLE && newType === CONTROL_TYPES.SELECT_MULTI) {
+    return prevValue ? [{
+      value: prevValue,
+      label: availableValues?.find(option => option.value === prevValue)?.label ?? prevValue,
+    }] : prevValue;
   }
 
   return '';
