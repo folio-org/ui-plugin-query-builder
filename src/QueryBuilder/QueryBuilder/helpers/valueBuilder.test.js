@@ -534,7 +534,7 @@ describe('retainValueOnOperatorChange', () => {
       newOperator,
       source,
       prevValue,
-    })).toBe('opt1');
+    })).toBe('');
   });
 
   test('should convert SELECT_MULTI to SELECT_SINGLE with empty array', () => {

@@ -102,7 +102,7 @@ export const retainValueOnOperatorChange = ({
 
   // Handle select single/multi conversions
   if (prevType === CONTROL_TYPES.SELECT_MULTI && newType === CONTROL_TYPES.SELECT_SINGLE) {
-    return Array.isArray(prevValue) ? (prevValue[0]?.value ?? prevValue[0]?.id) : prevValue;
+    return Array.isArray(prevValue) ? (prevValue[0]?.value ?? prevValue[0]?.id) : '';
   }
 
   // Handle select multi/single conversions
