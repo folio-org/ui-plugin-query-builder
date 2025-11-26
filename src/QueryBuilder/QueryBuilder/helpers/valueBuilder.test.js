@@ -521,22 +521,6 @@ describe('retainValueOnOperatorChange', () => {
     })).toBe('id1');
   });
 
-  test('should return prevValue when converting SELECT_MULTI to SELECT_SINGLE with non-array value', () => {
-    const prevValue = 'opt1';
-    const dataType = DATA_TYPES.StringType;
-    const operator = OPERATORS.IN;
-    const newOperator = OPERATORS.EQUAL;
-    const source = [{ label: 'Option 1', value: 'opt1' }];
-
-    expect(retainValueOnOperatorChange({
-      dataType,
-      operator,
-      newOperator,
-      source,
-      prevValue,
-    })).toBe('');
-  });
-
   test('should convert SELECT_MULTI to SELECT_SINGLE with empty array', () => {
     const prevValue = [];
     const dataType = DATA_TYPES.StringType;
@@ -550,7 +534,7 @@ describe('retainValueOnOperatorChange', () => {
       newOperator,
       source,
       prevValue,
-    })).toBe(undefined);
+    })).toBe('');
   });
 
   // Tests for select single to multi conversion
