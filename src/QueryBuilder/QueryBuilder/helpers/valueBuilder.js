@@ -1,7 +1,7 @@
 import { dayjs } from '@folio/stripes/components';
 import { DATA_TYPES } from '../../../constants/dataTypes';
-import { OPERATORS, OPERATORS_GROUPS_NAME } from '../../../constants/operators';
-import { getOperatorType } from './selectOptions';
+import { OPERATORS } from '../../../constants/operators';
+import { CONTROL_TYPES, getControlType } from './getControlTypes';
 
 export const getCommaSeparatedStr = (arr) => {
   const str = arr?.map(el => `${el?.label}`).join(', ');
@@ -80,42 +80,37 @@ export const valueBuilder = ({ value, field, operator, fieldOptions, intl, timez
   return valueMap[dataType]?.();
 };
 
-export const retainValueOnOperatorChange = (
-  prevOperator,
+export const retainValueOnOperatorChange = ({
+  dataType,
+  operator,
   newOperator,
-  memorizedFieldDataType,
-  prevValue = '',
-  options = [],
-) => {
-  const prevType = getOperatorType(prevOperator);
-  const newType = getOperatorType(newOperator);
+  source,
+  availableValues,
+  prevValue,
+}) => {
+  const prevType = getControlType({ dataType, operator, source, availableValues });
+  const newType = getControlType({ dataType, operator: newOperator, source, availableValues });
 
   if (!prevType || !newType) {
     return '';
   }
 
+  // If control types are the same, retain previous value
   if (prevType === newType) {
     return prevValue;
   }
 
-  if (prevValue === '') {
-    return '';
+  // Handle select single/multi conversions
+  if (prevType === CONTROL_TYPES.SELECT_MULTI && newType === CONTROL_TYPES.SELECT_SINGLE) {
+    return prevValue.length ? (prevValue[0]?.value || prevValue[0]?.id) : '';
   }
 
-  if (prevType === OPERATORS_GROUPS_NAME.COMPARISON && newType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON) {
-    if (memorizedFieldDataType === DATA_TYPES.RangedUUIDType) {
-      return prevValue;
-    }
-
-    return [{ value: prevValue, label: options?.find(option => option.value === prevValue)?.label ?? prevValue }];
-  }
-
-  if (prevType === OPERATORS_GROUPS_NAME.ARRAY_COMPARISON && newType === OPERATORS_GROUPS_NAME.COMPARISON) {
-    if (prevValue.length === 0) {
-      return '';
-    }
-
-    return Array.isArray(prevValue) ? (prevValue[0]?.value ?? prevValue[0]?.id) : prevValue;
+  // Handle select multi/single conversions
+  if (prevType === CONTROL_TYPES.SELECT_SINGLE && newType === CONTROL_TYPES.SELECT_MULTI) {
+    return prevValue ? [{
+      value: prevValue,
+      label: availableValues?.find(option => option.value === prevValue)?.label ?? prevValue,
+    }] : prevValue;
   }
 
   return '';

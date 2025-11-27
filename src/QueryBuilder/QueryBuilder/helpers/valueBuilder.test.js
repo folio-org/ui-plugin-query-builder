@@ -164,55 +164,361 @@ describe('valueBuilder', () => {
 });
 
 describe('retainValueOnOperatorChange', () => {
-  test('should return the previous value when the operator type is the same', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.EQUAL, DATA_TYPES.StringType, 'someValue');
+  describe('when control type does not change and value should be retained', () => {
+    test.each([
+      {
+        name: 'StringType EQUAL → NOT_EQUAL',
+        prevValue: 'test',
+        dataType: DATA_TYPES.StringType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.NOT_EQUAL,
+      },
+      {
+        name: 'StringType EQUAL → IN (without options - both TEXT)',
+        prevValue: 'test',
+        dataType: DATA_TYPES.StringType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.IN,
+      },
+      {
+        name: 'StringType IN → NOT_IN with options',
+        prevValue: [{ label: 'Option 1', value: 'opt1' }],
+        dataType: DATA_TYPES.StringType,
+        operator: OPERATORS.IN,
+        newOperator: OPERATORS.NOT_IN,
+        source: [{ label: 'Option 1', value: 'opt1' }],
+      },
+      {
+        name: 'IntegerType EQUAL → NOT_EQUAL without options',
+        prevValue: 42,
+        dataType: DATA_TYPES.IntegerType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.NOT_EQUAL,
+      },
+      {
+        name: 'NumberType EQUAL → NOT_EQUAL without options',
+        prevValue: 42.5,
+        dataType: DATA_TYPES.NumberType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.NOT_EQUAL,
+      },
+      {
+        name: 'BooleanType EQUAL → NOT_EQUAL',
+        prevValue: true,
+        dataType: DATA_TYPES.BooleanType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.NOT_EQUAL,
+      },
+      {
+        name: 'DateType EQUAL → NOT_EQUAL',
+        prevValue: '2024-11-06',
+        dataType: DATA_TYPES.DateType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.NOT_EQUAL,
+      },
+      {
+        name: 'DateTimeType EQUAL → NOT_EQUAL',
+        prevValue: '2024-11-06T12:00:00Z',
+        dataType: DATA_TYPES.DateTimeType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.NOT_EQUAL,
+      },
+      {
+        name: 'OpenUUIDType EQUAL → NOT_EQUAL',
+        prevValue: 'uuid-value',
+        dataType: DATA_TYPES.OpenUUIDType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.NOT_EQUAL,
+      },
+      {
+        name: 'OpenUUIDType IN → NOT_IN',
+        prevValue: 'uuid1, uuid2',
+        dataType: DATA_TYPES.OpenUUIDType,
+        operator: OPERATORS.IN,
+        newOperator: OPERATORS.NOT_IN,
+      },
+      {
+        name: 'EnumType EQUAL → NOT_EQUAL',
+        prevValue: 'active',
+        dataType: DATA_TYPES.EnumType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.NOT_EQUAL,
+      },
+      {
+        name: 'EnumType IN → NOT_IN',
+        prevValue: ['active', 'inactive'],
+        dataType: DATA_TYPES.EnumType,
+        operator: OPERATORS.IN,
+        newOperator: OPERATORS.NOT_IN,
+      },
+      {
+        name: 'Unknown dataType defaults to TEXT control type',
+        prevValue: 'test-value',
+        dataType: 'UnknownDataType',
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.NOT_EQUAL,
+      },
+      {
+        name: 'Unknown operator defaults to TEXT control type',
+        prevValue: 'test-value',
+        dataType: DATA_TYPES.StringType,
+        operator: OPERATORS.EQUAL,
+        newOperator: 'unknownOperator',
+      },
+      {
+        name: 'ArrayType with availableValues when control type does not change',
+        prevValue: 'opt1',
+        dataType: DATA_TYPES.ArrayType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.NOT_EQUAL,
+        availableValues: [{ label: 'Option 1', value: 'opt1' }],
+      },
+    ])(
+      '$name',
+      ({ prevValue, dataType, operator, newOperator, source, availableValues }) => {
+        const args = {
+          dataType,
+          operator,
+          newOperator,
+          prevValue,
+        };
 
-    expect(result).toBe('someValue');
-  });
+        if (source) {
+          args.source = source;
+        }
 
-  test('should return the previous value when switching between comparison and comparison array', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, DATA_TYPES.StringType, 'someValue', [{
-      label: 'someLabel', value: 'someValue',
-    }]);
+        if (availableValues) {
+          args.availableValues = availableValues;
+        }
 
-    expect(result).toEqual([{ label: 'someLabel', value: 'someValue' }]);
-  });
-
-  test('should return the first value of the array when switching from comparison array to comparison', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.IN, OPERATORS.EQUAL, DATA_TYPES.StringType, [
-      { value: 1, label: 'First value' },
-      { value: 2, label: 'Second value' },
-      { value: 3, label: 'Third value' },
-    ]);
-
-    expect(result).toBe(1);
-  });
-
-  test('should return an empty string when operator types are different and incompatible', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.STARTS_WITH, DATA_TYPES.StringType, 'someValue');
-
-    expect(result).toBe('');
-  });
-
-  test('should return an empty string when previous value is an empty string', () => {
-    const result = retainValueOnOperatorChange(OPERATORS.EQUAL, OPERATORS.IN, DATA_TYPES.StringType, '');
-
-    expect(result).toBe('');
-  });
-
-  test('should fallback to prevValue as label when option label is not found', () => {
-    const result = retainValueOnOperatorChange(
-      OPERATORS.EQUAL,
-      OPERATORS.IN,
-      DATA_TYPES.StringType,
-      'Previous value',
-      [
-        { label: 'Some Label', value: 'Some value' },
-      ],
+        expect(retainValueOnOperatorChange(args)).toBe(prevValue);
+      },
     );
+  });
 
-    expect(result).toEqual([
-      { label: 'Previous value', value: 'Previous value' },
+  describe('when control type changes or value should be transformed/reset', () => {
+    test.each([
+      {
+        name: 'StringType EQUAL → IN with options',
+        prevValue: 'test',
+        dataType: DATA_TYPES.StringType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.IN,
+        source: [{ label: 'Option 1', value: 'opt1' }],
+        expected: [{ label: 'test', value: 'test' }],
+      },
+      {
+        name: 'ArrayType EQUAL → IN with options',
+        prevValue: 'opt1',
+        dataType: DATA_TYPES.ArrayType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.IN,
+        source: [{ label: 'Option 1', value: 'opt1' }],
+        expected: [{ label: 'opt1', value: 'opt1' }],
+      },
+      {
+        name: 'DateType → EMPTY operator',
+        prevValue: '2024-11-06',
+        dataType: DATA_TYPES.DateType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.EMPTY,
+        expected: '',
+      },
+      {
+        name: 'OpenUUIDType EQUAL → IN',
+        prevValue: 'uuid-value',
+        dataType: DATA_TYPES.OpenUUIDType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.IN,
+        expected: '',
+      },
+      {
+        name: 'EnumType EQUAL → IN',
+        prevValue: 'active',
+        dataType: DATA_TYPES.EnumType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.IN,
+        expected: [{ label: 'active', value: 'active' }],
+      },
+      {
+        name: 'StringType ANY → EMPTY operator',
+        prevValue: 'test-value',
+        dataType: DATA_TYPES.StringType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.EMPTY,
+        expected: '',
+      },
+      {
+        name: 'ArrayType control type changes with availableValues (EQUAL → IN)',
+        prevValue: 'opt1',
+        dataType: DATA_TYPES.ArrayType,
+        operator: OPERATORS.EQUAL,
+        newOperator: OPERATORS.IN,
+        availableValues: [{ label: 'Option 1', value: 'opt1' }],
+        expected: [{ label: 'Option 1', value: 'opt1' }],
+      },
+    ])(
+      '$name',
+      ({ prevValue, dataType, operator, newOperator, source, availableValues, expected }) => {
+        const args = {
+          dataType,
+          operator,
+          newOperator,
+          prevValue,
+        };
+
+        if (source) {
+          args.source = source;
+        }
+
+        if (availableValues) {
+          args.availableValues = availableValues;
+        }
+
+        expect(retainValueOnOperatorChange(args)).toEqual(expected);
+      },
+    );
+  });
+
+  test('should convert SELECT_MULTI to SELECT_SINGLE using value property', () => {
+    const prevValue = [
+      { label: 'Option 1', value: 'opt1' },
+      { label: 'Option 2', value: 'opt2' },
+    ];
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.IN;
+    const newOperator = OPERATORS.EQUAL;
+    const source = [
+      { label: 'Option 1', value: 'opt1' },
+      { label: 'Option 2', value: 'opt2' },
+    ];
+
+    expect(
+      retainValueOnOperatorChange({
+        dataType,
+        operator,
+        newOperator,
+        source,
+        prevValue,
+      }),
+    ).toBe('opt1');
+  });
+
+  test('should convert SELECT_MULTI to SELECT_SINGLE using id property when value is not available', () => {
+    const prevValue = [
+      { label: 'Option 1', id: 'id1' },
+      { label: 'Option 2', id: 'id2' },
+    ];
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.IN;
+    const newOperator = OPERATORS.EQUAL;
+    const source = [
+      { label: 'Option 1', id: 'id1' },
+      { label: 'Option 2', id: 'id2' },
+    ];
+
+    expect(
+      retainValueOnOperatorChange({
+        dataType,
+        operator,
+        newOperator,
+        source,
+        prevValue,
+      }),
+    ).toBe('id1');
+  });
+
+  test('should convert SELECT_MULTI to SELECT_SINGLE with empty array', () => {
+    const prevValue = [];
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.IN;
+    const newOperator = OPERATORS.EQUAL;
+    const source = [{ label: 'Option 1', value: 'opt1' }];
+
+    expect(
+      retainValueOnOperatorChange({
+        dataType,
+        operator,
+        newOperator,
+        source,
+        prevValue,
+      }),
+    ).toBe('');
+  });
+
+  test('should convert SELECT_SINGLE to SELECT_MULTI with label lookup', () => {
+    const prevValue = 'opt1';
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+    const source = [
+      { label: 'Option 1', value: 'opt1' },
+      { label: 'Option 2', value: 'opt2' },
+    ];
+    const availableValues = [
+      { label: 'Option 1', value: 'opt1' },
+      { label: 'Option 2', value: 'opt2' },
+    ];
+
+    expect(
+      retainValueOnOperatorChange({
+        dataType,
+        operator,
+        newOperator,
+        source,
+        availableValues,
+        prevValue,
+      }),
+    ).toEqual([
+      {
+        value: 'opt1',
+        label: 'Option 1',
+      },
     ]);
+  });
+
+  test('should convert SELECT_SINGLE to SELECT_MULTI with EnumType', () => {
+    const prevValue = 'active';
+    const dataType = DATA_TYPES.EnumType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+    const availableValues = [
+      { label: 'Active', value: 'active' },
+      { label: 'Inactive', value: 'inactive' },
+    ];
+
+    expect(
+      retainValueOnOperatorChange({
+        dataType,
+        operator,
+        newOperator,
+        availableValues,
+        prevValue,
+      }),
+    ).toEqual([
+      {
+        value: 'active',
+        label: 'Active',
+      },
+    ]);
+  });
+
+  test('should convert SELECT_MULTI to SELECT_SINGLE with EnumType', () => {
+    const prevValue = [
+      { label: 'Active', value: 'active' },
+      { label: 'Inactive', value: 'inactive' },
+    ];
+    const dataType = DATA_TYPES.EnumType;
+    const operator = OPERATORS.IN;
+    const newOperator = OPERATORS.EQUAL;
+
+    expect(
+      retainValueOnOperatorChange({
+        dataType,
+        operator,
+        newOperator,
+        prevValue,
+      }),
+    ).toBe('active');
   });
 });
