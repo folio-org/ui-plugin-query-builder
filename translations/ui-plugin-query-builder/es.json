@@ -42,5 +42,8 @@
     "control.search.button.organization": "Organization look-up",
     "control.search.button.donor_organization": "Donor organization look-up",
     "noOptionsAvailable.organization": "No matches! Use the “Organization look-up” below to add organizations",
-    "noOptionsAvailable.donor_organization": "No matches! Use the “Donor organization look-up” below to add organizations"
+    "noOptionsAvailable.donor_organization": "No matches! Use the “Donor organization look-up” below to add organizations",
+    "viewer.deletedRecord.emptyField": "—",
+    "viewer.deletedRecord.rowLabel": "Borrado",
+    "viewer.deletedRecord.tooltip": "This record has been deleted; refresh the list to remove it from the results."
 }
