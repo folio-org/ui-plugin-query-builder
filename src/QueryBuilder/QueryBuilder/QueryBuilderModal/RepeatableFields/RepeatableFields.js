@@ -1,4 +1,4 @@
-import React, { memo, useContext, useEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import {
   IconButton,
   RepeatableField,
@@ -27,13 +27,11 @@ import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
 import { DataTypeInput } from '../DataTypeInput';
 import { findMissingValues } from '../../helpers/query';
 import { retainValueOnOperatorChange } from '../../helpers/valueBuilder';
-import { RootContext } from '../../../../context/RootContext';
 
 export const RepeatableFields = memo(({ source, setSource, columns }) => {
   const intl = useIntl();
   const callout = useShowCallout();
   const calloutCalledRef = useRef(false);
-  const { getDataOptions } = useContext(RootContext);
 
   const fieldOptions = getFieldOptions(columns);
 
@@ -85,6 +83,7 @@ export const RepeatableFields = memo(({ source, setSource, columns }) => {
     const memoizedFieldSource = source[index].value.source;
     const memorizedField = fieldOptions.find(o => o.value === rowField);
     const memorizedOperator = source[index].operator.current;
+    const memoizedValues = source[index].value.options;
     const memorizedValue = source[index].value.current;
     const modifications = (item) => {
       if (isField) {
@@ -122,7 +121,7 @@ export const RepeatableFields = memo(({ source, setSource, columns }) => {
               operator: memorizedOperator,
               newOperator: value,
               prevValue: memorizedValue,
-              availableValues: getDataOptions(memorizedField.value),
+              availableValues: memoizedValues,
             }),
           },
         };
