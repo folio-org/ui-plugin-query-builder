@@ -42,5 +42,8 @@
     "control.search.button.organization": "Consultar organização",
     "control.search.button.donor_organization": "Consultar organização doadora",
     "noOptionsAvailable.organization": "Nenhuma correspondência! Use a \"Consulta de organização\" abaixo para adicionar organizações",
-    "noOptionsAvailable.donor_organization": "Nenhuma correspondência! Use a opção \"Consultar organização doadora\" abaixo para adicionar organizações."
+    "noOptionsAvailable.donor_organization": "Nenhuma correspondência! Use a opção \"Consultar organização doadora\" abaixo para adicionar organizações.",
+    "viewer.deletedRecord.emptyField": "—",
+    "viewer.deletedRecord.rowLabel": "Excluído",
+    "viewer.deletedRecord.tooltip": "Este registro foi excluído; atualize a lista para removê-lo dos resultados."
 }

@@ -42,5 +42,8 @@
     "control.search.button.organization": "Organisatie opzoeken",
     "control.search.button.donor_organization": "Donor Organisatie opzoeken",
     "noOptionsAvailable.organization": "Geen overeenkomsten! Gebruik de \"Organization look-up\" hieronder om Organisaties toe te voegen",
-    "noOptionsAvailable.donor_organization": "Geen overeenkomsten! Gebruik de \"Donor organisatie opzoeken\" hieronder om organisaties toe te voegen"
+    "noOptionsAvailable.donor_organization": "Geen overeenkomsten! Gebruik de \"Donor organisatie opzoeken\" hieronder om organisaties toe te voegen",
+    "viewer.deletedRecord.emptyField": "-",
+    "viewer.deletedRecord.rowLabel": "Verwijderd",
+    "viewer.deletedRecord.tooltip": "Dit Record is verwijderd; ververs de lijst om het uit de resultaten te verwijderen."
 }

@@ -42,5 +42,8 @@
     "control.search.button.organization": "Vyhledat organizace",
     "control.search.button.donor_organization": "Vyhledávání dárcovské organizace",
     "noOptionsAvailable.organization": "Žádné shody! Pro přidání organizací použijte níže uvedený \"Vyhledávač organizací\"",
-    "noOptionsAvailable.donor_organization": "Žádná shoda! Pro přidání organizací použijte níže uvedenou možnost \"Vyhledávání dárcovských organizací\""
+    "noOptionsAvailable.donor_organization": "Žádná shoda! Pro přidání organizací použijte níže uvedenou možnost \"Vyhledávání dárcovských organizací\"",
+    "viewer.deletedRecord.emptyField": "—",
+    "viewer.deletedRecord.rowLabel": "Smazáno",
+    "viewer.deletedRecord.tooltip": "Tento záznam byl smazán; aktualizujte seznam, abyste jej z výsledků odstranili."
 }
