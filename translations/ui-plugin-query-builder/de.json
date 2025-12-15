@@ -25,7 +25,7 @@
     "error.sww": "Fehler ist aufgetreten",
     "options.true": "Ja",
     "options.false": "Nein",
-    "modal.preview.title.empty": "Query returns {total, plural, =0 {no records} one {# record} other {# records}}.",
+    "modal.preview.title.empty": "Query returns {total, plural, =0 {no records} one {{total, number} record} other {{total, number} records}}.",
     "control.search.placeholder": "Search fields",
     "ariaLabel.columnFilter": "Column filter input",
     "error.occurredMessage": "Ein Fehler ist aufgetreten.",

@@ -25,7 +25,7 @@
     "error.sww": "Algo salió mal",
     "options.true": "True",
     "options.false": "Falso",
-    "modal.preview.title.empty": "Query returns {total, plural, =0 {no records} one {# record} other {# records}}.",
+    "modal.preview.title.empty": "Query returns {total, plural, =0 {no records} one {{total, number} record} other {{total, number} records}}.",
     "control.search.placeholder": "Search fields",
     "ariaLabel.columnFilter": "Column filter input",
     "error.occurredMessage": "Se ha producido un error.",

@@ -12,7 +12,7 @@
     "columns.action": "アクション",
     "control.info.separateValues": "Separate multiple values with a comma.",
     "control.selection.placeholder": "Select field",
-    "modal.preview.title": "Query returns {total, plural, =0 {no records} one {# record} other {# records}}. Previewing the first {limit, plural, one {# record} other {# records}}:",
+    "modal.preview.title": "Query returns {total, plural, =0 {no records} one {{total, number} record} other {{total, number} records}}. Previewing the first {limit, plural, one {{limit, number} record} other {{limit, number} records}}:",
     "modal.preview.queryInProgress": "テストクエリ処理中",
     "control.dropdown.showColumns": "カラムを表示",
     "viewer.retrieving": "Retrieving...",
