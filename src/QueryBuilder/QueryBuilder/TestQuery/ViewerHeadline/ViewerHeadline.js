@@ -1,11 +1,12 @@
 import React, { memo, useMemo } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { Loading } from '@folio/stripes/components';
 import PropTypes from 'prop-types';
 import css from '../../../QueryBuilder.css';
 import { QUERY_DETAILS_STATUSES } from '../../../../constants/query';
 
 export const ViewerHeadline = memo(({ limit, total, isInProgress, status }) => {
+  const intl = useIntl();
   const hasFailed = status === QUERY_DETAILS_STATUSES.FAILED;
   const isEmpty = total === 0;
 
@@ -13,12 +14,27 @@ export const ViewerHeadline = memo(({ limit, total, isInProgress, status }) => {
     if (hasFailed) {
       return <FormattedMessage id="ui-plugin-query-builder.error.occurredMessage" />;
     }
+
+    const formattedTotal = intl.formatNumber(total);
+
     if (isEmpty) {
-      return <FormattedMessage id="ui-plugin-query-builder.modal.preview.title.empty" values={{ total }} />;
+      return (
+        <FormattedMessage
+          id="ui-plugin-query-builder.modal.preview.title.empty"
+          values={{ total, formattedTotal }}
+        />
+      );
     }
 
-    return <FormattedMessage id="ui-plugin-query-builder.modal.preview.title" values={{ total, limit }} />;
-  }, [hasFailed, isEmpty, total, limit]);
+    const formattedLimit = intl.formatNumber(limit);
+
+    return (
+      <FormattedMessage
+        id="ui-plugin-query-builder.modal.preview.title"
+        values={{ total, limit, formattedTotal, formattedLimit }}
+      />
+    );
+  }, [hasFailed, isEmpty, total, limit, intl]);
 
   return (
     <>
