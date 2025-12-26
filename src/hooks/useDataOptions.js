@@ -16,7 +16,6 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
   const intl = useIntl();
   const [dataOptions, setDataOptions] = useState({});
 
-  // Helper to format language options
   const formatLanguageOptions = useCallback((data, shouldFormat) => {
     if (!shouldFormat || !Array.isArray(data)) {
       return data;
