@@ -1,4 +1,6 @@
 import { useCallback, useState } from 'react';
+import { formattedLanguageName } from '@folio/stripes/components';
+import { useIntl } from 'react-intl';
 import { ORGANIZATIONS_TYPES } from '../constants/dataTypes';
 
 function getUniqueValues(a, b) {
@@ -11,17 +13,35 @@ function getUniqueValues(a, b) {
 }
 
 export function useDataOptions({ getParamsSource, getOrganizations }) {
+  const intl = useIntl();
   const [dataOptions, setDataOptions] = useState({});
+
+  const formatLanguageOptions = useCallback((data, shouldFormat) => {
+    if (!shouldFormat || !Array.isArray(data)) {
+      return data;
+    }
+
+    return data.map((item) => ({
+      value: item.value,
+      label: formattedLanguageName(item.value, intl),
+    }));
+  }, [intl]);
 
   // helper methods to prevent redundant digging through our raw dataOptions
   const getDataOptions = useCallback(
-    (field, allowPromises = false, fetchPromise = undefined, fetchIfValuesMissing = []) => {
+    (
+      field,
+      allowPromises = false,
+      fetchPromise = undefined,
+      fetchIfValuesMissing = [],
+      shouldFormatLanguages = false,
+    ) => {
       if (
         Array.isArray(dataOptions[field]) &&
-        // check that all specially requested values are present
-        fetchIfValuesMissing.every((v) => !!dataOptions[field].find((o) => o.value === v))
+                // check that all specially requested values are present
+                fetchIfValuesMissing.every((v) => !!dataOptions[field].find((o) => o.value === v))
       ) {
-        return dataOptions[field];
+        return formatLanguageOptions(dataOptions[field], shouldFormatLanguages);
       }
 
       // only return promises if requested, to prevent non-async code from exploding here
@@ -52,16 +72,18 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
         return promise;
       }
 
-      return dataOptions[field] ?? [];
+      return formatLanguageOptions(dataOptions[field] ?? [], shouldFormatLanguages);
     },
-    [dataOptions],
+    [dataOptions, formatLanguageOptions],
   );
 
   const getDataOptionsWithFetching = useCallback(
     // usedIds are only for organization sources
     (fieldName, source, searchValue, usedIds) => {
+      const isLanguageField = source?.columnName === 'languages';
+
       if (!source) {
-        return getDataOptions(fieldName);
+        return getDataOptions(fieldName, false, undefined, [], isLanguageField);
       } else if (ORGANIZATIONS_TYPES.includes(source.name)) {
         return getDataOptions(
           fieldName,
@@ -83,16 +105,23 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
               return results.flat();
             },
           usedIds,
+          isLanguageField,
         );
       } else {
-        return getDataOptions(fieldName, true, () => getParamsSource({
-          entityTypeId: source?.entityTypeId,
-          columnName: source?.columnName,
-          searchValue,
-        }).then((data) => data?.content));
+        return getDataOptions(
+          fieldName,
+          true,
+          () => getParamsSource({
+            entityTypeId: source?.entityTypeId,
+            columnName: source?.columnName,
+            searchValue,
+          }).then((data) => data?.content),
+          [],
+          isLanguageField,
+        );
       }
     },
-    [getDataOptions],
+    [getDataOptions, getParamsSource, getOrganizations],
   );
 
   return {
