@@ -42,7 +42,7 @@ export const getQueryStr = (rows, fieldOptions, intl, timezone, getDataOptions) 
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
-    const isLanguageField = row[COLUMN_KEYS.VALUE].source.columnName === 'languages';
+    const isLanguageField = row[COLUMN_KEYS.VALUE].source?.columnName === 'languages';
     const labeledValue = getLabeledValue(value, getDataOptions(field, false, undefined, [], isLanguageField));
     const builtValue = valueBuilder({ value: labeledValue, field, operator, fieldOptions, intl, timezone });
 
