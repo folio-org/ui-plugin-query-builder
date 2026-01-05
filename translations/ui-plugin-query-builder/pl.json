@@ -27,7 +27,7 @@
     "options.false": "Nieprawidłowy",
     "modal.preview.title.empty": "Zapytanie zwraca {total, plural, =0 {brak rekordów} one {# rekord} other {# rekordy}}.",
     "control.search.placeholder": "Przeszukaj nazwę kolumny",
-    "ariaLabel.columnFilter": "Column filter input",
+    "ariaLabel.columnFilter": "Pole filtra kolumny",
     "error.occurredMessage": "Wystąpił błąd.",
     "warning.deletedField": "{value} w Twoim zapytaniu jest niedostępna. Proszę poprawić swoje zapytanie.",
     "viewer.accordion.title.query": "Zapytanie: {query}",
