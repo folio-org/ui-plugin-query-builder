@@ -30,3 +30,19 @@
   flex-grow: 1;
   min-height: 200px;
 }
+
+.DropdownStickyHeader {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.DropdownStickyHeader:before {
+    content: "";
+    position: absolute;
+    left: -15px;
+    top: -5px;
+    height: 34px;
+    width: calc(100% + 30px);
+    background: #fff;
+}

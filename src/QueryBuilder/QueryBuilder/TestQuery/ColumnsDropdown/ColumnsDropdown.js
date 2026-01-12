@@ -1,8 +1,11 @@
 import React, { memo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import PropTypes from 'prop-types';
+
 import { Dropdown, DropdownMenu, TextField } from '@folio/stripes/components';
 import { CheckboxFilter } from '@folio/stripes/smart-components';
-import PropTypes from 'prop-types';
+
+import css from '../../../ResultViewer/ResultViewer.css';
 
 export const ColumnsDropdown = memo(({ columns, visibleColumns, onColumnChange }) => {
   const intl = useIntl();
@@ -23,13 +26,15 @@ export const ColumnsDropdown = memo(({ columns, visibleColumns, onColumnChange }
         role="menu"
         overrideStyle={{ maxHeight: 240 }}
       >
-        <TextField
-          value={columnSearch}
-          onChange={e => setColumnSearch(e.target.value)}
-          aria-label={intl.formatMessage({ id: 'ui-plugin-query-builder.ariaLabel.columnFilter' })}
-          disabled={allDisabled}
-          placeholder={intl.formatMessage({ id: 'ui-plugin-query-builder.control.search.placeholder' })}
-        />
+        <div className={css.DropdownStickyHeader}>
+          <TextField
+            value={columnSearch}
+            onChange={e => setColumnSearch(e.target.value)}
+            aria-label={intl.formatMessage({ id: 'ui-plugin-query-builder.ariaLabel.columnFilter' })}
+            disabled={allDisabled}
+            placeholder={intl.formatMessage({ id: 'ui-plugin-query-builder.control.search.placeholder' })}
+          />
+        </div>
         <CheckboxFilter
           dataOptions={filteredColumns}
           selectedValues={visibleColumns}
