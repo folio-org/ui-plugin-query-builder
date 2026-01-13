@@ -88,6 +88,7 @@ export const DataTypeInput = ({
   source,
   fieldName,
   value,
+  entityTypeId,
   ...rest
 }) => {
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
@@ -131,6 +132,7 @@ export const DataTypeInput = ({
       fieldName={fieldName}
       component={Select}
       source={source}
+      entityTypeId={entityTypeId}
       testId={testId}
       availableValues={availableValues}
       value={inputValue}
@@ -146,6 +148,7 @@ export const DataTypeInput = ({
       testId={testId}
       component={MultiSelection}
       source={source}
+      entityTypeId={entityTypeId}
       availableValues={availableValues}
       onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
       isMulti
@@ -333,4 +336,5 @@ DataTypeInput.propTypes = {
       PropTypes.object,
     ]),
   ),
+  entityTypeId: PropTypes.string,
 };

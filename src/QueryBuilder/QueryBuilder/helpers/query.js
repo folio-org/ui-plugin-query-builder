@@ -199,6 +199,7 @@ const getFormattedSourceField = async ({
   boolean,
   getDataOptionsWithFetching,
   preserveQueryValue, // for enum values, preserves the value (used for initial value handling in QB)
+  originalEntityTypeId,
 }) => {
   const [field, query] = Object.entries(item)[0];
   const fqlOperator = Object.keys(query)[0];
@@ -230,7 +231,13 @@ const getFormattedSourceField = async ({
     let formattedValue;
 
     if (source) {
-      possibleValues = await getDataOptionsWithFetching(field, source, '', Array.isArray(value) ? value : [value]);
+      possibleValues = await getDataOptionsWithFetching(
+        field,
+        source,
+        '',
+        Array.isArray(value) ? value : [value],
+        originalEntityTypeId,
+      );
     }
 
     if (Array.isArray(value)) {
@@ -274,11 +281,18 @@ export const fqlQueryToSource = async ({
   intl,
   getDataOptionsWithFetching,
   preserveQueryValue,
+  originalEntityTypeId,
 }) => {
   if (!fieldOptions?.length || !Object.keys(initialValues).length) return [];
 
   const key = Object.keys(initialValues)[0];
-  const sharedArgs = { intl, fieldOptions, getDataOptionsWithFetching, preserveQueryValue };
+  const sharedArgs = {
+    intl,
+    fieldOptions,
+    getDataOptionsWithFetching,
+    preserveQueryValue,
+    originalEntityTypeId,
+  };
 
   // handle case when query contains boolean operators (AND, OR, etc.)
   if (Object.values(BOOLEAN_OPERATORS).includes(key)) {
@@ -314,6 +328,7 @@ export const getSourceValue = ({
   intl,
   getDataOptionsWithFetching,
   preserveQueryValue = true,
+  originalEntityTypeId,
 }) => {
   // if initial value provided, and it has some items, fill the source with it
   const hasInitialValues = Object
@@ -327,6 +342,7 @@ export const getSourceValue = ({
       intl,
       getDataOptionsWithFetching,
       preserveQueryValue,
+      originalEntityTypeId,
     });
   }
 
@@ -367,7 +383,16 @@ export const useQueryStr = (entityType, { source, fqlQuery }) => {
     const calculateRows = async () => {
       if (source?.length) {
         setRows(source);
-      } else if (fqlQuery) {
+        return;
+      }
+
+      if (fqlQuery) {
+        // Entity type must be present so options can be fetched using the entity type's id
+        if (!entityType?.id) {
+          setRows(null);
+          return;
+        }
+
         const upgraded = upgradeInitialValues(fqlQuery, entityType);
 
         setRows(
@@ -377,15 +402,18 @@ export const useQueryStr = (entityType, { source, fqlQuery }) => {
             intl,
             getDataOptionsWithFetching,
             preserveQueryValue: false, // pretty print
+            originalEntityTypeId: entityType.id,
           }),
         );
-      } else {
-        setRows([]);
+
+        return;
       }
+
+      setRows([]);
     };
 
     calculateRows();
-  }, [source, fqlQuery, fieldOptions, intl]);
+  }, [source, fqlQuery, fieldOptions, intl, entityType?.id, getDataOptionsWithFetching, ]);
 
   return useMemo(() => {
     if (rows === null) {

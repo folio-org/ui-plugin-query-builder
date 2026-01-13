@@ -28,7 +28,7 @@ import { DataTypeInput } from '../DataTypeInput';
 import { findMissingValues } from '../../helpers/query';
 import { retainValueOnOperatorChange } from '../../helpers/valueBuilder';
 
-export const RepeatableFields = memo(({ source, setSource, columns }) => {
+export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId }) => {
   const intl = useIntl();
   const callout = useShowCallout();
   const calloutCalledRef = useRef(false);
@@ -232,6 +232,7 @@ export const RepeatableFields = memo(({ source, setSource, columns }) => {
                     data-testid={`input-value-${index}`}
                     aria-label={`input-value-${index}`}
                     usePortal
+                    entityTypeId={entityTypeId}
                   />
                 )}
               </Col>
@@ -261,4 +262,5 @@ RepeatableFields.propTypes = {
   source: PropTypes.arrayOf(PropTypes.object),
   columns: PropTypes.arrayOf(PropTypes.object),
   setSource: PropTypes.func,
+  entityTypeId: PropTypes.string,
 };

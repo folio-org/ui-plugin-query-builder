@@ -264,6 +264,7 @@ export const QueryBuilderModal = ({
                 source={source}
                 setSource={handleSetSource}
                 columns={entityType?.columns}
+                entityTypeId={entityType?.id}
               />
               <TestQuery
                 queryId={queryId}

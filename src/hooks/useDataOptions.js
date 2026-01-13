@@ -79,7 +79,8 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
 
   const getDataOptionsWithFetching = useCallback(
     // usedIds are only for organization sources
-    (fieldName, source, searchValue, usedIds) => {
+    // `originalEntityTypeId` is the entityTypeId the user is building the query against
+    (fieldName, source, searchValue, usedIds, originalEntityTypeId) => {
       const isLanguageField = source?.columnName === 'languages';
 
       if (!source) {
@@ -108,12 +109,17 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
           isLanguageField,
         );
       } else {
+        // If the entityType isn't known yet, don't attempt value fetching
+        if (!originalEntityTypeId) {
+          return [];
+        }
+
         return getDataOptions(
           fieldName,
           true,
           () => getParamsSource({
-            entityTypeId: source?.entityTypeId,
-            columnName: source?.columnName,
+            entityTypeId: originalEntityTypeId,
+            columnName: fieldName,
             searchValue,
           }).then((data) => data?.content),
           [],
