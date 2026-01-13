@@ -124,7 +124,7 @@ export const useAsyncDataSource = ({
         throw e;
       }
     },
-    refetchInterval,
+    refetchInterval: isErrorOccurred ? 0 : refetchInterval,
     onSuccess: (data) => {
       setHasShownError(false);
       setIsErrorOccurred(false);
