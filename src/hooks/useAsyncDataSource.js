@@ -12,7 +12,6 @@ import { useEntityType } from './useEntityType';
 import { QUERY_KEYS } from '../constants/query';
 
 const DEFAULT_TIMEOUT = 6000;
-const DEFAULT_MAX_RETRIES = 3;
 
 // temporary solution to emulate structuralSharing before migrating to react-query v4+
 const structuralSharing = (queryClient, key, newData) => {
@@ -48,7 +47,6 @@ export const useAsyncDataSource = ({
   const [contentDataKey] = useNamespace({ key: QUERY_KEYS.QUERY_PLUGIN_CONTENT_DATA });
   const [debouncedOffset, debouncedLimit] = useDebounce([offset, limit], 200);
   const debouncedContentQueryKeys = useDebounce(contentQueryKeys, 500);
-  const [retry, setRetry] = useState(DEFAULT_MAX_RETRIES);
   const [hasShownError, setHasShownError] = useState(false);
   const [isErrorOccurred, setIsErrorOccurred] = useState(false);
   const {
@@ -108,31 +106,33 @@ export const useAsyncDataSource = ({
       } catch (e) {
         const response = await e.response.json();
 
-        if (response.code === 'read-list.contents.request.failed') {
-          if (response.message.includes('schema is invalid')) {
-            showError('ui-plugin-query-builder.error.invalidEntity');
-          } else {
+        switch (response.code) {
+          case 'entity.type.invalid':
             showError('ui-plugin-query-builder.error.needsRefresh');
-          }
-          setRetry(false);
+            break;
+          case 'read-list.contents.request.failed':
+            if (response.message.includes('schema is invalid')) {
+              showError('ui-plugin-query-builder.error.invalidEntity');
+            } else {
+              showError('ui-plugin-query-builder.error.needsRefresh');
+            }
+            break;
+          default:
+            showError('ui-plugin-query-builder.error.sww');
+            break;
         }
         throw e;
       }
     },
     refetchInterval,
     onSuccess: (data) => {
-      setRetry(DEFAULT_MAX_RETRIES);
       setHasShownError(false);
       setIsErrorOccurred(false);
       onSuccess(data);
     },
-    onError: () => {
-      showError('ui-plugin-query-builder.error.sww');
-    },
+    retry: false,
     refetchOnWindowFocus: false,
     keepPreviousData,
-    retry,
-    retryDelay: 100,
   });
 
   const { content: contentData, totalRecords, status } = recordsData || {};
