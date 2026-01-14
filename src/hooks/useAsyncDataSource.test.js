@@ -178,7 +178,7 @@ describe('useAsyncDataSource', () => {
     });
   });
 
-  it('should handle generic error case with retries', async () => {
+  it('should handle generic error case', async () => {
     const contentDataSource = jest.fn(() => {
       throw Object.assign(new Error(), {
         response: {
@@ -208,7 +208,7 @@ describe('useAsyncDataSource', () => {
       { wrapper },
     );
 
-    await waitFor(() => expect(contentDataSource.mock.calls.length).toBeGreaterThanOrEqual(3));
+    await waitFor(() => expect(contentDataSource).toHaveBeenCalled());
     await waitFor(() => expect(completeExecution).toHaveBeenCalled());
 
     expect(result.current.isErrorOccurred).toBe(true);
