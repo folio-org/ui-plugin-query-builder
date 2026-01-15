@@ -4,13 +4,6 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { RootContext } from '../../../context/RootContext';
 import { useQueryStr } from './query';
 
-jest.mock('react-intl', () => ({
-  ...jest.requireActual('react-intl'),
-  useIntl: () => ({
-    formatMessage: ({ id }) => id,
-  }),
-}));
-
 jest.mock('../../../hooks/useTenantTimezone', () => {
   return () => ({ tenantTimezone: 'UTC' });
 });
@@ -31,9 +24,7 @@ describe('useQueryStr', () => {
       { wrapper },
     );
 
-    await waitFor(() => {
-      expect(result.current).toBe('');
-    });
+    await waitFor(() => expect(result.current).toBe(''));
   });
 
   it('returns early (keeps loading) when fqlQuery exists but entityType is not loaded yet', async () => {
@@ -53,5 +44,6 @@ describe('useQueryStr', () => {
 
     // When entityType is missing but fqlQuery exists, the hook should remain in the loading state
     expect(React.isValidElement(result.current)).toBe(true);
+    expect(result.current.type?.name).toBe('Loading');
   });
 });

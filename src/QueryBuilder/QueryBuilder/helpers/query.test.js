@@ -233,8 +233,8 @@ describe('fqlQueryToSource()', () => {
   it('should fetch possible values when field has a source and format value using fetched labels', async () => {
     const intl = { formatMessage: jest.fn() };
     const getDataOptionsWithFetching = jest.fn(() => Promise.resolve([
-      { value: 'v1', label: 'Label 1' },
-      { value: 'v2', label: 'Label 2' },
+      { value: 'value1', label: 'Label 1' },
+      { value: 'value2', label: 'Label 2' },
     ]));
 
     const fieldOptionsWithSource = [{
@@ -245,7 +245,7 @@ describe('fqlQueryToSource()', () => {
     }];
 
     const initialValuesWithSource = {
-      user_first_name: { $in: ['v1', 'v2'] },
+      user_first_name: { $in: ['value1', 'value2'] },
     };
 
     const result = await fqlQueryToSource({
@@ -261,7 +261,7 @@ describe('fqlQueryToSource()', () => {
       'user_first_name',
       fieldOptionsWithSource[0].source,
       '',
-      ['v1', 'v2'],
+      ['value1', 'value2'],
       'entity-type-id',
     );
 
@@ -272,8 +272,8 @@ describe('fqlQueryToSource()', () => {
         operator: { options: expect.any(Array), current: OPERATORS.IN, dataType: DATA_TYPES.StringType },
         value: {
           current: [
-            { value: 'v1', label: 'Label 1' },
-            { value: 'v2', label: 'Label 2' },
+            { value: 'value1', label: 'Label 1' },
+            { value: 'value2', label: 'Label 2' },
           ],
           source: fieldOptionsWithSource[0].source,
           options: undefined,
