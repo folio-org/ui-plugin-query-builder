@@ -270,10 +270,14 @@ describe('fqlQueryToSource()', () => {
         boolean: { options: booleanOptions, current: '' },
         field: { options: fieldOptionsWithSource, current: 'user_first_name', dataType: DATA_TYPES.StringType },
         operator: { options: expect.any(Array), current: OPERATORS.IN, dataType: DATA_TYPES.StringType },
-        value: { current: [
-          { value: 'v1', label: 'Label 1' },
-          { value: 'v2', label: 'Label 2' },
-        ], source: fieldOptionsWithSource[0].source, options: undefined },
+        value: {
+          current: [
+            { value: 'v1', label: 'Label 1' },
+            { value: 'v2', label: 'Label 2' },
+          ],
+          source: fieldOptionsWithSource[0].source,
+          options: undefined
+        },
       },
     ]);
   });

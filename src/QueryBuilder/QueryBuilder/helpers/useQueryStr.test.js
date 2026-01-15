@@ -55,4 +55,3 @@ describe('useQueryStr', () => {
     expect(React.isValidElement(result.current)).toBe(true);
   });
 });
-

@@ -383,6 +383,7 @@ export const useQueryStr = (entityType, { source, fqlQuery }) => {
     const calculateRows = async () => {
       if (source?.length) {
         setRows(source);
+
         return;
       }
 
@@ -390,6 +391,7 @@ export const useQueryStr = (entityType, { source, fqlQuery }) => {
         // Entity type must be present so options can be fetched using the entity type's id
         if (!entityType?.id) {
           setRows(null);
+
           return;
         }
 
@@ -413,7 +415,7 @@ export const useQueryStr = (entityType, { source, fqlQuery }) => {
     };
 
     calculateRows();
-  }, [source, fqlQuery, fieldOptions, intl, entityType?.id, getDataOptionsWithFetching, ]);
+  }, [source, fqlQuery, fieldOptions, intl, entityType?.id, getDataOptionsWithFetching]);
 
   return useMemo(() => {
     if (rows === null) {
