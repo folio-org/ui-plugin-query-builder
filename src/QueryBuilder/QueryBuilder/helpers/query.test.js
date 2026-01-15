@@ -276,7 +276,7 @@ describe('fqlQueryToSource()', () => {
             { value: 'v2', label: 'Label 2' },
           ],
           source: fieldOptionsWithSource[0].source,
-          options: undefined
+          options: undefined,
         },
       },
     ]);
