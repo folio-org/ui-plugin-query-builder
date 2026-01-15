@@ -229,6 +229,58 @@ describe('fqlQueryToSource()', () => {
       },
     ]);
   });
+
+  it('should fetch possible values when field has a source and format value using fetched labels', async () => {
+    const intl = { formatMessage: jest.fn() };
+    const getDataOptionsWithFetching = jest.fn(() => Promise.resolve([
+      { value: 'value1', label: 'Label 1' },
+      { value: 'value2', label: 'Label 2' },
+    ]));
+
+    const fieldOptionsWithSource = [{
+      value: 'user_first_name',
+      label: 'User first name',
+      dataType: DATA_TYPES.StringType,
+      source: { name: 'non-org', columnName: 'user_first_name' },
+    }];
+
+    const initialValuesWithSource = {
+      user_first_name: { $in: ['value1', 'value2'] },
+    };
+
+    const result = await fqlQueryToSource({
+      initialValues: initialValuesWithSource,
+      fieldOptions: fieldOptionsWithSource,
+      intl,
+      getDataOptionsWithFetching,
+      preserveQueryValue: false,
+      originalEntityTypeId: 'entity-type-id',
+    });
+
+    expect(getDataOptionsWithFetching).toHaveBeenCalledWith(
+      'user_first_name',
+      fieldOptionsWithSource[0].source,
+      '',
+      ['value1', 'value2'],
+      'entity-type-id',
+    );
+
+    expect(result).toEqual([
+      {
+        boolean: { options: booleanOptions, current: '' },
+        field: { options: fieldOptionsWithSource, current: 'user_first_name', dataType: DATA_TYPES.StringType },
+        operator: { options: expect.any(Array), current: OPERATORS.IN, dataType: DATA_TYPES.StringType },
+        value: {
+          current: [
+            { value: 'value1', label: 'Label 1' },
+            { value: 'value2', label: 'Label 2' },
+          ],
+          source: fieldOptionsWithSource[0].source,
+          options: undefined,
+        },
+      },
+    ]);
+  });
 });
 
 describe('isQueryValid', () => {

@@ -15,6 +15,7 @@ export const SelectionContainer = ({
   isMulti,
   onChange,
   source,
+  entityTypeId,
   testId,
   emptyMessage,
   value,
@@ -50,7 +51,7 @@ export const SelectionContainer = ({
   };
 
   const usedIds = (Array.isArray(value) ? value : [value]).map(item => item?.value || item).filter(Boolean);
-  const optionsPromise = getDataOptionsWithFetching(fieldName, source, searchValue, usedIds);
+  const optionsPromise = getDataOptionsWithFetching(fieldName, source, searchValue, usedIds, entityTypeId);
 
   const filterOptions = (filterText, list) => {
     const lowerCaseFilterText = filterText?.toLowerCase() || '';
@@ -119,4 +120,5 @@ SelectionContainer.propTypes = {
     PropTypes.array,
     PropTypes.object,
   ]),
+  entityTypeId: PropTypes.string,
 };

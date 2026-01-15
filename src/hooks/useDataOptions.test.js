@@ -91,9 +91,18 @@ describe('useDataOptions', () => {
       const getParamsSource = jest.fn(() => Promise.resolve({ content: [] }));
       const { result } = renderHook(() => useDataOptions({ getParamsSource }));
 
-      result.current.getDataOptionsWithFetching('field', { name: 'non-org' });
+      result.current.getDataOptionsWithFetching('field', { name: 'non-org' }, '', [], 'entity-type-id');
 
       expect(getParamsSource).toHaveBeenCalled();
+    });
+
+    it('does not call getParamsSource for non-org when originalEntityTypeId is missing', async () => {
+      const getParamsSource = jest.fn(() => Promise.resolve({ content: [] }));
+      const { result } = renderHook(() => useDataOptions({ getParamsSource }));
+
+      result.current.getDataOptionsWithFetching('field', { name: 'non-org' });
+
+      expect(getParamsSource).not.toHaveBeenCalled();
     });
 
     it('calls getOrganizations for org source', async () => {
