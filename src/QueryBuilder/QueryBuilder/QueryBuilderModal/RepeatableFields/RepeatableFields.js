@@ -1,20 +1,21 @@
-import React, { memo, useEffect, useRef } from 'react';
+import { useShowCallout } from '@folio/stripes-acq-components';
 import {
+  Col,
+  getFirstFocusable,
   IconButton,
   RepeatableField,
+  Row,
   Select,
   Selection,
-  Col,
-  Row,
-  getFirstFocusable,
 } from '@folio/stripes/components';
-import { useShowCallout } from '@folio/stripes-acq-components';
+import React, { memo, useEffect, useRef } from 'react';
 
 import PropTypes from 'prop-types';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { QueryBuilderTitle } from '../../QueryBuilderTitle';
-import css from '../QueryBuilderModal.css';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
+import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
+import { RootContext } from '../../../../context/RootContext';
+import { findMissingValues } from '../../helpers/query';
 import {
   booleanOptions,
   getFieldOptions,
@@ -23,15 +24,17 @@ import {
   REPEATABLE_FIELD_DELIMITER,
   sourceTemplate,
 } from '../../helpers/selectOptions';
-import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
-import { DataTypeInput } from '../DataTypeInput';
-import { findMissingValues } from '../../helpers/query';
 import { retainValueOnOperatorChange } from '../../helpers/valueBuilder';
+import { QueryBuilderTitle } from '../../QueryBuilderTitle';
+import { DataTypeInput } from '../DataTypeInput';
+import css from '../QueryBuilderModal.css';
 
 export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId }) => {
   const intl = useIntl();
   const callout = useShowCallout();
   const calloutCalledRef = useRef(false);
+
+  const { getDataOptions } = React.useContext(RootContext);
 
   const fieldOptions = getFieldOptions(columns);
 
@@ -83,8 +86,9 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
     const memoizedFieldSource = source[index].value.source;
     const memorizedField = fieldOptions.find(o => o.value === rowField);
     const memorizedOperator = source[index].operator.current;
-    const memoizedValues = source[index].value.options;
+    const memoizedValues = source[index].value.options || getDataOptions(rowField);
     const memorizedValue = source[index].value.current;
+
     const modifications = (item) => {
       if (isField) {
         return {
