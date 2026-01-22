@@ -25,7 +25,7 @@
     "error.sww": "لقد حدث خطأ ما",
     "options.true": "صحيح",
     "options.false": "غير صحيح",
-    "modal.preview.title.empty": "سوف يقوم الاستعلام بإرجاع {total} تسجيلة.",
+    "modal.preview.title.empty": "Query returns {total, plural, =0 {no records} one {{total, number} record} other {{total, number} records}}.",
     "control.search.placeholder": "حقول البحث",
     "ariaLabel.columnFilter": "مدخلات منقح العمود",
     "error.occurredMessage": "لقد حدث خطأ.",
