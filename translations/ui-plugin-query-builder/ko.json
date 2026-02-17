@@ -45,5 +45,5 @@
     "noOptionsAvailable.donor_organization": "No matches! Use the “Donor organization look-up” below to add organizations",
     "viewer.deletedRecord.emptyField": "—",
     "viewer.deletedRecord.rowLabel": "삭제",
-    "viewer.deletedRecord.tooltip": "This record has been deleted; refresh the list to remove it from the results."
+    "viewer.deletedRecord.tooltip": "이 레코드는 삭제되었습니다. 목록을 새로고침하면 결과에서 사라집니다."
 }
