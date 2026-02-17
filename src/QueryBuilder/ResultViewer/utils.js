@@ -1,10 +1,15 @@
 import React from 'react';
 import { FormattedDate, FormattedMessage } from 'react-intl';
+import { get } from 'lodash';
 
 import { formattedLanguageName } from '@folio/stripes/components';
 
 import { DATA_TYPES } from '../../constants/dataTypes';
 import { DynamicTable } from './DynamicTable';
+
+export const getNestedValue = (obj, path) => {
+  return get(obj, path);
+};
 
 export const formatValueByDataType = (value, dataType, properties, intl, additionalParams = {}) => {
   if (value === undefined || value === null) {

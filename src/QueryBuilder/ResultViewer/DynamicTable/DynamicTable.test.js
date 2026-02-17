@@ -152,4 +152,48 @@ describe('DynamicTable component', () => {
 
     expect(container.innerHTML).toBe('');
   });
+
+  it('handles nested property paths like "metadata.createdByUserId"', () => {
+    const nestedColumns = [
+      {
+        id: 'metadata.createdByUserId',
+        name: 'Created By User ID',
+        dataType: 'stringType',
+      },
+      {
+        id: 'metadata.createdDate',
+        name: 'Created Date',
+        dataType: 'dateTimeType',
+      },
+      {
+        id: 'name',
+        name: 'Name',
+        dataType: 'stringType',
+      },
+    ];
+
+    const nestedValues = [
+      {
+        name: 'Test Item',
+        metadata: {
+          createdDate: '2026-02-16T20:21:09.182Z',
+          updatedDate: '2026-02-16T20:21:09.182Z',
+          createdByUserId: 'da319ad6-5969-48c9-bd94-1aa173cdab76',
+          updatedByUserId: 'da319ad6-5969-48c9-bd94-1aa173cdab76',
+        },
+      },
+    ];
+
+    const { getByText } = render(
+      <IntlProvider locale="en" timeZone="UTC">
+        <DynamicTable columns={nestedColumns} values={nestedValues} formatter={formatValueByDataType} />
+      </IntlProvider>,
+    );
+
+    expect(getByText('Created By User ID')).toBeInTheDocument();
+    expect(getByText('Created Date')).toBeInTheDocument();
+    expect(getByText('Name')).toBeInTheDocument();
+    expect(getByText('Test Item')).toBeInTheDocument();
+    expect(getByText('da319ad6-5969-48c9-bd94-1aa173cdab76')).toBeInTheDocument();
+  });
 });

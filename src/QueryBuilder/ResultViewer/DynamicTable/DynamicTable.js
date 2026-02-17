@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useIntl } from 'react-intl';
+import { getNestedValue } from '../utils';
 import css from './DynamicTable.css';
 
 export const DynamicTable = ({ columns = [], values = [], formatter }) => {
@@ -25,7 +26,7 @@ export const DynamicTable = ({ columns = [], values = [], formatter }) => {
             {columns.map((column) => (
               <td key={column.id} style={column.styles}>
                 {formatter(
-                  row[column.id],
+                  getNestedValue(row, column.id),
                   column.dataType,
                   undefined,
                   intl,
