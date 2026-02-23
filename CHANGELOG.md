@@ -16,6 +16,7 @@
 * [UIPQB-65](https://folio-org.atlassian.net/browse/UIPQB-65) Change Query build modal to full screen layer
 * [UIPQB-250](https://folio-org.atlassian.net/browse/UIPQB-250) Changing operators resets value
 * [UIPQB-251](https://folio-org.atlassian.net/browse/UIPQB-251) Search box under "Show Columns" should stick to top when building a query
+* [UIPQB-260](https://folio-org.atlassian.net/browse/UIPQB-260) Fix undefined values when editing a query
 
 ## [2.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.3) (2025-04-18)
 

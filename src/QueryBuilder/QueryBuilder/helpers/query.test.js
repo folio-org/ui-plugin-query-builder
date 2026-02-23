@@ -110,7 +110,7 @@ describe('fqlQueryToSource()', () => {
       boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'instance.languages' },
       operator: { options: expect.any(Array), current: OPERATORS.IN },
-      value: { current: ['value', 'value2'] },
+      value: { current: [{ value: 'value', label: 'value' }, { value: 'value2', label: 'value2' }] },
     },
   ];
 
@@ -280,6 +280,73 @@ describe('fqlQueryToSource()', () => {
         },
       },
     ]);
+  });
+
+  it('should preserve query value when preserveQueryValue is true', async () => {
+    const intl = { formatMessage: jest.fn() };
+    const getDataOptionsWithFetching = jest.fn(() => Promise.resolve([
+      { value: 'value1', label: 'Label 1' },
+      { value: 'value2', label: 'Label 2' },
+    ]));
+
+    const fieldOptionsWithSource = [{
+      value: 'user_first_name',
+      label: 'User first name',
+      dataType: DATA_TYPES.StringType,
+      source: { name: 'non-org', columnName: 'user_first_name' },
+    }];
+
+    const initialValuesWithSource = {
+      user_first_name: { $eq: 'value1' },
+    };
+
+    const result = await fqlQueryToSource({
+      initialValues: initialValuesWithSource,
+      fieldOptions: fieldOptionsWithSource,
+      intl,
+      getDataOptionsWithFetching,
+      preserveQueryValue: true,
+      originalEntityTypeId: 'entity-type-id',
+    });
+
+    expect(result).toEqual([
+      {
+        boolean: { options: booleanOptions, current: '' },
+        field: { options: fieldOptionsWithSource, current: 'user_first_name', dataType: DATA_TYPES.StringType },
+        operator: { options: expect.any(Array), current: OPERATORS.EQUAL, dataType: DATA_TYPES.StringType },
+        value: {
+          current: 'value1',
+          source: fieldOptionsWithSource[0].source,
+          options: undefined,
+        },
+      },
+    ]);
+  });
+
+  it('should include null for items with unsupported operators', async () => {
+    const intl = { formatMessage: jest.fn() };
+
+    const initialValuesWithUnsupportedOperator = {
+      $and: [
+        { user_first_name: { $eq: 'value' } },
+        { user_last_name: { $unsupported_operator: 'value' } },
+        { user_full_name: { $contains: 'test' } },
+      ],
+    };
+
+    const result = await fqlQueryToSource({
+      initialValues: initialValuesWithUnsupportedOperator,
+      fieldOptions,
+      intl,
+      getDataOptionsWithFetching: jest.fn(),
+    });
+
+    expect(result).toHaveLength(3);
+    expect(result[0].field.current).toBe('user_first_name');
+    expect(result[0].operator.current).toBe(OPERATORS.EQUAL);
+    expect(result[1]).toBeNull(); // Unsupported operator returns null
+    expect(result[2].field.current).toBe('user_full_name');
+    expect(result[2].operator.current).toBe(OPERATORS.CONTAINS);
   });
 });
 
