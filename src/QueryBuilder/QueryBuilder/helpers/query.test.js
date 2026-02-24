@@ -326,20 +326,18 @@ describe('fqlQueryToSource()', () => {
   it('should show labels for array fields with predefined values when editing query', async () => {
     const intl = { formatMessage: jest.fn() };
 
-    // Simulate editing a query for instance.languages which has arrayType with predefined values
-    const initialValuesWithArrayField = {
+    const initial = {
       'instance.languages': { $in: ['eng', 'fra'] },
     };
 
     const result = await fqlQueryToSource({
-      initialValues: initialValuesWithArrayField,
-      fieldOptions, // includes instance.languages with values: [{label: 'English', value: 'eng'}, {label: 'French', value: 'fra'}]
+      initialValues: initial,
+      fieldOptions,
       intl,
       getDataOptionsWithFetching: jest.fn(),
-      preserveQueryValue: true, // When editing (not pretty printing)
+      preserveQueryValue: true,
     });
 
-    // Should find the values in the predefined values array and return full objects with labels
     expect(result).toHaveLength(1);
     expect(result[0].field.current).toBe('instance.languages');
     expect(result[0].operator.current).toBe(OPERATORS.IN);
@@ -349,14 +347,14 @@ describe('fqlQueryToSource()', () => {
     ]);
   });
 
-  it('should show labels for array fields with source when editing query (preserveQueryValue: true)', async () => {
+  it('should show labels for array fields with source when editing query', async () => {
     const intl = { formatMessage: jest.fn() };
     const getDataOptionsWithFetching = jest.fn(() => Promise.resolve([
       { value: 'uuid-1', label: 'Department A' },
       { value: 'uuid-2', label: 'Department B' },
     ]));
 
-    const fieldOptionsWithDepartments = [{
+    const fieldOptionsWithSource = [{
       value: 'departments',
       label: 'Departments',
       dataType: DATA_TYPES.JsonbArrayType,
@@ -366,24 +364,22 @@ describe('fqlQueryToSource()', () => {
       },
     }];
 
-    // Backend returns UUIDs
-    const initialValuesWithDepartments = {
+    const initial = {
       departments: { $in: ['uuid-1', 'uuid-2'] },
     };
 
     const result = await fqlQueryToSource({
-      initialValues: initialValuesWithDepartments,
-      fieldOptions: fieldOptionsWithDepartments,
+      initialValues: initial,
+      fieldOptions: fieldOptionsWithSource,
       intl,
       getDataOptionsWithFetching,
-      preserveQueryValue: true, // When editing query (not pretty printing)
+      preserveQueryValue: true,
       originalEntityTypeId: 'entity-type-id',
     });
 
-    // Should fetch and show labels
     expect(getDataOptionsWithFetching).toHaveBeenCalledWith(
       'departments',
-      fieldOptionsWithDepartments[0].source,
+      fieldOptionsWithSource[0].source,
       '',
       ['uuid-1', 'uuid-2'],
       'entity-type-id',
@@ -392,7 +388,6 @@ describe('fqlQueryToSource()', () => {
     expect(result).toHaveLength(1);
     expect(result[0].field.current).toBe('departments');
     expect(result[0].operator.current).toBe(OPERATORS.IN);
-    // Should show full objects with proper labels, not { value: 'uuid-1', label: 'uuid-1' }
     expect(result[0].value.current).toEqual([
       { value: 'uuid-1', label: 'Department A' },
       { value: 'uuid-2', label: 'Department B' },
