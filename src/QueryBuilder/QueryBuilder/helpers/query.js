@@ -192,6 +192,37 @@ const getSourceFields = (field) => ({
   },
 }[field]);
 
+const createDeletedFieldResponse = (boolean, fieldOptions) => {
+  const defaultItem = fieldOptions[0];
+
+  return {
+    boolean: { options: booleanOptions, current: boolean },
+    field: { options: fieldOptions, dataType: defaultItem?.dataType },
+    operator: { current: '' },
+    value: { current: '' },
+    deleted: true,
+  };
+};
+
+const formatArrayValue = (value, hasSourceOrValues, possibleValues) => {
+  if (!hasSourceOrValues) {
+    return value;
+  }
+
+  return value.map(val => {
+    const found = possibleValues?.find(param => param.value === val);
+
+    // If not found, create an object with value and label to maintain consistent format
+    return found || { value: val, label: val };
+  });
+};
+
+const formatSingleValue = (value, possibleValues, preserveQueryValue) => {
+  const key = preserveQueryValue ? 'value' : 'label';
+
+  return possibleValues?.find(param => param.value === value)?.[key];
+};
+
 const getFormattedSourceField = async ({
   item,
   intl,
@@ -205,74 +236,53 @@ const getFormattedSourceField = async ({
   const fqlOperator = Object.keys(query)[0];
   const fqlValue = query[fqlOperator];
 
-  const { operator, value } = getSourceFields(fqlOperator)(fqlValue);
+  const { operator, value } = getSourceFields(fqlOperator)?.(fqlValue) || {};
 
-  if (operator) {
-    const fieldItem = fieldOptions.find(f => f.value === field);
-    const defaultItem = fieldOptions[0];
-
-    // Exceptional case, when queried field were deleted
-    if (!fieldItem) {
-      return {
-        boolean: { options: booleanOptions, current: boolean },
-        field: { options: fieldOptions, dataType: defaultItem?.dataType },
-        operator: {
-          current: '',
-        },
-        value: { current: '' },
-        deleted: true,
-      };
-    }
-
-    const { dataType, values, source } = fieldItem;
-    const hasSourceOrValues = values || source;
-
-    let possibleValues = values;
-    let formattedValue;
-
-    if (source) {
-      possibleValues = await getDataOptionsWithFetching(
-        field,
-        source,
-        '',
-        Array.isArray(value) ? value : [value],
-        originalEntityTypeId,
-      );
-    }
-
-    if (Array.isArray(value)) {
-      formattedValue = value
-        .map(val => possibleValues?.find(param => param.value === val) || val);
-    } else {
-      let key;
-
-      if (preserveQueryValue) {
-        key = 'value';
-      } else {
-        key = 'label';
-      }
-
-      formattedValue = possibleValues?.find(param => param.value === value)?.[key];
-    }
-
-    return {
-      boolean: { options: booleanOptions, current: boolean },
-      field: { options: fieldOptions, current: field, dataType },
-      operator: {
-        dataType,
-        options: getOperatorOptions({
-          dataType,
-          hasSourceOrValues,
-          isFromNestedField: fieldItem.value.includes(REPEATABLE_FIELD_DELIMITER),
-          intl,
-        }),
-        current: operator,
-      },
-      value: { current: formattedValue || value, source, options: values },
-    };
+  if (!operator) {
+    return null;
   }
 
-  return null;
+  const fieldItem = fieldOptions.find(f => f.value === field);
+
+  // Exceptional case, when queried field was deleted
+  if (!fieldItem) {
+    return createDeletedFieldResponse(boolean, fieldOptions);
+  }
+
+  const { dataType, values, source } = fieldItem;
+  const hasSourceOrValues = values || source;
+
+  let possibleValues = values;
+
+  if (source) {
+    possibleValues = await getDataOptionsWithFetching(
+      field,
+      source,
+      '',
+      Array.isArray(value) ? value : [value],
+      originalEntityTypeId,
+    );
+  }
+
+  const formattedValue = Array.isArray(value)
+    ? formatArrayValue(value, hasSourceOrValues, possibleValues)
+    : formatSingleValue(value, possibleValues, preserveQueryValue);
+
+  return {
+    boolean: { options: booleanOptions, current: boolean },
+    field: { options: fieldOptions, current: field, dataType },
+    operator: {
+      dataType,
+      options: getOperatorOptions({
+        dataType,
+        hasSourceOrValues,
+        isFromNestedField: fieldItem.value.includes(REPEATABLE_FIELD_DELIMITER),
+        intl,
+      }),
+      current: operator,
+    },
+    value: { current: formattedValue || value, source, options: values },
+  };
 };
 
 export const fqlQueryToSource = async ({
@@ -305,7 +315,8 @@ export const fqlQueryToSource = async ({
         ...sharedArgs,
       });
 
-      if (!formattedItem?.deleted) {
+      // Filter out deleted fields and unsupported operators (null)
+      if (formattedItem && !formattedItem.deleted) {
         formattedSource.push(formattedItem);
       }
     }

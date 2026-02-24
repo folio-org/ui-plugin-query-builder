@@ -110,7 +110,7 @@ describe('fqlQueryToSource()', () => {
       boolean: { options: booleanOptions, current: '$and' },
       field: { options: fieldOptions, current: 'instance.languages' },
       operator: { options: expect.any(Array), current: OPERATORS.IN },
-      value: { current: ['value', 'value2'] },
+      value: { current: [{ value: 'value', label: 'value' }, { value: 'value2', label: 'value2' }] },
     },
   ];
 
@@ -280,6 +280,145 @@ describe('fqlQueryToSource()', () => {
         },
       },
     ]);
+  });
+
+  it('should preserve query value when preserveQueryValue is true', async () => {
+    const intl = { formatMessage: jest.fn() };
+    const getDataOptionsWithFetching = jest.fn(() => Promise.resolve([
+      { value: 'value1', label: 'Label 1' },
+      { value: 'value2', label: 'Label 2' },
+    ]));
+
+    const fieldOptionsWithSource = [{
+      value: 'user_first_name',
+      label: 'User first name',
+      dataType: DATA_TYPES.StringType,
+      source: { name: 'non-org', columnName: 'user_first_name' },
+    }];
+
+    const initialValuesWithSource = {
+      user_first_name: { $eq: 'value1' },
+    };
+
+    const result = await fqlQueryToSource({
+      initialValues: initialValuesWithSource,
+      fieldOptions: fieldOptionsWithSource,
+      intl,
+      getDataOptionsWithFetching,
+      preserveQueryValue: true,
+      originalEntityTypeId: 'entity-type-id',
+    });
+
+    expect(result).toEqual([
+      {
+        boolean: { options: booleanOptions, current: '' },
+        field: { options: fieldOptionsWithSource, current: 'user_first_name', dataType: DATA_TYPES.StringType },
+        operator: { options: expect.any(Array), current: OPERATORS.EQUAL, dataType: DATA_TYPES.StringType },
+        value: {
+          current: 'value1',
+          source: fieldOptionsWithSource[0].source,
+          options: undefined,
+        },
+      },
+    ]);
+  });
+
+  it('should show labels for array fields with predefined values when editing query', async () => {
+    const intl = { formatMessage: jest.fn() };
+
+    const initial = {
+      'instance.languages': { $in: ['eng', 'fra'] },
+    };
+
+    const result = await fqlQueryToSource({
+      initialValues: initial,
+      fieldOptions,
+      intl,
+      getDataOptionsWithFetching: jest.fn(),
+      preserveQueryValue: true,
+    });
+
+    expect(result).toHaveLength(1);
+    expect(result[0].field.current).toBe('instance.languages');
+    expect(result[0].operator.current).toBe(OPERATORS.IN);
+    expect(result[0].value.current).toEqual([
+      { value: 'eng', label: 'English' },
+      { value: 'fra', label: 'French' },
+    ]);
+  });
+
+  it('should show labels for array fields with source when editing query', async () => {
+    const intl = { formatMessage: jest.fn() };
+    const getDataOptionsWithFetching = jest.fn(() => Promise.resolve([
+      { value: 'uuid-1', label: 'Department A' },
+      { value: 'uuid-2', label: 'Department B' },
+    ]));
+
+    const fieldOptionsWithSource = [{
+      value: 'departments',
+      label: 'Departments',
+      dataType: DATA_TYPES.JsonbArrayType,
+      source: {
+        columnName: 'name',
+        entityTypeId: 'f067beda-cbeb-4423-9a0d-3b59fb329ce2',
+      },
+    }];
+
+    const initial = {
+      departments: { $in: ['uuid-1', 'uuid-2'] },
+    };
+
+    const result = await fqlQueryToSource({
+      initialValues: initial,
+      fieldOptions: fieldOptionsWithSource,
+      intl,
+      getDataOptionsWithFetching,
+      preserveQueryValue: true,
+      originalEntityTypeId: 'entity-type-id',
+    });
+
+    expect(getDataOptionsWithFetching).toHaveBeenCalledWith(
+      'departments',
+      fieldOptionsWithSource[0].source,
+      '',
+      ['uuid-1', 'uuid-2'],
+      'entity-type-id',
+    );
+
+    expect(result).toHaveLength(1);
+    expect(result[0].field.current).toBe('departments');
+    expect(result[0].operator.current).toBe(OPERATORS.IN);
+    expect(result[0].value.current).toEqual([
+      { value: 'uuid-1', label: 'Department A' },
+      { value: 'uuid-2', label: 'Department B' },
+    ]);
+  });
+
+  it('should filter out items with unsupported operators', async () => {
+    const intl = { formatMessage: jest.fn() };
+
+    const initialValuesWithUnsupportedOperator = {
+      $and: [
+        { user_first_name: { $eq: 'value' } },
+        { user_last_name: { $unsupported_operator: 'value' } },
+        { user_full_name: { $contains: 'test' } },
+      ],
+    };
+
+    const result = await fqlQueryToSource({
+      initialValues: initialValuesWithUnsupportedOperator,
+      fieldOptions,
+      intl,
+      getDataOptionsWithFetching: jest.fn(),
+    });
+
+    // The unsupported operator should be filtered out (returns null, gets filtered)
+    // This prevents UI crashes when trying to render null rows
+    expect(result).toHaveLength(2);
+    expect(result[0].field.current).toBe('user_first_name');
+    expect(result[0].operator.current).toBe(OPERATORS.EQUAL);
+    expect(result[1].field.current).toBe('user_full_name');
+    expect(result[1].operator.current).toBe(OPERATORS.CONTAINS);
   });
 });
 
