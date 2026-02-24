@@ -315,7 +315,8 @@ export const fqlQueryToSource = async ({
         ...sharedArgs,
       });
 
-      if (!formattedItem?.deleted) {
+      // Filter out deleted fields and unsupported operators (null)
+      if (formattedItem && !formattedItem.deleted) {
         formattedSource.push(formattedItem);
       }
     }

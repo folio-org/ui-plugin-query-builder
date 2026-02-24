@@ -394,7 +394,7 @@ describe('fqlQueryToSource()', () => {
     ]);
   });
 
-  it('should include null for items with unsupported operators', async () => {
+  it('should filter out items with unsupported operators', async () => {
     const intl = { formatMessage: jest.fn() };
 
     const initialValuesWithUnsupportedOperator = {
@@ -412,12 +412,13 @@ describe('fqlQueryToSource()', () => {
       getDataOptionsWithFetching: jest.fn(),
     });
 
-    expect(result).toHaveLength(3);
+    // The unsupported operator should be filtered out (returns null, gets filtered)
+    // This prevents UI crashes when trying to render null rows
+    expect(result).toHaveLength(2);
     expect(result[0].field.current).toBe('user_first_name');
     expect(result[0].operator.current).toBe(OPERATORS.EQUAL);
-    expect(result[1]).toBeNull(); // Unsupported operator returns null
-    expect(result[2].field.current).toBe('user_full_name');
-    expect(result[2].operator.current).toBe(OPERATORS.CONTAINS);
+    expect(result[1].field.current).toBe('user_full_name');
+    expect(result[1].operator.current).toBe(OPERATORS.CONTAINS);
   });
 });
 
