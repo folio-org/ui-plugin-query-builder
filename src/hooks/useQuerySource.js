@@ -34,6 +34,7 @@ export const useQuerySource = ({ initialValues, entityType }) => {
           fieldOptions,
           intl,
           getDataOptionsWithFetching,
+          originalEntityTypeId: entityType?.id,
         });
 
         setSource(value);
@@ -41,7 +42,7 @@ export const useQuerySource = ({ initialValues, entityType }) => {
 
       setInitialValue();
     }
-  }, [initialValues, stringifiedFieldOptions]);
+  }, [initialValues, stringifiedFieldOptions, entityType?.id]);
 
   return {
     source,
