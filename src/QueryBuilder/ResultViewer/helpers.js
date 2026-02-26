@@ -2,6 +2,7 @@ import { Icon, Tooltip } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
 import { formatValueByDataType } from './utils';
 
+const MIN_CONTROLLABLE_WIDTH = 30;
 const INSTANCE_LANGUAGE_FIELDS = new Set(['instance.languages', 'instances.languages']);
 
 export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
@@ -13,6 +14,7 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
     selected: cell.visibleByDefault,
     dataType: cell.dataType.dataType,
     properties: cell.dataType.itemDataType?.properties,
+    maxWidth: cell.maxColumnWidth,
   })) || []);
 
   const columnMapping = defaultColumns?.reduce((acc, { value, label }) => {
@@ -21,7 +23,11 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
     return acc;
   }, {});
 
-  const columnWidths = defaultColumns?.reduce((acc, { value, properties }) => {
+  const columnWidths = defaultColumns?.reduce((acc, { value, properties, maxWidth }) => {
+    if (maxWidth) {
+      acc[value] = { min: MIN_CONTROLLABLE_WIDTH, max: maxWidth };
+    }
+
     if (properties?.length) {
       acc[value] = `${properties.length * 180}px`;
     }
