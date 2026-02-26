@@ -39,6 +39,7 @@ describe('getTableMetadata (pure metadata)', () => {
           name: 'languages',
           visibleByDefault: true,
           dataType: { dataType: 'arrayType', itemDataType: null },
+          maxColumnWidth: 200,
         },
         {
           labelAlias: 'Tags',
@@ -66,7 +67,7 @@ describe('getTableMetadata (pure metadata)', () => {
 
     expect(defaultColumns).toHaveLength(2);
     expect(columnMapping).toEqual({ languages: 'Languages', tags: 'Tags' });
-    expect(columnWidths).toEqual({ tags: '360px' });
+    expect(columnWidths).toEqual({ languages: { min: 30, max: 200 }, tags: '360px' });
     expect(defaultVisibleColumns.sort()).toEqual(['languages', 'tags'].sort());
   });
 
