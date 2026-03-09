@@ -1,9 +1,8 @@
 import {
+  useOkapiKy,
   useStripes,
-  useTenantPreferences,
   usePreferences,
   userOwnLocaleConfig,
-  tenantLocaleConfig,
 } from '@folio/stripes/core';
 import { useQuery } from 'react-query';
 
@@ -42,24 +41,21 @@ export function getQueryWarning(tenantTimezone, userTimezone) {
  */
 export default function useTenantTimezone() {
   const stripes = useStripes();
-  const { getTenantPreference } = useTenantPreferences();
+  const ky = useOkapiKy();
+
   const { getPreference } = usePreferences();
+
   const userId = stripes.user.user.id;
   const tenantId = stripes.okapi.tenant;
   const userScope = userOwnLocaleConfig.SCOPE;
-  const tenantScope = tenantLocaleConfig.SCOPE;
   const userKey = userOwnLocaleConfig.KEY;
-  const tenantKey = tenantLocaleConfig.KEY;
 
   const tenantTimezone = useQuery({
-    queryKey: ['@folio/plugin-query-builder', 'timezone-config', 'tenant', tenantId, tenantScope, tenantKey],
+    queryKey: ['@folio/plugin-query-builder', 'timezone-config', 'tenant', tenantId],
     queryFn: async () => {
-      const settings = await getTenantPreference({
-        scope: tenantScope,
-        key: tenantKey,
-      });
+      const { timezone } = await ky.get('locale').json();
 
-      return settings?.timezone;
+      return timezone;
     },
     refetchOnMount: false,
   });

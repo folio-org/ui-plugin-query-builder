@@ -7,7 +7,7 @@ import {
 import { renderHook } from '@testing-library/react';
 
 import {
-  useTenantPreferences,
+  useOkapiKy,
   usePreferences,
 } from '@folio/stripes/core';
 
@@ -15,14 +15,10 @@ import useTenantTimezone, { getQueryWarning } from './useTenantTimezone';
 
 jest.mock('@folio/stripes/core', () => ({
   ...jest.requireActual('@folio/stripes/core'),
-  useTenantPreferences: jest.fn(),
+  useOkapiKy: jest.fn(),
   usePreferences: jest.fn(),
   userOwnLocaleConfig: {
     SCOPE: 'user-scope',
-    KEY: 'user-key',
-  },
-  tenantLocaleConfig: {
-    SCOPE: 'tenant-scope',
     KEY: 'user-key',
   },
   useStripes: jest.fn().mockReturnValue({
@@ -49,8 +45,8 @@ describe('useTenantTimezone', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    useTenantPreferences.mockReturnValue({
-      getTenantPreference: jest.fn().mockResolvedValue({ timezone: 'UTC' }),
+    useOkapiKy.mockReturnValue({
+      get: jest.fn().mockReturnValue({ json: jest.fn().mockReturnValue({ timezone: 'UTC' }) }),
     });
 
     usePreferences.mockReturnValue({
