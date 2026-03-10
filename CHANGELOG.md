@@ -18,6 +18,7 @@
 * [UIPQB-251](https://folio-org.atlassian.net/browse/UIPQB-251) Search box under "Show Columns" should stick to top when building a query
 * [UIPQB-260](https://folio-org.atlassian.net/browse/UIPQB-260) Fix undefined values when editing a query
 * [UIPQB-261](https://folio-org.atlassian.net/browse/UIPQB-261) Add maxColumnWidth support
+* [UIPQB-267](https://folio-org.atlassian.net/browse/UIPQB-267) *BREAKING* Use GET /locale to get tenant language & locale settings
 
 ## [2.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.3) (2025-04-18)
 

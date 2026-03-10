@@ -17,7 +17,7 @@
     "okapiInterfaces": {
       "fqm-query": "2.0",
       "settings": "1.0",
-      "configuration": "2.0"
+      "locale": "1.0"
     },
     "stripesDeps": [
       "@folio/stripes-acq-components"
