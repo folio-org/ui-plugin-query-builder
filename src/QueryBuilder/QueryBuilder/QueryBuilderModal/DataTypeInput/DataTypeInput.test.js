@@ -169,6 +169,8 @@ const arr = [
     dataType: DATA_TYPES.BooleanType,
     operator: OPERATORS.EMPTY,
     componentTestId: 'data-input-select-booleanType',
+    onChange: jest.fn(),
+    expectedOnChangeArgs: [true, undefined, 'value'],
   },
   {
     dataType: DATA_TYPES.BooleanType,
@@ -193,6 +195,17 @@ const arr = [
     ],
   },
   {
+    dataType: DATA_TYPES.StringType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-select-single-stringType',
+    onChange: jest.fn(),
+    availableValues: [
+      { label: 'Available', value: 'available' },
+      { label: 'Checked out', value: 'checked' },
+    ],
+    expectedOnChangeArgs: ['available', undefined, 'value'],
+  },
+  {
     dataType: 'DEFAULT',
     operator: OPERATORS.GREATER_THAN,
     componentTestId: 'data-input-text-default',
@@ -205,7 +218,17 @@ describe('DataTypeInput', () => {
     cleanup();
   });
 
-  for (const { dataType, operator, componentTestId, text, onChange, source, availableValues, value } of arr) {
+  for (const {
+    dataType,
+    operator,
+    componentTestId,
+    text,
+    onChange,
+    source,
+    availableValues,
+    value,
+    expectedOnChangeArgs,
+  } of arr) {
     it(`should render correct component based on ${dataType} and ${operator}`, async () => {
       const {
         queryByTestId,
@@ -215,14 +238,25 @@ describe('DataTypeInput', () => {
 
       await waitFor(() => {
         expect(el).toBeVisible();
+      });
 
-        if (onChange) {
+      if (onChange) {
+        const isTextInput = el.tagName === 'INPUT' || el.tagName === 'TEXTAREA';
+
+        if (isTextInput) {
           const testValue = dataType === DATA_TYPES.BooleanType ? 'true' : 2;
 
           fireEvent.change(el, { target: { value: testValue } });
           expect(onChange).toHaveBeenCalled();
+        } else if (expectedOnChangeArgs) {
+          fireEvent.click(el.querySelector('button'));
+
+          await waitFor(() => {
+            fireEvent.click(document.querySelector('[role="option"]'));
+            expect(onChange).toHaveBeenCalledWith(...expectedOnChangeArgs);
+          });
         }
-      });
+      }
     });
   }
 });

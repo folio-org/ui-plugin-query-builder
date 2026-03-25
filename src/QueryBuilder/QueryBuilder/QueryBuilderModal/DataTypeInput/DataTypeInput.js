@@ -1,7 +1,7 @@
 import {
   Datepicker,
   MultiSelection,
-  Select,
+  Selection,
   TextArea,
   TextField,
 } from '@folio/stripes/components';
@@ -130,13 +130,13 @@ export const DataTypeInput = ({
   const selectControl = ({ testId, value: inputValue }) => (
     <SelectionContainer
       fieldName={fieldName}
-      component={Select}
+      component={Selection}
       source={source}
       entityTypeId={entityTypeId}
       testId={testId}
       availableValues={availableValues}
       value={inputValue}
-      onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
+      onChange={(selectedValue) => onChange(selectedValue, index, COLUMN_KEYS.VALUE)}
       {...rest}
     />
   );
@@ -263,10 +263,10 @@ export const DataTypeInput = ({
     return (
       <SelectionContainer
         fieldName={fieldName}
-        component={Select}
+        component={Selection}
         testId="data-input-select-booleanType"
         availableValues={staticBooleanOptions}
-        onChange={(e) => onChange(JSON.parse(e.target.value), index, COLUMN_KEYS.VALUE)}
+        onChange={(selectedValue) => onChange(JSON.parse(selectedValue), index, COLUMN_KEYS.VALUE)}
         value={value}
         {...rest}
       />
