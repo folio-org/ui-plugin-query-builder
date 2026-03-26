@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
+import fuzzysort from 'fuzzysort';
 
-import { Loading } from '@folio/stripes/components';
+import { Loading, OptionSegment } from '@folio/stripes/components';
 
 import { RootContext } from '../../../../context/RootContext';
 import { ORGANIZATIONS_TYPES } from '../../../../constants/dataTypes';
@@ -24,6 +25,8 @@ export const SelectionContainer = ({
   const intl = useIntl();
   const { getDataOptionsWithFetching } = useContext(RootContext);
   const [searchValue, setSearchValue] = useState('');
+  const pendingSearchRef = useRef('');
+  const valuePlaceholder = intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' });
   const isBooleanField = availableValues?.every(opt => typeof opt.value === 'boolean');
   let normalizedValue = value;
 
@@ -36,11 +39,14 @@ export const SelectionContainer = ({
   }
 
   const getSelectOptionsWithPlaceholder = (options, sourceName) => {
-    return isMulti ? options : [
-      { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' }), disabled: true },
-      ...(ORGANIZATIONS_TYPES.includes(sourceName) ? [{ value: '', label: intl.formatMessage({ id: `ui-plugin-query-builder.control.value.placeholder.${sourceName}` }), disabled: true }] : []),
-      ...options,
-    ];
+    if (ORGANIZATIONS_TYPES.includes(sourceName)) {
+      return isMulti ? options : [
+        { value: '', label: intl.formatMessage({ id: `ui-plugin-query-builder.control.value.placeholder.${sourceName}` }), disabled: true },
+        ...options,
+      ];
+    }
+
+    return options;
   };
 
   const getOptions = (staticValues, sourceValues, sourceName) => {
@@ -53,23 +59,72 @@ export const SelectionContainer = ({
   const usedIds = (Array.isArray(value) ? value : [value]).map(item => item?.value || item).filter(Boolean);
   const optionsPromise = getDataOptionsWithFetching(fieldName, source, searchValue, usedIds, entityTypeId);
 
-  const filterOptions = (filterText, list) => {
-    const lowerCaseFilterText = filterText?.toLowerCase() || '';
+  useEffect(() => {
+    if (pendingSearchRef.current !== searchValue) {
+      setSearchValue(pendingSearchRef.current);
+    }
+  }, [searchValue]);
 
-    setSearchValue(lowerCaseFilterText);
+  const fuzzySort = useCallback((searchTerm, list) => {
+    if (!searchTerm) return list;
 
-    // filtering based on list label
-    const renderedItems = lowerCaseFilterText
-      ? list.filter(item => item.label.toLowerCase().includes(lowerCaseFilterText))
-      : list;
+    const results = [...fuzzysort.go(searchTerm, list, { key: 'label' })];
 
-    // check for exact math using non-case sensitive
-    const exactMatch = lowerCaseFilterText
-      ? renderedItems.some(item => item.label.toLowerCase() === lowerCaseFilterText)
-      : false;
+    // Score descending, then label ascending for ties
+    results.sort((a, b) => {
+      if (a.score === b.score) return a.target.localeCompare(b.target);
+
+      return -(a.score - b.score);
+    });
+
+    return results.map(result => result.obj);
+  }, []);
+
+  const prepareSearch = useCallback((filterText = '') => {
+    pendingSearchRef.current = filterText;
+
+    return filterText;
+  }, []);
+
+  // For Selection (single value): onFilter must return a plain array
+  const singleValueFilterOptions = useCallback(
+    (filterText, list) => fuzzySort(prepareSearch(filterText), list), [fuzzySort, prepareSearch],
+  );
+
+  // For MultiSelection (multiple values): filter must return { renderedItems, exactMatch }
+  const multiValueFilterOptions = useCallback((filterText, list) => {
+    const searchTerm = prepareSearch(filterText);
+    const renderedItems = fuzzySort(searchTerm, list);
+    const exactMatch = list.some(item => item.label?.toLowerCase() === searchTerm.toLowerCase());
 
     return { renderedItems, exactMatch };
-  };
+  }, [fuzzySort, prepareSearch]);
+
+  const fuzzyFormatter = useCallback(({ option, searchTerm }) => {
+    if (!option?.label) {
+      return <OptionSegment />;
+    }
+
+    if (typeof searchTerm !== 'string' || searchTerm === '') {
+      return <OptionSegment>{option.label}</OptionSegment>;
+    }
+
+    const result = fuzzysort.single(searchTerm, option.label);
+
+    if (!result) {
+      return <OptionSegment>{option.label}</OptionSegment>;
+    }
+
+    return (
+      <OptionSegment>
+        {fuzzysort.highlight(result, (match, i) => (
+          <span key={i} className="mark---opJNO">
+            {match}
+          </span>
+        ))}
+      </OptionSegment>
+    );
+  }, []);
 
   const dataOptions = useMemo(() => {
     if (Array.isArray(optionsPromise)) {
@@ -85,17 +140,24 @@ export const SelectionContainer = ({
 
   if (!Array.isArray(optionsPromise)) return <Loading size="large" />;
 
+  const filterProps = isMulti
+    ? { filter: multiValueFilterOptions }
+    : { onFilter: singleValueFilterOptions };
+
   return (
-    <Component
-      key={operator}
-      {...rest}
-      data-testid={testId}
-      value={normalizedValue}
-      onChange={handleOnChange}
-      filter={filterOptions}
-      dataOptions={dataOptions}
-      emptyMessage={emptyMessage}
-    />
+    <div data-testid={testId}>
+      <Component
+        key={operator}
+        {...rest}
+        {...filterProps}
+        value={normalizedValue}
+        onChange={handleOnChange}
+        formatter={fuzzyFormatter}
+        placeholder={isMulti ? undefined : valuePlaceholder}
+        dataOptions={dataOptions}
+        emptyMessage={emptyMessage}
+      />
+    </div>
   );
 };
 

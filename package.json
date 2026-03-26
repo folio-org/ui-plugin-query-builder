@@ -67,6 +67,7 @@
   "dependencies": {
     "@folio/stripes-acq-components": "^7.0.0",
     "classnames": "^2.5.1",
+    "fuzzysort": "^2.0.4",
     "ky": "^0.33.2",
     "lodash": "^4.17.5",
     "prop-types": "^15.5.10",
