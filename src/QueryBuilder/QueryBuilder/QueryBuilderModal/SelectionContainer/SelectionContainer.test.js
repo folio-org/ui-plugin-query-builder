@@ -85,6 +85,7 @@ describe('SelectionContainer', () => {
     ]);
 
     expect(results[0].label).toBe('Apple');
+    expect(results[1].label).toBe('Apricot');
   });
 
   it('multi select filter returns renderedItems and exactMatch', () => {
