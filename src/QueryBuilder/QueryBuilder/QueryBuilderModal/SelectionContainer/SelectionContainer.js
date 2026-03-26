@@ -117,7 +117,11 @@ export const SelectionContainer = ({
 
     return (
       <OptionSegment>
-        {fuzzysort.highlight(result, (match, i) => <strong key={i}>{match}</strong>)}
+        {fuzzysort.highlight(result, (match, i) => (
+          <span key={i} className="mark---opJNO">
+            {match}
+          </span>
+        ))}
       </OptionSegment>
     );
   }, []);
