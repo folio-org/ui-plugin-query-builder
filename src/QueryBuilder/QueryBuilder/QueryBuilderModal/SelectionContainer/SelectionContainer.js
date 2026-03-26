@@ -63,7 +63,7 @@ export const SelectionContainer = ({
     if (pendingSearchRef.current !== searchValue) {
       setSearchValue(pendingSearchRef.current);
     }
-  });
+  }, [searchValue]);
 
   const fuzzySort = useCallback((searchTerm, list) => {
     if (!searchTerm) return list;
