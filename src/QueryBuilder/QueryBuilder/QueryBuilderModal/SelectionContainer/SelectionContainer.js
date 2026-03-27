@@ -135,6 +135,9 @@ export const SelectionContainer = ({
   }, [optionsPromise, availableValues, isMulti, source]);
 
   const handleOnChange = (selectedValue) => {
+    if (isBooleanField && typeof selectedValue === 'boolean') {
+      selectedValue = String(selectedValue);
+    }
     if (onChange) onChange(selectedValue);
   };
 
