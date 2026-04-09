@@ -102,7 +102,7 @@ export const SelectionContainer = ({
 
   const fuzzyFormatter = useCallback(({ option, searchTerm }) => {
     if (!option?.label) {
-      return <OptionSegment />;
+      return null;
     }
 
     if (typeof searchTerm !== 'string' || searchTerm === '') {

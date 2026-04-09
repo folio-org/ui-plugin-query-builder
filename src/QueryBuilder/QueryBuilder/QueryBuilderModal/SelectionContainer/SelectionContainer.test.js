@@ -126,6 +126,20 @@ describe('SelectionContainer', () => {
     expect(element.props.children).toBe('Apple');
   });
 
+  it('formatter returns null when no selected option is present so the control placeholder can render', () => {
+    const mockComponent = jest.fn(() => null);
+
+    renderSelectionContainer({
+      component: mockComponent,
+      options: [],
+    });
+
+    const props = mockComponent.mock.calls[0][0];
+    const element = props.formatter({ option: undefined });
+
+    expect(element).toBeNull();
+  });
+
   it('formatter returns label when no fuzzysort match', () => {
     const mockComponent = jest.fn(() => null);
 
@@ -230,5 +244,18 @@ describe('SelectionContainer', () => {
     );
 
     expect(true).toBe(true);
+  });
+
+  it('passes the value placeholder to single-select components', () => {
+    const mockComponent = jest.fn(() => null);
+
+    renderSelectionContainer({
+      component: mockComponent,
+      options: [],
+    });
+
+    const props = mockComponent.mock.calls[0][0];
+
+    expect(props.placeholder).toBe('ui-plugin-query-builder.control.value.placeholder');
   });
 });
