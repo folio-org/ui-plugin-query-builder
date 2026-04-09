@@ -19,6 +19,7 @@
 * [UIPQB-260](https://folio-org.atlassian.net/browse/UIPQB-260) Fix undefined values when editing a query
 * [UIPQB-261](https://folio-org.atlassian.net/browse/UIPQB-261) Add maxColumnWidth support
 * [UIPQB-267](https://folio-org.atlassian.net/browse/UIPQB-267) *BREAKING* Use GET /locale to get tenant language & locale settings
+* [UIPQB-268](https://folio-org.atlassian.net/browse/UIPQB-268) Restore 'Select value' placeholder in value dropdown
 
 ## [2.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v2.0.3) (2025-04-18)
 
