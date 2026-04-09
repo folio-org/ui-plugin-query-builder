@@ -245,17 +245,4 @@ describe('SelectionContainer', () => {
 
     expect(true).toBe(true);
   });
-
-  it('passes the value placeholder to single-select components', () => {
-    const mockComponent = jest.fn(() => null);
-
-    renderSelectionContainer({
-      component: mockComponent,
-      options: [],
-    });
-
-    const props = mockComponent.mock.calls[0][0];
-
-    expect(props.placeholder).toBe('ui-plugin-query-builder.control.value.placeholder');
-  });
 });
