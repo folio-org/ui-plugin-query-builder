@@ -119,6 +119,20 @@ describe('useDataOptions', () => {
         { value: 'zzz', label: 'zzz' },
       ]));
     });
+
+    it('falls back to the raw code when a language code is unknown and no label is provided', async () => {
+      const { result, rerender } = renderHook(() => useDataOptions({}));
+
+      result.current.getDataOptions('languages', true, () => Promise.resolve([
+        { value: 'zzz' },
+      ]), [], true);
+
+      rerender();
+
+      await waitFor(() => expect(result.current.getDataOptions('languages', false, undefined, [], true)).toEqual([
+        { value: 'zzz', label: 'zzz' },
+      ]));
+    });
   });
 
   describe('getDataOptionsWithFetching', () => {
