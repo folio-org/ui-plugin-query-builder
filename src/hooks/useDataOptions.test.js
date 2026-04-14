@@ -100,8 +100,8 @@ describe('useDataOptions', () => {
       rerender();
 
       await waitFor(() => expect(result.current.getDataOptions('languages', false, undefined, [], true)).toEqual([
-        { value: 'eng', label: 'English' },
         { value: 'de', label: 'German [de]' },
+        { value: 'eng', label: 'English' },
         { value: 'ger', label: 'German [ger]' },
       ]));
     });

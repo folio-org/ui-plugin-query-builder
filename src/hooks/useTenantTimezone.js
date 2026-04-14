@@ -2,7 +2,9 @@ import {
   useOkapiKy,
   useStripes,
   usePreferences,
-  userOwnLocaleConfig,
+  // userOwnLocaleConfig,
+  // tenantLocaleConfig,
+  userLocaleConfig,
 } from '@folio/stripes/core';
 import { useQuery } from 'react-query';
 
@@ -41,31 +43,55 @@ export function getQueryWarning(tenantTimezone, userTimezone) {
  */
 export default function useTenantTimezone() {
   const stripes = useStripes();
-  const ky = useOkapiKy();
 
   const { getPreference } = usePreferences();
 
   const userId = stripes.user.user.id;
   const tenantId = stripes.okapi.tenant;
-  const userScope = userOwnLocaleConfig.SCOPE;
-  const userKey = userOwnLocaleConfig.KEY;
+
+  // stripes-core@11.0.14 exposes only userLocaleConfig, so we use it as the
+  // configuration key and resolve tenant-level values via mod-configuration.
+  const configName = userLocaleConfig.configName;
+  const moduleName = userLocaleConfig.module;
 
   const tenantTimezone = useQuery({
-    queryKey: ['@folio/plugin-query-builder', 'timezone-config', 'tenant', tenantId],
+    queryKey: ['@folio/plugin-query-builder', 'timezone-config', 'tenant', tenantId, moduleName, configName],
     queryFn: async () => {
-      const { timezone } = await ky.get('locale').json();
+      // If getPreference supports tenant-scoped values in this Stripes version,
+      // prefer it.
+      try {
+        const settings = await getPreference({
+          scope: moduleName,
+          key: configName,
+        });
 
-      return timezone;
+        if (settings?.timezone) return settings.timezone;
+      } catch (e) {
+        // fall through to direct fetch
+      }
+
+      // Fallback: fetch tenant-level locale settings directly.
+      const ky = stripes.okapi.ky;
+      const res = await ky.get('configurations/entries', {
+        searchParams: {
+          query: `(module==${moduleName} and configName==${configName})`,
+          limit: 1,
+        },
+      }).json();
+
+      const entry = res?.configs?.[0];
+      const value = entry?.value ? JSON.parse(entry.value) : undefined;
+      return value?.timezone;
     },
     refetchOnMount: false,
   });
 
   const userTimezone = useQuery({
-    queryKey: ['@folio/plugin-query-builder', 'timezone-config', 'user', userId, tenantId, userScope, userKey],
+    queryKey: ['@folio/plugin-query-builder', 'timezone-config', 'user', userId, tenantId, moduleName, configName],
     queryFn: async () => {
       const settings = await getPreference({
-        scope: userScope,
-        key: userKey,
+        scope: moduleName,
+        key: configName,
         userId: stripes.user.user.id,
       });
 
