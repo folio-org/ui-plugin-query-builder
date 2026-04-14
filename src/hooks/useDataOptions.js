@@ -41,7 +41,12 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
 
     return formattedOptions.map((item) => ({
       ...item,
-      label: labelCounts.get(item.label) > 1 ? `${item.label} [${item.value}]` : item.label,
+      label: labelCounts.get(item.label) > 1
+        ? intl.formatMessage(
+          { id: 'ui-plugin-query-builder.control.value.languageDisambiguated' },
+          { label: item.label, code: item.value },
+        )
+        : item.label,
     }));
   }, [intl]);
 
