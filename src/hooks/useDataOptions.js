@@ -35,6 +35,7 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
     });
     const labelCounts = formattedOptions.reduce((counts, item) => {
       counts.set(item.label, (counts.get(item.label) || 0) + 1);
+
       return counts;
     }, new Map());
 
