@@ -21,9 +21,26 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
       return data;
     }
 
-    return data.map((item) => ({
-      value: item.value,
-      label: formattedLanguageName(item.value, intl),
+    const formattedOptions = data.map((item) => {
+      const formattedLabel = formattedLanguageName(item.value, intl);
+      const fallbackLabel = item.label || item.value;
+      const label = formattedLabel && formattedLabel !== 'Undetermined'
+        ? formattedLabel
+        : fallbackLabel;
+
+      return {
+        value: item.value,
+        label,
+      };
+    });
+    const labelCounts = formattedOptions.reduce((counts, item) => {
+      counts.set(item.label, (counts.get(item.label) || 0) + 1);
+      return counts;
+    }, new Map());
+
+    return formattedOptions.map((item) => ({
+      ...item,
+      label: labelCounts.get(item.label) > 1 ? `${item.label} [${item.value}]` : item.label,
     }));
   }, [intl]);
 
