@@ -503,6 +503,37 @@ describe('retainValueOnOperatorChange', () => {
     ]);
   });
 
+  test('should convert SELECT_SINGLE to SELECT_MULTI preserving disambiguated language labels', () => {
+    const prevValue = 'ger';
+    const dataType = DATA_TYPES.StringType;
+    const operator = OPERATORS.EQUAL;
+    const newOperator = OPERATORS.IN;
+    const source = [
+      { label: 'German', value: 'ger' },
+      { label: 'German', value: 'de' },
+    ];
+    const availableValues = [
+      { label: 'German [ger]', value: 'ger' },
+      { label: 'German [de]', value: 'de' },
+    ];
+
+    expect(
+      retainValueOnOperatorChange({
+        dataType,
+        operator,
+        newOperator,
+        source,
+        availableValues,
+        prevValue,
+      }),
+    ).toEqual([
+      {
+        value: 'ger',
+        label: 'German [ger]',
+      },
+    ]);
+  });
+
   test('should convert SELECT_MULTI to SELECT_SINGLE with EnumType', () => {
     const prevValue = [
       { label: 'Active', value: 'active' },

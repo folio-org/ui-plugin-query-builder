@@ -86,7 +86,10 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
     const memoizedFieldSource = source[index].value.source;
     const memorizedField = fieldOptions.find(o => o.value === rowField);
     const memorizedOperator = source[index].operator.current;
-    const memoizedValues = source[index].value.options || getDataOptions(rowField);
+    const isLanguageField = memoizedFieldSource?.columnName === 'languages' || memorizedField?.source?.columnName === 'languages';
+    const memoizedValues = source[index].value.options && !isLanguageField
+      ? source[index].value.options
+      : getDataOptions(rowField, false, undefined, [], isLanguageField);
     const memorizedValue = source[index].value.current;
 
     const modifications = (item) => {
