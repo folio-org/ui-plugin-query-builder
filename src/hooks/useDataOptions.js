@@ -39,15 +39,17 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
       return counts;
     }, new Map());
 
-    return formattedOptions.map((item) => ({
-      ...item,
-      label: labelCounts.get(item.label) > 1
-        ? intl.formatMessage(
-          { id: 'ui-plugin-query-builder.control.value.languageDisambiguated' },
-          { label: item.label, code: item.value },
-        )
-        : item.label,
-    }));
+    return formattedOptions
+      .map((item) => ({
+        ...item,
+        label: labelCounts.get(item.label) > 1
+          ? intl.formatMessage(
+            { id: 'ui-plugin-query-builder.control.value.languageDisambiguated' },
+            { label: item.label, code: item.value },
+          )
+          : item.label,
+      }))
+      .toSorted((aa, bb) => aa.label.localeCompare(bb.label));
   }, [intl]);
 
   // helper methods to prevent redundant digging through our raw dataOptions
