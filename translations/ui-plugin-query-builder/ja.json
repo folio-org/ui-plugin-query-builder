@@ -36,7 +36,7 @@
     "error.invalidEntity": "The record type used by this list is currently unable to be used; please verify its definition.",
     "viewer.accordion.title.query.showMore": "もっと表示",
     "viewer.accordion.title.query.showLess": "表示を減らす",
-    "modal.entityType": "Record type:",
+    "modal.entityType": "レコードタイプ:",
     "control.value.placeholder.organization": "Use the “Organization look-up” below to add values",
     "control.value.placeholder.donor_organization": "Use the “Donor organization look-up” below to add values",
     "control.search.button.organization": "組織検索",
