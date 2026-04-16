@@ -1,6 +1,8 @@
 # Change history for ui-plugin-query-builder
 
-## [3.0.0] IN PROGRESS
+## [3.1.0] IN PROGRESS
+
+## [3.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v3.0.0) (2026-04-16)
 
 * [UIPQB-195](https://folio-org.atlassian.net/browse/UIPQB-195) Filter out deleted custom field values
 * [UIPQB-217](https://folio-org.atlassian.net/browse/UIPQB-217) *BREAKING* useTenantTimezone - use mod-settings API.
