@@ -1,3 +1,4 @@
+import { useIntl } from 'react-intl';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useDataOptions } from './useDataOptions';
 import { ORGANIZATIONS_TYPES } from '../constants/dataTypes';
@@ -13,6 +14,21 @@ jest.mock('@folio/stripes/components', () => ({
 }));
 
 describe('useDataOptions', () => {
+  beforeEach(() => {
+    useIntl.mockReturnValue({
+      formatDate: (value) => (value ? value.substring(0, 10) : value),
+      formatDisplayName: (value) => value,
+      formatMessage: ({ id }, values = {}) => {
+        if (id === 'ui-plugin-query-builder.control.value.languageDisambiguated') {
+          return `${values.label} [${values.code}]`;
+        }
+
+        return id;
+      },
+      formatNumber: (value) => value,
+    });
+  });
+
   describe('getDataOptions', () => {
     it('returns empty array for getting unknown fields', () => {
       const { result } = renderHook(() => useDataOptions({}));
