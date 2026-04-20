@@ -24,7 +24,7 @@ jest.mock('react-intl', () => {
 
       return value;
     }),
-    useIntl: () => intl,
+    useIntl: jest.fn(() => intl),
     injectIntl: (Component) => (props) => <Component {...props} intl={intl} />,
   };
 });
