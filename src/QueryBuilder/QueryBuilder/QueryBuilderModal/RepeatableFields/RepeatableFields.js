@@ -29,6 +29,17 @@ import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import { DataTypeInput } from '../DataTypeInput';
 import css from '../QueryBuilderModal.css';
 
+export const getMemoizedValues = ({
+  currentOptions,
+  isLanguageField,
+  rowField,
+  getDataOptions,
+}) => (
+  currentOptions && !isLanguageField
+    ? currentOptions
+    : getDataOptions(rowField, false, undefined, [], isLanguageField)
+);
+
 export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId }) => {
   const intl = useIntl();
   const callout = useShowCallout();
@@ -87,9 +98,12 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
     const memorizedField = fieldOptions.find(o => o.value === rowField);
     const memorizedOperator = source[index].operator.current;
     const isLanguageField = memoizedFieldSource?.columnName === 'languages' || memorizedField?.source?.columnName === 'languages';
-    const memoizedValues = source[index].value.options && !isLanguageField
-      ? source[index].value.options
-      : getDataOptions(rowField, false, undefined, [], isLanguageField);
+    const memoizedValues = getMemoizedValues({
+      currentOptions: source[index].value.options,
+      isLanguageField,
+      rowField,
+      getDataOptions,
+    });
     const memorizedValue = source[index].value.current;
 
     const modifications = (item) => {
