@@ -1,6 +1,20 @@
 import { getMemoizedValues } from './RepeatableFields';
 
 describe('getMemoizedValues', () => {
+  it('uses cached options for non-language fields', () => {
+    const currentOptions = [{ value: 'available', label: 'Available' }];
+    const getDataOptions = jest.fn();
+
+    expect(getMemoizedValues({
+      currentOptions,
+      isLanguageField: false,
+      rowField: 'status',
+      getDataOptions,
+    })).toEqual(currentOptions);
+
+    expect(getDataOptions).not.toHaveBeenCalled();
+  });
+
   it('uses fetched options for language fields even when cached options exist', () => {
     const currentOptions = [{ value: 'ger', label: 'German' }];
     const fetchedOptions = [{ value: 'ger', label: 'German [ger]' }];
