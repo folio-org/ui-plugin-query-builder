@@ -16,8 +16,6 @@ jest.mock('@folio/stripes/components', () => ({
 describe('useDataOptions', () => {
   beforeEach(() => {
     useIntl.mockReturnValue({
-      formatDate: (value) => (value ? value.substring(0, 10) : value),
-      formatDisplayName: (value) => value,
       formatMessage: ({ id }, values = {}) => {
         if (id === 'ui-plugin-query-builder.control.value.languageDisambiguated') {
           return `${values.label} [${values.code}]`;
@@ -25,7 +23,6 @@ describe('useDataOptions', () => {
 
         return id;
       },
-      formatNumber: (value) => value,
     });
   });
 
