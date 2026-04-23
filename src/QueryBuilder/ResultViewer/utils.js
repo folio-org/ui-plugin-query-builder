@@ -11,6 +11,32 @@ export const getNestedValue = (obj, path) => {
   return get(obj, path);
 };
 
+export const formatLanguagesForDisplay = (languages = [], intl) => {
+  const formattedOptions = languages.map((code) => {
+    const formattedLabel = formattedLanguageName(code, intl);
+    const label = formattedLabel && formattedLabel !== 'Undetermined'
+      ? formattedLabel
+      : code;
+
+    return { code, label };
+  });
+  const labelCounts = formattedOptions.reduce((counts, item) => {
+    counts.set(item.label, (counts.get(item.label) || 0) + 1);
+    return counts;
+  }, new Map());
+
+  return formattedOptions
+    .map((item) => (
+      labelCounts.get(item.label) > 1
+        ? intl.formatMessage(
+          { id: 'ui-plugin-query-builder.control.value.languageDisambiguated' },
+          { label: item.label, code: item.code },
+        )
+        : item.label
+    ))
+    .toSorted((aa, bb) => aa.localeCompare(bb));
+};
+
 export const formatValueByDataType = (value, dataType, properties, intl, additionalParams = {}) => {
   if (value === undefined || value === null) {
     return '';
@@ -69,7 +95,7 @@ export const formatValueByDataType = (value, dataType, properties, intl, additio
     case DATA_TYPES.JsonbArrayType:
     case DATA_TYPES.ArrayType:
       if (additionalParams?.isInstanceLanguages) {
-        return value.map((lang) => formattedLanguageName(lang, intl)).join(' | ');
+        return formatLanguagesForDisplay(value, intl).join(' | ');
       }
 
       return value.join(' | ');
