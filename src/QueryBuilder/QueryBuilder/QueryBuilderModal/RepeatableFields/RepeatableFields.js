@@ -58,7 +58,7 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
       },
     ]));
   };
-
+//
   const handleRemove = (index) => {
     if (index === 0) {
       setSource((prevSource) => {
