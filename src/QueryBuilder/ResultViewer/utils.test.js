@@ -2,17 +2,7 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { DATA_TYPES } from '../../constants/dataTypes';
-import { findLabelByValue, formatLanguagesForDisplay, formatValueByDataType } from './utils';
-
-jest.mock('@folio/stripes/components', () => ({
-  ...jest.requireActual('@folio/stripes/components'),
-  formattedLanguageName: jest.fn((value) => ({
-    de: 'German',
-    ger: 'German',
-    eng: 'English',
-    zzz: 'Undetermined',
-  }[value] || value)),
-}));
+import { findLabelByValue, formatValueByDataType } from './utils';
 
 jest.mock('./DynamicTable/DynamicTable', () => ({
   __esModule: true,
@@ -129,30 +119,6 @@ describe('formatValueByDataType returns correct value', () => {
       { id: 't1', name: 'alpha', active: true },
       { id: 't2', name: 'beta', active: false },
     ]);
-  });
-});
-
-describe('formatLanguagesForDisplay', () => {
-  const intl = {
-    formatMessage: ({ id }, values = {}) => {
-      if (id === 'ui-plugin-query-builder.control.value.languageDisambiguated') {
-        return `${values.label} [${values.code}]`;
-      }
-
-      return id;
-    },
-  };
-
-  it('disambiguates clashing formatted language labels and sorts by final label', () => {
-    expect(formatLanguagesForDisplay(['de', 'ger', 'eng'], intl)).toEqual([
-      'English',
-      'German [de]',
-      'German [ger]',
-    ]);
-  });
-
-  it('falls back to the raw code for unknown language labels', () => {
-    expect(formatLanguagesForDisplay(['zzz'], intl)).toEqual(['zzz']);
   });
 });
 

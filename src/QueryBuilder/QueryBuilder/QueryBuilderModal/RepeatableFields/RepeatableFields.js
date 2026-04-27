@@ -31,13 +31,12 @@ import css from '../QueryBuilderModal.css';
 
 export const getMemoizedValues = ({
   currentOptions,
-  isLanguageField,
   rowField,
   getDataOptions,
 }) => (
-  currentOptions && !isLanguageField
+  currentOptions
     ? currentOptions
-    : getDataOptions(rowField, false, undefined, [], isLanguageField)
+    : getDataOptions(rowField)
 );
 
 export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId }) => {
@@ -97,10 +96,8 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
     const memoizedFieldSource = source[index].value.source;
     const memorizedField = fieldOptions.find(o => o.value === rowField);
     const memorizedOperator = source[index].operator.current;
-    const isLanguageField = memoizedFieldSource?.columnName === 'languages' || memorizedField?.source?.columnName === 'languages';
     const memoizedValues = getMemoizedValues({
       currentOptions: source[index].value.options,
-      isLanguageField,
       rowField,
       getDataOptions,
     });
