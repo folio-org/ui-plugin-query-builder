@@ -9,6 +9,37 @@ export const getNestedValue = (obj, path) => {
   return get(obj, path);
 };
 
+const formatBooleanValue = (value) => {
+  // booleans may be returned as true booleans, or strings 'true' or 'false'
+  if (typeof value === 'string') {
+    return value === 'true' ? (
+      <FormattedMessage id="ui-plugin-query-builder.options.true" />
+    ) : (
+      <FormattedMessage id="ui-plugin-query-builder.options.false" />
+    );
+  }
+
+  return value ? (
+    <FormattedMessage id="ui-plugin-query-builder.options.true" />
+  ) : (
+    <FormattedMessage id="ui-plugin-query-builder.options.false" />
+  );
+};
+
+const formatDateValue = (value) => {
+  // DateType is timezone agnostic; value expected as YYYY-MM-DD. Return as-is (string) so table renders raw/localizable text.
+  // If BE ever sends full ISO, fall back to trimming time part.
+  if (typeof value === 'string') {
+    const dateOnlyMatch = value.match(/^(\d{4}-\d{2}-\d{2})/);
+
+    if (dateOnlyMatch) {
+      return dateOnlyMatch[1];
+    }
+  }
+
+  return value;
+};
+
 export const formatValueByDataType = (value, dataType, properties, intl) => {
   if (value === undefined || value === null) {
     return '';
@@ -33,33 +64,10 @@ export const formatValueByDataType = (value, dataType, properties, intl) => {
 
   switch (dataType) {
     case DATA_TYPES.BooleanType:
-      // booleans may be returned as true booleans, or strings 'true' or 'false'
-      if (typeof value === 'string') {
-        return value === 'true' ? (
-          <FormattedMessage id="ui-plugin-query-builder.options.true" />
-        ) : (
-          <FormattedMessage id="ui-plugin-query-builder.options.false" />
-        );
-      } else {
-        return value ? (
-          <FormattedMessage id="ui-plugin-query-builder.options.true" />
-        ) : (
-          <FormattedMessage id="ui-plugin-query-builder.options.false" />
-        );
-      }
+      return formatBooleanValue(value);
 
     case DATA_TYPES.DateType:
-      // DateType is timezone agnostic; value expected as YYYY-MM-DD. Return as-is (string) so table renders raw/localizable text.
-      // If BE ever sends full ISO, fall back to trimming time part.
-      if (typeof value === 'string') {
-        const dateOnlyMatch = value.match(/^(\d{4}-\d{2}-\d{2})/);
-
-        if (dateOnlyMatch) {
-          return dateOnlyMatch[1];
-        }
-      }
-
-      return value;
+      return formatDateValue(value);
 
     case DATA_TYPES.DateTimeType:
       return <FormattedDate value={value} />;
