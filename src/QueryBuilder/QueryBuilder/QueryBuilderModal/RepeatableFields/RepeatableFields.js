@@ -34,9 +34,7 @@ export const getMemoizedValues = ({
   rowField,
   getDataOptions,
 }) => (
-  currentOptions
-    ? currentOptions
-    : getDataOptions(rowField)
+  currentOptions || getDataOptions(rowField)
 );
 
 export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId }) => {

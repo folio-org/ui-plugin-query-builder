@@ -75,7 +75,6 @@ describe('useDataOptions', () => {
         { value: 'foo', label: 'foo' },
       ]));
     });
-
   });
 
   describe('getDataOptionsWithFetching', () => {
