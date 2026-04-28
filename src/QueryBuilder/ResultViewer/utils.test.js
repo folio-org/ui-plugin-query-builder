@@ -120,6 +120,10 @@ describe('formatValueByDataType returns correct value', () => {
       { id: 't2', name: 'beta', active: false },
     ]);
   });
+
+  it('returns non-string DateType values unchanged', () => {
+    expect(formatValueByDataType(12345, DATA_TYPES.DateType, null, null)).toBe(12345);
+  });
 });
 
 describe('findLabelByValue', () => {
