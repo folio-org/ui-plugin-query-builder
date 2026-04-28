@@ -1,13 +1,8 @@
 import React from 'react';
 import { FormattedDate, FormattedMessage } from 'react-intl';
-import { get } from 'lodash';
 
 import { DATA_TYPES } from '../../constants/dataTypes';
 import { DynamicTable } from './DynamicTable';
-
-export const getNestedValue = (obj, path) => {
-  return get(obj, path);
-};
 
 const formatBooleanValue = (value) => {
   // booleans may be returned as true booleans, or strings 'true' or 'false'
