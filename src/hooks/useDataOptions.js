@@ -1,6 +1,4 @@
 import { useCallback, useState } from 'react';
-import { formattedLanguageName } from '@folio/stripes/components';
-import { useIntl } from 'react-intl';
 import { ORGANIZATIONS_TYPES } from '../constants/dataTypes';
 
 function getUniqueValues(a, b) {
@@ -13,44 +11,7 @@ function getUniqueValues(a, b) {
 }
 
 export function useDataOptions({ getParamsSource, getOrganizations }) {
-  const intl = useIntl();
   const [dataOptions, setDataOptions] = useState({});
-
-  const formatLanguageOptions = useCallback((data, shouldFormat) => {
-    if (!shouldFormat || !Array.isArray(data)) {
-      return data;
-    }
-
-    const formattedOptions = data.map((item) => {
-      const formattedLabel = formattedLanguageName(item.value, intl);
-      const fallbackLabel = item.label || item.value;
-      const label = formattedLabel && formattedLabel !== 'Undetermined'
-        ? formattedLabel
-        : fallbackLabel;
-
-      return {
-        value: item.value,
-        label,
-      };
-    });
-    const labelCounts = formattedOptions.reduce((counts, item) => {
-      counts.set(item.label, (counts.get(item.label) || 0) + 1);
-
-      return counts;
-    }, new Map());
-
-    return formattedOptions
-      .map((item) => ({
-        ...item,
-        label: labelCounts.get(item.label) > 1
-          ? intl.formatMessage(
-            { id: 'ui-plugin-query-builder.control.value.languageDisambiguated' },
-            { label: item.label, code: item.value },
-          )
-          : item.label,
-      }))
-      .toSorted((aa, bb) => aa.label.localeCompare(bb.label));
-  }, [intl]);
 
   // helper methods to prevent redundant digging through our raw dataOptions
   const getDataOptions = useCallback(
@@ -59,14 +20,13 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
       allowPromises = false,
       fetchPromise = undefined,
       fetchIfValuesMissing = [],
-      shouldFormatLanguages = false,
     ) => {
       if (
         Array.isArray(dataOptions[field]) &&
                 // check that all specially requested values are present
                 fetchIfValuesMissing.every((v) => !!dataOptions[field].find((o) => o.value === v))
       ) {
-        return formatLanguageOptions(dataOptions[field], shouldFormatLanguages);
+        return dataOptions[field];
       }
 
       // only return promises if requested, to prevent non-async code from exploding here
@@ -97,19 +57,17 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
         return promise;
       }
 
-      return formatLanguageOptions(dataOptions[field] ?? [], shouldFormatLanguages);
+      return dataOptions[field] ?? [];
     },
-    [dataOptions, formatLanguageOptions],
+    [dataOptions],
   );
 
   const getDataOptionsWithFetching = useCallback(
     // usedIds are only for organization sources
     // `originalEntityTypeId` is the entityTypeId the user is building the query against
     (fieldName, source, searchValue, usedIds, originalEntityTypeId) => {
-      const isLanguageField = source?.columnName === 'languages';
-
       if (!source) {
-        return getDataOptions(fieldName, false, undefined, [], isLanguageField);
+        return getDataOptions(fieldName);
       } else if (ORGANIZATIONS_TYPES.includes(source.name)) {
         return getDataOptions(
           fieldName,
@@ -131,7 +89,6 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
               return results.flat();
             },
           usedIds,
-          isLanguageField,
         );
       } else {
         // If the entityType isn't known yet, don't attempt value fetching
@@ -148,7 +105,6 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
             searchValue,
           }).then((data) => data?.content),
           [],
-          isLanguageField,
         );
       }
     },

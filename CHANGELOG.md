@@ -1,6 +1,7 @@
 # Change history for ui-plugin-query-builder
 
 ## [3.1.0] IN PROGRESS
+* [UIPQB-271](https://folio-org.atlassian.net/browse/UIPQB-271) Remove specific language-field translation logic
 
 ## [3.0.0](https://github.com/folio-org/ui-plugin-query-builder/tree/v3.0.0) (2026-04-16)
 

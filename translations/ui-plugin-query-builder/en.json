@@ -25,7 +25,6 @@
   "control.info.separateValues": "Separate multiple values with a comma.",
   "control.selection.placeholder": "Select field",
   "control.value.placeholder": "Select value",
-  "control.value.languageDisambiguated": "{label} [{code}]",
   "control.value.placeholder.organization": "Use the “Organization look-up” below to add values",
   "control.value.placeholder.donor_organization": "Use the “Donor organization look-up” below to add values",
   "control.operator.placeholder": "Select operator",

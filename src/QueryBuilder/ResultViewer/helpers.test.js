@@ -143,7 +143,6 @@ describe('getTableMetadata.formatter (rendered output)', () => {
       'numberType',
       undefined,
       intl,
-      { isInstanceLanguages: false },
     );
     expect(screen.getByText('formatted-value')).toBeInTheDocument();
   });
@@ -168,12 +167,11 @@ describe('getTableMetadata.formatter (rendered output)', () => {
       'numberType',
       undefined,
       intl,
-      { isInstanceLanguages: false },
     );
     expect(screen.getByText('formatted-value')).toBeInTheDocument();
   });
 
-  it('sets isInstanceLanguages=true only for "instance.languages"', () => {
+  it('passes instance languages through to the formatter unchanged', () => {
     const entityType = {
       columns: [
         {
@@ -193,7 +191,6 @@ describe('getTableMetadata.formatter (rendered output)', () => {
       'arrayType',
       undefined,
       intl,
-      { isInstanceLanguages: true },
     );
     expect(screen.getByText('formatted-value')).toBeInTheDocument();
   });
