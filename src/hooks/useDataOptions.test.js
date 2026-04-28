@@ -1,31 +1,8 @@
-import { useIntl } from 'react-intl';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useDataOptions } from './useDataOptions';
 import { ORGANIZATIONS_TYPES } from '../constants/dataTypes';
 
-jest.mock('@folio/stripes/components', () => ({
-  ...jest.requireActual('@folio/stripes/components'),
-  formattedLanguageName: jest.fn((value) => ({
-    de: 'German',
-    ger: 'German',
-    eng: 'English',
-    zzz: 'Undetermined',
-  }[value] || value)),
-}));
-
 describe('useDataOptions', () => {
-  beforeEach(() => {
-    useIntl.mockReturnValue({
-      formatMessage: ({ id }, values = {}) => {
-        if (id === 'ui-plugin-query-builder.control.value.languageDisambiguated') {
-          return `${values.label} [${values.code}]`;
-        }
-
-        return id;
-      },
-    });
-  });
-
   describe('getDataOptions', () => {
     it('returns empty array for getting unknown fields', () => {
       const { result } = renderHook(() => useDataOptions({}));
@@ -96,54 +73,6 @@ describe('useDataOptions', () => {
       await waitFor(() => expect(result.current.getDataOptions('field')).toEqual([
         { value: 'bar', label: 'bar' },
         { value: 'foo', label: 'foo' },
-      ]));
-    });
-
-    it('disambiguates clashing formatted language labels', async () => {
-      const { result, rerender } = renderHook(() => useDataOptions({}));
-
-      const options = [
-        { value: 'de', label: 'de' },
-        { value: 'ger', label: 'German' },
-        { value: 'eng', label: 'English' },
-      ];
-
-      result.current.getDataOptions('languages', true, () => Promise.resolve(options), [], true);
-
-      rerender();
-
-      await waitFor(() => expect(result.current.getDataOptions('languages', false, undefined, [], true)).toEqual([
-        { value: 'eng', label: 'English' },
-        { value: 'de', label: 'German [de]' },
-        { value: 'ger', label: 'German [ger]' },
-      ]));
-    });
-
-    it('falls back to the raw code when a language code is unknown', async () => {
-      const { result, rerender } = renderHook(() => useDataOptions({}));
-
-      result.current.getDataOptions('languages', true, () => Promise.resolve([
-        { value: 'zzz', label: 'zzz' },
-      ]), [], true);
-
-      rerender();
-
-      await waitFor(() => expect(result.current.getDataOptions('languages', false, undefined, [], true)).toEqual([
-        { value: 'zzz', label: 'zzz' },
-      ]));
-    });
-
-    it('falls back to the raw code when a language code is unknown and no label is provided', async () => {
-      const { result, rerender } = renderHook(() => useDataOptions({}));
-
-      result.current.getDataOptions('languages', true, () => Promise.resolve([
-        { value: 'zzz' },
-      ]), [], true);
-
-      rerender();
-
-      await waitFor(() => expect(result.current.getDataOptions('languages', false, undefined, [], true)).toEqual([
-        { value: 'zzz', label: 'zzz' },
       ]));
     });
   });

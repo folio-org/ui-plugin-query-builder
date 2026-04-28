@@ -119,7 +119,7 @@ describe('ResultViewer', () => {
     const limit = 200;
     const changePage = jest.fn();
 
-    it('should format language name shortcuts to full name', async () => {
+    it('should render language values as provided by the backend', async () => {
       render(renderResultViewer({ visibleColumns:
           ['instance.languages', 'user_expiration_date', 'department_names', 'decimal_position', 'user_id'] }));
 
@@ -127,7 +127,7 @@ describe('ResultViewer', () => {
         expect(screen.queryByText('ui-plugin-query-builder.result.inProgress')).not.toBeInTheDocument();
 
         expect(screen.queryByText('Languages')).toBeVisible();
-        expect(screen.queryByText('English | French')).toBeVisible();
+        expect(screen.queryByText('eng | fre')).toBeVisible();
       });
     });
 

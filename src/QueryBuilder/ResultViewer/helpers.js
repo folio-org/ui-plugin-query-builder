@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl';
 import { formatValueByDataType } from './utils';
 
 const MIN_CONTROLLABLE_WIDTH = 30;
-const INSTANCE_LANGUAGE_FIELDS = new Set(['instance.languages', 'instances.languages']);
 
 export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
   const defaultColumns = (entityType?.columns?.map((cell) => ({
@@ -49,7 +48,6 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
         dataType,
         properties,
         intl,
-        { isInstanceLanguages: INSTANCE_LANGUAGE_FIELDS.has(value) },
       );
     };
 

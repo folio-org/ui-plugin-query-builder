@@ -1,33 +1,17 @@
 import { getMemoizedValues } from './RepeatableFields';
 
 describe('getMemoizedValues', () => {
-  it('uses cached options for non-language fields', () => {
+  it('uses cached options when they exist', () => {
     const currentOptions = [{ value: 'available', label: 'Available' }];
     const getDataOptions = jest.fn();
 
     expect(getMemoizedValues({
       currentOptions,
-      isLanguageField: false,
       rowField: 'status',
       getDataOptions,
     })).toEqual(currentOptions);
 
     expect(getDataOptions).not.toHaveBeenCalled();
-  });
-
-  it('uses fetched options for language fields even when cached options exist', () => {
-    const currentOptions = [{ value: 'ger', label: 'German' }];
-    const fetchedOptions = [{ value: 'ger', label: 'German [ger]' }];
-    const getDataOptions = jest.fn(() => fetchedOptions);
-
-    expect(getMemoizedValues({
-      currentOptions,
-      isLanguageField: true,
-      rowField: 'instance.languages',
-      getDataOptions,
-    })).toEqual(fetchedOptions);
-
-    expect(getDataOptions).toHaveBeenCalledWith('instance.languages', false, undefined, [], true);
   });
 
   it('uses fetched options when cached options are missing', () => {
@@ -36,11 +20,10 @@ describe('getMemoizedValues', () => {
 
     expect(getMemoizedValues({
       currentOptions: undefined,
-      isLanguageField: false,
       rowField: 'status',
       getDataOptions,
     })).toEqual(fetchedOptions);
 
-    expect(getDataOptions).toHaveBeenCalledWith('status', false, undefined, [], false);
+    expect(getDataOptions).toHaveBeenCalledWith('status');
   });
 });
