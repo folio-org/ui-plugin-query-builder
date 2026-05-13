@@ -35,7 +35,7 @@ const formatDateValue = (value) => {
   return value;
 };
 
-export const formatValueByDataType = (value, dataType, properties, intl) => {
+export const formatValueByDataType = (value, dataType, properties, _intl) => {
   if (value === undefined || value === null) {
     return '';
   }
