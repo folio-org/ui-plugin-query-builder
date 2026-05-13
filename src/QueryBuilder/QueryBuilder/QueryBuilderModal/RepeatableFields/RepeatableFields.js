@@ -275,8 +275,8 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
 });
 
 RepeatableFields.propTypes = {
-  source: PropTypes.arrayOf(PropTypes.object),
-  columns: PropTypes.arrayOf(PropTypes.object),
+  source: PropTypes.arrayOf(PropTypes.shape({})),
+  columns: PropTypes.arrayOf(PropTypes.shape({})),
   setSource: PropTypes.func,
   entityTypeId: PropTypes.string,
 };

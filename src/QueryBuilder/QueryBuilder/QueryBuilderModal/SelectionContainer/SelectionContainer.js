@@ -172,8 +172,8 @@ SelectionContainer.propTypes = {
   isMulti: PropTypes.bool,
   onChange: PropTypes.func,
   index: PropTypes.number,
-  source: PropTypes.object,
-  availableValues: PropTypes.arrayOf(PropTypes.object),
+  source: PropTypes.shape({}),
+  availableValues: PropTypes.arrayOf(PropTypes.shape({})),
   emptyMessage: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.node,
@@ -183,7 +183,7 @@ SelectionContainer.propTypes = {
     PropTypes.bool,
     PropTypes.number,
     PropTypes.array,
-    PropTypes.object,
+    PropTypes.shape({}),
   ]),
   entityTypeId: PropTypes.string,
 };

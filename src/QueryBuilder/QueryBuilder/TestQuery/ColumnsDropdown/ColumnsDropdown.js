@@ -47,7 +47,7 @@ export const ColumnsDropdown = memo(({ columns, visibleColumns, onColumnChange }
 });
 
 ColumnsDropdown.propTypes = {
-  columns: PropTypes.arrayOf(PropTypes.object),
+  columns: PropTypes.arrayOf(PropTypes.shape({})),
   visibleColumns: PropTypes.arrayOf(PropTypes.string),
   onColumnChange: PropTypes.func,
 };

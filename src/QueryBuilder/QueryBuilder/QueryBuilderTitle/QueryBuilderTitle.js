@@ -55,5 +55,5 @@ export const QueryBuilderTitle = ({ results }) => {
 };
 
 QueryBuilderTitle.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.object),
+  results: PropTypes.arrayOf(PropTypes.shape({})),
 };
