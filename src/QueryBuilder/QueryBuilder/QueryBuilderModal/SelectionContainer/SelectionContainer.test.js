@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import Intl from '../../../../../test/jest/__mock__/intlProvider.mock';
 import { RootContext } from '../../../../context/RootContext';
+import { DATA_OPTIONS_LOAD_FAILED } from '../../../../hooks/useDataOptions';
 import { SelectionContainer } from './SelectionContainer';
 
 const renderSelectionContainer = ({
@@ -11,12 +12,15 @@ const renderSelectionContainer = ({
   value,
   options = [],
   source,
+  valueSourceApi,
+  fallback,
+  getDataOptionsWithFetching = () => options,
 } = {}) => {
   return render(
     <Intl>
       <RootContext.Provider
         value={{
-          getDataOptionsWithFetching: () => options,
+          getDataOptionsWithFetching,
         }}
       >
         <SelectionContainer
@@ -27,6 +31,8 @@ const renderSelectionContainer = ({
           availableValues={availableValues}
           value={value}
           source={source}
+          valueSourceApi={valueSourceApi}
+          fallback={fallback}
         />
       </RootContext.Provider>
     </Intl>,
@@ -48,6 +54,16 @@ describe('SelectionContainer', () => {
     );
 
     expect(container.querySelector('.spinner')).toBeInTheDocument();
+  });
+
+  it('renders fallback when options failed to load', () => {
+    const { getByTestId } = renderSelectionContainer({
+      component: jest.fn(() => null),
+      fallback: <div data-testid="fallback-input" />,
+      getDataOptionsWithFetching: () => DATA_OPTIONS_LOAD_FAILED,
+    });
+
+    expect(getByTestId('fallback-input')).toBeVisible();
   });
 
   it('normalizes boolean string value', () => {
@@ -214,6 +230,26 @@ describe('SelectionContainer', () => {
     const props = mockComponent.mock.calls[0][0];
 
     expect(props.dataOptions[0].disabled).toBe(true);
+  });
+
+  it('passes valueSourceApi to getDataOptionsWithFetching', () => {
+    const getDataOptionsWithFetching = jest.fn(() => []);
+    const valueSourceApi = { path: '/value-source-api' };
+
+    renderSelectionContainer({
+      component: jest.fn(() => null),
+      valueSourceApi,
+      getDataOptionsWithFetching,
+    });
+
+    expect(getDataOptionsWithFetching).toHaveBeenCalledWith(
+      'test',
+      undefined,
+      '',
+      [],
+      undefined,
+      valueSourceApi,
+    );
   });
 
   it('updates searchValue from pendingSearchRef in useEffect', () => {

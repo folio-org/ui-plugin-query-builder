@@ -7,6 +7,7 @@ import { Loading, OptionSegment } from '@folio/stripes/components';
 
 import { RootContext } from '../../../../context/RootContext';
 import { ORGANIZATIONS_TYPES } from '../../../../constants/dataTypes';
+import { isDataOptionsLoadFailure } from '../../../../hooks/useDataOptions';
 
 export const SelectionContainer = ({
   fieldName,
@@ -16,9 +17,11 @@ export const SelectionContainer = ({
   isMulti,
   onChange,
   source,
+  valueSourceApi,
   entityTypeId,
   testId,
   emptyMessage,
+  fallback,
   value,
   ...rest
 }) => {
@@ -57,7 +60,14 @@ export const SelectionContainer = ({
   };
 
   const usedIds = (Array.isArray(value) ? value : [value]).map(item => item?.value || item).filter(Boolean);
-  const optionsPromise = getDataOptionsWithFetching(fieldName, source, searchValue, usedIds, entityTypeId);
+  const optionsPromise = getDataOptionsWithFetching(
+    fieldName,
+    source,
+    searchValue,
+    usedIds,
+    entityTypeId,
+    valueSourceApi,
+  );
 
   useEffect(() => {
     if (pendingSearchRef.current !== searchValue) {
@@ -141,6 +151,8 @@ export const SelectionContainer = ({
     if (onChange) onChange(selectedValue);
   };
 
+  if (isDataOptionsLoadFailure(optionsPromise)) return fallback ?? null;
+
   if (!Array.isArray(optionsPromise)) return <Loading size="large" />;
 
   const filterProps = isMulti
@@ -173,7 +185,9 @@ SelectionContainer.propTypes = {
   onChange: PropTypes.func,
   index: PropTypes.number,
   source: PropTypes.shape({}),
+  valueSourceApi: PropTypes.shape({}),
   availableValues: PropTypes.arrayOf(PropTypes.shape({})),
+  fallback: PropTypes.node,
   emptyMessage: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.node,

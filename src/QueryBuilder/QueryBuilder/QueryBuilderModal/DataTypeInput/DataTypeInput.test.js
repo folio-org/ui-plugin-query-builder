@@ -7,6 +7,7 @@ import { DataTypeInput } from './DataTypeInput';
 import { DATA_TYPES } from '../../../../constants/dataTypes';
 import { OPERATORS } from '../../../../constants/operators';
 import { RootContext } from '../../../../context/RootContext';
+import { DATA_OPTIONS_LOAD_FAILED } from '../../../../hooks/useDataOptions';
 
 jest.mock('@folio/stripes/core', () => ({
   ...jest.requireActual('@folio/stripes/core'),
@@ -38,16 +39,18 @@ const renderDataTypeInput = ({
   dataType,
   operator,
   source,
+  valueSourceApi,
   availableValues,
   value,
+  getDataOptionsWithFetching = () => [
+    { label: 'Available', value: 'available' },
+    { label: 'Checked out', value: 'checked' },
+  ],
 }) => render(
   <Intl>
     <RootContext.Provider
       value={{
-        getDataOptionsWithFetching: () => [
-          { label: 'Available', value: 'available' },
-          { label: 'Checked out', value: 'checked' },
-        ],
+        getDataOptionsWithFetching,
       }}
     >
       <QueryClientProvider client={queryClient}>
@@ -56,6 +59,7 @@ const renderDataTypeInput = ({
           dataType={dataType}
           operator={operator}
           source={source}
+          valueSourceApi={valueSourceApi}
           availableValues={availableValues}
           getParamsSource={noop}
           value={value}
@@ -154,6 +158,13 @@ const arr = [
     source: mockSource,
   },
   {
+    dataType: DATA_TYPES.StringType,
+    operator: OPERATORS.EQUAL,
+    componentTestId: 'data-input-select-single-stringType',
+    onChange: jest.fn(),
+    valueSourceApi: { path: '/value-source-api' },
+  },
+  {
     dataType: DATA_TYPES.DateType,
     operator: OPERATORS.GREATER_THAN,
     componentTestId: 'data-input-dateType',
@@ -225,6 +236,7 @@ describe('DataTypeInput', () => {
     text,
     onChange,
     source,
+    valueSourceApi,
     availableValues,
     value,
     expectedOnChangeArgs,
@@ -233,7 +245,7 @@ describe('DataTypeInput', () => {
       const {
         queryByTestId,
         queryByText,
-      } = renderDataTypeInput({ dataType, operator, onChange, source, availableValues, value });
+      } = renderDataTypeInput({ dataType, operator, onChange, source, valueSourceApi, availableValues, value });
       const el = queryByTestId(componentTestId || '') || queryByText(text || '');
 
       await waitFor(() => {
@@ -259,6 +271,51 @@ describe('DataTypeInput', () => {
       }
     });
   }
+});
+
+describe('DataTypeInput source fetch failures', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('falls back to free text when valueSourceApi options fail to load', async () => {
+    const { findByTestId, queryByTestId } = renderDataTypeInput({
+      dataType: DATA_TYPES.StringType,
+      operator: OPERATORS.EQUAL,
+      valueSourceApi: { path: '/value-source-api' },
+      getDataOptionsWithFetching: () => DATA_OPTIONS_LOAD_FAILED,
+    });
+
+    expect(await findByTestId('data-input-text-stringType')).toBeVisible();
+    expect(queryByTestId('data-input-select-single-stringType')).not.toBeInTheDocument();
+  });
+
+  it('falls back to free text for select-only controls when options fail to load', async () => {
+    const { findByTestId, queryByTestId } = renderDataTypeInput({
+      dataType: DATA_TYPES.EnumType,
+      operator: OPERATORS.EQUAL,
+      valueSourceApi: { path: '/value-source-api' },
+      getDataOptionsWithFetching: () => DATA_OPTIONS_LOAD_FAILED,
+    });
+
+    expect(await findByTestId('data-input-text-enumType')).toBeVisible();
+    expect(queryByTestId('data-input-select-arrayType')).not.toBeInTheDocument();
+  });
+
+  it('normalizes multi-select fallback values for free text entry', async () => {
+    const { findByTestId } = renderDataTypeInput({
+      dataType: DATA_TYPES.StringType,
+      operator: OPERATORS.IN,
+      valueSourceApi: { path: '/value-source-api' },
+      value: [
+        { value: 'value1', label: 'Label 1' },
+        { value: 'value2', label: 'Label 2' },
+      ],
+      getDataOptionsWithFetching: () => DATA_OPTIONS_LOAD_FAILED,
+    });
+
+    expect(await findByTestId('data-input-text-stringType')).toHaveValue('value1, value2');
+  });
 });
 
 describe('DataTypeInput with organization Pluggable', () => {

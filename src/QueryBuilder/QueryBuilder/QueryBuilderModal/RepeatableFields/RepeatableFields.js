@@ -21,6 +21,7 @@ import {
   getFieldOptions,
   getFilteredOptions,
   getOperatorOptions,
+  hasValueOptions,
   REPEATABLE_FIELD_DELIMITER,
   sourceTemplate,
 } from '../../helpers/selectOptions';
@@ -92,6 +93,7 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
     const rowField = source[index].field.current;
     const memorizedFieldDataType = source[index].field.dataType;
     const memoizedFieldSource = source[index].value.source;
+    const memoizedFieldValueSourceApi = source[index].value.valueSourceApi;
     const memorizedField = fieldOptions.find(o => o.value === rowField);
     const memorizedOperator = source[index].operator.current;
     const memoizedValues = getMemoizedValues({
@@ -112,7 +114,7 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
           [COLUMN_KEYS.OPERATOR]: {
             options: getOperatorOptions({
               dataType: field.dataType,
-              hasSourceOrValues: field.values || field.source,
+              hasSourceOrValues: hasValueOptions(field),
               isFromNestedField: field.value.includes(REPEATABLE_FIELD_DELIMITER),
               intl,
             }),
@@ -121,6 +123,7 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
           [COLUMN_KEYS.VALUE]: {
             options: field.values,
             source: field.source,
+            valueSourceApi: field.valueSourceApi,
             current: '',
           },
         };
@@ -131,8 +134,10 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
           [COLUMN_KEYS.VALUE]: {
             options: memorizedField.values,
             source: memorizedField.source,
+            valueSourceApi: memorizedField.valueSourceApi,
             current: retainValueOnOperatorChange({
               source: memoizedFieldSource,
+              valueSourceApi: memoizedFieldValueSourceApi,
               dataType: memorizedFieldDataType,
               operator: memorizedOperator,
               newOperator: value,
@@ -243,6 +248,7 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
                     index={index}
                     availableValues={row.value.options}
                     source={row.value.source}
+                    valueSourceApi={row.value.valueSourceApi}
                     operator={row.operator.current}
                     onChange={handleChange}
                     data-testid={`input-value-${index}`}
