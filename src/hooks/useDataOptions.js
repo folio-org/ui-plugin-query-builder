@@ -1,6 +1,17 @@
 import { useCallback, useState } from 'react';
 import { ORGANIZATIONS_TYPES } from '../constants/dataTypes';
 
+export const DATA_OPTIONS_LOAD_FAILED = Object.freeze({ dataOptionsLoadFailed: true });
+
+export const isDataOptionsLoadFailure = (options) => Boolean(options?.dataOptionsLoadFailed);
+
+const getRequestKey = (request) => JSON.stringify(request);
+
+const getDataOptionsLoadFailure = (requestKey) => ({
+  ...DATA_OPTIONS_LOAD_FAILED,
+  requestKey,
+});
+
 function getUniqueValues(a, b) {
   const uniqueValues = new Map();
 
@@ -9,6 +20,15 @@ function getUniqueValues(a, b) {
 
   return Array.from(uniqueValues.values()).toSorted((aa, bb) => aa.label.localeCompare(bb.label));
 }
+
+const isPendingOrFailedOptions = (options) => (
+  typeof options === 'object' && !Array.isArray(options)
+);
+
+const shouldUseCachedOptions = (options, fetchPromise, requestKey) => (
+  isPendingOrFailedOptions(options) &&
+  (!isDataOptionsLoadFailure(options) || !fetchPromise || options.requestKey === requestKey)
+);
 
 export function useDataOptions({ getParamsSource, getOrganizations }) {
   const [dataOptions, setDataOptions] = useState({});
@@ -20,27 +40,33 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
       allowPromises = false,
       fetchPromise = undefined,
       fetchIfValuesMissing = [],
+      requestKey = undefined,
     ) => {
+      const cachedOptions = dataOptions[field];
+
       if (
-        Array.isArray(dataOptions[field]) &&
+        Array.isArray(cachedOptions) &&
                 // check that all specially requested values are present
-                fetchIfValuesMissing.every((v) => !!dataOptions[field].find((o) => o.value === v))
+                fetchIfValuesMissing.every((v) => !!cachedOptions.find((o) => o.value === v))
       ) {
-        return dataOptions[field];
+        return cachedOptions;
       }
 
-      // only return promises if requested, to prevent non-async code from exploding here
+      // only return promises/failures if requested, to prevent non-async code from exploding here
       // we don't need to worry about fetchIfValuesMissing here as we will re-render once this promise is resolved,
       // and any missing ones will then be checked
-      if (typeof dataOptions[field] === 'object' && !Array.isArray(dataOptions[field])) {
-        return allowPromises ? dataOptions[field] : [];
+      if (shouldUseCachedOptions(cachedOptions, fetchPromise, requestKey)) {
+        return allowPromises ? cachedOptions : [];
       }
 
       // if we're provided a fetcher, atomically set it here and automatically put its value back
       if (fetchPromise) {
-        const existingValues = dataOptions[field] ?? [];
-
-        const promise = fetchPromise();
+        const existingValues = Array.isArray(cachedOptions) ? cachedOptions : [];
+        const promise = fetchPromise()
+          .then((newValues) => (Array.isArray(newValues)
+            ? getUniqueValues(existingValues, newValues)
+            : getDataOptionsLoadFailure(requestKey)))
+          .catch(() => getDataOptionsLoadFailure(requestKey));
 
         setDataOptions((prev) => ({
           ...prev,
@@ -50,14 +76,14 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
         promise.then((newValues) => {
           setDataOptions((prev) => ({
             ...prev,
-            [field]: getUniqueValues(existingValues, newValues),
+            [field]: newValues,
           }));
         });
 
         return promise;
       }
 
-      return dataOptions[field] ?? [];
+      return cachedOptions ?? [];
     },
     [dataOptions],
   );
@@ -65,10 +91,10 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
   const getDataOptionsWithFetching = useCallback(
     // usedIds are only for organization sources
     // `originalEntityTypeId` is the entityTypeId the user is building the query against
-    (fieldName, source, searchValue, usedIds, originalEntityTypeId) => {
-      if (!source) {
+    (fieldName, source, searchValue, usedIds = [], originalEntityTypeId, valueSourceApi) => {
+      if (!source && !valueSourceApi) {
         return getDataOptions(fieldName);
-      } else if (ORGANIZATIONS_TYPES.includes(source.name)) {
+      } else if (source && ORGANIZATIONS_TYPES.includes(source.name)) {
         return getDataOptions(
           fieldName,
           true,
@@ -89,6 +115,11 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
               return results.flat();
             },
           usedIds,
+          getRequestKey({
+            source: source.name,
+            columnName: source.columnName,
+            usedIds,
+          }),
         );
       } else {
         // If the entityType isn't known yet, don't attempt value fetching
@@ -105,6 +136,11 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
             searchValue,
           }).then((data) => data?.content),
           [],
+          getRequestKey({
+            entityTypeId: originalEntityTypeId,
+            columnName: fieldName,
+            searchValue,
+          }),
         );
       }
     },

@@ -16,9 +16,10 @@ export const getControlType = ({
   dataType,
   operator,
   source,
+  valueSourceApi,
   availableValues,
 }) => {
-  const hasOptions = Boolean(source || availableValues?.length);
+  const hasOptions = Boolean(source || valueSourceApi || availableValues?.length);
 
   const isIn = operator === OPERATORS.IN || operator === OPERATORS.NOT_IN;
   const isEqual =

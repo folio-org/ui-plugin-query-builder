@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { useDataOptions } from './useDataOptions';
+import { DATA_OPTIONS_LOAD_FAILED, isDataOptionsLoadFailure, useDataOptions } from './useDataOptions';
 import { ORGANIZATIONS_TYPES } from '../constants/dataTypes';
 
 describe('useDataOptions', () => {
@@ -94,6 +94,117 @@ describe('useDataOptions', () => {
       result.current.getDataOptionsWithFetching('field', { name: 'non-org' }, '', [], 'entity-type-id');
 
       expect(getParamsSource).toHaveBeenCalled();
+    });
+
+    it('calls getParamsSource for valueSourceApi when source is not provided', () => {
+      const getParamsSource = jest.fn(() => Promise.resolve({ content: [] }));
+      const { result } = renderHook(() => useDataOptions({ getParamsSource }));
+
+      result.current.getDataOptionsWithFetching(
+        'field',
+        undefined,
+        'search-value',
+        [],
+        'entity-type-id',
+        { path: '/value-source-api' },
+      );
+
+      expect(getParamsSource).toHaveBeenCalledWith({
+        entityTypeId: 'entity-type-id',
+        columnName: 'field',
+        searchValue: 'search-value',
+      });
+    });
+
+    it('returns failed marker when valueSourceApi fetch rejects', async () => {
+      const getParamsSource = jest.fn(() => Promise.reject(new Error('request failed')));
+      const { result } = renderHook(() => useDataOptions({ getParamsSource }));
+
+      const promise = result.current.getDataOptionsWithFetching(
+        'field',
+        undefined,
+        'search-value',
+        [],
+        'entity-type-id',
+        { path: '/value-source-api' },
+      );
+
+      await expect(promise).resolves.toMatchObject(DATA_OPTIONS_LOAD_FAILED);
+      await waitFor(() => expect(isDataOptionsLoadFailure(result.current.getDataOptions('field', true))).toBe(true));
+      expect(result.current.getDataOptionsWithFetching(
+        'field',
+        undefined,
+        'search-value',
+        [],
+        'entity-type-id',
+        { path: '/value-source-api' },
+      )).toMatchObject(DATA_OPTIONS_LOAD_FAILED);
+      expect(getParamsSource).toHaveBeenCalledTimes(1);
+    });
+
+    it('retries failed valueSourceApi fetches when the search request changes', async () => {
+      const retryValues = [{ value: 'retry-value', label: 'Retry value' }];
+      const getParamsSource = jest.fn()
+        .mockRejectedValueOnce(new Error('request failed'))
+        .mockResolvedValueOnce({ content: retryValues });
+      const { result } = renderHook(() => useDataOptions({ getParamsSource }));
+
+      const failedPromise = result.current.getDataOptionsWithFetching(
+        'field',
+        undefined,
+        'failed-search',
+        [],
+        'entity-type-id',
+        { path: '/value-source-api' },
+      );
+
+      await expect(failedPromise).resolves.toMatchObject(DATA_OPTIONS_LOAD_FAILED);
+      await waitFor(() => expect(isDataOptionsLoadFailure(result.current.getDataOptions('field', true))).toBe(true));
+
+      expect(result.current.getDataOptionsWithFetching(
+        'field',
+        undefined,
+        'failed-search',
+        [],
+        'entity-type-id',
+        { path: '/value-source-api' },
+      )).toMatchObject(DATA_OPTIONS_LOAD_FAILED);
+      expect(getParamsSource).toHaveBeenCalledTimes(1);
+
+      const retryPromise = result.current.getDataOptionsWithFetching(
+        'field',
+        undefined,
+        'retry-search',
+        [],
+        'entity-type-id',
+        { path: '/value-source-api' },
+      );
+
+      await expect(retryPromise).resolves.toEqual(retryValues);
+      expect(getParamsSource).toHaveBeenCalledTimes(2);
+      expect(getParamsSource).toHaveBeenLastCalledWith({
+        entityTypeId: 'entity-type-id',
+        columnName: 'field',
+        searchValue: 'retry-search',
+      });
+    });
+
+    it('uses source when both source and valueSourceApi are provided', () => {
+      const getParamsSource = jest.fn(() => Promise.resolve({ content: [] }));
+      const getOrganizations = jest.fn(() => Promise.resolve([]));
+      const { result } = renderHook(() => useDataOptions({ getParamsSource, getOrganizations }));
+
+      result.current.getDataOptionsWithFetching(
+        'field',
+        { name: ORGANIZATIONS_TYPES[0], columnName: 'name' },
+        'search-value',
+        ['org-id'],
+        'entity-type-id',
+        { path: '/value-source-api' },
+      );
+
+      expect(getOrganizations).toHaveBeenCalledWith(['org-id'], 'name');
+      expect(getParamsSource).not.toHaveBeenCalled();
     });
 
     it('does not call getParamsSource for non-org when originalEntityTypeId is missing', async () => {

@@ -85,11 +85,12 @@ export const retainValueOnOperatorChange = ({
   operator,
   newOperator,
   source,
+  valueSourceApi,
   availableValues,
   prevValue,
 }) => {
-  const prevType = getControlType({ dataType, operator, source, availableValues });
-  const newType = getControlType({ dataType, operator: newOperator, source, availableValues });
+  const prevType = getControlType({ dataType, operator, source, valueSourceApi, availableValues });
+  const newType = getControlType({ dataType, operator: newOperator, source, valueSourceApi, availableValues });
 
   if (!prevType || !newType) {
     return '';
