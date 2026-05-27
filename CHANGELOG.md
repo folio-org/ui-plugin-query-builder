@@ -1,6 +1,7 @@
 # Change history for ui-plugin-query-builder
 
-## [3.1.0] IN PROGRESS
+## [3.0.2] IN PROGRESS
+* [UIPQB-279](https://folio-org.atlassian.net/browse/UIPQB-279) Add support for fields containing a valueSourceApi property without a source property
 
 ## [3.0.1](https://github.com/folio-org/ui-plugin-query-builder/tree/v3.0.1) (2026-05-13)
 * [UIPQB-271](https://folio-org.atlassian.net/browse/UIPQB-271) Disambiguate duplicate language labels in UI

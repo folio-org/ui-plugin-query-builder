@@ -54,6 +54,10 @@ export const getFilledValues = (options) => {
   return options?.map(({ value, label }) => ({ value, label: label || value }));
 };
 
+export const hasValueOptions = ({ values, source, valueSourceApi } = {}) => (
+  Boolean(values || source || valueSourceApi)
+);
+
 const stringOperators = (hasSourceOrValues) => {
   return [
     { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
@@ -154,6 +158,7 @@ export const getFieldOptions = (options) => {
       value: o.name,
       dataType: o.dataType.dataType,
       source: o.source,
+      valueSourceApi: o.valueSourceApi,
       values: getFilledValues(o.values),
     }));
 };

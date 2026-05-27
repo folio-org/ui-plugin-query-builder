@@ -17,10 +17,30 @@ import {
 } from '../../../../constants/dataTypes';
 import { OPERATORS } from '../../../../constants/operators';
 import useTenantTimezone from '../../../../hooks/useTenantTimezone';
-import { staticBooleanOptions } from '../../helpers/selectOptions';
+import { hasValueOptions, staticBooleanOptions } from '../../helpers/selectOptions';
 import { SelectionContainer } from '../SelectionContainer/SelectionContainer';
 
 import css from '../../../QueryBuilder.css';
+
+const fallbackInputPropsByDataType = {
+  [DATA_TYPES.IntegerType]: {
+    type: 'number',
+    textClass: css.NumberInput,
+  },
+  [DATA_TYPES.NumberType]: {
+    type: 'number',
+    textClass: css.NumberInput,
+  },
+};
+
+const getFallbackInputValue = (inputValue) => {
+  if (!Array.isArray(inputValue)) return inputValue;
+
+  return inputValue
+    .map((item) => item?.value ?? item?.id ?? item?.label ?? item)
+    .filter((item) => item !== undefined && item !== null && typeof item !== 'object')
+    .join(', ');
+};
 
 function getOrganizationPluginButton(source, multi, onChange, value, index) {
   if (!ORGANIZATIONS_TYPES.includes(source?.name)) {
@@ -86,6 +106,7 @@ export const DataTypeInput = ({
   index,
   operator,
   source,
+  valueSourceApi,
   fieldName,
   value,
   entityTypeId,
@@ -94,11 +115,11 @@ export const DataTypeInput = ({
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
   const isEqualRelatedOperator = [OPERATORS.EQUAL, OPERATORS.NOT_EQUAL].includes(operator);
   const isEmptyRelatedOperator = [OPERATORS.EMPTY].includes(operator);
-  const hasSourceOrValues = source || availableValues;
+  const hasSourceOrValues = hasValueOptions({ values: availableValues, source, valueSourceApi });
 
   const { tenantTimezone: timezone } = useTenantTimezone();
 
-  const textControl = ({ testId, type = 'text', value: inputValue, textClass }) => {
+  const textControl = ({ dataTestId, type = 'text', value: inputValue, textClass }) => {
     const onKeyDown = (event) => {
       // prevent typing e, +, - in number type
       if (type === 'number' && (event.keyCode === 69 || event.keyCode === 187 || event.keyCode === 189)) {
@@ -108,7 +129,7 @@ export const DataTypeInput = ({
 
     return (
       <TextField
-        data-testid={testId}
+        data-testid={dataTestId}
         onChange={(e) => onChange(e.target.value, index, COLUMN_KEYS.VALUE)}
         onKeyDown={onKeyDown}
         type={type}
@@ -127,15 +148,25 @@ export const DataTypeInput = ({
     />
   );
 
+  const fallbackInputControl = (inputValue) => {
+    return textControl({
+      dataTestId: `data-input-text-${dataType}`,
+      value: getFallbackInputValue(inputValue),
+      ...fallbackInputPropsByDataType[dataType],
+    });
+  };
+
   const selectControl = ({ testId, value: inputValue }) => (
     <SelectionContainer
       fieldName={fieldName}
       component={Selection}
       source={source}
+      valueSourceApi={valueSourceApi}
       entityTypeId={entityTypeId}
       testId={testId}
       availableValues={availableValues}
       value={inputValue}
+      fallback={fallbackInputControl(inputValue)}
       onChange={(selectedValue) => onChange(selectedValue, index, COLUMN_KEYS.VALUE)}
       {...rest}
     />
@@ -148,12 +179,14 @@ export const DataTypeInput = ({
       testId={testId}
       component={MultiSelection}
       source={source}
+      valueSourceApi={valueSourceApi}
       entityTypeId={entityTypeId}
       availableValues={availableValues}
       onChange={(selectedItems) => onChange(selectedItems, index, COLUMN_KEYS.VALUE)}
       isMulti
       emptyMessage={emptyMessage}
       value={inputValue}
+      fallback={fallbackInputControl(inputValue)}
       {...rest}
     />
   );
@@ -218,7 +251,7 @@ export const DataTypeInput = ({
       );
     }
 
-    return textControl({ testId: `data-input-text-${testIdPostfix}`, value });
+    return textControl({ dataTestId: `data-input-text-${testIdPostfix}`, value });
   };
 
   const numericTypeControls = () => {
@@ -248,7 +281,7 @@ export const DataTypeInput = ({
       </>
     ) : (
       <div className={className}>
-        {textControl({ testId: 'data-input-text-openUUIDType', value })}
+        {textControl({ dataTestId: 'data-input-text-openUUIDType', value })}
       </div>
     );
   };
@@ -287,10 +320,10 @@ export const DataTypeInput = ({
       return booleanTypeControls();
 
     case DATA_TYPES.RangedUUIDType:
-      return textControl({ testId: 'data-input-text-rangedUUIDType', value });
+      return textControl({ dataTestId: 'data-input-text-rangedUUIDType', value });
 
     case DATA_TYPES.StringUUIDType:
-      return textControl({ testId: 'data-input-text-stringUUIDType', value });
+      return textControl({ dataTestId: 'data-input-text-stringUUIDType', value });
 
     case DATA_TYPES.DateType:
       return datePickerControl();
@@ -305,7 +338,7 @@ export const DataTypeInput = ({
       return enumTypeControls();
 
     default:
-      return textControl({ testId: 'data-input-text-default', value });
+      return textControl({ dataTestId: 'data-input-text-default', value });
   }
 };
 
@@ -321,6 +354,7 @@ DataTypeInput.propTypes = {
     entityTypeId: PropTypes.string,
     columnName: PropTypes.string,
   }),
+  valueSourceApi: PropTypes.shape({}),
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.bool,

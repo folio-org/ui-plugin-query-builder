@@ -10,6 +10,7 @@ import {
   booleanOptions,
   getFieldOptions,
   getOperatorOptions,
+  hasValueOptions,
   REPEATABLE_FIELD_DELIMITER,
   sourceTemplate,
 } from './selectOptions';
@@ -204,7 +205,7 @@ const createDeletedFieldResponse = (boolean, fieldOptions) => {
 };
 
 const formatArrayValue = (value, hasSourceOrValues, possibleValues) => {
-  if (!hasSourceOrValues) {
+  if (!hasSourceOrValues || !Array.isArray(possibleValues)) {
     return value;
   }
 
@@ -217,6 +218,10 @@ const formatArrayValue = (value, hasSourceOrValues, possibleValues) => {
 };
 
 const formatSingleValue = (value, possibleValues, preserveQueryValue) => {
+  if (!Array.isArray(possibleValues)) {
+    return undefined;
+  }
+
   const key = preserveQueryValue ? 'value' : 'label';
 
   return possibleValues?.find(param => param.value === value)?.[key];
@@ -248,18 +253,19 @@ const getFormattedSourceField = async ({
     return createDeletedFieldResponse(boolean, fieldOptions);
   }
 
-  const { dataType, values, source } = fieldItem;
-  const hasSourceOrValues = values || source;
+  const { dataType, values, source, valueSourceApi } = fieldItem;
+  const hasSourceOrValues = hasValueOptions(fieldItem);
 
   let possibleValues = values;
 
-  if (source) {
+  if (source || valueSourceApi) {
     possibleValues = await getDataOptionsWithFetching(
       field,
       source,
       '',
       Array.isArray(value) ? value : [value],
       originalEntityTypeId,
+      valueSourceApi,
     );
   }
 
@@ -280,7 +286,12 @@ const getFormattedSourceField = async ({
       }),
       current: operator,
     },
-    value: { current: formattedValue || value, source, options: values },
+    value: {
+      current: formattedValue || value,
+      source,
+      valueSourceApi,
+      options: values,
+    },
   };
 };
 

@@ -68,6 +68,59 @@ describe('select options', () => {
     it('should be equal to result value', () => {
       expect(getFieldOptions(entityType?.columns)).toEqual(result);
     });
+
+    it('uses source when valueSourceApi is not present', () => {
+      const source = { name: 'organization', columnName: 'name' };
+
+      const [field] = getFieldOptions([{
+        name: 'organization_name',
+        queryable: true,
+        dataType: {
+          dataType: 'stringType',
+        },
+        labelAlias: 'Organization name',
+        source,
+      }]);
+
+      expect(field.source).toEqual(source);
+      expect(field.valueSourceApi).toBeUndefined();
+    });
+
+    it('uses valueSourceApi when source is not present', () => {
+      const valueSourceApi = { path: '/value-source-api' };
+
+      const [field] = getFieldOptions([{
+        name: 'user_full_name',
+        queryable: true,
+        dataType: {
+          dataType: 'stringType',
+        },
+        labelAlias: 'User full name',
+        valueSourceApi,
+      }]);
+
+      expect(field.source).toBeUndefined();
+      expect(field.valueSourceApi).toEqual(valueSourceApi);
+    });
+
+    it('keeps source and valueSourceApi separate when both are present', () => {
+      const source = { name: 'organization', columnName: 'name' };
+      const valueSourceApi = { path: '/value-source-api' };
+
+      const [field] = getFieldOptions([{
+        name: 'organization_name',
+        queryable: true,
+        dataType: {
+          dataType: 'stringType',
+        },
+        labelAlias: 'Organization name',
+        source,
+        valueSourceApi,
+      }]);
+
+      expect(field.source).toEqual(source);
+      expect(field.valueSourceApi).toEqual(valueSourceApi);
+    });
   });
 
   describe('getOperatorOptions', () => {

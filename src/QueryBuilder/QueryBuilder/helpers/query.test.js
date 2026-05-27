@@ -4,6 +4,7 @@ import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
+import { DATA_OPTIONS_LOAD_FAILED } from '../../../hooks/useDataOptions';
 
 describe('fqlQueryToSource()', () => {
   test('should return empty array for empty query', async () => {
@@ -263,6 +264,7 @@ describe('fqlQueryToSource()', () => {
       '',
       ['value1', 'value2'],
       'entity-type-id',
+      undefined,
     );
 
     expect(result).toEqual([
@@ -280,6 +282,94 @@ describe('fqlQueryToSource()', () => {
         },
       },
     ]);
+  });
+
+  it('should fetch possible values when field has valueSourceApi and no source', async () => {
+    const intl = { formatMessage: jest.fn() };
+    const valueSourceApi = { path: '/value-source-api' };
+    const getDataOptionsWithFetching = jest.fn(() => Promise.resolve([
+      { value: 'value1', label: 'Label 1' },
+      { value: 'value2', label: 'Label 2' },
+    ]));
+
+    const fieldOptionsWithValueSourceApi = [{
+      value: 'user_first_name',
+      label: 'User first name',
+      dataType: DATA_TYPES.StringType,
+      valueSourceApi,
+    }];
+
+    const initialValuesWithValueSourceApi = {
+      user_first_name: { $in: ['value1', 'value2'] },
+    };
+
+    const result = await fqlQueryToSource({
+      initialValues: initialValuesWithValueSourceApi,
+      fieldOptions: fieldOptionsWithValueSourceApi,
+      intl,
+      getDataOptionsWithFetching,
+      preserveQueryValue: false,
+      originalEntityTypeId: 'entity-type-id',
+    });
+
+    expect(getDataOptionsWithFetching).toHaveBeenCalledWith(
+      'user_first_name',
+      undefined,
+      '',
+      ['value1', 'value2'],
+      'entity-type-id',
+      valueSourceApi,
+    );
+
+    expect(result).toEqual([
+      {
+        boolean: { options: booleanOptions, current: '' },
+        field: { options: fieldOptionsWithValueSourceApi, current: 'user_first_name', dataType: DATA_TYPES.StringType },
+        operator: { options: expect.any(Array), current: OPERATORS.IN, dataType: DATA_TYPES.StringType },
+        value: {
+          current: [
+            { value: 'value1', label: 'Label 1' },
+            { value: 'value2', label: 'Label 2' },
+          ],
+          source: undefined,
+          valueSourceApi,
+          options: undefined,
+        },
+      },
+    ]);
+  });
+
+  it('should preserve query value when valueSourceApi possible values fail to load', async () => {
+    const intl = { formatMessage: jest.fn() };
+    const valueSourceApi = { path: '/value-source-api' };
+    const getDataOptionsWithFetching = jest.fn(() => Promise.resolve(DATA_OPTIONS_LOAD_FAILED));
+
+    const fieldOptionsWithValueSourceApi = [{
+      value: 'user_first_name',
+      label: 'User first name',
+      dataType: DATA_TYPES.StringType,
+      valueSourceApi,
+    }];
+
+    const initialValuesWithValueSourceApi = {
+      user_first_name: { $in: ['value1', 'value2'] },
+    };
+
+    const result = await fqlQueryToSource({
+      initialValues: initialValuesWithValueSourceApi,
+      fieldOptions: fieldOptionsWithValueSourceApi,
+      intl,
+      getDataOptionsWithFetching,
+      preserveQueryValue: false,
+      originalEntityTypeId: 'entity-type-id',
+    });
+
+    expect(result[0].value).toEqual({
+      current: ['value1', 'value2'],
+      source: undefined,
+      valueSourceApi,
+      options: undefined,
+    });
   });
 
   it('should preserve query value when preserveQueryValue is true', async () => {
@@ -383,6 +473,7 @@ describe('fqlQueryToSource()', () => {
       '',
       ['uuid-1', 'uuid-2'],
       'entity-type-id',
+      undefined,
     );
 
     expect(result).toHaveLength(1);
