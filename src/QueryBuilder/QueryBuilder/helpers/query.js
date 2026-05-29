@@ -28,10 +28,6 @@ const getLabeledValue = (value, ...optionSets) => {
     return '';
   }
 
-  if (value?.label) {
-    return value.label;
-  }
-
   if (Array.isArray(value)) {
     return value;
   }
