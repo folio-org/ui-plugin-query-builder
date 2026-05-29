@@ -524,8 +524,8 @@ describe('getQueryStr', () => {
   it('uses static option labels for single-value custom field values', () => {
     const customFieldOptions = [
       {
-        value: 'user_customfields._custom_field_123',
-        label: 'User custom field',
+        value: 'source._custom_field_123',
+        label: 'Custom field',
         dataType: DATA_TYPES.StringType,
         values: [
           { value: 'opt_1', label: 'Option 1' },
@@ -538,7 +538,7 @@ describe('getQueryStr', () => {
         boolean: { current: '' },
         field: {
           options: customFieldOptions,
-          current: 'user_customfields._custom_field_123',
+          current: 'source._custom_field_123',
         },
         operator: { current: OPERATORS.EQUAL },
         value: {
@@ -556,14 +556,14 @@ describe('getQueryStr', () => {
       jest.fn(() => []),
     );
 
-    expect(result).toBe('(User custom field == Option 1)');
+    expect(result).toBe('(Custom field == Option 1)');
   });
 
   it('uses async option labels for single-value source field values', () => {
     const sourceFieldOptions = [
       {
-        value: 'item_material_type',
-        label: 'Item material type',
+        value: 'field1',
+        label: 'Field 1',
         dataType: DATA_TYPES.StringType,
       },
     ];
@@ -572,11 +572,11 @@ describe('getQueryStr', () => {
         boolean: { current: '' },
         field: {
           options: sourceFieldOptions,
-          current: 'item_material_type',
+          current: 'field1',
         },
         operator: { current: OPERATORS.EQUAL },
         value: {
-          current: 'book',
+          current: 'value 1',
         },
       },
     ];
@@ -586,10 +586,10 @@ describe('getQueryStr', () => {
       sourceFieldOptions,
       { formatDate: jest.fn() },
       'UTC',
-      jest.fn(() => [{ value: 'book', label: 'Book' }]),
+      jest.fn(() => [{ value: 'value 1', label: 'Label 1' }]),
     );
 
-    expect(result).toBe('(item_material_type == Book)');
+    expect(result).toBe('(field1 == Label 1)');
   });
 });
 
