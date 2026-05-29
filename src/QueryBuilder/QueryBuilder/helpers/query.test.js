@@ -1,4 +1,11 @@
-import { findMissingValues, getTransformedValue, isQueryValid, fqlQueryToSource, sourceToFqlQuery } from './query';
+import {
+  findMissingValues,
+  getQueryStr,
+  getTransformedValue,
+  isQueryValid,
+  fqlQueryToSource,
+  sourceToFqlQuery,
+} from './query';
 import { booleanOptions } from './selectOptions';
 import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
@@ -510,6 +517,79 @@ describe('fqlQueryToSource()', () => {
     expect(result[0].operator.current).toBe(OPERATORS.EQUAL);
     expect(result[1].field.current).toBe('user_full_name');
     expect(result[1].operator.current).toBe(OPERATORS.CONTAINS);
+  });
+});
+
+describe('getQueryStr', () => {
+  it('uses static option labels for single-value custom field values', () => {
+    const customFieldOptions = [
+      {
+        value: 'user_customfields._custom_field_123',
+        label: 'User custom field',
+        dataType: DATA_TYPES.StringType,
+        values: [
+          { value: 'opt_1', label: 'Option 1' },
+          { value: 'opt_2', label: 'Option 2' },
+        ],
+      },
+    ];
+    const rows = [
+      {
+        boolean: { current: '' },
+        field: {
+          options: customFieldOptions,
+          current: 'user_customfields._custom_field_123',
+        },
+        operator: { current: OPERATORS.EQUAL },
+        value: {
+          current: 'opt_1',
+          options: customFieldOptions[0].values,
+        },
+      },
+    ];
+
+    const result = getQueryStr(
+      rows,
+      customFieldOptions,
+      { formatDate: jest.fn() },
+      'UTC',
+      jest.fn(() => []),
+    );
+
+    expect(result).toBe('(User custom field == Option 1)');
+  });
+
+  it('uses async option labels for single-value source field values', () => {
+    const sourceFieldOptions = [
+      {
+        value: 'item_material_type',
+        label: 'Item material type',
+        dataType: DATA_TYPES.StringType,
+      },
+    ];
+    const rows = [
+      {
+        boolean: { current: '' },
+        field: {
+          options: sourceFieldOptions,
+          current: 'item_material_type',
+        },
+        operator: { current: OPERATORS.EQUAL },
+        value: {
+          current: 'book',
+        },
+      },
+    ];
+
+    const result = getQueryStr(
+      rows,
+      sourceFieldOptions,
+      { formatDate: jest.fn() },
+      'UTC',
+      jest.fn(() => [{ value: 'book', label: 'Book' }]),
+    );
+
+    expect(result).toBe('(item_material_type == Book)');
   });
 });
 

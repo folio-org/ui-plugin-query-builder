@@ -19,7 +19,7 @@ import { valueBuilder } from './valueBuilder';
 
 export const DEFAULT_PREVIEW_INTERVAL = 3000;
 
-const getLabeledValue = (value, dataOptions) => {
+const getLabeledValue = (value, ...optionSets) => {
   if (typeof value === 'boolean') {
     return value;
   }
@@ -28,11 +28,17 @@ const getLabeledValue = (value, dataOptions) => {
     return '';
   }
 
+  if (value?.label) {
+    return value.label;
+  }
+
   if (Array.isArray(value)) {
     return value;
   }
 
-  const matchedOption = dataOptions?.find(option => option.value === value);
+  const matchedOption = optionSets
+    .flat()
+    .find(option => option?.value === value);
 
   return matchedOption ? matchedOption.label : value;
 };
@@ -43,7 +49,7 @@ export const getQueryStr = (rows, fieldOptions, intl, timezone, getDataOptions) 
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
-    const labeledValue = getLabeledValue(value, getDataOptions(field));
+    const labeledValue = getLabeledValue(value, row[COLUMN_KEYS.VALUE].options, getDataOptions(field));
     const builtValue = valueBuilder({ value: labeledValue, field, operator, fieldOptions, intl, timezone });
 
     const queryPiece = `(${findLabelByValue(row[COLUMN_KEYS.FIELD], field)} ${operator} ${builtValue})`;
