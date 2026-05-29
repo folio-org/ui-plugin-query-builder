@@ -1,4 +1,11 @@
-import { findMissingValues, getTransformedValue, isQueryValid, fqlQueryToSource, sourceToFqlQuery } from './query';
+import {
+  findMissingValues,
+  getQueryStr,
+  getTransformedValue,
+  isQueryValid,
+  fqlQueryToSource,
+  sourceToFqlQuery,
+} from './query';
 import { booleanOptions } from './selectOptions';
 import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
@@ -510,6 +517,79 @@ describe('fqlQueryToSource()', () => {
     expect(result[0].operator.current).toBe(OPERATORS.EQUAL);
     expect(result[1].field.current).toBe('user_full_name');
     expect(result[1].operator.current).toBe(OPERATORS.CONTAINS);
+  });
+});
+
+describe('getQueryStr', () => {
+  it('uses static option labels for single-value custom field values', () => {
+    const customFieldOptions = [
+      {
+        value: 'source._custom_field_123',
+        label: 'Custom field',
+        dataType: DATA_TYPES.StringType,
+        values: [
+          { value: 'opt_1', label: 'Option 1' },
+          { value: 'opt_2', label: 'Option 2' },
+        ],
+      },
+    ];
+    const rows = [
+      {
+        boolean: { current: '' },
+        field: {
+          options: customFieldOptions,
+          current: 'source._custom_field_123',
+        },
+        operator: { current: OPERATORS.EQUAL },
+        value: {
+          current: 'opt_1',
+          options: customFieldOptions[0].values,
+        },
+      },
+    ];
+
+    const result = getQueryStr(
+      rows,
+      customFieldOptions,
+      { formatDate: jest.fn() },
+      'UTC',
+      jest.fn(() => []),
+    );
+
+    expect(result).toBe('(Custom field == Option 1)');
+  });
+
+  it('uses async option labels for single-value source field values', () => {
+    const sourceFieldOptions = [
+      {
+        value: 'field1',
+        label: 'Field 1',
+        dataType: DATA_TYPES.StringType,
+      },
+    ];
+    const rows = [
+      {
+        boolean: { current: '' },
+        field: {
+          options: sourceFieldOptions,
+          current: 'field1',
+        },
+        operator: { current: OPERATORS.EQUAL },
+        value: {
+          current: 'value 1',
+        },
+      },
+    ];
+
+    const result = getQueryStr(
+      rows,
+      sourceFieldOptions,
+      { formatDate: jest.fn() },
+      'UTC',
+      jest.fn(() => [{ value: 'value 1', label: 'Label 1' }]),
+    );
+
+    expect(result).toBe('(field1 == Label 1)');
   });
 });
 
