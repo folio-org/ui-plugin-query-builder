@@ -594,7 +594,7 @@ describe('getColumnsWithProperties', () => {
     expect(getColumnsWithProperties([])).toEqual([]);
   });
 
-  test('filters out columns whose name is listed as some item’s idColumnName', () => {
+  test('includes queryable columns whose name is listed as some item’s idColumnName', () => {
     const columns = [
       { name: 'meta', idColumnName: 'userId' },
       { name: 'userId', queryable: true },
@@ -603,7 +603,7 @@ describe('getColumnsWithProperties', () => {
 
     const res = getColumnsWithProperties(columns);
 
-    expect(res.map((i) => i.name)).toEqual(['displayName']);
+    expect(res.map((i) => i.name)).toEqual(['userId', 'displayName']);
   });
 
   test('includes only top-level items with queryable === true', () => {
