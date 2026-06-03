@@ -121,10 +121,7 @@ export const getOperatorOptions = ({
 };
 
 export const getColumnsWithProperties = (columns = []) => {
-  const ids = columns.filter(o => Boolean(o.idColumnName)).map(o => o.idColumnName) || [];
-
   return columns
-    .filter((o) => !ids.includes(o.name))
     .reduce((acc, item) => {
       if (item.queryable) {
         acc.push(item);
