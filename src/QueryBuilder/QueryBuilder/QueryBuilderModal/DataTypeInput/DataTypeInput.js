@@ -42,6 +42,8 @@ const getFallbackInputValue = (inputValue) => {
     .join(', ');
 };
 
+const getOrganizationSelectionLabel = (item, columnName) => item?.[columnName] ?? item?.name ?? item?.id;
+
 function getOrganizationPluginButton(source, multi, onChange, value, index) {
   if (!ORGANIZATIONS_TYPES.includes(source?.name)) {
     return { organizationPluginButton: null, multiSelectionEmptyMessage: undefined };
@@ -55,7 +57,7 @@ function getOrganizationPluginButton(source, multi, onChange, value, index) {
       selectVendor: (selectedItems) => {
         const normalizedItems = selectedItems.map((item) => ({
           value: item.id,
-          label: item.name,
+          label: getOrganizationSelectionLabel(item, source.columnName),
         }));
 
         onChange(
