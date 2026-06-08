@@ -209,7 +209,7 @@ const getHighlightedLabel = (label, indexes) => {
     }
 
     highlightedLabel.push(
-      <span key={i} className="mark---opJNO">
+      <span key={`${start}-${end}`} className="mark---opJNO">
         {label.slice(start, end + 1)}
       </span>,
     );
