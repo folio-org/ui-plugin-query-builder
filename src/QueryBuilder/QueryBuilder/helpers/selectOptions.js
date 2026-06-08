@@ -188,7 +188,7 @@ const getMatchRanges = (indexes = []) => {
   return Array.from(indexes).reduce((ranges, index) => {
     const lastRange = ranges[ranges.length - 1];
 
-    if (lastRange && lastRange.end === index - 1) {
+    if (lastRange?.end === index - 1) {
       lastRange.end = index;
     } else {
       ranges.push({ start: index, end: index });
