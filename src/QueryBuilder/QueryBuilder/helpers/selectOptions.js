@@ -178,10 +178,61 @@ export const sourceTemplate = (fieldOptions = []) => ({
   [COLUMN_KEYS.VALUE]: { current: '' },
 });
 
+const DASH_CHARS = /[\u2010-\u2015\u2212]/g;
+
+const normalizeSearchText = (value) => (
+  typeof value === 'string' ? value.replace(DASH_CHARS, '-') : value
+);
+
+const getMatchRanges = (indexes = []) => {
+  return Array.from(indexes).reduce((ranges, index) => {
+    const lastRange = ranges[ranges.length - 1];
+
+    if (lastRange && lastRange.end === index - 1) {
+      lastRange.end = index;
+    } else {
+      ranges.push({ start: index, end: index });
+    }
+
+    return ranges;
+  }, []);
+};
+
+const getHighlightedLabel = (label, indexes) => {
+  const ranges = getMatchRanges(indexes);
+  const highlightedLabel = [];
+  let cursor = 0;
+
+  ranges.forEach(({ start, end }, i) => {
+    if (cursor < start) {
+      highlightedLabel.push(label.slice(cursor, start));
+    }
+
+    highlightedLabel.push(
+      <span key={i} className="mark---opJNO">
+        {label.slice(start, end + 1)}
+      </span>,
+    );
+
+    cursor = end + 1;
+  });
+
+  if (cursor < label.length) {
+    highlightedLabel.push(label.slice(cursor));
+  }
+
+  return highlightedLabel;
+};
+
 export const fuzzySortOptions = (searchTerm, list) => {
   if (!searchTerm) return list;
 
-  const results = [...fuzzysort.go(searchTerm, list, { key: 'label' })];
+  const normalizedSearchTerm = normalizeSearchText(searchTerm);
+  const searchableList = list.map((option) => ({
+    option,
+    label: normalizeSearchText(option.label),
+  }));
+  const results = [...fuzzysort.go(normalizedSearchTerm, searchableList, { key: 'label' })];
 
   // Score descending, then label ascending for ties
   results.sort((a, b) => {
@@ -190,7 +241,7 @@ export const fuzzySortOptions = (searchTerm, list) => {
     return -(a.score - b.score);
   });
 
-  return results.map(result => result.obj);
+  return results.map(result => result.obj.option);
 };
 
 export const getFilteredOptions = fuzzySortOptions;
@@ -204,7 +255,13 @@ export const fuzzyOptionFormatter = ({ option, searchTerm }) => {
     return <OptionSegment>{option.label}</OptionSegment>;
   }
 
-  const result = fuzzysort.single(searchTerm, option.label);
+  if (typeof option.label !== 'string') {
+    return <OptionSegment>{option.label}</OptionSegment>;
+  }
+
+  const normalizedSearchTerm = normalizeSearchText(searchTerm);
+  const normalizedLabel = normalizeSearchText(option.label);
+  const result = fuzzysort.single(normalizedSearchTerm, normalizedLabel);
 
   if (!result) {
     return <OptionSegment>{option.label}</OptionSegment>;
@@ -212,11 +269,7 @@ export const fuzzyOptionFormatter = ({ option, searchTerm }) => {
 
   return (
     <OptionSegment>
-      {fuzzysort.highlight(result, (match, i) => (
-        <span key={i} className="mark---opJNO">
-          {match}
-        </span>
-      ))}
+      {getHighlightedLabel(option.label, fuzzysort.indexes(result))}
     </OptionSegment>
   );
 };

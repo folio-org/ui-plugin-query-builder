@@ -2,10 +2,19 @@ import {
   getColumnsWithProperties,
   getFieldOptions,
   getFilteredOptions,
+  fuzzyOptionFormatter,
   getOperatorOptions,
 } from './selectOptions';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
+
+const getElementText = (node) => {
+  if (!node) return '';
+  if (typeof node === 'string') return node;
+  if (Array.isArray(node)) return node.map(getElementText).join('');
+
+  return getElementText(node.props?.children);
+};
 
 const entityType = {
   columns: [
@@ -546,6 +555,20 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual([{ label: 'Items — Instances — Updated date' }]);
   });
 
+  test('should match hyphen input against em dash labels', () => {
+    const res = getFilteredOptions('Instances - Updated date', mockDataOptions);
+
+    expect(res).toEqual([{ label: 'Items — Instances — Updated date' }]);
+  });
+
+  test('should match em dash input against hyphen labels', () => {
+    const res = getFilteredOptions('項目 — 持股', [
+      { label: '項目 - 持股 - 報表' },
+    ]);
+
+    expect(res).toEqual([{ label: '項目 - 持股 - 報表' }]);
+  });
+
   test('should support fuzzy matching for non-contiguous input', () => {
     const res = getFilteredOptions('InstUpd', mockDataOptions);
 
@@ -585,6 +608,29 @@ describe('getFilteredOptions', () => {
     const res = getFilteredOptions('持股', mockDataOptionsChina);
 
     expect(res).toEqual([{ label: '項目 - 持股 - 報表' }]);
+  });
+
+  test('should preserve original label dashes when highlighting normalized dash matches', () => {
+    const element = fuzzyOptionFormatter({
+      option: { label: 'Items — Holdings' },
+      searchTerm: 'Items - Holdings',
+    });
+
+    expect(element.props.children[0].props.children).toBe('Items — Holdings');
+  });
+
+  test('should not reuse stale fuzzy indexes when formatting a shorter dash match', () => {
+    fuzzyOptionFormatter({
+      option: { label: 'User — Email' },
+      searchTerm: 'User - Email',
+    });
+
+    const element = fuzzyOptionFormatter({
+      option: { label: 'User — Email' },
+      searchTerm: '-',
+    });
+
+    expect(getElementText(element)).toBe('User — Email');
   });
 });
 
