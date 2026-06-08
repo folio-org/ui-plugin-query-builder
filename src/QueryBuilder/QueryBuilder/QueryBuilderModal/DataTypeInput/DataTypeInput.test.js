@@ -9,11 +9,26 @@ import { OPERATORS } from '../../../../constants/operators';
 import { RootContext } from '../../../../context/RootContext';
 import { DATA_OPTIONS_LOAD_FAILED } from '../../../../hooks/useDataOptions';
 
+let mockSelectedOrganizations;
+
 jest.mock('@folio/stripes/core', () => ({
   ...jest.requireActual('@folio/stripes/core'),
-  Pluggable: ({ children, initialFilters, hiddenFilters }) => (
+  Pluggable: ({ children, initialFilters, hiddenFilters, isMultiSelect, selectVendor }) => (
     <div>
-      {children}
+      <button
+        data-testid="organization-plugin-select"
+        type="button"
+        onClick={() => {
+          const selectedOrganizations = mockSelectedOrganizations ?? [
+            { id: 'org-1-id', name: 'Organization One', code: 'ORG_ONE' },
+            { id: 'org-2-id', name: 'Organization Two', code: 'ORG_TWO' },
+          ];
+
+          selectVendor?.(isMultiSelect ? selectedOrganizations : selectedOrganizations[0]);
+        }}
+      >
+        {children}
+      </button>
       <span data-testid="pluggable-props">{JSON.stringify({ initialFilters, hiddenFilters })}</span>
     </div>
   ),
@@ -319,6 +334,10 @@ describe('DataTypeInput source fetch failures', () => {
 });
 
 describe('DataTypeInput with organization Pluggable', () => {
+  afterEach(() => {
+    mockSelectedOrganizations = undefined;
+  });
+
   it('renders multi select and organization Pluggable when operator is IN and source is organization', async () => {
     const onChangeMock = jest.fn();
 
@@ -338,6 +357,103 @@ describe('DataTypeInput with organization Pluggable', () => {
       expect(getByText(/control.search.button.organization/)).toBeVisible();
       expect(JSON.parse(getByTestId('pluggable-props').innerHTML)).toEqual({});
     });
+  });
+
+  it('uses organization code as the label for multi-select organization code lookup selections', async () => {
+    const onChangeMock = jest.fn();
+
+    const { getByTestId } = renderDataTypeInput({
+      dataType: DATA_TYPES.StringType,
+      operator: OPERATORS.IN,
+      source: { name: 'organization', columnName: 'code' },
+      onChange: onChangeMock,
+      value: [],
+    });
+
+    fireEvent.click(getByTestId('organization-plugin-select'));
+
+    expect(onChangeMock).toHaveBeenCalledWith(
+      [
+        { value: 'org-1-id', label: 'ORG_ONE' },
+        { value: 'org-2-id', label: 'ORG_TWO' },
+      ],
+      undefined,
+      'value',
+    );
+  });
+
+  it('uses organization name as the label for multi-select organization name lookup selections', async () => {
+    const onChangeMock = jest.fn();
+
+    const { getByTestId } = renderDataTypeInput({
+      dataType: DATA_TYPES.StringType,
+      operator: OPERATORS.IN,
+      source: { name: 'organization', columnName: 'name' },
+      onChange: onChangeMock,
+      value: [],
+    });
+
+    fireEvent.click(getByTestId('organization-plugin-select'));
+
+    expect(onChangeMock).toHaveBeenCalledWith(
+      [
+        { value: 'org-1-id', label: 'Organization One' },
+        { value: 'org-2-id', label: 'Organization Two' },
+      ],
+      undefined,
+      'value',
+    );
+  });
+
+  it('falls back to organization name when selected records do not contain the source column', async () => {
+    const onChangeMock = jest.fn();
+
+    const { getByTestId } = renderDataTypeInput({
+      dataType: DATA_TYPES.StringType,
+      operator: OPERATORS.IN,
+      source: { name: 'organization', columnName: 'missingColumn' },
+      onChange: onChangeMock,
+      value: [],
+    });
+
+    fireEvent.click(getByTestId('organization-plugin-select'));
+
+    expect(onChangeMock).toHaveBeenCalledWith(
+      [
+        { value: 'org-1-id', label: 'Organization One' },
+        { value: 'org-2-id', label: 'Organization Two' },
+      ],
+      undefined,
+      'value',
+    );
+  });
+
+  it('falls back to organization id when selected records do not contain the source column or name', async () => {
+    const onChangeMock = jest.fn();
+
+    mockSelectedOrganizations = [
+      { id: 'org-1-id' },
+      { id: 'org-2-id' },
+    ];
+
+    const { getByTestId } = renderDataTypeInput({
+      dataType: DATA_TYPES.StringType,
+      operator: OPERATORS.IN,
+      source: { name: 'organization', columnName: 'code' },
+      onChange: onChangeMock,
+      value: [],
+    });
+
+    fireEvent.click(getByTestId('organization-plugin-select'));
+
+    expect(onChangeMock).toHaveBeenCalledWith(
+      [
+        { value: 'org-1-id', label: 'org-1-id' },
+        { value: 'org-2-id', label: 'org-2-id' },
+      ],
+      undefined,
+      'value',
+    );
   });
 
   it('should render single select and donor Pluggable when operator is EQUAL and source is donor_organization', async () => {

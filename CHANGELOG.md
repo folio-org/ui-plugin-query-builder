@@ -2,6 +2,7 @@
 
 ## [3.0.3] IN PROGRESS
 * [UIPQB-282](https://folio-org.atlassian.net/browse/UIPQB-282) Stop hiding fields used as idColumnName
+* [UIPQB-286](https://folio-org.atlassian.net/browse/UIPQB-286) Fix incorrect value display for 'Organization - Code' queries
 
 ## [3.0.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v3.0.2) (2026-06-03)
 * [UIPQB-279](https://folio-org.atlassian.net/browse/UIPQB-279) Add support for fields containing a valueSourceApi property without a source property
