@@ -9,6 +9,8 @@ import { OPERATORS } from '../../../../constants/operators';
 import { RootContext } from '../../../../context/RootContext';
 import { DATA_OPTIONS_LOAD_FAILED } from '../../../../hooks/useDataOptions';
 
+let mockSelectedOrganizations;
+
 jest.mock('@folio/stripes/core', () => ({
   ...jest.requireActual('@folio/stripes/core'),
   Pluggable: ({ children, initialFilters, hiddenFilters, isMultiSelect, selectVendor }) => (
@@ -17,7 +19,7 @@ jest.mock('@folio/stripes/core', () => ({
         data-testid="organization-plugin-select"
         type="button"
         onClick={() => {
-          const selectedOrganizations = [
+          const selectedOrganizations = mockSelectedOrganizations ?? [
             { id: 'org-1', name: 'Amazon', code: 'AMAZ' },
             { id: 'org-2', name: 'GOBI Library Solutions', code: 'GOBI' },
           ];
@@ -332,6 +334,10 @@ describe('DataTypeInput source fetch failures', () => {
 });
 
 describe('DataTypeInput with organization Pluggable', () => {
+  afterEach(() => {
+    mockSelectedOrganizations = undefined;
+  });
+
   it('renders multi select and organization Pluggable when operator is IN and source is organization', async () => {
     const onChangeMock = jest.fn();
 
@@ -393,6 +399,57 @@ describe('DataTypeInput with organization Pluggable', () => {
       [
         { value: 'org-1', label: 'Amazon' },
         { value: 'org-2', label: 'GOBI Library Solutions' },
+      ],
+      undefined,
+      'value',
+    );
+  });
+
+  it('falls back to organization name when selected records do not contain the source column', async () => {
+    const onChangeMock = jest.fn();
+
+    const { getByTestId } = renderDataTypeInput({
+      dataType: DATA_TYPES.StringType,
+      operator: OPERATORS.IN,
+      source: { name: 'organization', columnName: 'missingColumn' },
+      onChange: onChangeMock,
+      value: [],
+    });
+
+    fireEvent.click(getByTestId('organization-plugin-select'));
+
+    expect(onChangeMock).toHaveBeenCalledWith(
+      [
+        { value: 'org-1', label: 'Amazon' },
+        { value: 'org-2', label: 'GOBI Library Solutions' },
+      ],
+      undefined,
+      'value',
+    );
+  });
+
+  it('falls back to organization id when selected records do not contain the source column or name', async () => {
+    const onChangeMock = jest.fn();
+
+    mockSelectedOrganizations = [
+      { id: 'org-1' },
+      { id: 'org-2' },
+    ];
+
+    const { getByTestId } = renderDataTypeInput({
+      dataType: DATA_TYPES.StringType,
+      operator: OPERATORS.IN,
+      source: { name: 'organization', columnName: 'code' },
+      onChange: onChangeMock,
+      value: [],
+    });
+
+    fireEvent.click(getByTestId('organization-plugin-select'));
+
+    expect(onChangeMock).toHaveBeenCalledWith(
+      [
+        { value: 'org-1', label: 'org-1' },
+        { value: 'org-2', label: 'org-2' },
       ],
       undefined,
       'value',
