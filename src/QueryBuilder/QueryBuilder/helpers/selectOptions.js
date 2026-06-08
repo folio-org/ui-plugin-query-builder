@@ -1,4 +1,6 @@
+import fuzzysort from 'fuzzysort';
 import { FormattedMessage } from 'react-intl';
+import { OptionSegment } from '@folio/stripes/components';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { BOOLEAN_OPERATORS, OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
@@ -176,13 +178,45 @@ export const sourceTemplate = (fieldOptions = []) => ({
   [COLUMN_KEYS.VALUE]: { current: '' },
 });
 
-export const getFilteredOptions = (value, dataOptions) => {
-  // Retain letters (from any language), numbers, spaces, and specific special characters (em dash, en dash, hyphen).
-  const cleanedValue = value.replace(/[^\p{L}\p{N}\s—–-]/gu, '');
+export const fuzzySortOptions = (searchTerm, list) => {
+  if (!searchTerm) return list;
 
-  // create a case-insensitive regex using the cleaned value.
-  const regex = new RegExp(cleanedValue, 'i');
+  const results = [...fuzzysort.go(searchTerm, list, { key: 'label' })];
 
-  // filter options based on whether the label matches the simplified pattern.
-  return dataOptions.filter(option => regex.test(option.label));
+  // Score descending, then label ascending for ties
+  results.sort((a, b) => {
+    if (a.score === b.score) return a.target.localeCompare(b.target);
+
+    return -(a.score - b.score);
+  });
+
+  return results.map(result => result.obj);
+};
+
+export const getFilteredOptions = fuzzySortOptions;
+
+export const fuzzyOptionFormatter = ({ option, searchTerm }) => {
+  if (!option?.label) {
+    return null;
+  }
+
+  if (typeof searchTerm !== 'string' || searchTerm === '') {
+    return <OptionSegment>{option.label}</OptionSegment>;
+  }
+
+  const result = fuzzysort.single(searchTerm, option.label);
+
+  if (!result) {
+    return <OptionSegment>{option.label}</OptionSegment>;
+  }
+
+  return (
+    <OptionSegment>
+      {fuzzysort.highlight(result, (match, i) => (
+        <span key={i} className="mark---opJNO">
+          {match}
+        </span>
+      ))}
+    </OptionSegment>
+  );
 };

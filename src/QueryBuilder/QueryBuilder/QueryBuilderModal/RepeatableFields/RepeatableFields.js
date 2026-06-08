@@ -20,6 +20,7 @@ import {
   booleanOptions,
   getFieldOptions,
   getFilteredOptions,
+  fuzzyOptionFormatter,
   getOperatorOptions,
   hasValueOptions,
   REPEATABLE_FIELD_DELIMITER,
@@ -223,6 +224,7 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
                   dataOptions={row.field.options}
                   value={row.field.current}
                   onFilter={getFilteredOptions}
+                  formatter={fuzzyOptionFormatter}
                   onChange={(value) => handleChange(value, index, COLUMN_KEYS.FIELD)}
                 />
               </Col>

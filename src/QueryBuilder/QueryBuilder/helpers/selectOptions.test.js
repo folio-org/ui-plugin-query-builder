@@ -546,21 +546,21 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual([{ label: 'Items — Instances — Updated date' }]);
   });
 
-  test('should ignore other special characters but still match meaningful content', () => {
-    // Ignore special characters like '*' and '!', and match only the meaningful content.
-    const res = getFilteredOptions('Items — Ins*tan!ces — Upd?ate.', mockDataOptions);
+  test('should support fuzzy matching for non-contiguous input', () => {
+    const res = getFilteredOptions('InstUpd', mockDataOptions);
 
     expect(res).toEqual([{ label: 'Items — Instances — Updated date' }]);
   });
 
-  test('should return entire list if put "—"', () => {
+  test('should return all matching options if put "—"', () => {
     const res = getFilteredOptions('—', mockDataOptions);
 
-    expect(res).toEqual(mockDataOptions);
+    expect(res).toHaveLength(mockDataOptions.length);
+    expect(res).toEqual(expect.arrayContaining(mockDataOptions));
   });
 
   test('should match values case-insensitively', () => {
-    const res = getFilteredOptions(' — statements', mockDataOptions);
+    const res = getFilteredOptions('statements', mockDataOptions);
 
     expect(res).toEqual([{ label: 'Items — Holdings — Statements' }]);
   });
