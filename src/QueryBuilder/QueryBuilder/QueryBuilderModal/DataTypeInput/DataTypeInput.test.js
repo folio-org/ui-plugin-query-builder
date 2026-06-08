@@ -20,8 +20,8 @@ jest.mock('@folio/stripes/core', () => ({
         type="button"
         onClick={() => {
           const selectedOrganizations = mockSelectedOrganizations ?? [
-            { id: 'org-1', name: 'Amazon', code: 'AMAZ' },
-            { id: 'org-2', name: 'GOBI Library Solutions', code: 'GOBI' },
+            { id: 'org-1-id', name: 'Organization One', code: 'ORG_ONE' },
+            { id: 'org-2-id', name: 'Organization Two', code: 'ORG_TWO' },
           ];
 
           selectVendor?.(isMultiSelect ? selectedOrganizations : selectedOrganizations[0]);
@@ -374,8 +374,8 @@ describe('DataTypeInput with organization Pluggable', () => {
 
     expect(onChangeMock).toHaveBeenCalledWith(
       [
-        { value: 'org-1', label: 'AMAZ' },
-        { value: 'org-2', label: 'GOBI' },
+        { value: 'org-1-id', label: 'ORG_ONE' },
+        { value: 'org-2-id', label: 'ORG_TWO' },
       ],
       undefined,
       'value',
@@ -397,8 +397,8 @@ describe('DataTypeInput with organization Pluggable', () => {
 
     expect(onChangeMock).toHaveBeenCalledWith(
       [
-        { value: 'org-1', label: 'Amazon' },
-        { value: 'org-2', label: 'GOBI Library Solutions' },
+        { value: 'org-1-id', label: 'Organization One' },
+        { value: 'org-2-id', label: 'Organization Two' },
       ],
       undefined,
       'value',
@@ -420,8 +420,8 @@ describe('DataTypeInput with organization Pluggable', () => {
 
     expect(onChangeMock).toHaveBeenCalledWith(
       [
-        { value: 'org-1', label: 'Amazon' },
-        { value: 'org-2', label: 'GOBI Library Solutions' },
+        { value: 'org-1-id', label: 'Organization One' },
+        { value: 'org-2-id', label: 'Organization Two' },
       ],
       undefined,
       'value',
@@ -432,8 +432,8 @@ describe('DataTypeInput with organization Pluggable', () => {
     const onChangeMock = jest.fn();
 
     mockSelectedOrganizations = [
-      { id: 'org-1' },
-      { id: 'org-2' },
+      { id: 'org-1-id' },
+      { id: 'org-2-id' },
     ];
 
     const { getByTestId } = renderDataTypeInput({
@@ -448,8 +448,8 @@ describe('DataTypeInput with organization Pluggable', () => {
 
     expect(onChangeMock).toHaveBeenCalledWith(
       [
-        { value: 'org-1', label: 'org-1' },
-        { value: 'org-2', label: 'org-2' },
+        { value: 'org-1-id', label: 'org-1-id' },
+        { value: 'org-2-id', label: 'org-2-id' },
       ],
       undefined,
       'value',
