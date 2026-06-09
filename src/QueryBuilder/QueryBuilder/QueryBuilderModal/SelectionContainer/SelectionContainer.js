@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
-import fuzzysort from 'fuzzysort';
 
-import { Loading, OptionSegment } from '@folio/stripes/components';
+import { Loading } from '@folio/stripes/components';
 
 import { RootContext } from '../../../../context/RootContext';
 import { ORGANIZATIONS_TYPES } from '../../../../constants/dataTypes';
 import { isDataOptionsLoadFailure } from '../../../../hooks/useDataOptions';
+import { fuzzyOptionFormatter, fuzzySortOptions } from '../../helpers/selectOptions';
 
 export const SelectionContainer = ({
   fieldName,
@@ -75,21 +75,6 @@ export const SelectionContainer = ({
     }
   }, [searchValue]);
 
-  const fuzzySort = useCallback((searchTerm, list) => {
-    if (!searchTerm) return list;
-
-    const results = [...fuzzysort.go(searchTerm, list, { key: 'label' })];
-
-    // Score descending, then label ascending for ties
-    results.sort((a, b) => {
-      if (a.score === b.score) return a.target.localeCompare(b.target);
-
-      return -(a.score - b.score);
-    });
-
-    return results.map(result => result.obj);
-  }, []);
-
   const prepareSearch = useCallback((filterText = '') => {
     pendingSearchRef.current = filterText;
 
@@ -98,43 +83,17 @@ export const SelectionContainer = ({
 
   // For Selection (single value): onFilter must return a plain array
   const singleValueFilterOptions = useCallback(
-    (filterText, list) => fuzzySort(prepareSearch(filterText), list), [fuzzySort, prepareSearch],
+    (filterText, list) => fuzzySortOptions(prepareSearch(filterText), list), [prepareSearch],
   );
 
   // For MultiSelection (multiple values): filter must return { renderedItems, exactMatch }
   const multiValueFilterOptions = useCallback((filterText, list) => {
     const searchTerm = prepareSearch(filterText);
-    const renderedItems = fuzzySort(searchTerm, list);
+    const renderedItems = fuzzySortOptions(searchTerm, list);
     const exactMatch = list.some(item => item.label?.toLowerCase() === searchTerm.toLowerCase());
 
     return { renderedItems, exactMatch };
-  }, [fuzzySort, prepareSearch]);
-
-  const fuzzyFormatter = useCallback(({ option, searchTerm }) => {
-    if (!option?.label) {
-      return null;
-    }
-
-    if (typeof searchTerm !== 'string' || searchTerm === '') {
-      return <OptionSegment>{option.label}</OptionSegment>;
-    }
-
-    const result = fuzzysort.single(searchTerm, option.label);
-
-    if (!result) {
-      return <OptionSegment>{option.label}</OptionSegment>;
-    }
-
-    return (
-      <OptionSegment>
-        {fuzzysort.highlight(result, (match, i) => (
-          <span key={i} className="mark---opJNO">
-            {match}
-          </span>
-        ))}
-      </OptionSegment>
-    );
-  }, []);
+  }, [prepareSearch]);
 
   const dataOptions = useMemo(() => {
     if (Array.isArray(optionsPromise)) {
@@ -167,7 +126,7 @@ export const SelectionContainer = ({
         {...filterProps}
         value={normalizedValue}
         onChange={handleOnChange}
-        formatter={fuzzyFormatter}
+        formatter={fuzzyOptionFormatter}
         placeholder={isMulti ? undefined : valuePlaceholder}
         dataOptions={dataOptions}
         emptyMessage={emptyMessage}

@@ -2,10 +2,19 @@ import {
   getColumnsWithProperties,
   getFieldOptions,
   getFilteredOptions,
+  fuzzyOptionFormatter,
   getOperatorOptions,
 } from './selectOptions';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
+
+const getElementText = (node) => {
+  if (!node) return '';
+  if (typeof node === 'string') return node;
+  if (Array.isArray(node)) return node.map(getElementText).join('');
+
+  return getElementText(node.props?.children);
+};
 
 const entityType = {
   columns: [
@@ -546,29 +555,88 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual([{ label: 'Items — Instances — Updated date' }]);
   });
 
-  test('should ignore other special characters but still match meaningful content', () => {
-    // Ignore special characters like '*' and '!', and match only the meaningful content.
-    const res = getFilteredOptions('Items — Ins*tan!ces — Upd?ate.', mockDataOptions);
+  test('should match hyphen input against em dash labels', () => {
+    const res = getFilteredOptions('Parent - Child', [
+      { label: 'Parent — Child' },
+    ]);
+
+    expect(res).toEqual([{ label: 'Parent — Child' }]);
+  });
+
+  test('should match em dash input against hyphen labels', () => {
+    const res = getFilteredOptions('Parent — Child', [
+      { label: 'Parent - Child' },
+    ]);
+
+    expect(res).toEqual([{ label: 'Parent - Child' }]);
+  });
+
+  test('should support fuzzy matching for non-contiguous input', () => {
+    const res = getFilteredOptions('InstUpd', mockDataOptions);
 
     expect(res).toEqual([{ label: 'Items — Instances — Updated date' }]);
   });
 
-  test('should return entire list if put "—"', () => {
+  test('should ignore unsupported special characters in search terms', () => {
+    const res = getFilteredOptions('Parent ! Child', [
+      { label: 'Parent Child' },
+    ]);
+
+    expect(res).toEqual([{ label: 'Parent Child' }]);
+  });
+
+  test('should return all options containing normalized dash characters', () => {
     const res = getFilteredOptions('—', mockDataOptions);
+
+    expect(res).toHaveLength(mockDataOptions.length);
+    expect(res).toEqual(expect.arrayContaining(mockDataOptions));
+  });
+
+  test('should return all options when search term only contains ignored special characters', () => {
+    const res = getFilteredOptions('!*?', mockDataOptions);
 
     expect(res).toEqual(mockDataOptions);
   });
 
   test('should match values case-insensitively', () => {
-    const res = getFilteredOptions(' — statements', mockDataOptions);
+    const res = getFilteredOptions('statements', mockDataOptions);
 
     expect(res).toEqual([{ label: 'Items — Holdings — Statements' }]);
+  });
+
+  test('should sort equal-score matches by label', () => {
+    const res = getFilteredOptions('x', [
+      { label: 'Cx' },
+      { label: 'Dx' },
+      { label: 'Bx' },
+      { label: 'Ax' },
+    ]);
+
+    expect(res.map(({ label }) => label)).toEqual(['Ax', 'Bx', 'Cx', 'Dx']);
   });
 
   test('should return all options if input value is an empty string', () => {
     const res = getFilteredOptions('', mockDataOptions);
 
     expect(res).toEqual(mockDataOptions);
+  });
+
+  test('should ignore non-string labels while filtering', () => {
+    const label = <span>Formatted label</span>;
+    const res = getFilteredOptions('Alpha', [
+      { label },
+      { label: 'Alpha' },
+    ]);
+
+    expect(res).toEqual([{ label: 'Alpha' }]);
+  });
+
+  test('should return no matches for non-string search terms', () => {
+    const res = getFilteredOptions(123, [
+      { label: '123' },
+    ]);
+
+    expect(res).toEqual([]);
   });
 
   test('should return an empty array if no options match', () => {
@@ -585,6 +653,48 @@ describe('getFilteredOptions', () => {
     const res = getFilteredOptions('持股', mockDataOptionsChina);
 
     expect(res).toEqual([{ label: '項目 - 持股 - 報表' }]);
+  });
+
+  test('should preserve original label dashes when highlighting normalized dash matches', () => {
+    const element = fuzzyOptionFormatter({
+      option: { label: 'Parent — Child' },
+      searchTerm: 'Parent - Child',
+    });
+
+    expect(element.props.children[0].props.children).toBe('Parent — Child');
+  });
+
+  test('should render non-string labels without highlighting', () => {
+    const label = <span>Formatted label</span>;
+    const element = fuzzyOptionFormatter({
+      option: { label },
+      searchTerm: 'Formatted',
+    });
+
+    expect(element.props.children).toBe(label);
+  });
+
+  test('should render unhighlighted labels when the search term only contains ignored special characters', () => {
+    const element = fuzzyOptionFormatter({
+      option: { label: 'Alpha' },
+      searchTerm: '!*?',
+    });
+
+    expect(element.props.children).toBe('Alpha');
+  });
+
+  test('should not reuse stale fuzzy indexes when formatting a shorter dash match', () => {
+    fuzzyOptionFormatter({
+      option: { label: 'Alpha — Beta' },
+      searchTerm: 'Alpha - Beta',
+    });
+
+    const element = fuzzyOptionFormatter({
+      option: { label: 'Alpha — Beta' },
+      searchTerm: '-',
+    });
+
+    expect(getElementText(element)).toBe('Alpha — Beta');
   });
 });
 

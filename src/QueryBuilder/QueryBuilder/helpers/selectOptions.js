@@ -1,4 +1,6 @@
+import fuzzysort from 'fuzzysort';
 import { FormattedMessage } from 'react-intl';
+import { OptionSegment } from '@folio/stripes/components';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 import { BOOLEAN_OPERATORS, OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
@@ -176,13 +178,112 @@ export const sourceTemplate = (fieldOptions = []) => ({
   [COLUMN_KEYS.VALUE]: { current: '' },
 });
 
-export const getFilteredOptions = (value, dataOptions) => {
-  // Retain letters (from any language), numbers, spaces, and specific special characters (em dash, en dash, hyphen).
-  const cleanedValue = value.replace(/[^\p{L}\p{N}\s—–-]/gu, '');
+// Normalize search text so dash variants match and noisy punctuation does not block fuzzy matches.
+const DASH_CHARS = /[\u2010-\u2015\u2212]/g;
+const IGNORED_SEARCH_CHARS = /[^\p{L}\p{N}\s-]/gu;
 
-  // create a case-insensitive regex using the cleaned value.
-  const regex = new RegExp(cleanedValue, 'i');
+const normalizeDashCharacters = (value) => (
+  typeof value === 'string' ? value.replace(DASH_CHARS, '-') : value
+);
 
-  // filter options based on whether the label matches the simplified pattern.
-  return dataOptions.filter(option => regex.test(option.label));
+const normalizeSearchText = (value) => (
+  typeof value === 'string' ? normalizeDashCharacters(value).replace(IGNORED_SEARCH_CHARS, '') : value
+);
+
+const getMatchRanges = (indexes) => {
+  return Array.from(indexes).reduce((ranges, index) => {
+    const lastRange = ranges[ranges.length - 1];
+
+    if (lastRange?.end === index - 1) {
+      lastRange.end = index;
+    } else {
+      ranges.push({ start: index, end: index });
+    }
+
+    return ranges;
+  }, []);
+};
+
+const getHighlightedLabel = (label, indexes) => {
+  const ranges = getMatchRanges(indexes);
+  const highlightedLabel = [];
+  let cursor = 0;
+
+  ranges.forEach(({ start, end }) => {
+    if (cursor < start) {
+      highlightedLabel.push(label.slice(cursor, start));
+    }
+
+    highlightedLabel.push(
+      <span key={`${start}-${end}`} className="mark---opJNO">
+        {label.slice(start, end + 1)}
+      </span>,
+    );
+
+    cursor = end + 1;
+  });
+
+  if (cursor < label.length) {
+    highlightedLabel.push(label.slice(cursor));
+  }
+
+  return highlightedLabel;
+};
+
+export const fuzzySortOptions = (searchTerm, list) => {
+  if (!searchTerm) return list;
+
+  const normalizedSearchTerm = normalizeSearchText(searchTerm);
+
+  if (!normalizedSearchTerm) return list;
+
+  const searchableList = list.map((option) => ({
+    option,
+    label: normalizeDashCharacters(option.label),
+  }));
+  const results = [...fuzzysort.go(normalizedSearchTerm, searchableList, { key: 'label' })];
+
+  // Score descending, then label ascending for ties
+  results.sort((a, b) => {
+    if (a.score === b.score) return a.target.localeCompare(b.target);
+
+    return -(a.score - b.score);
+  });
+
+  return results.map(result => result.obj.option);
+};
+
+export const getFilteredOptions = fuzzySortOptions;
+
+export const fuzzyOptionFormatter = ({ option, searchTerm }) => {
+  if (!option?.label) {
+    return null;
+  }
+
+  if (typeof searchTerm !== 'string' || searchTerm === '') {
+    return <OptionSegment>{option.label}</OptionSegment>;
+  }
+
+  if (typeof option.label !== 'string') {
+    return <OptionSegment>{option.label}</OptionSegment>;
+  }
+
+  const normalizedSearchTerm = normalizeSearchText(searchTerm);
+
+  if (!normalizedSearchTerm) {
+    return <OptionSegment>{option.label}</OptionSegment>;
+  }
+
+  const normalizedLabel = normalizeDashCharacters(option.label);
+  const result = fuzzysort.single(normalizedSearchTerm, normalizedLabel);
+
+  if (!result) {
+    return <OptionSegment>{option.label}</OptionSegment>;
+  }
+
+  return (
+    <OptionSegment>
+      {getHighlightedLabel(option.label, fuzzysort.indexes(result))}
+    </OptionSegment>
+  );
 };

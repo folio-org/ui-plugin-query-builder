@@ -1,6 +1,7 @@
 # Change history for ui-plugin-query-builder
 
 ## [3.0.3] IN PROGRESS
+* [UIPQB-281](https://folio-org.atlassian.net/browse/UIPQB-281) Implement fuzzy matching within "Field" dropdown
 * [UIPQB-282](https://folio-org.atlassian.net/browse/UIPQB-282) Stop hiding fields used as idColumnName
 * [UIPQB-286](https://folio-org.atlassian.net/browse/UIPQB-286) Fix incorrect value display for 'Organization - Code' queries
 
