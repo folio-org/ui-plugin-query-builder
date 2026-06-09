@@ -203,7 +203,7 @@ const getHighlightedLabel = (label, indexes) => {
   const highlightedLabel = [];
   let cursor = 0;
 
-  ranges.forEach(({ start, end }, i) => {
+  ranges.forEach(({ start, end }) => {
     if (cursor < start) {
       highlightedLabel.push(label.slice(cursor, start));
     }
