@@ -234,6 +234,7 @@ export const fuzzySortOptions = (searchTerm, list) => {
   if (!searchTerm) return list;
 
   const normalizedSearchTerm = normalizeSearchText(searchTerm);
+
   if (!normalizedSearchTerm) return list;
 
   const searchableList = list.map((option) => ({
@@ -268,6 +269,7 @@ export const fuzzyOptionFormatter = ({ option, searchTerm }) => {
   }
 
   const normalizedSearchTerm = normalizeSearchText(searchTerm);
+
   if (!normalizedSearchTerm) {
     return <OptionSegment>{option.label}</OptionSegment>;
   }
