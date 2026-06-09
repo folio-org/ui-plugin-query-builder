@@ -178,6 +178,7 @@ export const sourceTemplate = (fieldOptions = []) => ({
   [COLUMN_KEYS.VALUE]: { current: '' },
 });
 
+// Normalize dash-like Unicode characters so hyphen, en dash, em dash, etc. match each other
 const DASH_CHARS = /[\u2010-\u2015\u2212]/g;
 
 const normalizeSearchText = (value) => (
