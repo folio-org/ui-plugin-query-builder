@@ -588,6 +588,17 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual([{ label: 'Items — Holdings — Statements' }]);
   });
 
+  test('should sort equal-score matches by label', () => {
+    const res = getFilteredOptions('x', [
+      { label: 'Cx' },
+      { label: 'Dx' },
+      { label: 'Bx' },
+      { label: 'Ax' },
+    ]);
+
+    expect(res.map(({ label }) => label)).toEqual(['Ax', 'Bx', 'Cx', 'Dx']);
+  });
+
   test('should return all options if input value is an empty string', () => {
     const res = getFilteredOptions('', mockDataOptions);
 
@@ -617,6 +628,16 @@ describe('getFilteredOptions', () => {
     });
 
     expect(element.props.children[0].props.children).toBe('Items — Holdings');
+  });
+
+  test('should render non-string labels without highlighting', () => {
+    const label = <span>Formatted label</span>;
+    const element = fuzzyOptionFormatter({
+      option: { label },
+      searchTerm: 'Formatted',
+    });
+
+    expect(element.props.children).toBe(label);
   });
 
   test('should not reuse stale fuzzy indexes when formatting a shorter dash match', () => {

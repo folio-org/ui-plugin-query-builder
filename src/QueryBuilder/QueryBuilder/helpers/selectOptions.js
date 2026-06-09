@@ -185,7 +185,7 @@ const normalizeSearchText = (value) => (
   typeof value === 'string' ? value.replace(DASH_CHARS, '-') : value
 );
 
-const getMatchRanges = (indexes = []) => {
+const getMatchRanges = (indexes) => {
   return Array.from(indexes).reduce((ranges, index) => {
     const lastRange = ranges[ranges.length - 1];
 
