@@ -621,6 +621,24 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual(mockDataOptions);
   });
 
+  test('should ignore non-string labels while filtering', () => {
+    const label = <span>Formatted label</span>;
+    const res = getFilteredOptions('Alpha', [
+      { label },
+      { label: 'Alpha' },
+    ]);
+
+    expect(res).toEqual([{ label: 'Alpha' }]);
+  });
+
+  test('should return no matches for non-string search terms', () => {
+    const res = getFilteredOptions(123, [
+      { label: '123' },
+    ]);
+
+    expect(res).toEqual([]);
+  });
+
   test('should return an empty array if no options match', () => {
     const res = getFilteredOptions('no such option present', mockDataOptions);
 
@@ -654,6 +672,15 @@ describe('getFilteredOptions', () => {
     });
 
     expect(element.props.children).toBe(label);
+  });
+
+  test('should render unhighlighted labels when the search term only contains ignored special characters', () => {
+    const element = fuzzyOptionFormatter({
+      option: { label: 'Alpha' },
+      searchTerm: '!*?',
+    });
+
+    expect(element.props.children).toBe('Alpha');
   });
 
   test('should not reuse stale fuzzy indexes when formatting a shorter dash match', () => {
