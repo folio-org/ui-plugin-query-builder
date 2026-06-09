@@ -577,11 +577,25 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual([{ label: 'Items — Instances — Updated date' }]);
   });
 
+  test('should ignore unsupported special characters in search terms', () => {
+    const res = getFilteredOptions('Parent ! Child', [
+      { label: 'Parent Child' },
+    ]);
+
+    expect(res).toEqual([{ label: 'Parent Child' }]);
+  });
+
   test('should return all matching options if put "—"', () => {
     const res = getFilteredOptions('—', mockDataOptions);
 
     expect(res).toHaveLength(mockDataOptions.length);
     expect(res).toEqual(expect.arrayContaining(mockDataOptions));
+  });
+
+  test('should return all options when search term only contains ignored special characters', () => {
+    const res = getFilteredOptions('!*?', mockDataOptions);
+
+    expect(res).toEqual(mockDataOptions);
   });
 
   test('should match values case-insensitively', () => {

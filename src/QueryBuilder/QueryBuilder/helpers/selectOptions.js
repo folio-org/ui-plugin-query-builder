@@ -178,11 +178,16 @@ export const sourceTemplate = (fieldOptions = []) => ({
   [COLUMN_KEYS.VALUE]: { current: '' },
 });
 
-// Normalize dash-like Unicode characters so hyphen, en dash, em dash, etc. match each other
+// Normalize search text so dash variants match and noisy punctuation does not block fuzzy matches.
 const DASH_CHARS = /[\u2010-\u2015\u2212]/g;
+const IGNORED_SEARCH_CHARS = /[^\p{L}\p{N}\s-]/gu;
+
+const normalizeDashCharacters = (value) => (
+  typeof value === 'string' ? value.replace(DASH_CHARS, '-') : value
+);
 
 const normalizeSearchText = (value) => (
-  typeof value === 'string' ? value.replace(DASH_CHARS, '-') : value
+  typeof value === 'string' ? normalizeDashCharacters(value).replace(IGNORED_SEARCH_CHARS, '') : value
 );
 
 const getMatchRanges = (indexes) => {
@@ -229,9 +234,11 @@ export const fuzzySortOptions = (searchTerm, list) => {
   if (!searchTerm) return list;
 
   const normalizedSearchTerm = normalizeSearchText(searchTerm);
+  if (!normalizedSearchTerm) return list;
+
   const searchableList = list.map((option) => ({
     option,
-    label: normalizeSearchText(option.label),
+    label: normalizeDashCharacters(option.label),
   }));
   const results = [...fuzzysort.go(normalizedSearchTerm, searchableList, { key: 'label' })];
 
@@ -261,7 +268,11 @@ export const fuzzyOptionFormatter = ({ option, searchTerm }) => {
   }
 
   const normalizedSearchTerm = normalizeSearchText(searchTerm);
-  const normalizedLabel = normalizeSearchText(option.label);
+  if (!normalizedSearchTerm) {
+    return <OptionSegment>{option.label}</OptionSegment>;
+  }
+
+  const normalizedLabel = normalizeDashCharacters(option.label);
   const result = fuzzysort.single(normalizedSearchTerm, normalizedLabel);
 
   if (!result) {
