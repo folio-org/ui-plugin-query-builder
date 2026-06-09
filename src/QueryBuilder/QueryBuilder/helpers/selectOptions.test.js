@@ -556,17 +556,19 @@ describe('getFilteredOptions', () => {
   });
 
   test('should match hyphen input against em dash labels', () => {
-    const res = getFilteredOptions('Instances - Updated date', mockDataOptions);
+    const res = getFilteredOptions('Parent - Child', [
+      { label: 'Parent — Child' },
+    ]);
 
-    expect(res).toEqual([{ label: 'Items — Instances — Updated date' }]);
+    expect(res).toEqual([{ label: 'Parent — Child' }]);
   });
 
   test('should match em dash input against hyphen labels', () => {
-    const res = getFilteredOptions('項目 — 持股', [
-      { label: '項目 - 持股 - 報表' },
+    const res = getFilteredOptions('Parent — Child', [
+      { label: 'Parent - Child' },
     ]);
 
-    expect(res).toEqual([{ label: '項目 - 持股 - 報表' }]);
+    expect(res).toEqual([{ label: 'Parent - Child' }]);
   });
 
   test('should support fuzzy matching for non-contiguous input', () => {
@@ -623,11 +625,11 @@ describe('getFilteredOptions', () => {
 
   test('should preserve original label dashes when highlighting normalized dash matches', () => {
     const element = fuzzyOptionFormatter({
-      option: { label: 'Items — Holdings' },
-      searchTerm: 'Items - Holdings',
+      option: { label: 'Parent — Child' },
+      searchTerm: 'Parent - Child',
     });
 
-    expect(element.props.children[0].props.children).toBe('Items — Holdings');
+    expect(element.props.children[0].props.children).toBe('Parent — Child');
   });
 
   test('should render non-string labels without highlighting', () => {
@@ -642,16 +644,16 @@ describe('getFilteredOptions', () => {
 
   test('should not reuse stale fuzzy indexes when formatting a shorter dash match', () => {
     fuzzyOptionFormatter({
-      option: { label: 'User — Email' },
-      searchTerm: 'User - Email',
+      option: { label: 'Alpha — Beta' },
+      searchTerm: 'Alpha - Beta',
     });
 
     const element = fuzzyOptionFormatter({
-      option: { label: 'User — Email' },
+      option: { label: 'Alpha — Beta' },
       searchTerm: '-',
     });
 
-    expect(getElementText(element)).toBe('User — Email');
+    expect(getElementText(element)).toBe('Alpha — Beta');
   });
 });
 
