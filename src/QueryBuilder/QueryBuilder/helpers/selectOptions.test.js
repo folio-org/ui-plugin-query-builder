@@ -585,7 +585,7 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual([{ label: 'Parent Child' }]);
   });
 
-  test('should return all matching options if put "—"', () => {
+  test('should return all options containing normalized dash characters', () => {
     const res = getFilteredOptions('—', mockDataOptions);
 
     expect(res).toHaveLength(mockDataOptions.length);
