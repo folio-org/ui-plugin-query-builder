@@ -235,7 +235,7 @@ export const fuzzySortOptions = (searchTerm, list) => {
 
   const normalizedSearchTerm = normalizeSearchText(searchTerm);
 
-  // Force Stripes Selection to refresh after its internal debounce for punctuation-only input.
+  // Force Selection to refresh for punctuation-only input
   if (!normalizedSearchTerm) return [...list];
 
   const searchableList = list.map((option) => ({
