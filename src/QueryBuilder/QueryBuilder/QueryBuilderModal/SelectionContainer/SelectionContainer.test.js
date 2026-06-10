@@ -39,6 +39,20 @@ const renderSelectionContainer = ({
   );
 };
 
+const createFilteringComponent = (filterValues, options = [{ label: 'Apple' }]) => {
+  const filterValuesByRender = [...filterValues];
+
+  return jest.fn((props) => {
+    const filterValue = filterValuesByRender.shift();
+
+    if (filterValue) {
+      props.onFilter(filterValue, options);
+    }
+
+    return null;
+  });
+};
+
 describe('SelectionContainer', () => {
   it('renders Loading when optionsPromise is not array', () => {
     const { container } = render(
@@ -104,7 +118,7 @@ describe('SelectionContainer', () => {
     expect(results[1].label).toBe('Apricot');
   });
 
-  it('single select returns a new options array when filter text only contains ignored special characters', () => {
+  it('single select returns a new array for punctuation-only search so Selection refreshes', () => {
     const mockComponent = jest.fn(() => null);
 
     renderSelectionContainer({
@@ -291,15 +305,7 @@ describe('SelectionContainer', () => {
 
   it('uses normalized filter text when fetching search options', async () => {
     const getDataOptionsWithFetching = jest.fn(() => []);
-    let hasFiltered = false;
-    const mockComponent = jest.fn((props) => {
-      if (!hasFiltered) {
-        hasFiltered = true;
-        props.onFilter('apple!', [{ label: 'Apple' }]);
-      }
-
-      return null;
-    });
+    const mockComponent = createFilteringComponent(['apple!']);
 
     renderSelectionContainer({
       component: mockComponent,
@@ -318,16 +324,7 @@ describe('SelectionContainer', () => {
 
   it('uses an empty search value when filter text changes to only ignored special characters', async () => {
     const getDataOptionsWithFetching = jest.fn(() => []);
-    const filterValues = ['apple!', '!*?'];
-    const mockComponent = jest.fn((props) => {
-      const filterValue = filterValues.shift();
-
-      if (filterValue) {
-        props.onFilter(filterValue, [{ label: 'Apple' }]);
-      }
-
-      return null;
-    });
+    const mockComponent = createFilteringComponent(['apple!', '!*?']);
 
     renderSelectionContainer({
       component: mockComponent,
