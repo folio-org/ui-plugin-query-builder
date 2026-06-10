@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import Intl from '../../../../../test/jest/__mock__/intlProvider.mock';
 import { RootContext } from '../../../../context/RootContext';
 import { DATA_OPTIONS_LOAD_FAILED } from '../../../../hooks/useDataOptions';
@@ -37,6 +37,21 @@ const renderSelectionContainer = ({
       </RootContext.Provider>
     </Intl>,
   );
+};
+
+// Simulate Stripes Selection calling onFilter with one queued filter value per render
+const createFilteringComponent = (filterValues, options = [{ label: 'Apple' }]) => {
+  const filterValuesByRender = [...filterValues];
+
+  return jest.fn((props) => {
+    const filterValue = filterValuesByRender.shift();
+
+    if (filterValue) {
+      props.onFilter(filterValue, options);
+    }
+
+    return null;
+  });
 };
 
 describe('SelectionContainer', () => {
@@ -104,6 +119,25 @@ describe('SelectionContainer', () => {
     expect(results[1].label).toBe('Apricot');
   });
 
+  it('single select returns a new array for punctuation-only search so Selection refreshes', () => {
+    const mockComponent = jest.fn(() => null);
+
+    renderSelectionContainer({
+      component: mockComponent,
+      options: [],
+    });
+
+    const props = mockComponent.mock.calls[0][0];
+    const options = [
+      { label: 'Apple' },
+      { label: 'Banana' },
+    ];
+    const results = props.onFilter('!*?', options);
+
+    expect(results).not.toBe(options);
+    expect(results).toEqual(options);
+  });
+
   it('multi select filter returns renderedItems and exactMatch', () => {
     const mockComponent = jest.fn(() => null);
 
@@ -121,6 +155,24 @@ describe('SelectionContainer', () => {
     ]);
 
     expect(result.renderedItems.length).toBeGreaterThan(0);
+    expect(result.exactMatch).toBe(true);
+  });
+
+  it('multi select exactMatch uses normalized labels', () => {
+    const mockComponent = jest.fn(() => null);
+
+    renderSelectionContainer({
+      component: mockComponent,
+      isMulti: true,
+      options: [],
+    });
+
+    const props = mockComponent.mock.calls[0][0];
+
+    const result = props.filter('Parent - Child', [
+      { label: 'Parent — Child' },
+    ]);
+
     expect(result.exactMatch).toBe(true);
   });
 
@@ -252,33 +304,46 @@ describe('SelectionContainer', () => {
     );
   });
 
-  it('updates searchValue from pendingSearchRef in useEffect', () => {
-    const mockComponent = jest.fn(() => null);
+  it('uses normalized filter text when fetching search options', async () => {
+    const getDataOptionsWithFetching = jest.fn(() => []);
+    const mockComponent = createFilteringComponent(['apple!']);
 
-    const { rerender } = render(
-      <Intl>
-        <RootContext.Provider
-          value={{ getDataOptionsWithFetching: () => [] }}
-        >
-          <SelectionContainer component={mockComponent} />
-        </RootContext.Provider>
-      </Intl>,
-    );
+    renderSelectionContainer({
+      component: mockComponent,
+      getDataOptionsWithFetching,
+    });
 
-    const props = mockComponent.mock.calls[0][0];
+    await waitFor(() => expect(getDataOptionsWithFetching).toHaveBeenLastCalledWith(
+      'test',
+      undefined,
+      'apple',
+      [],
+      undefined,
+      undefined,
+    ));
+  });
 
-    props.onFilter('apple', [{ label: 'Apple' }]);
+  it('uses an empty search value when filter text changes to only ignored special characters', async () => {
+    const getDataOptionsWithFetching = jest.fn(() => []);
+    const mockComponent = createFilteringComponent(['apple!', '!*?']);
 
-    rerender(
-      <Intl>
-        <RootContext.Provider
-          value={{ getDataOptionsWithFetching: () => [] }}
-        >
-          <SelectionContainer component={mockComponent} />
-        </RootContext.Provider>
-      </Intl>,
-    );
+    renderSelectionContainer({
+      component: mockComponent,
+      getDataOptionsWithFetching,
+    });
 
-    expect(true).toBe(true);
+    await waitFor(() => {
+      const emptySearchCalls = getDataOptionsWithFetching.mock.calls.filter(call => call[2] === '');
+
+      expect(emptySearchCalls.length).toBeGreaterThan(1);
+      expect(getDataOptionsWithFetching).toHaveBeenLastCalledWith(
+        'test',
+        undefined,
+        '',
+        [],
+        undefined,
+        undefined,
+      );
+    });
   });
 });

@@ -7,7 +7,7 @@ import { Loading } from '@folio/stripes/components';
 import { RootContext } from '../../../../context/RootContext';
 import { ORGANIZATIONS_TYPES } from '../../../../constants/dataTypes';
 import { isDataOptionsLoadFailure } from '../../../../hooks/useDataOptions';
-import { fuzzyOptionFormatter, fuzzySortOptions } from '../../helpers/selectOptions';
+import { fuzzyOptionFormatter, fuzzySortOptions, normalizeSearchText } from '../../helpers/selectOptions';
 
 export const SelectionContainer = ({
   fieldName,
@@ -76,21 +76,28 @@ export const SelectionContainer = ({
   }, [searchValue]);
 
   const prepareSearch = useCallback((filterText = '') => {
-    pendingSearchRef.current = filterText;
+    const normalizedFilterText = normalizeSearchText(filterText) || '';
 
-    return filterText;
+    pendingSearchRef.current = normalizedFilterText;
+
+    return normalizedFilterText;
   }, []);
 
   // For Selection (single value): onFilter must return a plain array
-  const singleValueFilterOptions = useCallback(
-    (filterText, list) => fuzzySortOptions(prepareSearch(filterText), list), [prepareSearch],
-  );
+  const singleValueFilterOptions = useCallback((filterText, list) => {
+    prepareSearch(filterText);
+
+    return fuzzySortOptions(filterText, list);
+  }, [prepareSearch]);
 
   // For MultiSelection (multiple values): filter must return { renderedItems, exactMatch }
   const multiValueFilterOptions = useCallback((filterText, list) => {
     const searchTerm = prepareSearch(filterText);
-    const renderedItems = fuzzySortOptions(searchTerm, list);
-    const exactMatch = list.some(item => item.label?.toLowerCase() === searchTerm.toLowerCase());
+    const renderedItems = fuzzySortOptions(filterText, list);
+    const exactMatch = list.some(item => (
+      typeof item.label === 'string' &&
+      normalizeSearchText(item.label).toLowerCase() === searchTerm.toLowerCase()
+    ));
 
     return { renderedItems, exactMatch };
   }, [prepareSearch]);

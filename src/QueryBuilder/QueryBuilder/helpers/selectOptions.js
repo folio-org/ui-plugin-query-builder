@@ -186,7 +186,7 @@ const normalizeDashCharacters = (value) => (
   typeof value === 'string' ? value.replace(DASH_CHARS, '-') : value
 );
 
-const normalizeSearchText = (value) => (
+export const normalizeSearchText = (value) => (
   typeof value === 'string' ? normalizeDashCharacters(value).replace(IGNORED_SEARCH_CHARS, '') : value
 );
 
@@ -235,7 +235,8 @@ export const fuzzySortOptions = (searchTerm, list) => {
 
   const normalizedSearchTerm = normalizeSearchText(searchTerm);
 
-  if (!normalizedSearchTerm) return list;
+  // Force Selection to refresh for punctuation-only input
+  if (!normalizedSearchTerm) return [...list];
 
   const searchableList = list.map((option) => ({
     option,
