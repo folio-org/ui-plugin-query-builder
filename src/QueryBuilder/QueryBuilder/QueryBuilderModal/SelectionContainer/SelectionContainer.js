@@ -7,7 +7,7 @@ import { Loading } from '@folio/stripes/components';
 import { RootContext } from '../../../../context/RootContext';
 import { ORGANIZATIONS_TYPES } from '../../../../constants/dataTypes';
 import { isDataOptionsLoadFailure } from '../../../../hooks/useDataOptions';
-import { fuzzyOptionFormatter, fuzzySortOptions } from '../../helpers/selectOptions';
+import { fuzzyOptionFormatter, fuzzySortOptions, normalizeSearchText } from '../../helpers/selectOptions';
 
 export const SelectionContainer = ({
   fieldName,
@@ -29,6 +29,8 @@ export const SelectionContainer = ({
   const { getDataOptionsWithFetching } = useContext(RootContext);
   const [searchValue, setSearchValue] = useState('');
   const pendingSearchRef = useRef('');
+  const searchUpdateRef = useRef();
+  const cachedDataOptionsRef = useRef();
   const valuePlaceholder = intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' });
   const isBooleanField = availableValues?.every(opt => typeof opt.value === 'boolean');
   let normalizedValue = value;
@@ -68,17 +70,30 @@ export const SelectionContainer = ({
     entityTypeId,
     valueSourceApi,
   );
+  const isLoadingOptions = !Array.isArray(optionsPromise);
 
-  useEffect(() => {
-    if (pendingSearchRef.current !== searchValue) {
-      setSearchValue(pendingSearchRef.current);
+  useEffect(() => () => {
+    if (searchUpdateRef.current) {
+      clearTimeout(searchUpdateRef.current);
     }
-  }, [searchValue]);
+  }, []);
 
   const prepareSearch = useCallback((filterText = '') => {
-    pendingSearchRef.current = filterText;
+    const normalizedFilterText = normalizeSearchText(filterText) || '';
 
-    return filterText;
+    pendingSearchRef.current = normalizedFilterText;
+
+    if (searchUpdateRef.current) {
+      clearTimeout(searchUpdateRef.current);
+    }
+
+    searchUpdateRef.current = setTimeout(() => {
+      setSearchValue((currentSearchValue) => (
+        currentSearchValue === pendingSearchRef.current ? currentSearchValue : pendingSearchRef.current
+      ));
+    }, 0);
+
+    return normalizedFilterText;
   }, []);
 
   // For Selection (single value): onFilter must return a plain array
@@ -90,7 +105,10 @@ export const SelectionContainer = ({
   const multiValueFilterOptions = useCallback((filterText, list) => {
     const searchTerm = prepareSearch(filterText);
     const renderedItems = fuzzySortOptions(searchTerm, list);
-    const exactMatch = list.some(item => item.label?.toLowerCase() === searchTerm.toLowerCase());
+    const exactMatch = list.some(item => (
+      typeof item.label === 'string' &&
+      normalizeSearchText(item.label).toLowerCase() === searchTerm.toLowerCase()
+    ));
 
     return { renderedItems, exactMatch };
   }, [prepareSearch]);
@@ -100,8 +118,14 @@ export const SelectionContainer = ({
       return getOptions(availableValues, optionsPromise, source?.name);
     }
 
-    return [];
+    return cachedDataOptionsRef.current ?? [];
   }, [optionsPromise, availableValues, isMulti, source]);
+
+  useEffect(() => {
+    if (Array.isArray(optionsPromise)) {
+      cachedDataOptionsRef.current = dataOptions;
+    }
+  }, [dataOptions, optionsPromise]);
 
   const handleOnChange = (selectedValue) => {
     if (isBooleanField && typeof selectedValue === 'boolean') {
@@ -112,11 +136,15 @@ export const SelectionContainer = ({
 
   if (isDataOptionsLoadFailure(optionsPromise)) return fallback ?? null;
 
-  if (!Array.isArray(optionsPromise)) return <Loading size="large" />;
+  if (isLoadingOptions && !cachedDataOptionsRef.current) return <Loading size="large" />;
 
   const filterProps = isMulti
     ? { filter: multiValueFilterOptions }
     : { onFilter: singleValueFilterOptions };
+  const shouldShowOptionsLoading = isLoadingOptions && searchValue !== '';
+  const loadingProps = isMulti
+    ? { showLoading: shouldShowOptionsLoading }
+    : { loading: shouldShowOptionsLoading };
 
   return (
     <div data-testid={testId}>
@@ -124,6 +152,7 @@ export const SelectionContainer = ({
         key={operator}
         {...rest}
         {...filterProps}
+        {...loadingProps}
         value={normalizedValue}
         onChange={handleOnChange}
         formatter={fuzzyOptionFormatter}

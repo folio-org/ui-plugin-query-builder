@@ -598,6 +598,13 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual(mockDataOptions);
   });
 
+  test('should return a new options array when a non-empty search term only contains ignored special characters', () => {
+    const res = getFilteredOptions('!*?', mockDataOptions);
+
+    expect(res).not.toBe(mockDataOptions);
+    expect(res).toEqual(mockDataOptions);
+  });
+
   test('should match values case-insensitively', () => {
     const res = getFilteredOptions('statements', mockDataOptions);
 

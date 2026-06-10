@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import Intl from '../../../../../test/jest/__mock__/intlProvider.mock';
 import { RootContext } from '../../../../context/RootContext';
 import { DATA_OPTIONS_LOAD_FAILED } from '../../../../hooks/useDataOptions';
@@ -121,6 +121,24 @@ describe('SelectionContainer', () => {
     ]);
 
     expect(result.renderedItems.length).toBeGreaterThan(0);
+    expect(result.exactMatch).toBe(true);
+  });
+
+  it('multi select exactMatch uses normalized labels', () => {
+    const mockComponent = jest.fn(() => null);
+
+    renderSelectionContainer({
+      component: mockComponent,
+      isMulti: true,
+      options: [],
+    });
+
+    const props = mockComponent.mock.calls[0][0];
+
+    const result = props.filter('Parent - Child', [
+      { label: 'Parent — Child' },
+    ]);
+
     expect(result.exactMatch).toBe(true);
   });
 
@@ -252,33 +270,149 @@ describe('SelectionContainer', () => {
     );
   });
 
-  it('updates searchValue from pendingSearchRef in useEffect', () => {
-    const mockComponent = jest.fn(() => null);
+  it('uses normalized filter text when fetching search options', async () => {
+    const getDataOptionsWithFetching = jest.fn(() => []);
+    let hasFiltered = false;
+    const mockComponent = jest.fn((props) => {
+      if (!hasFiltered) {
+        hasFiltered = true;
+        props.onFilter('apple!', [{ label: 'Apple' }]);
+      }
 
-    const { rerender } = render(
-      <Intl>
-        <RootContext.Provider
-          value={{ getDataOptionsWithFetching: () => [] }}
-        >
-          <SelectionContainer component={mockComponent} />
-        </RootContext.Provider>
-      </Intl>,
-    );
+      return null;
+    });
 
-    const props = mockComponent.mock.calls[0][0];
+    renderSelectionContainer({
+      component: mockComponent,
+      getDataOptionsWithFetching,
+    });
 
-    props.onFilter('apple', [{ label: 'Apple' }]);
+    await waitFor(() => expect(getDataOptionsWithFetching).toHaveBeenLastCalledWith(
+      'test',
+      undefined,
+      'apple',
+      [],
+      undefined,
+      undefined,
+    ));
+  });
 
-    rerender(
-      <Intl>
-        <RootContext.Provider
-          value={{ getDataOptionsWithFetching: () => [] }}
-        >
-          <SelectionContainer component={mockComponent} />
-        </RootContext.Provider>
-      </Intl>,
-    );
+  it('uses an empty search value when filter text changes to only ignored special characters', async () => {
+    const getDataOptionsWithFetching = jest.fn(() => []);
+    const filterValues = ['apple!', '!*?'];
+    const mockComponent = jest.fn((props) => {
+      const filterValue = filterValues.shift();
 
-    expect(true).toBe(true);
+      if (filterValue) {
+        props.onFilter(filterValue, [{ label: 'Apple' }]);
+      }
+
+      return null;
+    });
+
+    renderSelectionContainer({
+      component: mockComponent,
+      getDataOptionsWithFetching,
+    });
+
+    await waitFor(() => {
+      const emptySearchCalls = getDataOptionsWithFetching.mock.calls.filter(call => call[2] === '');
+
+      expect(emptySearchCalls.length).toBeGreaterThan(1);
+      expect(getDataOptionsWithFetching).toHaveBeenLastCalledWith(
+        'test',
+        undefined,
+        '',
+        [],
+        undefined,
+        undefined,
+      );
+    });
+  });
+
+  it('keeps rendering the dropdown while fetched search options are loading', async () => {
+    const loadedOptions = [{ label: 'Apple', value: 'apple' }];
+    const getDataOptionsWithFetching = jest.fn((_, __, searchValue) => (
+      searchValue === 'apple' ? new Promise(() => {}) : loadedOptions
+    ));
+    let hasFiltered = false;
+    const mockComponent = jest.fn((props) => {
+      if (!hasFiltered) {
+        hasFiltered = true;
+        props.onFilter('apple', props.dataOptions);
+      }
+
+      return null;
+    });
+
+    renderSelectionContainer({
+      component: mockComponent,
+      getDataOptionsWithFetching,
+    });
+
+    await waitFor(() => expect(getDataOptionsWithFetching).toHaveBeenLastCalledWith(
+      'test',
+      undefined,
+      'apple',
+      [],
+      undefined,
+      undefined,
+    ));
+
+    await waitFor(() => {
+      const latestProps = mockComponent.mock.calls[mockComponent.mock.calls.length - 1][0];
+
+      expect(latestProps.loading).toBe(true);
+      expect(latestProps.dataOptions).toEqual(loadedOptions);
+    });
+  });
+
+  it('does not show loading when pending filter text normalizes to an empty search value', async () => {
+    const loadedOptions = [{ label: 'Apple', value: 'apple' }];
+    let hasLoadedInitialOptions = false;
+    const getDataOptionsWithFetching = jest.fn((_, __, searchValue) => {
+      if (!hasLoadedInitialOptions) {
+        hasLoadedInitialOptions = true;
+        return loadedOptions;
+      }
+
+      return searchValue === 'apple' || searchValue === '' ? new Promise(() => {}) : loadedOptions;
+    });
+    const filterValues = ['apple', '!*?'];
+    const mockComponent = jest.fn((props) => {
+      const filterValue = filterValues.shift();
+
+      if (filterValue) {
+        props.onFilter(filterValue, props.dataOptions);
+      }
+
+      return null;
+    });
+
+    renderSelectionContainer({
+      component: mockComponent,
+      getDataOptionsWithFetching,
+    });
+
+    await waitFor(() => {
+      const emptySearchCalls = getDataOptionsWithFetching.mock.calls.filter(call => call[2] === '');
+
+      expect(emptySearchCalls.length).toBeGreaterThan(1);
+      expect(getDataOptionsWithFetching).toHaveBeenLastCalledWith(
+        'test',
+        undefined,
+        '',
+        [],
+        undefined,
+        undefined,
+      );
+    });
+
+    await waitFor(() => {
+      const latestProps = mockComponent.mock.calls[mockComponent.mock.calls.length - 1][0];
+
+      expect(latestProps.loading).toBe(false);
+      expect(latestProps.dataOptions).toEqual(loadedOptions);
+    });
   });
 });
