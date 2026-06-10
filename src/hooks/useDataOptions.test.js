@@ -189,46 +189,6 @@ describe('useDataOptions', () => {
       });
     });
 
-    it('starts a new valueSourceApi fetch when the search request changes while another request is pending', async () => {
-      const staleValues = [{ value: 'stale-value', label: 'Stale value' }];
-      const freshValues = [{ value: 'fresh-value', label: 'Fresh value' }];
-      const resolvers = {};
-      const getParamsSource = jest.fn(({ searchValue }) => new Promise((resolve) => {
-        resolvers[searchValue] = resolve;
-      }));
-      const { result } = renderHook(() => useDataOptions({ getParamsSource }));
-
-      const stalePromise = result.current.getDataOptionsWithFetching(
-        'field',
-        undefined,
-        'stale-search',
-        [],
-        'entity-type-id',
-        { path: '/value-source-api' },
-      );
-
-      await waitFor(() => expect(result.current.getDataOptions('field', true)).toBe(stalePromise));
-
-      const freshPromise = result.current.getDataOptionsWithFetching(
-        'field',
-        undefined,
-        '',
-        [],
-        'entity-type-id',
-        { path: '/value-source-api' },
-      );
-
-      expect(getParamsSource).toHaveBeenCalledTimes(2);
-
-      resolvers['']({ content: freshValues });
-      await expect(freshPromise).resolves.toEqual(freshValues);
-      await waitFor(() => expect(result.current.getDataOptions('field')).toEqual(freshValues));
-
-      resolvers['stale-search']({ content: staleValues });
-      await expect(stalePromise).resolves.toEqual(staleValues);
-      await waitFor(() => expect(result.current.getDataOptions('field')).toEqual(freshValues));
-    });
-
     it('uses source when both source and valueSourceApi are provided', () => {
       const getParamsSource = jest.fn(() => Promise.resolve({ content: [] }));
       const getOrganizations = jest.fn(() => Promise.resolve([]));

@@ -29,8 +29,6 @@ export const SelectionContainer = ({
   const { getDataOptionsWithFetching } = useContext(RootContext);
   const [searchValue, setSearchValue] = useState('');
   const pendingSearchRef = useRef('');
-  const searchUpdateRef = useRef();
-  const cachedDataOptionsRef = useRef();
   const valuePlaceholder = intl.formatMessage({ id: 'ui-plugin-query-builder.control.value.placeholder' });
   const isBooleanField = availableValues?.every(opt => typeof opt.value === 'boolean');
   let normalizedValue = value;
@@ -70,28 +68,17 @@ export const SelectionContainer = ({
     entityTypeId,
     valueSourceApi,
   );
-  const isLoadingOptions = !Array.isArray(optionsPromise);
 
-  useEffect(() => () => {
-    if (searchUpdateRef.current) {
-      clearTimeout(searchUpdateRef.current);
+  useEffect(() => {
+    if (pendingSearchRef.current !== searchValue) {
+      setSearchValue(pendingSearchRef.current);
     }
-  }, []);
+  }, [searchValue]);
 
   const prepareSearch = useCallback((filterText = '') => {
     const normalizedFilterText = normalizeSearchText(filterText) || '';
 
     pendingSearchRef.current = normalizedFilterText;
-
-    if (searchUpdateRef.current) {
-      clearTimeout(searchUpdateRef.current);
-    }
-
-    searchUpdateRef.current = setTimeout(() => {
-      setSearchValue((currentSearchValue) => (
-        currentSearchValue === pendingSearchRef.current ? currentSearchValue : pendingSearchRef.current
-      ));
-    }, 0);
 
     return normalizedFilterText;
   }, []);
@@ -120,14 +107,8 @@ export const SelectionContainer = ({
       return getOptions(availableValues, optionsPromise, source?.name);
     }
 
-    return cachedDataOptionsRef.current ?? [];
+    return [];
   }, [optionsPromise, availableValues, isMulti, source]);
-
-  useEffect(() => {
-    if (Array.isArray(optionsPromise)) {
-      cachedDataOptionsRef.current = dataOptions;
-    }
-  }, [dataOptions, optionsPromise]);
 
   const handleOnChange = (selectedValue) => {
     if (isBooleanField && typeof selectedValue === 'boolean') {
@@ -138,15 +119,11 @@ export const SelectionContainer = ({
 
   if (isDataOptionsLoadFailure(optionsPromise)) return fallback ?? null;
 
-  if (isLoadingOptions && !cachedDataOptionsRef.current) return <Loading size="large" />;
+  if (!Array.isArray(optionsPromise)) return <Loading size="large" />;
 
   const filterProps = isMulti
     ? { filter: multiValueFilterOptions }
     : { onFilter: singleValueFilterOptions };
-  const shouldShowOptionsLoading = isLoadingOptions && searchValue !== '';
-  const loadingProps = isMulti
-    ? { showLoading: shouldShowOptionsLoading }
-    : { loading: shouldShowOptionsLoading };
 
   return (
     <div data-testid={testId}>
@@ -154,7 +131,6 @@ export const SelectionContainer = ({
         key={operator}
         {...rest}
         {...filterProps}
-        {...loadingProps}
         value={normalizedValue}
         onChange={handleOnChange}
         formatter={fuzzyOptionFormatter}

@@ -27,7 +27,7 @@ const isPendingOrFailedOptions = (options) => (
 
 const shouldUseCachedOptions = (options, fetchPromise, requestKey) => (
   isPendingOrFailedOptions(options) &&
-  (!fetchPromise || !requestKey || options.requestKey === requestKey)
+  (!isDataOptionsLoadFailure(options) || !fetchPromise || options.requestKey === requestKey)
 );
 
 export function useDataOptions({ getParamsSource, getOrganizations }) {
@@ -68,20 +68,16 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
             : getDataOptionsLoadFailure(requestKey)))
           .catch(() => getDataOptionsLoadFailure(requestKey));
 
-        promise.requestKey = requestKey;
-
         setDataOptions((prev) => ({
           ...prev,
           [field]: promise,
         }));
 
         promise.then((newValues) => {
-          setDataOptions((prev) => (prev[field] === promise
-            ? {
-              ...prev,
-              [field]: newValues,
-            }
-            : prev));
+          setDataOptions((prev) => ({
+            ...prev,
+            [field]: newValues,
+          }));
         });
 
         return promise;
