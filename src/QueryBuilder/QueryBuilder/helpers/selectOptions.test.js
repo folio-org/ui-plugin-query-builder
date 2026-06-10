@@ -598,7 +598,7 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual(mockDataOptions);
   });
 
-  test('should return a new options array when a non-empty search term only contains ignored special characters', () => {
+  test('should return a new options array when a non-empty search term contains only ignored special characters', () => {
     const res = getFilteredOptions('!*?', mockDataOptions);
 
     expect(res).not.toBe(mockDataOptions);
