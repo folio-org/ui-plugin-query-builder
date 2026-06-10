@@ -39,6 +39,7 @@ const renderSelectionContainer = ({
   );
 };
 
+// Simulate Stripes Selection calling onFilter with one queued filter value per render
 const createFilteringComponent = (filterValues, options = [{ label: 'Apple' }]) => {
   const filterValuesByRender = [...filterValues];
 
