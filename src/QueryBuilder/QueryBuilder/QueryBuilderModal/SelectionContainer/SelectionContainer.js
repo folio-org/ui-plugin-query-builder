@@ -97,14 +97,16 @@ export const SelectionContainer = ({
   }, []);
 
   // For Selection (single value): onFilter must return a plain array
-  const singleValueFilterOptions = useCallback(
-    (filterText, list) => fuzzySortOptions(prepareSearch(filterText), list), [prepareSearch],
-  );
+  const singleValueFilterOptions = useCallback((filterText, list) => {
+    prepareSearch(filterText);
+
+    return fuzzySortOptions(filterText, list);
+  }, [prepareSearch]);
 
   // For MultiSelection (multiple values): filter must return { renderedItems, exactMatch }
   const multiValueFilterOptions = useCallback((filterText, list) => {
     const searchTerm = prepareSearch(filterText);
-    const renderedItems = fuzzySortOptions(searchTerm, list);
+    const renderedItems = fuzzySortOptions(filterText, list);
     const exactMatch = list.some(item => (
       typeof item.label === 'string' &&
       normalizeSearchText(item.label).toLowerCase() === searchTerm.toLowerCase()

@@ -104,6 +104,25 @@ describe('SelectionContainer', () => {
     expect(results[1].label).toBe('Apricot');
   });
 
+  it('single select returns a new options array when filter text only contains ignored special characters', () => {
+    const mockComponent = jest.fn(() => null);
+
+    renderSelectionContainer({
+      component: mockComponent,
+      options: [],
+    });
+
+    const props = mockComponent.mock.calls[0][0];
+    const options = [
+      { label: 'Apple' },
+      { label: 'Banana' },
+    ];
+    const results = props.onFilter('!*?', options);
+
+    expect(results).not.toBe(options);
+    expect(results).toEqual(options);
+  });
+
   it('multi select filter returns renderedItems and exactMatch', () => {
     const mockComponent = jest.fn(() => null);
 
