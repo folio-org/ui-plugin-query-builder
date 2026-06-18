@@ -1,6 +1,6 @@
 # Change history for ui-plugin-query-builder
 
-## [3.0.3] IN PROGRESS
+## [3.0.3](https://github.com/folio-org/ui-plugin-query-builder/tree/v3.0.3) (2026-06-18)
 * [UIPQB-282](https://folio-org.atlassian.net/browse/UIPQB-282) Stop hiding fields used as idColumnName
 
 ## [3.0.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v3.0.2) (2026-06-03)
