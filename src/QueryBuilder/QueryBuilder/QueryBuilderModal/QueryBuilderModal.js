@@ -256,7 +256,9 @@ export const QueryBuilderModal = ({
               <FormattedMessage id="ui-plugin-query-builder.modal.query" />
             </Headline>
             <div className={css.queryArea}>
-              {queryStr}
+              {/* Isolate the query for RTL (see AccordionHeaderLabel in ResultViewer for the
+                  full rationale + the interim-until-field-labels-are-localized caveat). */}
+              <bdi>{queryStr}</bdi>
             </div>
 
             <StripesOverlayWrapper>

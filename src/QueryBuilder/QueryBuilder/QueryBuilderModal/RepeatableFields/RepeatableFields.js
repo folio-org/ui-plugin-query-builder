@@ -27,6 +27,7 @@ import {
   sourceTemplate,
 } from '../../helpers/selectOptions';
 import { retainValueOnOperatorChange } from '../../helpers/valueBuilder';
+import { getBooleanOperatorLabel } from '../../helpers/operatorLabels';
 import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import { DataTypeInput } from '../DataTypeInput';
 import css from '../QueryBuilderModal.css';
@@ -207,7 +208,10 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
                 <Col sm={1} className={css.rowCell}>
                   {index > 0 && (
                     <Select
-                      dataOptions={row.boolean.options}
+                      dataOptions={row.boolean.options.map((option) => ({
+                        ...option,
+                        label: getBooleanOperatorLabel(option.value, intl),
+                      }))}
                       value={row.boolean.current}
                       onChange={(e) => handleChange(e.target.value, index, COLUMN_KEYS.BOOLEAN)}
                       data-testid={`boolean-option-${index}`}

@@ -2,8 +2,9 @@ import fuzzysort from 'fuzzysort';
 import { FormattedMessage } from 'react-intl';
 import { OptionSegment } from '@folio/stripes/components';
 import { DATA_TYPES } from '../../../constants/dataTypes';
-import { BOOLEAN_OPERATORS, OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
+import { BOOLEAN_OPERATORS, OPERATORS } from '../../../constants/operators';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
+import { getOperatorLabel } from './operatorLabels';
 
 export const REPEATABLE_FIELD_DELIMITER = '[*]->';
 
@@ -18,38 +19,41 @@ const getOperatorsWithPlaceholder = (options, intl) => {
   ];
 };
 
-const baseLogicalOperators = () => [
-  { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
-  { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
-  { label: OPERATORS_LABELS.GREATER_THAN, value: OPERATORS.GREATER_THAN },
-  { label: OPERATORS_LABELS.LESS_THAN, value: OPERATORS.LESS_THAN },
+// Builds a localized operator option for the dropdown (verbose label).
+const op = (value, intl) => ({ label: getOperatorLabel(value, intl), value });
+
+const baseLogicalOperators = (intl) => [
+  op(OPERATORS.EQUAL, intl),
+  op(OPERATORS.NOT_EQUAL, intl),
+  op(OPERATORS.GREATER_THAN, intl),
+  op(OPERATORS.LESS_THAN, intl),
 ];
 
-const extendedLogicalOperators = () => [
-  ...baseLogicalOperators(),
-  { label: OPERATORS_LABELS.GREATER_THAN_OR_EQUAL, value: OPERATORS.GREATER_THAN_OR_EQUAL },
-  { label: OPERATORS_LABELS.LESS_THAN_OR_EQUAL, value: OPERATORS.LESS_THAN_OR_EQUAL },
-  { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+const extendedLogicalOperators = (intl) => [
+  ...baseLogicalOperators(intl),
+  op(OPERATORS.GREATER_THAN_OR_EQUAL, intl),
+  op(OPERATORS.LESS_THAN_OR_EQUAL, intl),
+  op(OPERATORS.EMPTY, intl),
 ];
 
-const ArrayOperators = (hasSourceOrValues) => [
-  { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
-  { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+const ArrayOperators = (hasSourceOrValues, intl) => [
+  op(OPERATORS.EQUAL, intl),
+  op(OPERATORS.NOT_EQUAL, intl),
   ...(hasSourceOrValues ? [
-    { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
-    { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
+    op(OPERATORS.IN, intl),
+    op(OPERATORS.NOT_IN, intl),
   ] : [
-    { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
-    { label: OPERATORS_LABELS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
+    op(OPERATORS.CONTAINS, intl),
+    op(OPERATORS.STARTS_WITH, intl),
   ]),
-  { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+  op(OPERATORS.EMPTY, intl),
 ];
 
-const UUIDOperators = () => [
-  { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
-  { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
-  { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
-  { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+const UUIDOperators = (intl) => [
+  op(OPERATORS.EQUAL, intl),
+  op(OPERATORS.IN, intl),
+  op(OPERATORS.NOT_IN, intl),
+  op(OPERATORS.EMPTY, intl),
 ];
 
 export const getFilledValues = (options) => {
@@ -60,25 +64,25 @@ export const hasValueOptions = ({ values, source, valueSourceApi } = {}) => (
   Boolean(values || source || valueSourceApi)
 );
 
-const stringOperators = (hasSourceOrValues) => {
+const stringOperators = (hasSourceOrValues, intl) => {
   return [
-    { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
-    { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+    op(OPERATORS.EQUAL, intl),
+    op(OPERATORS.NOT_EQUAL, intl),
     ...(hasSourceOrValues ? [
-      { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
-      { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
+      op(OPERATORS.IN, intl),
+      op(OPERATORS.NOT_IN, intl),
     ] : [
-      { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
-      { label: OPERATORS_LABELS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
+      op(OPERATORS.CONTAINS, intl),
+      op(OPERATORS.STARTS_WITH, intl),
     ]),
-    { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+    op(OPERATORS.EMPTY, intl),
   ];
 };
 
-const booleanOperators = (isFromNestedField) => [
-  { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
-  ...(isFromNestedField ? [] : [{ label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL }]),
-  { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+const booleanOperators = (isFromNestedField, intl) => [
+  op(OPERATORS.EQUAL, intl),
+  ...(isFromNestedField ? [] : [op(OPERATORS.NOT_EQUAL, intl)]),
+  op(OPERATORS.EMPTY, intl),
 ];
 
 export const getOperatorOptions = ({
@@ -89,33 +93,33 @@ export const getOperatorOptions = ({
 }) => {
   switch (dataType) {
     case DATA_TYPES.StringType:
-      return getOperatorsWithPlaceholder(stringOperators(hasSourceOrValues), intl);
+      return getOperatorsWithPlaceholder(stringOperators(hasSourceOrValues, intl), intl);
 
     case DATA_TYPES.RangedUUIDType:
     case DATA_TYPES.OpenUUIDType:
     case DATA_TYPES.StringUUIDType:
-      return getOperatorsWithPlaceholder(UUIDOperators(), intl);
+      return getOperatorsWithPlaceholder(UUIDOperators(intl), intl);
 
     case DATA_TYPES.IntegerType:
     case DATA_TYPES.NumberType:
-      return getOperatorsWithPlaceholder(extendedLogicalOperators(), intl);
+      return getOperatorsWithPlaceholder(extendedLogicalOperators(intl), intl);
 
     case DATA_TYPES.ArrayType:
     case DATA_TYPES.JsonbArrayType:
-      return getOperatorsWithPlaceholder(ArrayOperators(hasSourceOrValues), intl);
+      return getOperatorsWithPlaceholder(ArrayOperators(hasSourceOrValues, intl), intl);
 
     case DATA_TYPES.DateType:
     case DATA_TYPES.DateTimeType:
-      return getOperatorsWithPlaceholder(extendedLogicalOperators(), intl);
+      return getOperatorsWithPlaceholder(extendedLogicalOperators(intl), intl);
 
     case DATA_TYPES.ObjectType:
-      return getOperatorsWithPlaceholder(extendedLogicalOperators(), intl);
+      return getOperatorsWithPlaceholder(extendedLogicalOperators(intl), intl);
 
     case DATA_TYPES.EnumType:
-      return getOperatorsWithPlaceholder(UUIDOperators(), intl);
+      return getOperatorsWithPlaceholder(UUIDOperators(intl), intl);
 
     case DATA_TYPES.BooleanType:
-      return getOperatorsWithPlaceholder(booleanOperators(isFromNestedField), intl);
+      return getOperatorsWithPlaceholder(booleanOperators(isFromNestedField, intl), intl);
 
     default:
       return [];

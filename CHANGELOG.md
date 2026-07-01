@@ -4,6 +4,7 @@
 * [UIPQB-281](https://folio-org.atlassian.net/browse/UIPQB-281) Implement fuzzy matching within "Field" dropdown
 * [UIPQB-282](https://folio-org.atlassian.net/browse/UIPQB-282) Stop hiding fields used as idColumnName
 * [UIPQB-286](https://folio-org.atlassian.net/browse/UIPQB-286) Fix incorrect value display for 'Organization - Code' queries
+* [UIPQB-210](https://folio-org.atlassian.net/browse/UIPQB-210) Localize operators, boolean operators, and boolean values in the query builder and user-friendly query
 
 ## [3.0.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v3.0.2) (2026-06-03)
 * [UIPQB-279](https://folio-org.atlassian.net/browse/UIPQB-279) Add support for fields containing a valueSourceApi property without a source property

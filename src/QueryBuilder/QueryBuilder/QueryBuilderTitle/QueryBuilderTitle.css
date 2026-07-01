@@ -12,6 +12,6 @@
 }
 
 .headerCell:last-child {
-  margin-left: auto;
+  margin-inline-start: auto;
   text-align: center;
 }

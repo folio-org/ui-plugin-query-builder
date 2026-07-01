@@ -6,7 +6,26 @@ import {
   getOperatorOptions,
 } from './selectOptions';
 import { DATA_TYPES } from '../../../constants/dataTypes';
-import { OPERATORS, OPERATORS_LABELS } from '../../../constants/operators';
+import { OPERATORS } from '../../../constants/operators';
+
+// Canonical English operator labels for the dropdown, kept in sync with the
+// verbose `operators.*` keys in en.json. Used here as the reference for expected
+// dropdown labels (the dropdown shows words; the user-friendly query uses the
+// compact `operators.symbol.*` set instead).
+const OPERATORS_LABELS = {
+  EQUAL: 'equals',
+  NOT_EQUAL: 'not equal to',
+  GREATER_THAN: 'greater than',
+  LESS_THAN: 'less than',
+  GREATER_THAN_OR_EQUAL: 'greater than or equal to',
+  LESS_THAN_OR_EQUAL: 'less than or equal to',
+  IN: 'in',
+  NOT_IN: 'not in',
+  CONTAINS: 'contains',
+  NOT_CONTAINS: 'not contains',
+  STARTS_WITH: 'starts with',
+  EMPTY: 'is null/empty',
+};
 
 const getElementText = (node) => {
   if (!node) return '';
@@ -133,8 +152,14 @@ describe('select options', () => {
   });
 
   describe('getOperatorOptions', () => {
+    // Operator labels now come from intl; map each operator translation id back
+    // to its canonical English label so the expected arrays stay readable.
     const intlMock = {
-      formatMessage: jest.fn().mockReturnValue('label'),
+      formatMessage: jest.fn(({ id }) => {
+        const key = id.replace('ui-plugin-query-builder.operators.', '');
+
+        return OPERATORS_LABELS[key] ?? 'label';
+      }),
     };
 
     const expectFn = ({ options, operators }) => {
@@ -147,7 +172,6 @@ describe('select options', () => {
         ...operators,
       ]);
 
-      expect(intlMock.formatMessage).toHaveBeenCalledTimes(1);
       expect(intlMock.formatMessage).toHaveBeenCalledWith({
         id: 'ui-plugin-query-builder.control.operator.placeholder',
       });
@@ -542,20 +566,20 @@ describe('getFilteredOptions', () => {
     { label: 'Items — Instances — Updated date' },
   ];
 
-  test('should return options that match the input value', () => {
+  it('should return options that match the input value', () => {
     const res = getFilteredOptions('Receiving', mockDataOptions);
 
     expect(res).toEqual([{ label: 'Items — Holdings — Receiving history display type' }]);
   });
 
-  test('should retain special characters like em dash (—) in the input and match labels', () => {
+  it('should retain special characters like em dash (—) in the input and match labels', () => {
     // The em dash (—) should be preserved, allowing this search to match.
     const res = getFilteredOptions('Instances — Updated date', mockDataOptions);
 
     expect(res).toEqual([{ label: 'Items — Instances — Updated date' }]);
   });
 
-  test('should match hyphen input against em dash labels', () => {
+  it('should match hyphen input against em dash labels', () => {
     const res = getFilteredOptions('Parent - Child', [
       { label: 'Parent — Child' },
     ]);
@@ -563,7 +587,7 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual([{ label: 'Parent — Child' }]);
   });
 
-  test('should match em dash input against hyphen labels', () => {
+  it('should match em dash input against hyphen labels', () => {
     const res = getFilteredOptions('Parent — Child', [
       { label: 'Parent - Child' },
     ]);
@@ -571,13 +595,13 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual([{ label: 'Parent - Child' }]);
   });
 
-  test('should support fuzzy matching for non-contiguous input', () => {
+  it('should support fuzzy matching for non-contiguous input', () => {
     const res = getFilteredOptions('InstUpd', mockDataOptions);
 
     expect(res).toEqual([{ label: 'Items — Instances — Updated date' }]);
   });
 
-  test('should ignore unsupported special characters in search terms', () => {
+  it('should ignore unsupported special characters in search terms', () => {
     const res = getFilteredOptions('Parent ! Child', [
       { label: 'Parent Child' },
     ]);
@@ -585,27 +609,27 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual([{ label: 'Parent Child' }]);
   });
 
-  test('should return all options containing normalized dash characters', () => {
+  it('should return all options containing normalized dash characters', () => {
     const res = getFilteredOptions('—', mockDataOptions);
 
     expect(res).toHaveLength(mockDataOptions.length);
     expect(res).toEqual(expect.arrayContaining(mockDataOptions));
   });
 
-  test('should return all options as a new array when non-empty search only contains ignored special characters', () => {
+  it('should return all options as a new array when non-empty search only contains ignored special characters', () => {
     const res = getFilteredOptions('!*?', mockDataOptions);
 
     expect(res).not.toBe(mockDataOptions);
     expect(res).toEqual(mockDataOptions);
   });
 
-  test('should match values case-insensitively', () => {
+  it('should match values case-insensitively', () => {
     const res = getFilteredOptions('statements', mockDataOptions);
 
     expect(res).toEqual([{ label: 'Items — Holdings — Statements' }]);
   });
 
-  test('should sort equal-score matches by label', () => {
+  it('should sort equal-score matches by label', () => {
     const res = getFilteredOptions('x', [
       { label: 'Cx' },
       { label: 'Dx' },
@@ -616,13 +640,13 @@ describe('getFilteredOptions', () => {
     expect(res.map(({ label }) => label)).toEqual(['Ax', 'Bx', 'Cx', 'Dx']);
   });
 
-  test('should return all options if input value is an empty string', () => {
+  it('should return all options if input value is an empty string', () => {
     const res = getFilteredOptions('', mockDataOptions);
 
     expect(res).toEqual(mockDataOptions);
   });
 
-  test('should ignore non-string labels while filtering', () => {
+  it('should ignore non-string labels while filtering', () => {
     const label = <span>Formatted label</span>;
     const res = getFilteredOptions('Alpha', [
       { label },
@@ -632,7 +656,7 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual([{ label: 'Alpha' }]);
   });
 
-  test('should return no matches for non-string search terms', () => {
+  it('should return no matches for non-string search terms', () => {
     const res = getFilteredOptions(123, [
       { label: '123' },
     ]);
@@ -640,13 +664,13 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual([]);
   });
 
-  test('should return an empty array if no options match', () => {
+  it('should return an empty array if no options match', () => {
     const res = getFilteredOptions('no such option present', mockDataOptions);
 
     expect(res).toEqual([]);
   });
 
-  test('should correctly match labels with non-Latin characters (Chinese)', () => {
+  it('should correctly match labels with non-Latin characters (Chinese)', () => {
     const mockDataOptionsChina = [
       { label: '項目 - 持股 - 報表' },
     ];
@@ -656,7 +680,7 @@ describe('getFilteredOptions', () => {
     expect(res).toEqual([{ label: '項目 - 持股 - 報表' }]);
   });
 
-  test('should preserve original label dashes when highlighting normalized dash matches', () => {
+  it('should preserve original label dashes when highlighting normalized dash matches', () => {
     const element = fuzzyOptionFormatter({
       option: { label: 'Parent — Child' },
       searchTerm: 'Parent - Child',
@@ -665,7 +689,7 @@ describe('getFilteredOptions', () => {
     expect(element.props.children[0].props.children).toBe('Parent — Child');
   });
 
-  test('should render non-string labels without highlighting', () => {
+  it('should render non-string labels without highlighting', () => {
     const label = <span>Formatted label</span>;
     const element = fuzzyOptionFormatter({
       option: { label },
@@ -675,7 +699,7 @@ describe('getFilteredOptions', () => {
     expect(element.props.children).toBe(label);
   });
 
-  test('should render unhighlighted labels when the search term only contains ignored special characters', () => {
+  it('should render unhighlighted labels when the search term only contains ignored special characters', () => {
     const element = fuzzyOptionFormatter({
       option: { label: 'Alpha' },
       searchTerm: '!*?',
@@ -684,7 +708,7 @@ describe('getFilteredOptions', () => {
     expect(element.props.children).toBe('Alpha');
   });
 
-  test('should not reuse stale fuzzy indexes when formatting a shorter dash match', () => {
+  it('should not reuse stale fuzzy indexes when formatting a shorter dash match', () => {
     fuzzyOptionFormatter({
       option: { label: 'Alpha — Beta' },
       searchTerm: 'Alpha - Beta',
@@ -700,12 +724,12 @@ describe('getFilteredOptions', () => {
 });
 
 describe('getColumnsWithProperties', () => {
-  test('returns empty array for empty input', () => {
+  it('returns empty array for empty input', () => {
     expect(getColumnsWithProperties()).toEqual([]);
     expect(getColumnsWithProperties([])).toEqual([]);
   });
 
-  test('includes queryable columns whose name is listed as some item’s idColumnName', () => {
+  it('includes queryable columns whose name is listed as some item’s idColumnName', () => {
     const columns = [
       { name: 'meta', idColumnName: 'userId' },
       { name: 'userId', queryable: true },
@@ -717,7 +741,7 @@ describe('getColumnsWithProperties', () => {
     expect(res.map((i) => i.name)).toEqual(['userId', 'displayName']);
   });
 
-  test('includes only top-level items with queryable === true', () => {
+  it('includes only top-level items with queryable === true', () => {
     const columns = [
       { name: 'visible', queryable: true },
       { name: 'notQueryable', queryable: false },
@@ -729,7 +753,7 @@ describe('getColumnsWithProperties', () => {
     expect(res.map((i) => i.name)).toEqual(['visible']);
   });
 
-  test('nested properties are sorted by labelAliasFullyQualified, falling back to labelAlias', () => {
+  it('nested properties are sorted by labelAliasFullyQualified, falling back to labelAlias', () => {
     const columns = [
       {
         name: 'item',
@@ -751,7 +775,7 @@ describe('getColumnsWithProperties', () => {
     expect(res.map((i) => i.name)).toEqual(['item[*]->a', 'item[*]->b', 'item[*]->c', 'item[*]->d']);
   });
 
-  test('does not blow up if item.dataType.itemDataType.properties is missing', () => {
+  it('does not blow up if item.dataType.itemDataType.properties is missing', () => {
     const columns = [
       { name: 'noItemDataType', queryable: true, dataType: {} },
       { name: 'noDataType', queryable: true },

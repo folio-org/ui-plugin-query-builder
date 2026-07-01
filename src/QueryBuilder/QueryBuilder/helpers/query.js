@@ -2,7 +2,8 @@ import { Loading } from '@folio/stripes/components';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
-import { BOOLEAN_OPERATORS, BOOLEAN_OPERATORS_MAP, OPERATORS } from '../../../constants/operators';
+import { DATA_TYPES } from '../../../constants/dataTypes';
+import { BOOLEAN_OPERATORS, OPERATORS } from '../../../constants/operators';
 import { RootContext } from '../../../context/RootContext';
 import useTenantTimezone from '../../../hooks/useTenantTimezone';
 import { findLabelByValue } from '../../ResultViewer/utils';
@@ -14,6 +15,7 @@ import {
   REPEATABLE_FIELD_DELIMITER,
   sourceTemplate,
 } from './selectOptions';
+import { getBooleanOperatorLabel, getOperatorSymbol } from './operatorLabels';
 import upgradeInitialValues from './upgradeInitialValues';
 import { valueBuilder } from './valueBuilder';
 
@@ -39,16 +41,47 @@ const getLabeledValue = (value, ...optionSets) => {
   return matchedOption ? matchedOption.label : value;
 };
 
+// Normalizes a boolean field's value to a real boolean so valueBuilder can localize it.
+// The value can arrive as a boolean, the string 'true'/'false', or the field's
+// server-provided label (e.g. 'True') when the query is derived from a saved fqlQuery.
+const normalizeBooleanValue = (value, options) => {
+  if (value === '' || value === undefined || value === null) {
+    return value;
+  }
+
+  const matched = (options ?? []).find(option => (
+    option?.value === value || String(option?.value) === String(value) || option?.label === value
+  ));
+
+  if (matched) {
+    return matched.value === true || matched.value === 'true';
+  }
+
+  return value === true || value === 'true';
+};
+
 export const getQueryStr = (rows, fieldOptions, intl, timezone, getDataOptions) => {
+  // The query is built in logical order (field operator value); RTL display is
+  // handled by the document direction and the browser's native bidi algorithm,
+  // not by rewriting the string.
   return rows.reduce((str, row, index) => {
     const bool = row[COLUMN_KEYS.BOOLEAN].current;
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
-    const labeledValue = getLabeledValue(value, row[COLUMN_KEYS.VALUE].options, getDataOptions(field));
+    const dataType = fieldOptions.find(o => o.value === field)?.dataType;
+    // Boolean fields — and the "is null/empty" operator, which uses a True/False value
+    // regardless of field type — carry a boolean value. Normalize it to a real boolean
+    // so valueBuilder can localize True/False.
+    const isBooleanValued = dataType === DATA_TYPES.BooleanType || operator === OPERATORS.EMPTY;
+    const labeledValue = isBooleanValued
+      ? normalizeBooleanValue(value, row[COLUMN_KEYS.VALUE].options)
+      : getLabeledValue(value, row[COLUMN_KEYS.VALUE].options, getDataOptions(field));
     const builtValue = valueBuilder({ value: labeledValue, field, operator, fieldOptions, intl, timezone });
 
-    const queryPiece = `(${findLabelByValue(row[COLUMN_KEYS.FIELD], field)} ${operator} ${builtValue})`;
+    const fieldLabel = findLabelByValue(row[COLUMN_KEYS.FIELD], field);
+    const operatorLabel = getOperatorSymbol(operator, intl);
+    const queryPiece = `(${fieldLabel} ${operatorLabel} ${builtValue})`;
 
     // if there aren't values yet - return empty string
     if (![bool, field, operator, value].some(val => Boolean(val))) {
@@ -57,7 +90,7 @@ export const getQueryStr = (rows, fieldOptions, intl, timezone, getDataOptions) 
 
     // if there is a boolean operator and it's not the first row - add it to the query
     if (bool && index > 0) {
-      str += ` ${BOOLEAN_OPERATORS_MAP[bool] || ''} ${queryPiece}`;
+      str += ` ${getBooleanOperatorLabel(bool, intl)} ${queryPiece}`;
     } else {
       str += queryPiece;
     }

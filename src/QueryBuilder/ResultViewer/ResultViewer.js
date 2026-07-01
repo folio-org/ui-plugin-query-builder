@@ -43,7 +43,18 @@ const AccordionHeaderLabel = ({ entityType, fqlQuery, headerRef }) => {
         id: 'ui-plugin-query-builder.viewer.accordion.title.query',
       },
       {
-        query: queryStr,
+        // Isolate the interpolated query so bidi doesn't tangle it with the
+        // surrounding label or reorder its clauses. <bdi> auto-detects direction
+        // from the content (no manual mirroring/flipping).
+        //
+        // NOTE: this single, whole-query isolation is intentionally interim. It
+        // works today because every clause starts with a Latin backend field name,
+        // which anchors the whole query to LTR. Once field labels are localized in
+        // the query (see the field-label follow-up), a clause could lead with RTL
+        // text and this coarse isolation would let clauses reorder/garble again —
+        // at which point each clause/token needs its own isolation (structured
+        // markup) instead of one <bdi> around everything.
+        query: <bdi>{queryStr}</bdi>,
       },
     ),
     [intl, queryStr],
