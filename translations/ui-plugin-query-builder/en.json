@@ -22,6 +22,34 @@
   "options.true": "True",
   "options.false": "False",
 
+  "operators.EQUAL": "equals",
+  "operators.NOT_EQUAL": "not equal to",
+  "operators.GREATER_THAN": "greater than",
+  "operators.LESS_THAN": "less than",
+  "operators.GREATER_THAN_OR_EQUAL": "greater than or equal to",
+  "operators.LESS_THAN_OR_EQUAL": "less than or equal to",
+  "operators.IN": "in",
+  "operators.NOT_IN": "not in",
+  "operators.CONTAINS": "contains",
+  "operators.NOT_CONTAINS": "not contains",
+  "operators.STARTS_WITH": "starts with",
+  "operators.EMPTY": "is null/empty",
+
+  "operators.symbol.EQUAL": "==",
+  "operators.symbol.NOT_EQUAL": "!=",
+  "operators.symbol.GREATER_THAN": ">",
+  "operators.symbol.LESS_THAN": "<",
+  "operators.symbol.GREATER_THAN_OR_EQUAL": ">=",
+  "operators.symbol.LESS_THAN_OR_EQUAL": "<=",
+  "operators.symbol.IN": "in",
+  "operators.symbol.NOT_IN": "not in",
+  "operators.symbol.CONTAINS": "contains",
+  "operators.symbol.NOT_CONTAINS": "not contains",
+  "operators.symbol.STARTS_WITH": "starts with",
+  "operators.symbol.EMPTY": "is null/empty",
+
+  "operators.boolean.$and": "AND",
+
   "control.info.separateValues": "Separate multiple values with a comma.",
   "control.selection.placeholder": "Select field",
   "control.value.placeholder": "Select value",
@@ -53,8 +81,6 @@
   "warning.deletedField": "{value} in your query is no longer available. Please revise your query.",
 
   "ariaLabel.columnFilter": "Column filter input",
-
-  "userFriendlyQuery.boolean.$and": "{query1} and {query2}",
 
   "noOptionsAvailable.organization": "No matches! Use the “Organization look-up” below to add organizations",
   "noOptionsAvailable.donor_organization": "No matches! Use the “Donor organization look-up” below to add organizations"

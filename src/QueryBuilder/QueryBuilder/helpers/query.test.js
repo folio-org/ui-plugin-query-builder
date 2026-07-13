@@ -14,7 +14,7 @@ import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { DATA_OPTIONS_LOAD_FAILED } from '../../../hooks/useDataOptions';
 
 describe('fqlQueryToSource()', () => {
-  test('should return empty array for empty query', async () => {
+  it('should return empty array for empty query', async () => {
     const result = await fqlQueryToSource({
       initialValues: {},
       booleanOptions,
@@ -551,7 +551,7 @@ describe('getQueryStr', () => {
     const result = getQueryStr(
       rows,
       customFieldOptions,
-      { formatDate: jest.fn() },
+      { formatDate: jest.fn(), formatMessage: jest.fn(({ id }) => (id.endsWith('.EQUAL') ? '==' : id)) },
       'UTC',
       jest.fn(() => []),
     );
@@ -584,12 +584,139 @@ describe('getQueryStr', () => {
     const result = getQueryStr(
       rows,
       sourceFieldOptions,
-      { formatDate: jest.fn() },
+      { formatDate: jest.fn(), formatMessage: jest.fn(({ id }) => (id.endsWith('.EQUAL') ? '==' : id)) },
       'UTC',
       jest.fn(() => [{ value: 'value 1', label: 'Label 1' }]),
     );
 
     expect(result).toBe('(field1 == Label 1)');
+  });
+
+  it('localizes a boolean field value instead of using the server-provided label', () => {
+    const options = [{ value: 'user_active', label: 'User active', dataType: DATA_TYPES.BooleanType }];
+    const valueOptions = [{ value: 'true', label: 'True (server)' }, { value: 'false', label: 'False (server)' }];
+    const formatMessage = jest.fn(({ id }) => {
+      if (id.endsWith('.symbol.EQUAL')) return '==';
+      if (id.endsWith('.options.true')) return 'localizedTrue';
+
+      return id;
+    });
+    const run = (current) => getQueryStr(
+      [{
+        boolean: { current: '' },
+        field: { options, current: 'user_active' },
+        operator: { current: OPERATORS.EQUAL },
+        value: { current, options: valueOptions },
+      }],
+      options,
+      { formatDate: jest.fn(), formatMessage },
+      'UTC',
+      jest.fn(() => []),
+    );
+
+    // live-rows path (string value), and saved-query path (server label) both localize
+    expect(run('true')).toBe('(user_active == localizedTrue)');
+    expect(run(true)).toBe('(user_active == localizedTrue)');
+    expect(run('True (server)')).toBe('(user_active == localizedTrue)');
+  });
+
+  it('coerces a boolean value with no matching options via the fallback path', () => {
+    const options = [{ value: 'user_active', label: 'User active', dataType: DATA_TYPES.BooleanType }];
+    const formatMessage = jest.fn(({ id }) => {
+      if (id.endsWith('.symbol.EQUAL')) return '==';
+      if (id.endsWith('.options.true')) return 'localizedTrue';
+
+      return id;
+    });
+    const result = getQueryStr(
+      [{
+        boolean: { current: '' },
+        field: { options, current: 'user_active' },
+        operator: { current: OPERATORS.EQUAL },
+        // no value.options -> normalizeBooleanValue finds no match and coerces the raw value
+        value: { current: true },
+      }],
+      options,
+      { formatDate: jest.fn(), formatMessage },
+      'UTC',
+      jest.fn(() => []),
+    );
+
+    expect(result).toBe('(user_active == localizedTrue)');
+  });
+
+  it('passes an empty boolean value through unchanged (not coerced to false)', () => {
+    const options = [{ value: 'user_active', label: 'User active', dataType: DATA_TYPES.BooleanType }];
+    const formatMessage = jest.fn(({ id }) => (id.endsWith('.symbol.EQUAL') ? '==' : id));
+    const result = getQueryStr(
+      [{
+        boolean: { current: '' },
+        field: { options, current: 'user_active' },
+        operator: { current: OPERATORS.EQUAL },
+        // empty value -> early return keeps it '' rather than coercing to false/localizing
+        value: { current: '' },
+      }],
+      options,
+      { formatDate: jest.fn(), formatMessage },
+      'UTC',
+      jest.fn(() => []),
+    );
+
+    expect(result).toBe('(user_active == )');
+  });
+
+  describe('direction independence', () => {
+    // The query is built in logical order regardless of direction; RTL display
+    // is left to the browser's native bidi algorithm, so the string is identical
+    // in LTR and RTL and never contains directional control characters.
+    const formatMessage = jest.fn(({ id }) => {
+      if (id.endsWith('.symbol.EQUAL')) return '==';
+      if (id.endsWith('.boolean.$and')) return 'AND';
+
+      return id;
+    });
+
+    const options = [
+      { value: 'field1', label: 'Field 1', dataType: DATA_TYPES.StringType },
+      { value: 'field2', label: 'Field 2', dataType: DATA_TYPES.StringType },
+    ];
+    const rows = [
+      {
+        boolean: { current: '' },
+        field: { options, current: 'field1' },
+        operator: { current: OPERATORS.EQUAL },
+        value: { current: 'a' },
+      },
+      {
+        boolean: { current: '$and' },
+        field: { options, current: 'field2' },
+        operator: { current: OPERATORS.EQUAL },
+        value: { current: 'b' },
+      },
+    ];
+    const args = [options, { formatDate: jest.fn(), formatMessage }, 'UTC', jest.fn(() => [])];
+    const expected = '(field1 == a) AND (field2 == b)';
+
+    afterEach(() => {
+      document.dir = '';
+      formatMessage.mockClear();
+    });
+
+    it('builds clauses in logical order in LTR', () => {
+      document.dir = 'ltr';
+
+      expect(getQueryStr(rows, ...args)).toBe(expected);
+    });
+
+    it('produces the same logical-order string in RTL (no mirroring, no isolates)', () => {
+      document.dir = 'rtl';
+
+      const result = getQueryStr(rows, ...args);
+      const isolateRange = new RegExp(`[${String.fromCodePoint(0x2066)}-${String.fromCodePoint(0x2069)}]`);
+
+      expect(result).toBe(expected);
+      expect(result).not.toMatch(isolateRange);
+    });
   });
 });
 

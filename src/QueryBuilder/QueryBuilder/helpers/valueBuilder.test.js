@@ -1,10 +1,10 @@
-import { getCommaSeparatedStr, getQuotedStr, retainValueOnOperatorChange, valueBuilder } from './valueBuilder';
+import { getCommaSeparatedStr, getQuotedStr, retainValueOnOperatorChange, stripDirectionalMarks, valueBuilder } from './valueBuilder';
 import { OPERATORS } from '../../../constants/operators';
 import { fieldOptions } from '../../../../test/jest/data/entityType';
 import { DATA_TYPES } from '../../../constants/dataTypes';
 
 describe('valueBuilder', () => {
-  test('should return a string for StringType', () => {
+  it('should return a string for StringType', () => {
     const value = 'John';
     const field = 'user_first_name';
     const operator = OPERATORS.EQUAL;
@@ -12,7 +12,7 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
-  test('should return the same value for IntegerType', () => {
+  it('should return the same value for IntegerType', () => {
     const value = 42;
     const field = 'position';
     const operator = OPERATORS.EQUAL;
@@ -20,7 +20,7 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(value);
   });
 
-  test('should return the same value for NumberType', () => {
+  it('should return the same value for NumberType', () => {
     const value = 42.1;
     const field = 'decimal_position';
     const operator = OPERATORS.EQUAL;
@@ -28,15 +28,36 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(value);
   });
 
-  test('should return a string for BooleanType', () => {
+  it('should return a localized string for BooleanType', () => {
     const value = true;
     const field = 'user_active';
     const operator = OPERATORS.EQUAL;
+    const intl = { formatMessage: jest.fn(({ id }) => (id.endsWith('.true') ? 'True' : 'False')) };
 
-    expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
+    expect(valueBuilder({ value, field, operator, fieldOptions, intl })).toBe('True');
+    expect(intl.formatMessage).toHaveBeenCalledWith({ id: 'ui-plugin-query-builder.options.true' });
   });
 
-  test('should return a string for ObjectType', () => {
+  it('should return a localized string for BooleanType when false', () => {
+    const value = false;
+    const field = 'user_active';
+    const operator = OPERATORS.EQUAL;
+    const intl = { formatMessage: jest.fn(({ id }) => (id.endsWith('.true') ? 'True' : 'False')) };
+
+    expect(valueBuilder({ value, field, operator, fieldOptions, intl })).toBe('False');
+    expect(intl.formatMessage).toHaveBeenCalledWith({ id: 'ui-plugin-query-builder.options.false' });
+  });
+
+  it('should localize BooleanType when the value is the string "true"/"false"', () => {
+    const field = 'user_active';
+    const operator = OPERATORS.EQUAL;
+    const intl = { formatMessage: jest.fn(({ id }) => (id.endsWith('.true') ? 'True' : 'False')) };
+
+    expect(valueBuilder({ value: 'true', field, operator, fieldOptions, intl })).toBe('True');
+    expect(valueBuilder({ value: 'false', field, operator, fieldOptions, intl })).toBe('False');
+  });
+
+  it('should return a string for ObjectType', () => {
     const value = { street: '123 Main St', city: 'Anytown' };
     const field = 'address';
     const operator = OPERATORS.EQUAL;
@@ -44,7 +65,7 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
-  test('should return a string for RangedUUIDType if value is not an array', () => {
+  it('should return a string for RangedUUIDType if value is not an array', () => {
     const value = 'id1, id2';
     const field = 'user_patron_group';
     const operator = OPERATORS.EQUAL;
@@ -52,7 +73,7 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toEqual('id1, id2');
   });
 
-  test('should return a string enclosed in parentheses for RangedUUIDType if value is an array', () => {
+  it('should return a string enclosed in parentheses for RangedUUIDType if value is an array', () => {
     const value = 'id';
     const field = 'user_patron_group';
     const operator = OPERATORS.IN;
@@ -60,7 +81,7 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value, true));
   });
 
-  test('should return an empty string if value is falsy for DateType', () => {
+  it('should return an empty string if value is falsy for DateType', () => {
     const value = null;
     const field = 'loan_checkout_date';
     const operator = OPERATORS.EQUAL;
@@ -68,7 +89,7 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe('');
   });
 
-  test('should return raw YYYY-MM-DD string for DateType if value is truthy', () => {
+  it('should return raw YYYY-MM-DD string for DateType if value is truthy', () => {
     const value = '2024-11-06';
     const field = 'loan_checkout_date';
     const operator = OPERATORS.EQUAL;
@@ -82,7 +103,7 @@ describe('valueBuilder', () => {
       .toBe('2024-11-06');
   });
 
-  test('should return an empty string if value is falsy for DateTimeType', () => {
+  it('should return an empty string if value is falsy for DateTimeType', () => {
     const value = null;
     const field = 'user_expiration_date';
     const operator = OPERATORS.EQUAL;
@@ -90,7 +111,7 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe('');
   });
 
-  test('should return formatted string for DateTimeType if value is truthy (timezone aware)', () => {
+  it('should return formatted string for DateTimeType if value is truthy (timezone aware)', () => {
     const value = '2024-11-06';
     const field = 'user_expiration_date';
     const operator = OPERATORS.EQUAL;
@@ -103,7 +124,7 @@ describe('valueBuilder', () => {
       .toBe('Wed, 06 Nov 2024 00:00:00 GMT in Narnia');
   });
 
-  test('should return the original string for an invalid date', () => {
+  it('should return the original string for an invalid date', () => {
     const value = 'invalid-date';
     const field = 'user_expiration_date';
     const operator = OPERATORS.EQUAL;
@@ -111,7 +132,7 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe('invalid-date');
   });
 
-  test('should return a string for ArrayType if value is a string', () => {
+  it('should return a string for ArrayType if value is a string', () => {
     const value = 'fr';
     const field = 'instance.languages';
     const operator = OPERATORS.EQUAL;
@@ -119,7 +140,7 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
-  test('should return a string enclosed in parentheses for ArrayType if value is an array and operator is IN', () => {
+  it('should return a string enclosed in parentheses for ArrayType if value is an array and operator is IN', () => {
     const value = [
       { label: 'English', value: 'eng' },
       { label: 'French', value: 'fra' },
@@ -130,7 +151,7 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getCommaSeparatedStr(value));
   });
 
-  test('should return a string for OpenUUIDType if operator is not IN or NOT_IN', () => {
+  it('should return a string for OpenUUIDType if operator is not IN or NOT_IN', () => {
     const value = 'val';
     const field = 'instance_id';
     const operator = OPERATORS.EQUAL;
@@ -138,7 +159,7 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
-  test('should return a string for StringUUIDType if operator is not IN or NOT_IN', () => {
+  it('should return a string for StringUUIDType if operator is not IN or NOT_IN', () => {
     const value = 'val';
     const field = 'string_uuid';
     const operator = OPERATORS.EQUAL;
@@ -146,7 +167,7 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
-  test('should return a string for EnumType if value is a string', () => {
+  it('should return a string for EnumType if value is a string', () => {
     const value = 'active';
     const field = 'status';
     const operator = OPERATORS.EQUAL;
@@ -154,18 +175,53 @@ describe('valueBuilder', () => {
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value));
   });
 
-  test('should return a string for String with in operator', () => {
+  it('should return a string for String with in operator', () => {
     const value = '123,456,789';
     const field = 'item_holdingsrecord_id';
     const operator = OPERATORS.IN;
 
     expect(valueBuilder({ value, field, operator, fieldOptions })).toBe(getQuotedStr(value, true));
   });
+
+  it('localizes the True/False value of the "is null/empty" operator on a non-boolean field', () => {
+    const intl = { formatMessage: jest.fn(({ id }) => (id.endsWith('.true') ? 'True' : 'False')) };
+    const field = 'user_full_name'; // stringType field
+    const operator = OPERATORS.EMPTY;
+
+    expect(valueBuilder({ value: true, field, operator, fieldOptions, intl })).toBe('True');
+    expect(valueBuilder({ value: false, field, operator, fieldOptions, intl })).toBe('False');
+  });
+
+  it('strips RTL directional marks from a formatted date (dateTimeType)', () => {
+    const rlm = String.fromCodePoint(0x200f);
+    // simulate Intl date output for an RTL locale: segments separated by RLM marks
+    const intl = { formatDate: jest.fn(() => `08${rlm}/11${rlm}/1999`) };
+    const field = 'user_expiration_date';
+    const operator = OPERATORS.EQUAL;
+
+    expect(valueBuilder({ value: '1999-11-08', field, operator, fieldOptions, intl })).toBe('08/11/1999');
+  });
+});
+
+describe('stripDirectionalMarks', () => {
+  it('removes LRM/RLM and isolate marks', () => {
+    const rlm = String.fromCodePoint(0x200f);
+    const lri = String.fromCodePoint(0x2066);
+    const pdi = String.fromCodePoint(0x2069);
+
+    expect(stripDirectionalMarks(`08${rlm}/11${rlm}/1999`)).toBe('08/11/1999');
+    expect(stripDirectionalMarks(`${lri}x${pdi}`)).toBe('x');
+  });
+
+  it('passes non-strings through unchanged', () => {
+    expect(stripDirectionalMarks(5)).toBe(5);
+    expect(stripDirectionalMarks(undefined)).toBe(undefined);
+  });
 });
 
 describe('retainValueOnOperatorChange', () => {
   describe('when control type does not change and value should be retained', () => {
-    test.each([
+    it.each([
       {
         name: 'StringType EQUAL → NOT_EQUAL',
         prevValue: 'test',
@@ -297,7 +353,7 @@ describe('retainValueOnOperatorChange', () => {
   });
 
   describe('when control type changes or value should be transformed/reset', () => {
-    test.each([
+    it.each([
       {
         name: 'StringType EQUAL → IN with options',
         prevValue: 'test',
@@ -380,7 +436,7 @@ describe('retainValueOnOperatorChange', () => {
     );
   });
 
-  test('should convert SELECT_MULTI to SELECT_SINGLE using value property', () => {
+  it('should convert SELECT_MULTI to SELECT_SINGLE using value property', () => {
     const prevValue = [
       { label: 'Option 1', value: 'opt1' },
       { label: 'Option 2', value: 'opt2' },
@@ -404,7 +460,7 @@ describe('retainValueOnOperatorChange', () => {
     ).toBe('opt1');
   });
 
-  test('should convert SELECT_MULTI to SELECT_SINGLE using id property when value is not available', () => {
+  it('should convert SELECT_MULTI to SELECT_SINGLE using id property when value is not available', () => {
     const prevValue = [
       { label: 'Option 1', id: 'id1' },
       { label: 'Option 2', id: 'id2' },
@@ -428,7 +484,7 @@ describe('retainValueOnOperatorChange', () => {
     ).toBe('id1');
   });
 
-  test('should convert SELECT_MULTI to SELECT_SINGLE with empty array', () => {
+  it('should convert SELECT_MULTI to SELECT_SINGLE with empty array', () => {
     const prevValue = [];
     const dataType = DATA_TYPES.StringType;
     const operator = OPERATORS.IN;
@@ -446,7 +502,7 @@ describe('retainValueOnOperatorChange', () => {
     ).toBe('');
   });
 
-  test('should convert SELECT_SINGLE to SELECT_MULTI with label lookup', () => {
+  it('should convert SELECT_SINGLE to SELECT_MULTI with label lookup', () => {
     const prevValue = 'opt1';
     const dataType = DATA_TYPES.StringType;
     const operator = OPERATORS.EQUAL;
@@ -477,7 +533,7 @@ describe('retainValueOnOperatorChange', () => {
     ]);
   });
 
-  test('should convert SELECT_SINGLE to SELECT_MULTI with EnumType', () => {
+  it('should convert SELECT_SINGLE to SELECT_MULTI with EnumType', () => {
     const prevValue = 'active';
     const dataType = DATA_TYPES.EnumType;
     const operator = OPERATORS.EQUAL;
@@ -503,7 +559,7 @@ describe('retainValueOnOperatorChange', () => {
     ]);
   });
 
-  test('should convert SELECT_SINGLE to SELECT_MULTI preserving disambiguated language labels', () => {
+  it('should convert SELECT_SINGLE to SELECT_MULTI preserving disambiguated language labels', () => {
     const prevValue = 'ger';
     const dataType = DATA_TYPES.StringType;
     const operator = OPERATORS.EQUAL;
@@ -534,7 +590,7 @@ describe('retainValueOnOperatorChange', () => {
     ]);
   });
 
-  test('should convert SELECT_MULTI to SELECT_SINGLE with EnumType', () => {
+  it('should convert SELECT_MULTI to SELECT_SINGLE with EnumType', () => {
     const prevValue = [
       { label: 'Active', value: 'active' },
       { label: 'Inactive', value: 'inactive' },

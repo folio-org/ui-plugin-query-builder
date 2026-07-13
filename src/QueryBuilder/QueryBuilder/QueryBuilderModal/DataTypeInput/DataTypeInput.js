@@ -158,7 +158,7 @@ export const DataTypeInput = ({
     });
   };
 
-  const selectControl = ({ testId, value: inputValue }) => (
+  const selectControl = ({ testId, value: inputValue, values = availableValues }) => (
     <SelectionContainer
       fieldName={fieldName}
       component={Selection}
@@ -166,7 +166,7 @@ export const DataTypeInput = ({
       valueSourceApi={valueSourceApi}
       entityTypeId={entityTypeId}
       testId={testId}
-      availableValues={availableValues}
+      availableValues={values}
       value={inputValue}
       fallback={fallbackInputControl(inputValue)}
       onChange={(selectedValue) => onChange(selectedValue, index, COLUMN_KEYS.VALUE)}
@@ -263,14 +263,25 @@ export const DataTypeInput = ({
   };
 
   const booleanTypeControls = () => {
-    availableValues = (availableValues ?? []).map(opt => ({
-      ...opt,
-      value: opt.value === 'true' || opt.value === true,
-    }));
+    // Localize True/False in the plugin instead of using the entity type's
+    // (server-provided) boolean value labels.
+    const localizedBooleanValues = (availableValues ?? []).map(opt => {
+      const boolValue = opt.value === 'true' || opt.value === true;
+
+      return {
+        ...opt,
+        value: boolValue,
+        label: (
+          <FormattedMessage
+            id={boolValue ? 'ui-plugin-query-builder.options.true' : 'ui-plugin-query-builder.options.false'}
+          />
+        ),
+      };
+    });
 
     return (
       <div className={className}>
-        {selectControl({ testId: 'data-input-select-boolType', value })}
+        {selectControl({ testId: 'data-input-select-boolType', value, values: localizedBooleanValues })}
       </div>
     );
   };

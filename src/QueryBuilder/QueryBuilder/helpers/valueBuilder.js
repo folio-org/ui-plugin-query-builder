@@ -27,6 +27,15 @@ export const getFormattedUUID = (value, isInRelatedOperator) => {
     : getQuotedStr(value);
 };
 
+// Intl date formatting for RTL locales embeds directional marks that scramble
+// the date inside the LTR-isolated user-friendly query. Strip them for display;
+// the stored FQL uses the raw value and is unaffected.
+const DIRECTIONAL_MARKS = /[\u200e\u200f\u202a-\u202e\u2066-\u2069]/g;
+
+export const stripDirectionalMarks = (value) => (
+  typeof value === 'string' ? value.replace(DIRECTIONAL_MARKS, '') : value
+);
+
 const formatDateToPreview = (dateString, intl, timezone) => {
   if (typeof dateString === 'boolean') {
     return dateString;
@@ -35,7 +44,9 @@ const formatDateToPreview = (dateString, intl, timezone) => {
   const formattedDate = dayjs.utc(dateString);
 
   if (formattedDate.isValid()) {
-    return intl.formatDate(formattedDate.toDate(), { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: timezone });
+    return stripDirectionalMarks(
+      intl.formatDate(formattedDate.toDate(), { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: timezone }),
+    );
   }
 
   return dateString;
@@ -45,6 +56,15 @@ export const valueBuilder = ({ value, field, operator, fieldOptions, intl, timez
   const dataType = fieldOptions?.find(o => o.value === field)?.dataType || DATA_TYPES.BooleanType;
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
   const isArray = Array.isArray(value);
+
+  // The "is null/empty" operator carries a True/False value regardless of the field's
+  // data type; localize it here so it doesn't fall through to the field-type branch.
+  if (operator === OPERATORS.EMPTY && typeof value === 'boolean') {
+    return intl.formatMessage({
+      id: value ? 'ui-plugin-query-builder.options.true' : 'ui-plugin-query-builder.options.false',
+    });
+  }
+
   // add additional templates for dataTypes
   const valueMap = {
     [DATA_TYPES.StringType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value, isInRelatedOperator)),
@@ -64,7 +84,19 @@ export const valueBuilder = ({ value, field, operator, fieldOptions, intl, timez
 
     [DATA_TYPES.EnumType]: () => (isArray ? getCommaSeparatedStr(value) : getQuotedStr(value, isInRelatedOperator)),
 
-    [DATA_TYPES.BooleanType]: () => getQuotedStr(value, isInRelatedOperator),
+    [DATA_TYPES.BooleanType]: () => {
+      const isBooleanLike = typeof value === 'boolean' || value === 'true' || value === 'false';
+
+      if (isBooleanLike) {
+        const isTrue = value === true || value === 'true';
+
+        return intl.formatMessage({
+          id: isTrue ? 'ui-plugin-query-builder.options.true' : 'ui-plugin-query-builder.options.false',
+        });
+      }
+
+      return getQuotedStr(value, isInRelatedOperator);
+    },
 
     [DATA_TYPES.ObjectType]: () => getQuotedStr(value, isInRelatedOperator),
 
