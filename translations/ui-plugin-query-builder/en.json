@@ -83,5 +83,15 @@
   "ariaLabel.columnFilter": "Column filter input",
 
   "noOptionsAvailable.organization": "No matches! Use the “Organization look-up” below to add organizations",
-  "noOptionsAvailable.donor_organization": "No matches! Use the “Donor organization look-up” below to add organizations"
+  "noOptionsAvailable.donor_organization": "No matches! Use the “Donor organization look-up” below to add organizations",
+
+  "marc.fieldOption": "MARC field",
+  "marc.tag": "Tag",
+  "marc.subfield": "Subfield",
+  "marc.ind1Filter": "Indicator 1",
+  "marc.ind2Filter": "Indicator 2",
+  "marc.indicator.any": "Any",
+  "marc.indicator.blank": "Blank",
+  "marc.validation.tag": "Enter a 3-digit tag",
+  "marc.validation.subfield": "Enter a-z or 0-9"
 }

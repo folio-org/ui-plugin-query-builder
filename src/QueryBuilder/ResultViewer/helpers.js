@@ -1,11 +1,36 @@
 import { Icon, Tooltip } from '@folio/stripes/components';
 import { FormattedMessage } from 'react-intl';
+import { DATA_TYPES } from '../../constants/dataTypes';
+import { isMarcFieldName, getMarcColumnLabel } from '../QueryBuilder/helpers/marcFields';
 import { formatValueByDataType } from './utils';
 
 const MIN_CONTROLLABLE_WIDTH = 30;
 
+// Synthetic column definitions for MARC fields referenced by a query but not declared on the entity type (they're
+// recognized by name, not enumerated). Without these a queried MARC field wouldn't appear as a result column. The
+// backend returns MARC values as an aggregated array, so they render like a jsonbArray (joined with " | ").
+const getMarcColumns = (entityType, forcedVisibleValues) => {
+  const existingNames = new Set((entityType?.columns ?? []).map((cell) => cell.name));
+
+  return (forcedVisibleValues ?? [])
+    .filter((value) => value && !existingNames.has(value) && isMarcFieldName(value))
+    .map((value) => ({
+      label: getMarcColumnLabel(value),
+      value,
+      disabled: false,
+      readOnly: false,
+      selected: false,
+      dataType: DATA_TYPES.JsonbArrayType,
+      properties: undefined,
+      maxWidth: undefined,
+    }));
+};
+
 export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
-  const defaultColumns = (entityType?.columns?.map((cell) => ({
+  // Exclude hidden columns from the table/column-picker. The entity type may include hidden columns (e.g. when
+  // fetched with includeHidden so MARC capability can be detected); they are internal metadata/placeholders and
+  // should be neither shown nor offered as toggleable columns.
+  const declaredColumns = (entityType?.columns?.filter((cell) => !cell.hidden).map((cell) => ({
     label: cell.labelAlias,
     value: cell.name,
     disabled: false,
@@ -15,6 +40,10 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
     properties: cell.dataType.itemDataType?.properties,
     maxWidth: cell.maxColumnWidth,
   })) || []);
+
+  // Add synthetic columns for MARC fields used in the query so they show up in the results (forcedVisibleValues
+  // makes any queried field default-visible, but only if it's a known column).
+  const defaultColumns = [...declaredColumns, ...getMarcColumns(entityType, forcedVisibleValues)];
 
   const columnMapping = defaultColumns?.reduce((acc, { value, label }) => {
     acc[value] = label;

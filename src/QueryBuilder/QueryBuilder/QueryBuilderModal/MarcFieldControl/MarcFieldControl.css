@@ -1,0 +1,20 @@
+/* Lay the MARC inputs out horizontally (tag, indicators, subfield) with small fixed-width boxes, matching the
+ * Bulk Edit MARC layout. Each stripes control renders its label above the box, so the labels read as column
+ * headers. Wraps to the next line if the field cell is too narrow. */
+.marcFieldControl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  /* Top-align so a box showing a validation message below it doesn't drag its neighbours down (matches
+   * FOLIO's Bulk Edit MARC form). */
+  align-items: flex-start;
+}
+
+.tagInput,
+.subfieldInput {
+  width: 5rem;
+}
+
+.indicatorInput {
+  width: 6rem;
+}

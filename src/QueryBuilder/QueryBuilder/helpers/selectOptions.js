@@ -5,7 +5,8 @@ import { DATA_TYPES } from '../../../constants/dataTypes';
 import { BOOLEAN_OPERATORS, OPERATORS, getDiscreteOrTextOperators } from '../../../constants/operators';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { getOperatorLabel } from './operatorLabels';
-import { getMarcOperators, parseMarcSelector } from './marcFieldOperators';
+import { getMarcOperators } from './marcFieldOperators';
+import { MARC_INDICATOR_VALUES, MARC_BLANK_INDICATOR } from './marcFields';
 
 export const REPEATABLE_FIELD_DELIMITER = '[*]->';
 
@@ -65,6 +66,17 @@ export const hasValueOptions = ({ values, source, valueSourceApi } = {}) => (
   Boolean(values || source || valueSourceApi)
 );
 
+// {value,label} options for an indicator pick-list (blank + 0-9). Used both as the row value-cell options when an
+// indicator is the query target and as the basis for the constraint selects in MarcFieldControl.
+export const getMarcIndicatorValueOptions = (intl) => (
+  MARC_INDICATOR_VALUES.map((value) => ({
+    value,
+    label: value === MARC_BLANK_INDICATOR
+      ? intl.formatMessage({ id: 'ui-plugin-query-builder.marc.indicator.blank' })
+      : value,
+  }))
+);
+
 const stringOperators = (hasSourceOrValues, intl) => (
   getDiscreteOrTextOperators(hasSourceOrValues).map((operator) => op(operator, intl))
 );
@@ -76,7 +88,7 @@ const booleanOperators = (isFromNestedField, intl) => [
 ];
 
 const marcOperators = (fieldName, intl) => (
-  getMarcOperators(parseMarcSelector(fieldName) || {}).map((operator) => op(operator, intl))
+  getMarcOperators(fieldName).map((operator) => op(operator, intl))
 );
 
 export const getOperatorOptions = ({
@@ -127,7 +139,7 @@ export const getOperatorOptions = ({
 export const getColumnsWithProperties = (columns = []) => {
   return columns
     .reduce((acc, item) => {
-      if (item.queryable) {
+      if (item.queryable && !item.hidden) {
         acc.push(item);
       }
 

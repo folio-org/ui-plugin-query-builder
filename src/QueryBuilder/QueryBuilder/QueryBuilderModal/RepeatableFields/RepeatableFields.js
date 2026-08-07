@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
 import { BOOLEAN_OPERATORS } from '../../../../constants/operators';
+import { DATA_TYPES } from '../../../../constants/dataTypes';
 import { RootContext } from '../../../../context/RootContext';
 import { findMissingValues } from '../../helpers/query';
 import {
@@ -26,10 +27,18 @@ import {
   REPEATABLE_FIELD_DELIMITER,
   sourceTemplate,
 } from '../../helpers/selectOptions';
+import {
+  findMarcPlaceholder,
+  getMarcSourcePrefix,
+  MARC_DATA_TYPE,
+  MARC_FIELD_SENTINEL,
+  MARC_VALUE_DATA_TYPE,
+} from '../../helpers/marcFields';
 import { retainValueOnOperatorChange } from '../../helpers/valueBuilder';
 import { getBooleanOperatorLabel } from '../../helpers/operatorLabels';
 import { QueryBuilderTitle } from '../../QueryBuilderTitle';
 import { DataTypeInput } from '../DataTypeInput';
+import { MarcFieldControl } from '../MarcFieldControl';
 import css from '../QueryBuilderModal.css';
 
 export const getMemoizedValues = ({
@@ -40,6 +49,41 @@ export const getMemoizedValues = ({
   currentOptions || getDataOptions(rowField)
 );
 
+// Switches a row into MARC mode when the "MARC field" option is picked: there's no real field name yet
+// (MarcFieldControl fills it in), so blank the field, mark it MARC, and clear the operator and value cells.
+export const enterMarcFieldMode = (item) => ({
+  [COLUMN_KEYS.FIELD]: {
+    ...item[COLUMN_KEYS.FIELD],
+    current: '',
+    isMarc: true,
+    dataType: MARC_DATA_TYPE,
+  },
+  [COLUMN_KEYS.OPERATOR]: { options: [], current: '' },
+  [COLUMN_KEYS.VALUE]: { options: undefined, source: undefined, valueSourceApi: undefined, current: '' },
+});
+
+// Applies a MARC field selection to a row: sets the assembled field name and attaches its operator set. The MARC
+// value is always free text, so the value cell is left as-is.
+export const applyMarcFieldChange = ({ item, name, intl }) => {
+  const options = getOperatorOptions({ dataType: DATA_TYPES.MarcType, fieldName: name, intl });
+  const operatorStillValid = options.some((option) => option.value === item[COLUMN_KEYS.OPERATOR].current);
+
+  return {
+    ...item,
+    [COLUMN_KEYS.FIELD]: {
+      ...item[COLUMN_KEYS.FIELD],
+      current: name,
+      isMarc: true,
+      dataType: MARC_VALUE_DATA_TYPE,
+    },
+    [COLUMN_KEYS.OPERATOR]: {
+      ...item[COLUMN_KEYS.OPERATOR],
+      options,
+      current: operatorStillValid ? item[COLUMN_KEYS.OPERATOR].current : '',
+    },
+  };
+};
+
 export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId }) => {
   const intl = useIntl();
   const callout = useShowCallout();
@@ -48,6 +92,20 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
   const { getDataOptions } = React.useContext(RootContext);
 
   const fieldOptions = getFieldOptions(columns);
+
+  // MARC fields aren't enumerable columns; a MARC-capable entity type is signaled by the generic marcType
+  // placeholder column. When present, the field dropdown offers a "MARC field" entry that switches the row into
+  // MARC mode.
+  const marcPlaceholder = findMarcPlaceholder(columns);
+  const marcSupported = Boolean(marcPlaceholder);
+  const marcSourcePrefix = getMarcSourcePrefix(marcPlaceholder?.name);
+  const marcFieldOption = {
+    // Label with the fully-qualified (source-aware) name
+    label: marcPlaceholder?.labelAliasFullyQualified
+      || marcPlaceholder?.labelAlias
+      || intl.formatMessage({ id: 'ui-plugin-query-builder.marc.fieldOption' }),
+    value: MARC_FIELD_SENTINEL,
+  };
 
   const handleAdd = () => {
     setSource(res => ([
@@ -106,11 +164,17 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
     const memorizedValue = source[index].value.current;
 
     const modifications = (item) => {
+      // Entering MARC mode: no real field name yet (MarcFieldControl fills it in), so reset operator/value.
+      if (isField && value === MARC_FIELD_SENTINEL) {
+        return enterMarcFieldMode(item);
+      }
+
       if (isField) {
         return {
           [COLUMN_KEYS.FIELD]: {
             ...item[COLUMN_KEYS.FIELD],
             current: value,
+            isMarc: false,
             dataType: field.dataType,
           },
           [COLUMN_KEYS.OPERATOR]: {
@@ -135,9 +199,11 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
       if (isOperator) {
         return {
           [COLUMN_KEYS.VALUE]: {
-            options: memorizedField.values,
-            source: memorizedField.source,
-            valueSourceApi: memorizedField.valueSourceApi,
+            // A MARC row's field name isn't in fieldOptions, so memorizedField is undefined; optional-chaining
+            // leaves the value cell's options/source undefined, which is correct for a free-text MARC value.
+            options: memorizedField?.values,
+            source: memorizedField?.source,
+            valueSourceApi: memorizedField?.valueSourceApi,
             current: retainValueOnOperatorChange({
               source: memoizedFieldSource,
               valueSourceApi: memoizedFieldValueSourceApi,
@@ -168,6 +234,14 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
 
       return item;
     }));
+  };
+
+  // MarcFieldControl emits the assembled field name (or '' while incomplete). Store the field and attach its
+  // operator set, which getOperatorOptions derives from the name.
+  const handleMarcFieldChange = (name, index) => {
+    setSource(prev => prev.map((item, i) => (
+      i === index ? applyMarcFieldChange({ item, name, intl }) : item
+    )));
   };
 
   useEffect(() => {
@@ -226,12 +300,20 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
                   id={`field-option-${index}`}
                   emptyMessage={<></>}
                   placeholder={intl.formatMessage({ id: 'ui-plugin-query-builder.control.selection.placeholder' })}
-                  dataOptions={row.field.options}
-                  value={row.field.current}
+                  dataOptions={marcSupported ? [marcFieldOption, ...row.field.options] : row.field.options}
+                  value={row.field.isMarc ? MARC_FIELD_SENTINEL : row.field.current}
                   onFilter={getFilteredOptions}
                   formatter={fuzzyOptionFormatter}
                   onChange={(value) => handleChange(value, index, COLUMN_KEYS.FIELD)}
                 />
+                {row.field.isMarc && (
+                  <MarcFieldControl
+                    sourcePrefix={marcSourcePrefix}
+                    value={row.field.current}
+                    index={index}
+                    onFieldChange={(name) => handleMarcFieldChange(name, index)}
+                  />
+                )}
               </Col>
 
               <Col sm={2} className={css.rowCell}>

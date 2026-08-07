@@ -15,6 +15,10 @@ import {
   REPEATABLE_FIELD_DELIMITER,
   sourceTemplate,
 } from './selectOptions';
+import {
+  isMarcFieldName,
+  MARC_VALUE_DATA_TYPE,
+} from './marcFields';
 import { getBooleanOperatorLabel, getOperatorSymbol } from './operatorLabels';
 import upgradeInitialValues from './upgradeInitialValues';
 import { valueBuilder } from './valueBuilder';
@@ -283,6 +287,21 @@ const getFormattedSourceField = async ({
 
   const fieldItem = fieldOptions.find(f => f.value === field);
 
+  // MARC fields aren't in fieldOptions (not enumerable). Recognize the field name, repopulate MARC mode, and
+  // attach the MARC operator set.
+  if (!fieldItem && isMarcFieldName(field)) {
+    return {
+      boolean: { options: booleanOptions, current: boolean },
+      field: { options: fieldOptions, current: field, isMarc: true, dataType: MARC_VALUE_DATA_TYPE },
+      operator: {
+        dataType: MARC_VALUE_DATA_TYPE,
+        options: getOperatorOptions({ dataType: DATA_TYPES.MarcType, fieldName: field, intl }),
+        current: operator,
+      },
+      value: { current: value, options: undefined },
+    };
+  }
+
   // Exceptional case, when queried field was deleted
   if (!fieldItem) {
     return createDeletedFieldResponse(boolean, fieldOptions);
@@ -417,7 +436,8 @@ export const findMissingValues = (
   for (const secondaryItem of secondaryArray) {
     const currentValue = secondaryItem.field.current;
 
-    if (currentValue && !mainValues.has(currentValue)) {
+    // MARC fields aren't in fieldOptions by design, so don't treat them as deleted/missing.
+    if (currentValue && !mainValues.has(currentValue) && !isMarcFieldName(currentValue)) {
       missingValues.push(currentValue);
     }
   }

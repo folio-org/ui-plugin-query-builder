@@ -1,4 +1,5 @@
 import { getColumnsWithProperties } from './selectOptions';
+import { isMarcFieldName } from './marcFields';
 
 /**
  * Filters the single array property in an `initialValues` object so that
@@ -26,13 +27,14 @@ export function filterByEntityColumns(initialValues, entityTypes) {
       [arrayProp]: initialValues[arrayProp].filter(item => {
         const key = Object.keys(item)[0];
 
-        return allowedKeys.includes(key);
+        // MARC fields aren't enumerable columns, so they're absent from allowedKeys — keep them explicitly.
+        return allowedKeys.includes(key) || isMarcFieldName(key);
       }),
     };
   }
 
   return Object.fromEntries(
-    entries.filter(([key]) => allowedKeys.includes(key)),
+    entries.filter(([key]) => allowedKeys.includes(key) || isMarcFieldName(key)),
   );
 }
 

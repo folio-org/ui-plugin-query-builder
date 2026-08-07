@@ -26,6 +26,44 @@ describe('fqlQueryToSource()', () => {
     expect(result).toEqual([]);
   });
 
+  it('round-trips a MARC subfield field (not in fieldOptions) into a MARC-mode row', async () => {
+    const result = await fqlQueryToSource({
+      initialValues: { marc_245_ind1_1_a: { $eq: 'Shakespeare' } },
+      fieldOptions,
+      intl: { formatMessage: jest.fn() },
+      getParamsSource: jest.fn(),
+    });
+
+    expect(result).toHaveLength(1);
+    expect(result[0].field).toMatchObject({
+      current: 'marc_245_ind1_1_a',
+      isMarc: true,
+      dataType: DATA_TYPES.StringType,
+    });
+    expect(result[0].operator.current).toBe(OPERATORS.EQUAL);
+    expect(result[0].operator.options).toEqual(expect.any(Array));
+    expect(result[0].value.current).toBe('Shakespeare');
+    // Subfield target stays free-text: no enumerated value options.
+    expect(result[0].value.options).toBeUndefined();
+  });
+
+  // The simplified UI doesn't build indicator-target fields, but a saved/API-created one still loads in MARC mode
+  // with the indicator operator set and a free-text value (no enumerated options).
+  it('round-trips a saved indicator-target field in MARC mode with a free-text value', async () => {
+    const result = await fqlQueryToSource({
+      initialValues: { marc_245_ind1_1_ind2: { $in: ['0', '4'] } },
+      fieldOptions,
+      intl: { formatMessage: jest.fn() },
+      getParamsSource: jest.fn(),
+    });
+
+    expect(result[0].field).toMatchObject({ current: 'marc_245_ind1_1_ind2', isMarc: true });
+    expect(result[0].operator.current).toBe(OPERATORS.IN);
+    expect(result[0].operator.options.map((option) => option.value)).not.toContain(OPERATORS.CONTAINS);
+    expect(result[0].value.options).toBeUndefined();
+    expect(result[0].value.current).toEqual(['0', '4']);
+  });
+
   const singleSource = [{
     boolean: { options: [{ label: 'AND', value: '$and' }], current: '' },
     field: { options: fieldOptions, current: 'user_first_name', dataType: 'stringType' },

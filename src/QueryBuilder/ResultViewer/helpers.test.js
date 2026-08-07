@@ -114,6 +114,41 @@ describe('getTableMetadata (pure metadata)', () => {
 
     expect(defaultVisibleColumns.sort()).toEqual(['x', 'y'].sort());
   });
+
+  it('synthesizes a column for a queried MARC field not declared on the entity type', () => {
+    const entityType = {
+      columns: [
+        { labelAlias: 'Title', name: 'title', visibleByDefault: true, dataType: { dataType: 'stringType' } },
+      ],
+    };
+
+    const { defaultColumns, columnMapping, defaultVisibleColumns } = getTableMetadata(
+      entityType,
+      ['title', 'marc_245_ind1_0'],
+      intl,
+    );
+
+    const marcColumn = defaultColumns.find((col) => col.value === 'marc_245_ind1_0');
+
+    expect(marcColumn).toBeDefined();
+    expect(marcColumn.dataType).toBe('jsonbArrayType');
+    expect(columnMapping.marc_245_ind1_0).toBe('MARC 245 ind1=0');
+    // A queried MARC field is default-visible in the results, like any queried field.
+    expect(defaultVisibleColumns).toContain('marc_245_ind1_0');
+  });
+
+  it('does not synthesize a MARC column already declared on the entity type, or non-MARC forced values', () => {
+    const entityType = {
+      columns: [
+        { labelAlias: 'MARC 245$a', name: 'marc_245_a', visibleByDefault: false, dataType: { dataType: 'marcType' } },
+      ],
+    };
+
+    const { defaultColumns } = getTableMetadata(entityType, ['marc_245_a', 'not_a_marc_field'], intl);
+
+    expect(defaultColumns.filter((col) => col.value === 'marc_245_a')).toHaveLength(1);
+    expect(defaultColumns.find((col) => col.value === 'not_a_marc_field')).toBeUndefined();
+  });
 });
 
 describe('getTableMetadata.formatter (rendered output)', () => {
@@ -192,6 +227,15 @@ describe('getTableMetadata.formatter (rendered output)', () => {
       undefined,
       intl,
     );
+    expect(screen.getByText('formatted-value')).toBeInTheDocument();
+  });
+
+  it('formats a synthesized MARC column value as an aggregated array', () => {
+    const { formatter } = getTableMetadata({ columns: [] }, ['marc_245_a'], intl);
+    const TestComponent = () => <>{formatter.marc_245_a({ marc_245_a: ['Hamlet', 'Macbeth'] })}</>;
+
+    render(<TestComponent />);
+    expect(formatValueByDataType).toHaveBeenCalledWith(['Hamlet', 'Macbeth'], 'jsonbArrayType', undefined, intl);
     expect(screen.getByText('formatted-value')).toBeInTheDocument();
   });
 
