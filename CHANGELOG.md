@@ -5,6 +5,7 @@
 * [UIPQB-282](https://folio-org.atlassian.net/browse/UIPQB-282) Stop hiding fields used as idColumnName
 * [UIPQB-286](https://folio-org.atlassian.net/browse/UIPQB-286) Fix incorrect value display for 'Organization - Code' queries
 * [UIPQB-210](https://folio-org.atlassian.net/browse/UIPQB-210) Localize operators, boolean operators, and boolean values in the query builder and user-friendly query
+* [UIPQB-296](https://folio-org.atlassian.net/browse/UIPQB-296) Adjust color contrast of queryArea to comply with WCAG AA standard (4.5:1).
 * [UIPQB-277](https://folio-org.atlassian.net/browse/UIPQB-277) Define supported operators for marcDataType
 
 ## [3.0.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v3.0.2) (2026-06-03)
