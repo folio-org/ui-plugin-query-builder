@@ -16,3 +16,13 @@ export const OPERATORS = {
 export const BOOLEAN_OPERATORS = {
   AND: '$and',
 };
+
+// Shared eq/ne + (in/nin for a discrete/fixed set of values, or contains/starts_with for free
+// text) + empty shape, reused by any dataType that makes this same discrete-vs-free-text split
+// (e.g. StringType via hasSourceOrValues, MarcType via isMarcIndicatorTarget).
+export const getDiscreteOrTextOperators = (isDiscrete) => [
+  OPERATORS.EQUAL,
+  OPERATORS.NOT_EQUAL,
+  ...(isDiscrete ? [OPERATORS.IN, OPERATORS.NOT_IN] : [OPERATORS.CONTAINS, OPERATORS.STARTS_WITH]),
+  OPERATORS.EMPTY,
+];

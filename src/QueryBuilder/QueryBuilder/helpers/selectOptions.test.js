@@ -455,6 +455,61 @@ describe('select options', () => {
 
       expect(intlMock.formatMessage).not.toHaveBeenCalled();
     });
+
+    it('should return text operators with placeholder for marc type when no fieldName is given (tag-only)', () => {
+      const options = getOperatorOptions({
+        dataType: DATA_TYPES.MarcType,
+        intl: intlMock,
+      });
+
+      expectFn({
+        options,
+        operators: [
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
+          { label: OPERATORS_LABELS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+        ],
+      });
+    });
+
+    it('should return text operators with placeholder for marc type when a subfield is selected', () => {
+      const options = getOperatorOptions({
+        dataType: DATA_TYPES.MarcType,
+        fieldName: 'marc_245_a',
+        intl: intlMock,
+      });
+
+      expectFn({
+        options,
+        operators: [
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
+          { label: OPERATORS_LABELS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+        ],
+      });
+    });
+
+    it('should return coded operators without empty, with placeholder, for marc type when an indicator is the target', () => {
+      const options = getOperatorOptions({
+        dataType: DATA_TYPES.MarcType,
+        fieldName: 'marc_245_ind1',
+        intl: intlMock,
+      });
+
+      expectFn({
+        options,
+        operators: [
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
+          { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
+        ],
+      });
+    });
   });
 });
 

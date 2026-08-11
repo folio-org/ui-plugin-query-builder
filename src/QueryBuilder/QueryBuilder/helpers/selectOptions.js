@@ -2,9 +2,10 @@ import fuzzysort from 'fuzzysort';
 import { FormattedMessage } from 'react-intl';
 import { OptionSegment } from '@folio/stripes/components';
 import { DATA_TYPES } from '../../../constants/dataTypes';
-import { BOOLEAN_OPERATORS, OPERATORS } from '../../../constants/operators';
+import { BOOLEAN_OPERATORS, OPERATORS, getDiscreteOrTextOperators } from '../../../constants/operators';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { getOperatorLabel } from './operatorLabels';
+import { getMarcOperators, parseMarcSelector } from './marcFieldOperators';
 
 export const REPEATABLE_FIELD_DELIMITER = '[*]->';
 
@@ -64,20 +65,9 @@ export const hasValueOptions = ({ values, source, valueSourceApi } = {}) => (
   Boolean(values || source || valueSourceApi)
 );
 
-const stringOperators = (hasSourceOrValues, intl) => {
-  return [
-    op(OPERATORS.EQUAL, intl),
-    op(OPERATORS.NOT_EQUAL, intl),
-    ...(hasSourceOrValues ? [
-      op(OPERATORS.IN, intl),
-      op(OPERATORS.NOT_IN, intl),
-    ] : [
-      op(OPERATORS.CONTAINS, intl),
-      op(OPERATORS.STARTS_WITH, intl),
-    ]),
-    op(OPERATORS.EMPTY, intl),
-  ];
-};
+const stringOperators = (hasSourceOrValues, intl) => (
+  getDiscreteOrTextOperators(hasSourceOrValues).map((operator) => op(operator, intl))
+);
 
 const booleanOperators = (isFromNestedField, intl) => [
   op(OPERATORS.EQUAL, intl),
@@ -85,15 +75,23 @@ const booleanOperators = (isFromNestedField, intl) => [
   op(OPERATORS.EMPTY, intl),
 ];
 
+const marcOperators = (fieldName, intl) => (
+  getMarcOperators(parseMarcSelector(fieldName) || {}).map((operator) => op(operator, intl))
+);
+
 export const getOperatorOptions = ({
   dataType,
   hasSourceOrValues,
   isFromNestedField,
+  fieldName,
   intl,
 }) => {
   switch (dataType) {
     case DATA_TYPES.StringType:
       return getOperatorsWithPlaceholder(stringOperators(hasSourceOrValues, intl), intl);
+
+    case DATA_TYPES.MarcType:
+      return getOperatorsWithPlaceholder(marcOperators(fieldName, intl), intl);
 
     case DATA_TYPES.RangedUUIDType:
     case DATA_TYPES.OpenUUIDType:
