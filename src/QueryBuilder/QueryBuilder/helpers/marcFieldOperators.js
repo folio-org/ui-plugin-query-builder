@@ -40,13 +40,13 @@ export const parseMarcSelector = (fieldName) => {
   const lastDotIndex = fieldName.lastIndexOf('.');
   const core = lastDotIndex > 0 ? fieldName.slice(lastDotIndex + 1) : fieldName;
 
-  let match = core.match(MARC_CORE_PATTERNS.subfield);
+  let match = MARC_CORE_PATTERNS.subfield.exec(core);
 
   if (match && !isControlFieldTag(match[1])) {
     return { subfield: match[2].toLowerCase(), indicator1: null, indicator2: null };
   }
 
-  match = core.match(MARC_CORE_PATTERNS.dualIndicatorSubfield);
+  match = MARC_CORE_PATTERNS.dualIndicatorSubfield.exec(core);
   if (match && !isControlFieldTag(match[1])) {
     return {
       subfield: match[4].toLowerCase(),
@@ -55,7 +55,7 @@ export const parseMarcSelector = (fieldName) => {
     };
   }
 
-  match = core.match(MARC_CORE_PATTERNS.constrainedSubfield);
+  match = MARC_CORE_PATTERNS.constrainedSubfield.exec(core);
   if (match && !isControlFieldTag(match[1])) {
     const [, , constraintSlot, constraintValue, subfield] = match;
 
@@ -66,7 +66,7 @@ export const parseMarcSelector = (fieldName) => {
     };
   }
 
-  match = core.match(MARC_CORE_PATTERNS.constrainedIndicatorTarget);
+  match = MARC_CORE_PATTERNS.constrainedIndicatorTarget.exec(core);
   if (match && !isControlFieldTag(match[1])) {
     const [, , constraintSlot, constraintValue, targetSlot] = match;
 
@@ -79,7 +79,7 @@ export const parseMarcSelector = (fieldName) => {
     }
   }
 
-  match = core.match(MARC_CORE_PATTERNS.indicatorTarget);
+  match = MARC_CORE_PATTERNS.indicatorTarget.exec(core);
   if (match && !isControlFieldTag(match[1])) {
     const [, , targetSlot] = match;
 
@@ -90,7 +90,7 @@ export const parseMarcSelector = (fieldName) => {
     };
   }
 
-  match = core.match(MARC_CORE_PATTERNS.tagOnly);
+  match = MARC_CORE_PATTERNS.tagOnly.exec(core);
   if (match) {
     return { subfield: null, indicator1: null, indicator2: null };
   }
