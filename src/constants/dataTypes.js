@@ -12,6 +12,7 @@ export const DATA_TYPES = {
   ObjectType: 'objectType',
   ArrayType: 'arrayType',
   JsonbArrayType: 'jsonbArrayType',
+  MarcType: 'marcType',
 };
 
 export const ORGANIZATIONS_TYPES = ['organization', 'donor_organization'];
