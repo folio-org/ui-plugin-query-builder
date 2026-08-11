@@ -5,7 +5,7 @@ import { DATA_TYPES } from '../../../constants/dataTypes';
 import { BOOLEAN_OPERATORS, OPERATORS, getDiscreteOrTextOperators } from '../../../constants/operators';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { getOperatorLabel } from './operatorLabels';
-import { getMarcOperators } from './marcFieldOperators';
+import { getMarcOperators, parseMarcSelector } from './marcFieldOperators';
 
 export const REPEATABLE_FIELD_DELIMITER = '[*]->';
 
@@ -75,15 +75,15 @@ const booleanOperators = (isFromNestedField, intl) => [
   op(OPERATORS.EMPTY, intl),
 ];
 
-const marcOperators = (marcSelector, intl) => (
-  getMarcOperators(marcSelector).map((operator) => op(operator, intl))
+const marcOperators = (fieldName, intl) => (
+  getMarcOperators(parseMarcSelector(fieldName) || {}).map((operator) => op(operator, intl))
 );
 
 export const getOperatorOptions = ({
   dataType,
   hasSourceOrValues,
   isFromNestedField,
-  marcSelector,
+  fieldName,
   intl,
 }) => {
   switch (dataType) {
@@ -91,7 +91,7 @@ export const getOperatorOptions = ({
       return getOperatorsWithPlaceholder(stringOperators(hasSourceOrValues, intl), intl);
 
     case DATA_TYPES.MarcType:
-      return getOperatorsWithPlaceholder(marcOperators(marcSelector, intl), intl);
+      return getOperatorsWithPlaceholder(marcOperators(fieldName, intl), intl);
 
     case DATA_TYPES.RangedUUIDType:
     case DATA_TYPES.OpenUUIDType:

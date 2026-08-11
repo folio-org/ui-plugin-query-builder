@@ -456,7 +456,7 @@ describe('select options', () => {
       expect(intlMock.formatMessage).not.toHaveBeenCalled();
     });
 
-    it('should return text operators with placeholder for marc type when no marcSelector is given (tag-only)', () => {
+    it('should return text operators with placeholder for marc type when no fieldName is given (tag-only)', () => {
       const options = getOperatorOptions({
         dataType: DATA_TYPES.MarcType,
         intl: intlMock,
@@ -477,7 +477,7 @@ describe('select options', () => {
     it('should return text operators with placeholder for marc type when a subfield is selected', () => {
       const options = getOperatorOptions({
         dataType: DATA_TYPES.MarcType,
-        marcSelector: { subfield: 'a' },
+        fieldName: 'marc_245_a',
         intl: intlMock,
       });
 
@@ -496,7 +496,7 @@ describe('select options', () => {
     it('should return coded operators without empty, with placeholder, for marc type when an indicator is the target', () => {
       const options = getOperatorOptions({
         dataType: DATA_TYPES.MarcType,
-        marcSelector: { indicator1: { isTarget: true, value: null } },
+        fieldName: 'marc_245_ind1',
         intl: intlMock,
       });
 

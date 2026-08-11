@@ -317,6 +317,7 @@ const getFormattedSourceField = async ({
         dataType,
         hasSourceOrValues,
         isFromNestedField: fieldItem.value.includes(REPEATABLE_FIELD_DELIMITER),
+        fieldName: fieldItem.value,
         intl,
       }),
       current: operator,

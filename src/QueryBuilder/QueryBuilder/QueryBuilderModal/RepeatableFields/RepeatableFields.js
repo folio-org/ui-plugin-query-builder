@@ -118,6 +118,7 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
               dataType: field.dataType,
               hasSourceOrValues: hasValueOptions(field),
               isFromNestedField: field.value.includes(REPEATABLE_FIELD_DELIMITER),
+              fieldName: field.value,
               intl,
             }),
             current: '',
