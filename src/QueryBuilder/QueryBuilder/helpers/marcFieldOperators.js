@@ -1,10 +1,5 @@
 import { OPERATORS, getDiscreteOrTextOperators } from '../../../constants/operators';
 
-// mod-fqm-manager always reports dataType: "marcType" for every synthetic MARC
-// column (tag-only, indicator, subfield, constrained-subfield, ...), so the
-// operator set has to be derived from the shape of the MARC selector itself
-// (see MarcFieldFactory.parse() in lib-fqm-query-processor) rather than from dataType.
-
 /**
  * True when the MARC selector's query target is an indicator (a single coded character,
  * e.g. marc_245_ind1) rather than a subfield or the whole tag. An indicator target behaves
