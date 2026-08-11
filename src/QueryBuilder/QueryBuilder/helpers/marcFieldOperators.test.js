@@ -1,7 +1,6 @@
 import {
   isMarcIndicatorTarget,
   getMarcOperators,
-  isMarcOperatorValid,
 } from './marcFieldOperators';
 import { OPERATORS, getDiscreteOrTextOperators } from '../../../constants/operators';
 
@@ -76,31 +75,6 @@ describe('marcFieldOperators', () => {
         OPERATORS.IN,
         OPERATORS.NOT_IN,
       ]);
-    });
-  });
-
-  describe('isMarcOperatorValid', () => {
-    it('is true for an operator that belongs to the current shape', () => {
-      expect(isMarcOperatorValid(OPERATORS.IN, { indicator1: { isTarget: true, value: null } })).toBe(true);
-    });
-
-    it('is false once the shape changes underneath the operator (indicator target -> subfield added)', () => {
-      const marcSelector = { subfield: 'a' };
-
-      expect(isMarcOperatorValid(OPERATORS.IN, marcSelector)).toBe(false);
-    });
-
-    it('is true when the operator is shared by both operator sets (e.g. `==`)', () => {
-      expect(isMarcOperatorValid(OPERATORS.EQUAL, {})).toBe(true);
-      expect(isMarcOperatorValid(OPERATORS.EQUAL, { indicator1: { isTarget: true, value: null } })).toBe(true);
-    });
-
-    it('is false for empty on an indicator target, since an indicator always has a value', () => {
-      expect(isMarcOperatorValid(OPERATORS.EMPTY, { indicator1: { isTarget: true, value: null } })).toBe(false);
-    });
-
-    it('is true for empty on a non-indicator-target selector', () => {
-      expect(isMarcOperatorValid(OPERATORS.EMPTY, { subfield: 'a' })).toBe(true);
     });
   });
 });

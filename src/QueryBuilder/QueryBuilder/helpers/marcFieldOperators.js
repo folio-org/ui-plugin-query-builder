@@ -35,9 +35,3 @@ export const getMarcOperators = (marcSelector) => {
 
   return isIndicatorTarget ? operators.filter((operator) => operator !== OPERATORS.EMPTY) : operators;
 };
-
-// Lets selector-UI code reset a stale operator (e.g. `in` selected, then a
-// subfield is added) when the shape changes underneath it.
-export const isMarcOperatorValid = (operator, marcSelector) => (
-  getMarcOperators(marcSelector).includes(operator)
-);
