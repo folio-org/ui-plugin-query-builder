@@ -1,6 +1,3 @@
-/* Lay the MARC inputs out horizontally (tag, indicators, subfield) with small fixed-width boxes, matching the
- * Bulk Edit MARC layout. Each stripes control renders its label above the box, so the labels read as column
- * headers. Wraps to the next line if the field cell is too narrow. */
 .marcFieldControl {
   display: flex;
   flex-wrap: wrap;
