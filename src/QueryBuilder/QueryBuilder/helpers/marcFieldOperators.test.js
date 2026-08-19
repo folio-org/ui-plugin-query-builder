@@ -11,8 +11,12 @@ describe('marcFieldOperators', () => {
       expect(getMarcOperators('marc_245_ind1_1_ind2_2')).toEqual(getDiscreteOrTextOperators(false));
     });
 
-    it('returns the free-text operator set for a non-MARC field name', () => {
-      expect(getMarcOperators('title')).toEqual(getDiscreteOrTextOperators(false));
+    it('returns no operators for an incomplete or non-MARC field name', () => {
+      // The MARC control emits '' while the tag is incomplete/invalid; no operators keeps the operator and
+      // value cells collapsed until a complete field name is built.
+      expect(getMarcOperators('')).toEqual([]);
+      expect(getMarcOperators('marc_24')).toEqual([]);
+      expect(getMarcOperators('title')).toEqual([]);
     });
 
     it('returns discrete operators without empty for an indicator target', () => {

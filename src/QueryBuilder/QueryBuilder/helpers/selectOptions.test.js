@@ -457,22 +457,15 @@ describe('select options', () => {
       expect(intlMock.formatMessage).not.toHaveBeenCalled();
     });
 
-    it('should return text operators with placeholder for marc type when no fieldName is given (tag-only)', () => {
+    it('returns only the placeholder (no operators) for marc type when no valid fieldName is given', () => {
+      // An incomplete/invalid MARC field (the control emits '') has no operators, which collapses the
+      // operator and value cells until a complete field name is built.
       const options = getOperatorOptions({
         dataType: DATA_TYPES.MarcType,
         intl: intlMock,
       });
 
-      expectFn({
-        options,
-        operators: [
-          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
-          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
-          { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
-          { label: OPERATORS_LABELS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
-          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
-        ],
-      });
+      expectFn({ options, operators: [] });
     });
 
     it('should return text operators with placeholder for marc type when a subfield is selected', () => {
