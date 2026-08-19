@@ -189,6 +189,61 @@ describe('QueryBuilderModal', () => {
     });
   });
 
+  describe('keyboard focus trap', () => {
+    // getFirstFocusable/getLastFocusable (from @folio/stripes-components) treat an element as
+    // visible when it has layout size, which jsdom never reports (always 0). Stub it so the
+    // real utilities can identify the actual first/last focusable elements in the pane.
+    let offsetHeightSpy;
+
+    beforeEach(() => {
+      offsetHeightSpy = jest.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(1);
+    });
+
+    afterEach(() => {
+      offsetHeightSpy.mockRestore();
+    });
+
+    it('should wrap focus back to the first focusable element when Tab is pressed on the last one', async () => {
+      renderQueryBuilderModal({});
+
+      await waitFor(() => {
+        expect(screen.queryByText('LOADING')).not.toBeInTheDocument();
+      });
+
+      const dialog = screen.getByRole('dialog');
+      const focusables = dialog.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      last.focus();
+      expect(document.activeElement).toBe(last);
+
+      fireEvent.keyDown(last, { key: 'Tab', code: 'Tab' });
+
+      expect(document.activeElement).toBe(first);
+    });
+
+    it('should wrap focus back to the last focusable element when Shift+Tab is pressed on the first one', async () => {
+      renderQueryBuilderModal({});
+
+      await waitFor(() => {
+        expect(screen.queryByText('LOADING')).not.toBeInTheDocument();
+      });
+
+      const dialog = screen.getByRole('dialog');
+      const focusables = dialog.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      first.focus();
+      expect(document.activeElement).toBe(first);
+
+      fireEvent.keyDown(first, { key: 'Tab', code: 'Tab', shiftKey: true });
+
+      expect(document.activeElement).toBe(last);
+    });
+  });
+
   it.skip('should show banner if limit is exceeded', async () => {
     renderQueryBuilderModal({
       recordsLimit: 1,
