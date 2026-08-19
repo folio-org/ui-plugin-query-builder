@@ -107,6 +107,17 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
     value: MARC_FIELD_SENTINEL,
   };
 
+  // Slot the "MARC field" entry where its placeholder column naturally sits, so it follows the existing field
+  // order instead of being pinned to the top of the dropdown. Field options preserve column order and the
+  // placeholder itself is filtered out, so its position = the number of options the columns before it produce.
+  const marcColumnIndex = marcSupported ? columns.indexOf(marcPlaceholder) : -1;
+  const marcOptionIndex = marcSupported ? getFieldOptions(columns.slice(0, marcColumnIndex)).length : 0;
+  const withMarcFieldOption = (options) => [
+    ...options.slice(0, marcOptionIndex),
+    marcFieldOption,
+    ...options.slice(marcOptionIndex),
+  ];
+
   const handleAdd = () => {
     setSource(res => ([
       ...res,
@@ -300,7 +311,7 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
                   id={`field-option-${index}`}
                   emptyMessage={<></>}
                   placeholder={intl.formatMessage({ id: 'ui-plugin-query-builder.control.selection.placeholder' })}
-                  dataOptions={marcSupported ? [marcFieldOption, ...row.field.options] : row.field.options}
+                  dataOptions={marcSupported ? withMarcFieldOption(row.field.options) : row.field.options}
                   value={row.field.isMarc ? MARC_FIELD_SENTINEL : row.field.current}
                   onFilter={getFilteredOptions}
                   formatter={fuzzyOptionFormatter}
