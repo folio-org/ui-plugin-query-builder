@@ -1,0 +1,19 @@
+.marcFieldControl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  /* Top-align so a box showing a validation message below it doesn't drag its neighbours down (matches
+   * FOLIO's Bulk Edit MARC form). */
+  align-items: flex-start;
+  /* Breathing room below the boxes so they don't crowd the next condition in a multi-condition query. */
+  margin-bottom: 8px;
+}
+
+.tagInput,
+.subfieldInput {
+  width: 5rem;
+}
+
+.indicatorInput {
+  width: 6rem;
+}

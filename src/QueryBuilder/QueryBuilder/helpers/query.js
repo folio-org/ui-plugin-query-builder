@@ -15,6 +15,11 @@ import {
   REPEATABLE_FIELD_DELIMITER,
   sourceTemplate,
 } from './selectOptions';
+import {
+  getMarcColumnLabel,
+  isMarcFieldName,
+  MARC_VALUE_DATA_TYPE,
+} from './marcFields';
 import { getBooleanOperatorLabel, getOperatorSymbol } from './operatorLabels';
 import upgradeInitialValues from './upgradeInitialValues';
 import { valueBuilder } from './valueBuilder';
@@ -69,6 +74,14 @@ export const getQueryStr = (rows, fieldOptions, intl, timezone, getDataOptions) 
     const field = row[COLUMN_KEYS.FIELD].current;
     const operator = row[COLUMN_KEYS.OPERATOR].current;
     const value = row[COLUMN_KEYS.VALUE].current;
+
+    // Only render a condition once it has both a field and an operator. While a row is still being built —
+    // e.g. a MARC field whose tag isn't valid yet (field is ''), or a field with no operator chosen — skip
+    // its piece so the string never shows a fragment like "( value)" or "(field value)". Other rows are kept.
+    if (!field || !operator) {
+      return str;
+    }
+
     const dataType = fieldOptions.find(o => o.value === field)?.dataType;
     // Boolean fields — and the "is null/empty" operator, which uses a True/False value
     // regardless of field type — carry a boolean value. Normalize it to a real boolean
@@ -79,14 +92,13 @@ export const getQueryStr = (rows, fieldOptions, intl, timezone, getDataOptions) 
       : getLabeledValue(value, row[COLUMN_KEYS.VALUE].options, getDataOptions(field));
     const builtValue = valueBuilder({ value: labeledValue, field, operator, fieldOptions, intl, timezone });
 
-    const fieldLabel = findLabelByValue(row[COLUMN_KEYS.FIELD], field);
+    // MARC fields aren't in fieldOptions, so use their human-readable label (e.g. "MARC 245$a") instead of
+    // letting the lookup fall back to the raw field name.
+    const fieldLabel = isMarcFieldName(field)
+      ? getMarcColumnLabel(field)
+      : findLabelByValue(row[COLUMN_KEYS.FIELD], field);
     const operatorLabel = getOperatorSymbol(operator, intl);
     const queryPiece = `(${fieldLabel} ${operatorLabel} ${builtValue})`;
-
-    // if there aren't values yet - return empty string
-    if (![bool, field, operator, value].some(val => Boolean(val))) {
-      return '';
-    }
 
     // if there is a boolean operator and it's not the first row - add it to the query
     if (bool && index > 0) {
@@ -283,6 +295,21 @@ const getFormattedSourceField = async ({
 
   const fieldItem = fieldOptions.find(f => f.value === field);
 
+  // MARC fields aren't in fieldOptions (not enumerable). Recognize the field name, repopulate MARC mode, and
+  // attach the MARC operator set.
+  if (!fieldItem && isMarcFieldName(field)) {
+    return {
+      boolean: { options: booleanOptions, current: boolean },
+      field: { options: fieldOptions, current: field, isMarc: true, dataType: MARC_VALUE_DATA_TYPE },
+      operator: {
+        dataType: MARC_VALUE_DATA_TYPE,
+        options: getOperatorOptions({ dataType: DATA_TYPES.MarcType, fieldName: field, intl }),
+        current: operator,
+      },
+      value: { current: value, options: undefined },
+    };
+  }
+
   // Exceptional case, when queried field was deleted
   if (!fieldItem) {
     return createDeletedFieldResponse(boolean, fieldOptions);
@@ -417,7 +444,8 @@ export const findMissingValues = (
   for (const secondaryItem of secondaryArray) {
     const currentValue = secondaryItem.field.current;
 
-    if (currentValue && !mainValues.has(currentValue)) {
+    // MARC fields aren't in fieldOptions by design, so don't treat them as deleted/missing.
+    if (currentValue && !mainValues.has(currentValue) && !isMarcFieldName(currentValue)) {
       missingValues.push(currentValue);
     }
   }
