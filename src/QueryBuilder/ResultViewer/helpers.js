@@ -6,27 +6,38 @@ import { formatValueByDataType } from './utils';
 
 const MIN_CONTROLLABLE_WIDTH = 30;
 
-// Synthetic column definitions for MARC fields referenced by a query but not declared on the entity type (they're
-// recognized by name, not enumerated). Without these a queried MARC field wouldn't appear as a result column. The
-// backend returns MARC values as an aggregated array, so they render like a jsonbArray (joined with " | ").
-const getMarcColumns = (entityType, forcedVisibleValues) => {
-  const existingNames = new Set((entityType?.columns ?? []).map((cell) => cell.name));
+// Synthetic column definitions for MARC fields that appear in the returned data but aren't declared on the
+// entity type (they're recognized by name, not enumerated). Driven by the actual result data rather than the
+// live query-builder state, so a MARC column only appears once its query has run and returned values — editing
+// an input doesn't conjure an empty column, and a re-run that no longer returns a field drops it. Requires the
+// entity type to be loaded so these don't briefly become the only columns before the declared ones arrive.
+// Marked default-visible: a MARC field is in the results only because it was queried. Backend returns MARC
+// values as an aggregated array, so they render like a jsonbArray (joined with " | ").
+const getMarcColumns = (entityType, contentData) => {
+  if (!entityType) return [];
 
-  return (forcedVisibleValues ?? [])
-    .filter((value) => value && !existingNames.has(value) && isMarcFieldName(value))
-    .map((value) => ({
-      label: getMarcColumnLabel(value),
-      value,
-      disabled: false,
-      readOnly: false,
-      selected: false,
-      dataType: DATA_TYPES.JsonbArrayType,
-      properties: undefined,
-      maxWidth: undefined,
-    }));
+  const declaredNames = new Set((entityType.columns ?? []).map((cell) => cell.name));
+  const marcNames = new Set();
+
+  (contentData ?? []).forEach((row) => {
+    Object.keys(row ?? {}).forEach((key) => {
+      if (!declaredNames.has(key) && isMarcFieldName(key)) marcNames.add(key);
+    });
+  });
+
+  return Array.from(marcNames).map((value) => ({
+    label: getMarcColumnLabel(value),
+    value,
+    disabled: false,
+    readOnly: false,
+    selected: true,
+    dataType: DATA_TYPES.JsonbArrayType,
+    properties: undefined,
+    maxWidth: undefined,
+  }));
 };
 
-export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
+export const getTableMetadata = (entityType, forcedVisibleValues, intl, contentData) => {
   // Exclude hidden columns from the table/column-picker. The entity type may include hidden columns (e.g. when
   // fetched with includeHidden so MARC capability can be detected); they are internal metadata/placeholders and
   // should be neither shown nor offered as toggleable columns.
@@ -41,9 +52,9 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl) => {
     maxWidth: cell.maxColumnWidth,
   })) || []);
 
-  // Add synthetic columns for MARC fields used in the query so they show up in the results (forcedVisibleValues
-  // makes any queried field default-visible, but only if it's a known column).
-  const defaultColumns = [...declaredColumns, ...getMarcColumns(entityType, forcedVisibleValues)];
+  // Add synthetic columns for MARC fields present in the returned data so queried MARC fields show up in the
+  // results alongside the declared columns.
+  const defaultColumns = [...declaredColumns, ...getMarcColumns(entityType, contentData)];
 
   const columnMapping = defaultColumns?.reduce((acc, { value, label }) => {
     acc[value] = label;

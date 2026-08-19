@@ -115,7 +115,7 @@ describe('getTableMetadata (pure metadata)', () => {
     expect(defaultVisibleColumns.sort()).toEqual(['x', 'y'].sort());
   });
 
-  it('synthesizes a column for a queried MARC field not declared on the entity type', () => {
+  it('synthesizes a column for a MARC field present in the returned data but not declared on the entity type', () => {
     const entityType = {
       columns: [
         { labelAlias: 'Title', name: 'title', visibleByDefault: true, dataType: { dataType: 'stringType' } },
@@ -124,8 +124,9 @@ describe('getTableMetadata (pure metadata)', () => {
 
     const { defaultColumns, columnMapping, defaultVisibleColumns } = getTableMetadata(
       entityType,
-      ['title', 'marc_245_ind1_0'],
+      ['title'],
       intl,
+      [{ title: 'Hamlet', marc_245_ind1_0: ['0'] }],
     );
 
     const marcColumn = defaultColumns.find((col) => col.value === 'marc_245_ind1_0');
@@ -133,21 +134,47 @@ describe('getTableMetadata (pure metadata)', () => {
     expect(marcColumn).toBeDefined();
     expect(marcColumn.dataType).toBe('jsonbArrayType');
     expect(columnMapping.marc_245_ind1_0).toBe('MARC 245 ind1=0');
-    // A queried MARC field is default-visible in the results, like any queried field.
+    // A MARC field is in the results only because it was queried, so it's default-visible.
     expect(defaultVisibleColumns).toContain('marc_245_ind1_0');
   });
 
-  it('does not synthesize a MARC column already declared on the entity type, or non-MARC forced values', () => {
+  it('does not synthesize a MARC column already declared on the entity type, or non-MARC data keys', () => {
     const entityType = {
       columns: [
         { labelAlias: 'MARC 245$a', name: 'marc_245_a', visibleByDefault: false, dataType: { dataType: 'marcType' } },
       ],
     };
 
-    const { defaultColumns } = getTableMetadata(entityType, ['marc_245_a', 'not_a_marc_field'], intl);
+    const { defaultColumns } = getTableMetadata(entityType, [], intl, [{ marc_245_a: ['x'], not_a_marc_field: 'y' }]);
 
     expect(defaultColumns.filter((col) => col.value === 'marc_245_a')).toHaveLength(1);
     expect(defaultColumns.find((col) => col.value === 'not_a_marc_field')).toBeUndefined();
+  });
+
+  it('drives MARC columns from the returned data, not the live query (a not-yet-run field gets no column)', () => {
+    const entityType = {
+      columns: [
+        { labelAlias: 'Title', name: 'title', visibleByDefault: true, dataType: { dataType: 'stringType' } },
+      ],
+    };
+
+    // The builder currently references marc_245_b, but the data that came back is still for marc_245_a.
+    const { defaultColumns } = getTableMetadata(
+      entityType,
+      ['title', 'marc_245_b'],
+      intl,
+      [{ title: 'x', marc_245_a: ['v'] }],
+    );
+
+    expect(defaultColumns.find((col) => col.value === 'marc_245_a')).toBeDefined();
+    expect(defaultColumns.find((col) => col.value === 'marc_245_b')).toBeUndefined();
+  });
+
+  it('synthesizes no MARC columns until the entity type has loaded', () => {
+    // Data already carries a MARC field, but the entity type has not resolved yet.
+    const { defaultColumns } = getTableMetadata(null, ['marc_245_a'], intl, [{ marc_245_a: ['v'] }]);
+
+    expect(defaultColumns).toEqual([]);
   });
 });
 
@@ -231,7 +258,7 @@ describe('getTableMetadata.formatter (rendered output)', () => {
   });
 
   it('formats a synthesized MARC column value as an aggregated array', () => {
-    const { formatter } = getTableMetadata({ columns: [] }, ['marc_245_a'], intl);
+    const { formatter } = getTableMetadata({ columns: [] }, [], intl, [{ marc_245_a: ['Hamlet', 'Macbeth'] }]);
     const TestComponent = () => <>{formatter.marc_245_a({ marc_245_a: ['Hamlet', 'Macbeth'] })}</>;
 
     render(<TestComponent />);

@@ -138,7 +138,7 @@ export const useAsyncDataSource = ({
   const { content: contentData, totalRecords, status } = recordsData || {};
 
   const { columnMapping, defaultColumns, defaultVisibleColumns, formatter, columnWidths } =
-    getTableMetadata(entityType, forcedVisibleValues, intl);
+    getTableMetadata(entityType, forcedVisibleValues, intl, contentData);
 
   return {
     contentData,
