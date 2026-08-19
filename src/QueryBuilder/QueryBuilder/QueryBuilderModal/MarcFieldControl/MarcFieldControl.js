@@ -29,8 +29,8 @@ const toDraft = (fieldName) => {
 export const MarcFieldControl = ({ sourcePrefix, value, onFieldChange, index }) => {
   const intl = useIntl();
   const [draft, setDraft] = useState(() => toDraft(value));
-  // Tracks whether the user has left the tag box, so we can flag a wrong-length tag on blur without nagging
-  // while they're still typing toward a valid 3-digit tag.
+  // Whether the user has left the tag box since they last started editing it. A wrong-length tag is flagged
+  // only once they leave (blur); focusing back in clears this, so re-editing a tag never nags mid-change.
   const [tagTouched, setTagTouched] = useState(false);
 
   const update = (patch) => {
@@ -75,6 +75,7 @@ export const MarcFieldControl = ({ sourcePrefix, value, onFieldChange, index }) 
           label={<FormattedMessage id="ui-plugin-query-builder.marc.tag" />}
           value={draft.tag}
           onChange={(e) => update({ tag: e.target.value.trim() })}
+          onFocus={() => setTagTouched(false)}
           onBlur={() => setTagTouched(true)}
           error={tagInvalid && <FormattedMessage id="ui-plugin-query-builder.marc.validation.tag" />}
           maxLength={TAG_LENGTH}

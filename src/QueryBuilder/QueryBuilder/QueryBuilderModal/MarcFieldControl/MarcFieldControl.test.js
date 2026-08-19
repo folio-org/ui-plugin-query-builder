@@ -126,6 +126,25 @@ describe('MarcFieldControl (subfield-target model)', () => {
     expect(tag).toHaveAttribute('aria-invalid', 'true'); // left it at 2 digits
   });
 
+  it('does not re-flag mid-edit when a previously-valid tag is shortened (only on the next blur)', () => {
+    const { getByTestId } = setup();
+    const tag = getByTestId('marc-tag-0');
+
+    // Enter a valid tag and leave the box.
+    change(tag, '245');
+    fireEvent.blur(tag);
+    expect(tag).toHaveAttribute('aria-invalid', 'false');
+
+    // Focus back in and shorten it — must NOT flag while still editing.
+    fireEvent.focus(tag);
+    change(tag, '24');
+    expect(tag).toHaveAttribute('aria-invalid', 'false');
+
+    // Only flags again once the user leaves the box.
+    fireEvent.blur(tag);
+    expect(tag).toHaveAttribute('aria-invalid', 'true');
+  });
+
   it('flags a full-length invalid tag, and clears it once valid', () => {
     const { getByTestId } = setup();
     const tag = getByTestId('marc-tag-0');
