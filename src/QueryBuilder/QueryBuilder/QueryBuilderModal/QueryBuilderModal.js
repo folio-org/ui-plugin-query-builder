@@ -10,6 +10,8 @@ import {
   Row,
   StripesOverlayWrapper,
   Layout,
+  getFirstFocusable,
+  getLastFocusable,
 } from '@folio/stripes/components';
 import { useShowCallout } from '@folio/stripes-acq-components';
 import { useQueryClient } from 'react-query';
@@ -198,6 +200,27 @@ export const QueryBuilderModal = ({
   // if getEntityTypeLabel is provided, use it to get the label, otherwise use entityType.labelAlias directly
   const entityTypeLabel = getEntityTypeLabel ? getEntityTypeLabel(entityType) : entityType?.labelAlias;
 
+  // Layer's own document-level focus trap treats every open <Layer> (e.g. a host app's
+  // wrapping edit-form layer) as an exception, so focus can leak into elements hidden behind
+  // this modal.
+  const handleTrapFocus = (event) => {
+    if (event.key !== 'Tab') return;
+
+    const container = event.currentTarget;
+    const firstFocusable = getFirstFocusable(container);
+    const lastFocusable = getLastFocusable(container);
+
+    if (!firstFocusable || !lastFocusable) return;
+
+    if (event.shiftKey && document.activeElement === firstFocusable) {
+      event.preventDefault();
+      lastFocusable.focus();
+    } else if (!event.shiftKey && document.activeElement === lastFocusable) {
+      event.preventDefault();
+      firstFocusable.focus();
+    }
+  };
+
   useEffect(() => {
     if (isTestQueryInProgress) {
       handleCancelQuery();
@@ -239,6 +262,8 @@ export const QueryBuilderModal = ({
         paneTitle={<FormattedMessage id="ui-plugin-query-builder.trigger" />}
         footer={renderFooter()}
         onClose={handleCloseModal}
+        onKeyDown={handleTrapFocus}
+        aria-modal="true"
         defaultWidth="fill"
       >
         {isEntityTypeFetching ? (
