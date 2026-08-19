@@ -30,7 +30,8 @@ export const getMarcSourcePrefix = (placeholderName = '') => (placeholderName.en
 // backend rule (tag starts with "00").
 export const isControlFieldTag = (tag) => typeof tag === 'string' && tag.startsWith('00');
 
-// What the query is targeting (the multi-valued part). Everything else is a single-valued constraint.
+// Which part of the field the query condition applies to — the part the operator and value cell act on. The
+// other parts act as fixed constraints that narrow which field occurrences match.
 export const MARC_TARGETS = {
   TAG: 'tag',
   SUBFIELD: 'subfield',
