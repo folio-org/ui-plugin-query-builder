@@ -29,7 +29,10 @@ const getMarcColumns = (entityType, contentData) => {
     label: getMarcColumnLabel(value),
     value,
     disabled: false,
-    readOnly: false,
+    // Locked visible: a synthesized MARC column only exists while it's in the returned data, and the results
+    // fetch only requests the visible columns — so if the user could de-select it, it would drop out of the
+    // data and the column picker with no way to re-add it. readOnly keeps its checkbox checked and un-toggleable.
+    readOnly: true,
     selected: true,
     dataType: DATA_TYPES.JsonbArrayType,
     properties: undefined,

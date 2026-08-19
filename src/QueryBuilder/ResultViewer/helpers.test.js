@@ -134,8 +134,10 @@ describe('getTableMetadata (pure metadata)', () => {
     expect(marcColumn).toBeDefined();
     expect(marcColumn.dataType).toBe('jsonbArrayType');
     expect(columnMapping.marc_245_ind1_0).toBe('MARC 245 ind1=0');
-    // A MARC field is in the results only because it was queried, so it's default-visible.
+    // A MARC field is in the results only because it was queried, so it's default-visible...
     expect(defaultVisibleColumns).toContain('marc_245_ind1_0');
+    // ...and locked visible: de-selecting it would drop it from the fetch/data and it couldn't be re-added.
+    expect(marcColumn.readOnly).toBe(true);
   });
 
   it('does not synthesize a MARC column already declared on the entity type, or non-MARC data keys', () => {
