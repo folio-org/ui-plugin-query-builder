@@ -703,6 +703,81 @@ describe('getQueryStr', () => {
     expect(result).toBe('(user_active == )');
   });
 
+  it('uses the friendly MARC label for a MARC field instead of the raw field name', () => {
+    const rows = [
+      {
+        boolean: { current: '' },
+        field: { options: [], current: 'marc_bib.marc_245_a', isMarc: true },
+        operator: { current: OPERATORS.EQUAL },
+        value: { current: 'Hamlet' },
+      },
+    ];
+
+    const result = getQueryStr(
+      rows,
+      [],
+      { formatDate: jest.fn(), formatMessage: jest.fn(({ id }) => (id.endsWith('.EQUAL') ? '==' : id)) },
+      'UTC',
+      jest.fn(() => []),
+    );
+
+    expect(result).toContain('MARC 245$a');
+    expect(result).not.toContain('marc_bib.marc_245_a');
+  });
+
+  it.each([
+    ['no field or operator (value only)', { field: '', operator: '', value: 'Ksdlfasdvna' }],
+    ['a field but no operator yet', { field: 'marc_bib.marc_245_a', operator: '', value: 'Ksdlfasdvna' }],
+  ])('renders nothing for an incomplete condition: %s', (_desc, { field, operator, value }) => {
+    const rows = [
+      {
+        boolean: { current: '' },
+        field: { options: [], current: field, isMarc: true },
+        operator: { current: operator },
+        value: { current: value },
+      },
+    ];
+
+    const result = getQueryStr(
+      rows,
+      [],
+      { formatDate: jest.fn(), formatMessage: jest.fn(({ id }) => id) },
+      'UTC',
+      jest.fn(() => []),
+    );
+
+    expect(result).toBe('');
+  });
+
+  it('keeps complete conditions and skips an incomplete one in a multi-row query', () => {
+    const options = [{ value: 'field1', label: 'Field 1', dataType: DATA_TYPES.StringType }];
+    const rows = [
+      {
+        boolean: { current: '' },
+        field: { options, current: 'field1' },
+        operator: { current: OPERATORS.EQUAL },
+        value: { current: 'a' },
+      },
+      {
+        // second row still being built — no operator yet
+        boolean: { current: '$and' },
+        field: { options: [], current: 'marc_bib.marc_245_a', isMarc: true },
+        operator: { current: '' },
+        value: { current: 'b' },
+      },
+    ];
+
+    const result = getQueryStr(
+      rows,
+      options,
+      { formatDate: jest.fn(), formatMessage: jest.fn(({ id }) => (id.endsWith('.EQUAL') ? '==' : id)) },
+      'UTC',
+      jest.fn(() => []),
+    );
+
+    expect(result).toBe('(field1 == a)');
+  });
+
   describe('direction independence', () => {
     // The query is built in logical order regardless of direction; RTL display
     // is left to the browser's native bidi algorithm, so the string is identical
