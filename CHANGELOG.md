@@ -7,7 +7,7 @@
 * [UIPQB-210](https://folio-org.atlassian.net/browse/UIPQB-210) Localize operators, boolean operators, and boolean values in the query builder and user-friendly query
 * [UIPQB-296](https://folio-org.atlassian.net/browse/UIPQB-296) Adjust color contrast of queryArea to comply with WCAG AA standard (4.5:1).
 * [UIPQB-277](https://folio-org.atlassian.net/browse/UIPQB-277) Define supported operators for marcDataType
-* [UIPQB-290](https://folio-org.atlassian.net/browse/UIPQB-277) Trap keyboard focus inside the Build Query modal
+* [UIPQB-290](https://folio-org.atlassian.net/browse/UIPQB-290) Trap keyboard focus inside the Build Query modal
 
 ## [3.0.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v3.0.2) (2026-06-03)
 * [UIPQB-279](https://folio-org.atlassian.net/browse/UIPQB-279) Add support for fields containing a valueSourceApi property without a source property
