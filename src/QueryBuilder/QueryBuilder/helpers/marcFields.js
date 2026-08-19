@@ -44,7 +44,7 @@ const SUBFIELD = '[a-z0-9]';
 const IND_VALUE = `${MARC_BLANK_INDICATOR}|[a-z0-9]`;
 
 // Indicator-target form (one indicator constrained, the other targeted). The two indicators must differ.
-const indicatorTargetFrom = (groups, base) => {
+const buildIndicatorTarget = (groups, base) => {
   if (groups.constraintInd === groups.targetInd) return null;
 
   const targetKey = groups.targetInd === '1' ? MARC_TARGETS.IND1 : MARC_TARGETS.IND2;
@@ -110,7 +110,7 @@ const PATTERNS = [
   },
   {
     re: new RegExp(`^marc_(?<tag>${TAG})_ind(?<constraintInd>[12])_(?<val>${IND_VALUE})_ind(?<targetInd>[12])$`, 'i'),
-    build: indicatorTargetFrom,
+    build: buildIndicatorTarget,
   },
 ];
 
