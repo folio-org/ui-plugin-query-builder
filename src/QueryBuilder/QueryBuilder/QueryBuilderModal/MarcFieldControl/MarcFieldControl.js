@@ -26,8 +26,6 @@ const toDraft = (fieldName) => {
 // Field-cell control for a MARC condition (simplified model): a flat set of boxes — tag plus, for data fields, an
 // optional subfield and optional indicator constraints. The subfield is always the query target (its value goes in
 // the row's value box); with no subfield, the whole tag is the target (covers control fields and tag-level queries).
-// Indicators are always constraints, never a target — so there's no "search on" choice. The control owns its draft
-// state and emits the canonical field name (or '' while incomplete).
 export const MarcFieldControl = ({ sourcePrefix, value, onFieldChange, index }) => {
   const intl = useIntl();
   const [draft, setDraft] = useState(() => toDraft(value));
