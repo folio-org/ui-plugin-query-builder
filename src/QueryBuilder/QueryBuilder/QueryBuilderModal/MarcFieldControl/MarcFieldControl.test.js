@@ -18,7 +18,7 @@ const change = (el, value) => fireEvent.change(el, { target: { value } });
 afterEach(cleanup);
 
 describe('MarcFieldControl (subfield-target model)', () => {
-  it('shows the tag, subfield, and both indicator constraints (no "search on")', () => {
+  it('shows the tag, subfield, and both indicator constraints', () => {
     const { getByTestId, queryByTestId } = setup();
 
     change(getByTestId('marc-tag-0'), '245');
