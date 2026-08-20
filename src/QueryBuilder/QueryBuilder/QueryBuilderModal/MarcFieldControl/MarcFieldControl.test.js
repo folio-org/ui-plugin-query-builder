@@ -59,17 +59,17 @@ describe('MarcFieldControl (subfield-target model)', () => {
     expect(onFieldChange).toHaveBeenLastCalledWith('marc_245_ind1_0');
   });
 
-  it('pins an indicator constraint via the dropdown, including Blank', () => {
+  it('pins an indicator constraint typed as text, treating a backslash as blank', () => {
     const { getByTestId, onFieldChange } = setup();
 
     change(getByTestId('marc-tag-0'), '245');
     change(getByTestId('marc-subfield-0'), 'a');
-    change(getByTestId('marc-ind1-0'), 'blank');
+    change(getByTestId('marc-ind1-0'), '\\');
 
     expect(onFieldChange).toHaveBeenLastCalledWith('marc_245_ind1_blank_a');
   });
 
-  it('treats the "Any" option (empty value) as no constraint', () => {
+  it('treats an empty indicator box as no constraint', () => {
     const { getByTestId, onFieldChange } = setup({ value: 'marc_245_ind1_1_a' });
 
     expect(getByTestId('marc-ind1-0').value).toBe('1');
@@ -105,6 +105,13 @@ describe('MarcFieldControl (subfield-target model)', () => {
     expect(getByTestId('marc-subfield-0').value).toBe('a');
     expect(getByTestId('marc-ind1-0').value).toBe('1');
     expect(getByTestId('marc-ind2-0').value).toBe('2');
+  });
+
+  it('round-trips a saved blank-indicator constraint back to a backslash', () => {
+    const { getByTestId } = setup({ value: 'marc_245_ind1_blank_a' });
+
+    expect(getByTestId('marc-ind1-0').value).toBe('\\');
+    expect(getByTestId('marc-ind2-0').value).toBe('');
   });
 
   it('does not flag a partially-typed tag while still in the box', () => {
@@ -177,5 +184,28 @@ describe('MarcFieldControl (subfield-target model)', () => {
 
     change(subfield, 'a');
     expect(subfield).toHaveAttribute('aria-invalid', 'false');
+  });
+
+  it('flags an invalid indicator, and clears it once valid', () => {
+    const { getByTestId } = setup();
+
+    change(getByTestId('marc-tag-0'), '245');
+    const ind1 = getByTestId('marc-ind1-0');
+
+    change(ind1, '!');
+    expect(ind1).toHaveAttribute('aria-invalid', 'true');
+
+    change(ind1, '0');
+    expect(ind1).toHaveAttribute('aria-invalid', 'false');
+  });
+
+  it('accepts a backslash (blank) as a valid indicator', () => {
+    const { getByTestId } = setup();
+
+    change(getByTestId('marc-tag-0'), '245');
+    const ind1 = getByTestId('marc-ind1-0');
+
+    change(ind1, '\\');
+    expect(ind1).toHaveAttribute('aria-invalid', 'false');
   });
 });

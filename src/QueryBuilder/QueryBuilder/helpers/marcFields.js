@@ -6,12 +6,8 @@ import { DATA_TYPES } from '../../../constants/dataTypes';
 // form when both are constraints.
 
 export const MARC_DATA_TYPE = DATA_TYPES.MarcType;
+// The grammar token for a blank indicator (backend stores it as '#'). The picker shows it as a backslash.
 export const MARC_BLANK_INDICATOR = 'blank';
-
-const DIGIT_INDICATORS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-const LETTER_INDICATORS = Array.from({ length: 26 }, (_, i) => String.fromCodePoint('a'.codePointAt(0) + i));
-
-export const MARC_INDICATOR_VALUES = [MARC_BLANK_INDICATOR, ...DIGIT_INDICATORS, ...LETTER_INDICATORS];
 
 // Sentinel used as the field-dropdown option value for "MARC field". Selecting it puts the row into MARC mode,
 // where MarcFieldControl builds the real field name. It's never sent to the backend.

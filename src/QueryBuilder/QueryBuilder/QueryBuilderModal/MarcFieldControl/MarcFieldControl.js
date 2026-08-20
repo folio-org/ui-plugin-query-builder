@@ -1,16 +1,29 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { Select, TextField } from '@folio/stripes/components';
+import { FormattedMessage } from 'react-intl';
+import { TextField } from '@folio/stripes/components';
 
-import { assembleMarcFieldName, parseMarcFieldName, isControlFieldTag, MARC_TARGETS } from '../../helpers/marcFields';
-import { getMarcIndicatorValueOptions } from '../../helpers/selectOptions';
+import {
+  assembleMarcFieldName,
+  parseMarcFieldName,
+  isControlFieldTag,
+  MARC_TARGETS,
+  MARC_BLANK_INDICATOR,
+} from '../../helpers/marcFields';
 import css from './MarcFieldControl.css';
 
-// A tag is exactly 3 digits; a subfield is exactly 1 character. Used for the input maxLength and to gate
-// validation (see tagInvalid/subfieldInvalid below).
+// A tag is exactly 3 digits; a subfield and an indicator are each exactly 1 character. Used for the input
+// maxLength and to gate validation (see tagInvalid/subfieldInvalid/indicatorInvalid below).
 const TAG_LENGTH = 3;
 const SUBFIELD_LENGTH = 1;
+const INDICATOR_LENGTH = 1;
+
+// A blank indicator is a real MARC value (stored in the grammar as the 'blank' token). Free text can't show a
+// space, so — matching the rest of FOLIO (quick-marc, bulk-edit) — it's displayed and typed as a backslash. An
+// empty box means "no constraint" (Any). This backslash lives only in the UI; the grammar keeps the 'blank' token.
+const BLANK_DISPLAY = '\\';
+const toIndicatorDisplay = (token) => (token === MARC_BLANK_INDICATOR ? BLANK_DISPLAY : token ?? '');
+const toIndicatorToken = (display) => (display === BLANK_DISPLAY ? MARC_BLANK_INDICATOR : display);
 
 const toDraft = (fieldName) => {
   const parsed = parseMarcFieldName(fieldName);
@@ -18,8 +31,8 @@ const toDraft = (fieldName) => {
   return {
     tag: parsed?.tag ?? '',
     subfield: parsed?.subfield ?? '',
-    ind1: parsed?.ind1 ?? '',
-    ind2: parsed?.ind2 ?? '',
+    ind1: toIndicatorDisplay(parsed?.ind1),
+    ind2: toIndicatorDisplay(parsed?.ind2),
   };
 };
 
@@ -27,7 +40,6 @@ const toDraft = (fieldName) => {
 // optional subfield and optional indicator constraints. The subfield is always the query target (its value goes in
 // the row's value box); with no subfield, the whole tag is the target (covers control fields and tag-level queries).
 export const MarcFieldControl = ({ sourcePrefix, value, onFieldChange, index }) => {
-  const intl = useIntl();
   const [draft, setDraft] = useState(() => toDraft(value));
   // Whether the user has left the tag box since they last started editing it. A wrong-length tag is flagged
   // only once they leave (blur); focusing back in clears this, so re-editing a tag never nags mid-change.
@@ -47,26 +59,22 @@ export const MarcFieldControl = ({ sourcePrefix, value, onFieldChange, index }) 
         tag: next.tag,
         target,
         subfield: next.subfield,
-        ind1: next.ind1,
-        ind2: next.ind2,
+        ind1: toIndicatorToken(next.ind1),
+        ind2: toIndicatorToken(next.ind2),
       }) ?? '',
     );
   };
-
-  // A pinned indicator holds exactly one value; "Any" (value '') means no constraint on that indicator.
-  const indicatorConstraintOptions = [
-    { value: '', label: intl.formatMessage({ id: 'ui-plugin-query-builder.marc.indicator.any' }) },
-    ...getMarcIndicatorValueOptions(intl),
-  ];
 
   // Control fields (00X) have no subfields or indicators — only the tag box applies.
   const showSubfieldAndIndicators = !isControlFieldTag(draft.tag);
 
   // Flag the tag once it's full-length-but-wrong (e.g. "24a"), or once the user leaves the box holding the
   // wrong length (e.g. "24") — but never mid-entry while they're still typing toward a valid 3-digit tag.
-  // A subfield is a single character, so any entry is already complete: flag an invalid one immediately.
+  // A subfield/indicator is a single character, so any entry is already complete: flag an invalid one immediately.
+  // A valid indicator is a-z, 0-9, or the backslash that stands in for a blank; empty means no constraint.
   const tagInvalid = draft.tag !== '' && !/^\d{3}$/.test(draft.tag) && (draft.tag.length === TAG_LENGTH || tagTouched);
   const subfieldInvalid = draft.subfield.length === SUBFIELD_LENGTH && !/^[a-z0-9]$/i.test(draft.subfield);
+  const indicatorInvalid = (indicator) => indicator.length === INDICATOR_LENGTH && !/^[\\a-z0-9]$/i.test(indicator);
 
   return (
     <div className={css.marcFieldControl} data-testid={`marc-field-${index}`}>
@@ -89,22 +97,28 @@ export const MarcFieldControl = ({ sourcePrefix, value, onFieldChange, index }) 
       {showSubfieldAndIndicators && (
         <>
           <div className={css.indicatorInput}>
-            <Select
+            <TextField
               label={<FormattedMessage id="ui-plugin-query-builder.marc.ind1Filter" />}
-              dataOptions={indicatorConstraintOptions}
               value={draft.ind1}
               onChange={(e) => update({ ind1: e.target.value })}
+              onFocus={(e) => e.target.select()}
+              error={indicatorInvalid(draft.ind1) && <FormattedMessage id="ui-plugin-query-builder.marc.validation.indicator" />}
+              maxLength={INDICATOR_LENGTH}
               marginBottom0
+              hasClearIcon={false}
               data-testid={`marc-ind1-${index}`}
             />
           </div>
           <div className={css.indicatorInput}>
-            <Select
+            <TextField
               label={<FormattedMessage id="ui-plugin-query-builder.marc.ind2Filter" />}
-              dataOptions={indicatorConstraintOptions}
               value={draft.ind2}
               onChange={(e) => update({ ind2: e.target.value })}
+              onFocus={(e) => e.target.select()}
+              error={indicatorInvalid(draft.ind2) && <FormattedMessage id="ui-plugin-query-builder.marc.validation.indicator" />}
+              maxLength={INDICATOR_LENGTH}
               marginBottom0
+              hasClearIcon={false}
               data-testid={`marc-ind2-${index}`}
             />
           </div>

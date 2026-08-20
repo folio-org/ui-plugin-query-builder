@@ -3,7 +3,6 @@ import {
   getFieldOptions,
   getFilteredOptions,
   fuzzyOptionFormatter,
-  getMarcIndicatorValueOptions,
   getOperatorOptions,
 } from './selectOptions';
 import { DATA_TYPES } from '../../../constants/dataTypes';
@@ -833,24 +832,5 @@ describe('getColumnsWithProperties', () => {
     const res = getColumnsWithProperties(columns);
 
     expect(res.map((i) => i.name)).toEqual(['noItemDataType', 'noDataType']);
-  });
-});
-
-describe('getMarcIndicatorValueOptions', () => {
-  const intl = { formatMessage: ({ id }) => id };
-
-  it('returns blank + 0-9 + a-z, localizing only the blank label', () => {
-    const options = getMarcIndicatorValueOptions(intl);
-
-    // blank + ten digits + twenty-six letters
-    expect(options).toHaveLength(37);
-    expect(options[0]).toEqual({ value: 'blank', label: 'ui-plugin-query-builder.marc.indicator.blank' });
-
-    const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    const letters = Array.from({ length: 26 }, (_, i) => String.fromCodePoint('a'.codePointAt(0) + i));
-
-    expect(options.slice(1)).toEqual(
-      [...digits, ...letters].map((value) => ({ value, label: value })),
-    );
   });
 });
