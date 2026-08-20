@@ -62,10 +62,7 @@ export const enterMarcFieldMode = (item) => ({
   [COLUMN_KEYS.VALUE]: { options: undefined, source: undefined, valueSourceApi: undefined, current: '' },
 });
 
-// Applies a MARC field selection to a row: sets the assembled field name and attaches its operator set. When the
-// field name actually changes we also reset the value, matching how selecting a different field from the dropdown
-// behaves — a value entered for one field is meaningless for another, and keeping it produces oddities (e.g. a
-// stale "is empty" True/False value resurfacing as literal text under a free-text operator).
+// Applies a MARC field selection to a row: sets the assembled field name and attaches its operator set.
 export const applyMarcFieldChange = ({ item, name, intl }) => {
   const options = getOperatorOptions({ dataType: DATA_TYPES.MarcType, fieldName: name, intl });
   const operatorStillValid = options.some((option) => option.value === item[COLUMN_KEYS.OPERATOR].current);

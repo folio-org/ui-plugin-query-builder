@@ -847,12 +847,10 @@ describe('getMarcIndicatorValueOptions', () => {
     expect(options[0]).toEqual({ value: 'blank', label: 'ui-plugin-query-builder.marc.indicator.blank' });
 
     const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    const letters = Array.from({ length: 26 }, (_, i) => String.fromCharCode('a'.charCodeAt(0) + i));
+    const letters = Array.from({ length: 26 }, (_, i) => String.fromCodePoint('a'.codePointAt(0) + i));
 
     expect(options.slice(1)).toEqual(
       [...digits, ...letters].map((value) => ({ value, label: value })),
     );
-    // 'f' is included (e.g. FOLIO's 999 ff field).
-    expect(options).toContainEqual({ value: 'f', label: 'f' });
   });
 });
