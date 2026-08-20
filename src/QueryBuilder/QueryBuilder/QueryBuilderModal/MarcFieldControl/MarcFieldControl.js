@@ -18,9 +18,6 @@ const TAG_LENGTH = 3;
 const SUBFIELD_LENGTH = 1;
 const INDICATOR_LENGTH = 1;
 
-// A blank indicator is a real MARC value (stored in the grammar as the 'blank' token). Free text can't show a
-// space, so — matching the rest of FOLIO (quick-marc, bulk-edit) — it's displayed and typed as a backslash. An
-// empty box means "no constraint" (Any). This backslash lives only in the UI; the grammar keeps the 'blank' token.
 const BLANK_DISPLAY = '\\';
 const toIndicatorDisplay = (token) => (token === MARC_BLANK_INDICATOR ? BLANK_DISPLAY : token ?? '');
 const toIndicatorToken = (display) => (display === BLANK_DISPLAY ? MARC_BLANK_INDICATOR : display);
