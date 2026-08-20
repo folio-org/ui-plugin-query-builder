@@ -62,11 +62,11 @@ export const enterMarcFieldMode = (item) => ({
   [COLUMN_KEYS.VALUE]: { options: undefined, source: undefined, valueSourceApi: undefined, current: '' },
 });
 
-// Applies a MARC field selection to a row: sets the assembled field name and attaches its operator set. The MARC
-// value is always free text, so the value cell is left as-is.
+// Applies a MARC field selection to a row: sets the assembled field name and attaches its operator set.
 export const applyMarcFieldChange = ({ item, name, intl }) => {
   const options = getOperatorOptions({ dataType: DATA_TYPES.MarcType, fieldName: name, intl });
   const operatorStillValid = options.some((option) => option.value === item[COLUMN_KEYS.OPERATOR].current);
+  const fieldChanged = name !== item[COLUMN_KEYS.FIELD].current;
 
   return {
     ...item,
@@ -81,6 +81,9 @@ export const applyMarcFieldChange = ({ item, name, intl }) => {
       options,
       current: operatorStillValid ? item[COLUMN_KEYS.OPERATOR].current : '',
     },
+    [COLUMN_KEYS.VALUE]: fieldChanged
+      ? { options: undefined, source: undefined, valueSourceApi: undefined, current: '' }
+      : item[COLUMN_KEYS.VALUE],
   };
 };
 

@@ -124,6 +124,8 @@ describe('marcFields helpers', () => {
       'marc_245_ind1_0',
       'marc_245_ind1_blank',
       'marc_245_ind1_1_ind2_2',
+      'marc_245_ind1_f_a',
+      'marc_999_ind1_f_ind2_f',
       'marc_bib.marc_245_ind1_1_ind2_2_a',
     ])('%s survives a parse/assemble round-trip', (name) => {
       expect(assembleMarcFieldName(parseMarcFieldName(name))).toBe(name);
