@@ -107,8 +107,23 @@ describe('applyMarcFieldChange', () => {
     expect(result[COLUMN_KEYS.VALUE].options).toBeUndefined();
   });
 
-  it('preserves the existing value', () => {
-    const item = { ...makeRow(), [COLUMN_KEYS.VALUE]: { current: 'Shakespeare' } };
+  it('clears the value when the field name changes', () => {
+    const item = {
+      ...makeRow(),
+      [COLUMN_KEYS.FIELD]: { options: [], current: 'marc_245', dataType: 'stringType' },
+      [COLUMN_KEYS.VALUE]: { current: 'Shakespeare' },
+    };
+    const result = applyMarcFieldChange({ item, name: 'marc_245_a', intl: marcIntl });
+
+    expect(result[COLUMN_KEYS.VALUE].current).toBe('');
+  });
+
+  it('keeps the value when the field name is unchanged (no-op change)', () => {
+    const item = {
+      ...makeRow(),
+      [COLUMN_KEYS.FIELD]: { options: [], current: 'marc_245_a', dataType: 'stringType' },
+      [COLUMN_KEYS.VALUE]: { current: 'Shakespeare' },
+    };
     const result = applyMarcFieldChange({ item, name: 'marc_245_a', intl: marcIntl });
 
     expect(result[COLUMN_KEYS.VALUE].current).toBe('Shakespeare');

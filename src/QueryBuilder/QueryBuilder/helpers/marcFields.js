@@ -8,7 +8,13 @@ import { DATA_TYPES } from '../../../constants/dataTypes';
 export const MARC_DATA_TYPE = DATA_TYPES.MarcType;
 export const MARC_BLANK_INDICATOR = 'blank';
 
-export const MARC_INDICATOR_VALUES = [MARC_BLANK_INDICATOR, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+// Valid MARC indicator values: a blank, a digit (0-9), or a lowercase letter (a-z) — per MARC 21, which allows
+// "any lowercase alphabetic or numeric character or a blank". Letters are real: e.g. FOLIO's system 999 field
+// uses indicators 'f' 'f'. Blank stays first as the most common non-"Any" value.
+const DIGIT_INDICATORS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+const LETTER_INDICATORS = Array.from({ length: 26 }, (_, i) => String.fromCharCode('a'.charCodeAt(0) + i));
+
+export const MARC_INDICATOR_VALUES = [MARC_BLANK_INDICATOR, ...DIGIT_INDICATORS, ...LETTER_INDICATORS];
 
 // Sentinel used as the field-dropdown option value for "MARC field". Selecting it puts the row into MARC mode,
 // where MarcFieldControl builds the real field name. It's never sent to the backend.
