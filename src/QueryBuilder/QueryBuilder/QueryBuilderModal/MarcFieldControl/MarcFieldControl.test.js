@@ -186,17 +186,22 @@ describe('MarcFieldControl (subfield-target model)', () => {
     expect(subfield).toHaveAttribute('aria-invalid', 'false');
   });
 
-  it('flags an invalid indicator, and clears it once valid', () => {
+  it('flags an invalid indicator in either box, and clears it once valid', () => {
     const { getByTestId } = setup();
 
     change(getByTestId('marc-tag-0'), '245');
     const ind1 = getByTestId('marc-ind1-0');
+    const ind2 = getByTestId('marc-ind2-0');
 
     change(ind1, '!');
     expect(ind1).toHaveAttribute('aria-invalid', 'true');
 
     change(ind1, '0');
     expect(ind1).toHaveAttribute('aria-invalid', 'false');
+
+    // Second indicator is validated independently.
+    change(ind2, '#');
+    expect(ind2).toHaveAttribute('aria-invalid', 'true');
   });
 
   it('accepts a backslash (blank) as a valid indicator', () => {
@@ -207,5 +212,18 @@ describe('MarcFieldControl (subfield-target model)', () => {
 
     change(ind1, '\\');
     expect(ind1).toHaveAttribute('aria-invalid', 'false');
+  });
+
+  it('selects the box contents on focus so typing overwrites the single character', () => {
+    const { getByTestId } = setup({ value: 'marc_245_ind1_1_ind2_2_a' });
+
+    ['marc-ind1-0', 'marc-ind2-0'].forEach((testId) => {
+      const indicator = getByTestId(testId);
+
+      fireEvent.focus(indicator);
+
+      expect(indicator.selectionStart).toBe(0);
+      expect(indicator.selectionEnd).toBe(indicator.value.length);
+    });
   });
 });
