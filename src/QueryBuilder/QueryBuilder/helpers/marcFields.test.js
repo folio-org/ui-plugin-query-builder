@@ -103,6 +103,8 @@ describe('marcFields helpers', () => {
     it.each([
       ['bad tag', { tag: '24', target: MARC_TARGETS.SUBFIELD, subfield: 'a' }],
       ['subfield target without subfield', { tag: '245', target: MARC_TARGETS.SUBFIELD }],
+      ['invalid ind1', { tag: '245', target: MARC_TARGETS.SUBFIELD, subfield: 'a', ind1: '#' }],
+      ['invalid ind2 on whole field', { tag: '245', target: MARC_TARGETS.TAG, ind2: '!' }],
       ['unknown target', { tag: '245', target: 'bogus' }],
       ['no tag', { target: MARC_TARGETS.TAG }],
       ['called with no arguments', undefined],
