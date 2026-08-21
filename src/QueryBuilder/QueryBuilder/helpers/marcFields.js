@@ -192,9 +192,7 @@ const normalizeIndicatorValue = (value) => (
 );
 
 // A normalized indicator value is valid when it's absent (null, i.e. no constraint), the blank token, or a single
-// alphanumeric character — mirroring the grammar's IND_VALUE. An invalid value (e.g. "#") makes the whole field
-// name invalid so assembleMarcFieldName returns null, which clears the field and hides the operator — exactly as
-// an invalid tag or subfield already does.
+// alphanumeric character.
 const isValidIndicatorValue = (value) => (
   value === null || value === MARC_BLANK_INDICATOR || /^[a-z0-9]$/.test(value)
 );
