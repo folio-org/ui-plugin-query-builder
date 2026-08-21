@@ -214,6 +214,22 @@ describe('MarcFieldControl (subfield-target model)', () => {
     expect(ind1).toHaveAttribute('aria-invalid', 'false');
   });
 
+  it('clears the field name while an indicator is invalid, so the operator stays hidden', () => {
+    const { getByTestId, onFieldChange } = setup();
+
+    change(getByTestId('marc-tag-0'), '245');
+    change(getByTestId('marc-subfield-0'), 'a');
+    expect(onFieldChange).toHaveBeenLastCalledWith('marc_245_a');
+
+    // Invalid indicator → no valid field name (empty), exactly as an invalid tag/subfield behaves.
+    change(getByTestId('marc-ind1-0'), '#');
+    expect(onFieldChange).toHaveBeenLastCalledWith('');
+
+    // Correcting it restores the field name.
+    change(getByTestId('marc-ind1-0'), '0');
+    expect(onFieldChange).toHaveBeenLastCalledWith('marc_245_ind1_0_a');
+  });
+
   it('selects the box contents on focus so typing overwrites the single character', () => {
     const { getByTestId } = setup({ value: 'marc_245_ind1_1_ind2_2_a' });
 

@@ -191,6 +191,14 @@ const normalizeIndicatorValue = (value) => (
   value === '' || value === null || value === undefined ? null : String(value).toLowerCase()
 );
 
+// A normalized indicator value is valid when it's absent (null, i.e. no constraint), the blank token, or a single
+// alphanumeric character — mirroring the grammar's IND_VALUE. An invalid value (e.g. "#") makes the whole field
+// name invalid so assembleMarcFieldName returns null, which clears the field and hides the operator — exactly as
+// an invalid tag or subfield already does.
+const isValidIndicatorValue = (value) => (
+  value === null || value === MARC_BLANK_INDICATOR || /^[a-z0-9]$/.test(value)
+);
+
 const indicatorConstraint = (position, value) => (value === null ? '' : `_ind${position}_${value}`);
 
 // Builds the part of the field name after `marc_<tag>` for each target, or null if the state is invalid for that
@@ -223,7 +231,12 @@ export function assembleMarcFieldName({ sourcePrefix = '', tag, target, subfield
 
   if (!builder) return null;
 
-  const suffix = builder({ subfield, c1: normalizeIndicatorValue(ind1), c2: normalizeIndicatorValue(ind2) });
+  const c1 = normalizeIndicatorValue(ind1);
+  const c2 = normalizeIndicatorValue(ind2);
+
+  if (!isValidIndicatorValue(c1) || !isValidIndicatorValue(c2)) return null;
+
+  const suffix = builder({ subfield, c1, c2 });
 
   return suffix === null ? null : `${sourcePrefix}marc_${tag}${suffix}`;
 }
