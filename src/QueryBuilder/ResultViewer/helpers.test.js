@@ -67,8 +67,36 @@ describe('getTableMetadata (pure metadata)', () => {
 
     expect(defaultColumns).toHaveLength(2);
     expect(columnMapping).toEqual({ languages: 'Languages', tags: 'Tags' });
-    expect(columnWidths).toEqual({ languages: { min: 30, max: 200 }, tags: '360px' });
+    // tags has two sub-properties but one is hidden, so only the visible one counts toward the width (1 x 180).
+    expect(columnWidths).toEqual({ languages: { min: 30, max: 200 }, tags: '180px' });
     expect(defaultVisibleColumns.sort()).toEqual(['languages', 'tags'].sort());
+  });
+
+  it('excludes hidden nested sub-properties from a subtable column', () => {
+    const entityType = {
+      columns: [
+        {
+          labelAlias: 'Locations',
+          name: 'locations',
+          visibleByDefault: true,
+          dataType: {
+            dataType: 'arrayType',
+            itemDataType: {
+              properties: [
+                { property: 'name', labelAlias: 'Location', hidden: false },
+                { property: 'quantity', labelAlias: 'Quantity', hidden: false },
+                { property: 'locationId', labelAlias: 'Location ID', hidden: true },
+              ],
+            },
+          },
+        },
+      ],
+    };
+
+    const { defaultColumns } = getTableMetadata(entityType, [], intl);
+    const locations = defaultColumns.find((column) => column.value === 'locations');
+
+    expect(locations.properties.map((property) => property.property)).toEqual(['name', 'quantity']);
   });
 
   it('does not set a width when there are no nested properties', () => {
