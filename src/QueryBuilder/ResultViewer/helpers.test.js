@@ -76,16 +76,16 @@ describe('getTableMetadata (pure metadata)', () => {
     const entityType = {
       columns: [
         {
-          labelAlias: 'Locations',
-          name: 'locations',
+          labelAlias: 'Nested',
+          name: 'nested',
           visibleByDefault: true,
           dataType: {
             dataType: 'arrayType',
             itemDataType: {
               properties: [
-                { property: 'name', labelAlias: 'Location', hidden: false },
-                { property: 'quantity', labelAlias: 'Quantity', hidden: false },
-                { property: 'locationId', labelAlias: 'Location ID', hidden: true },
+                { property: 'shown1', labelAlias: 'Shown 1', hidden: false },
+                { property: 'shown2', labelAlias: 'Shown 2', hidden: false },
+                { property: 'hidden', labelAlias: 'Hidden', hidden: true },
               ],
             },
           },
@@ -94,9 +94,9 @@ describe('getTableMetadata (pure metadata)', () => {
     };
 
     const { defaultColumns } = getTableMetadata(entityType, [], intl);
-    const locations = defaultColumns.find((column) => column.value === 'locations');
+    const nested = defaultColumns.find((column) => column.value === 'nested');
 
-    expect(locations.properties.map((property) => property.property)).toEqual(['name', 'quantity']);
+    expect(nested.properties.map((property) => property.property)).toEqual(['shown1', 'shown2']);
   });
 
   it('does not set a width when there are no nested properties', () => {

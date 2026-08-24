@@ -51,9 +51,6 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl, contentD
     readOnly: false,
     selected: cell.visibleByDefault,
     dataType: cell.dataType.dataType,
-    // Nested/subtable sub-columns need the same hidden filtering as top-level columns above: since the entity
-    // type is fetched with hidden columns included (for MARC detection), hidden sub-properties would otherwise
-    // leak into the subtable. Mirrors the field picker (getColumnsWithProperties).
     properties: cell.dataType.itemDataType?.properties?.filter((property) => !property.hidden),
     maxWidth: cell.maxColumnWidth,
   })) || []);
