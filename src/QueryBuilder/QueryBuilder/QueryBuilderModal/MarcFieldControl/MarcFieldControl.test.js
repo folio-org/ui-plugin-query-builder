@@ -264,7 +264,7 @@ describe('MarcFieldControl (subfield-target model)', () => {
   it('does not re-seed when the parent echoes back the value the inputs just produced', () => {
     const { getByTestId, rerender } = setup({ value: '' });
 
-    // Enter a valid tag; the control emits 'marc_245', which the parent echoes back as the value prop.
+    // Enter a valid tag. The control emits 'marc_245', which the parent echoes back as the value prop.
     change(getByTestId('marc-tag-0'), '245');
     change(getByTestId('marc-subfield-0'), 'a');
 
@@ -274,7 +274,7 @@ describe('MarcFieldControl (subfield-target model)', () => {
       </Intl>,
     );
 
-    // Inputs are left exactly as typed — the echo is not treated as an external change.
+    // Inputs are left exactly as typed - the echo is not treated as an external change.
     expect(getByTestId('marc-tag-0').value).toBe('245');
     expect(getByTestId('marc-subfield-0').value).toBe('a');
   });

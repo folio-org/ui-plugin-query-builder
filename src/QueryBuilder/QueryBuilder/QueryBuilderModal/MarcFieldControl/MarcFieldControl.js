@@ -42,9 +42,6 @@ export const MarcFieldControl = ({ sourcePrefix, value, onFieldChange, index }) 
   // only once they leave (blur); focusing back in clears this, so re-editing a tag never nags mid-change.
   const [tagTouched, setTagTouched] = useState(false);
 
-  // The canonical field name the current inputs produce ('' when they don't yet form a valid field). Subfield is
-  // the target when present; otherwise the whole tag. Control fields (00X) have no subfields or indicators, so
-  // they only ever build the whole-tag form.
   const buildFieldName = (state) => assembleMarcFieldName({
     sourcePrefix,
     tag: state.tag,
@@ -54,10 +51,6 @@ export const MarcFieldControl = ({ sourcePrefix, value, onFieldChange, index }) 
     ind2: toIndicatorToken(state.ind2),
   }) ?? '';
 
-  // Rows are keyed by index, so deleting a row hands this instance a *different* row's field name via `value`
-  // without remounting. When the incoming value no longer matches what the current inputs produce, it came from
-  // outside (e.g. a sibling row was removed) — re-seed the inputs from it. During normal typing the two always
-  // agree (we just emitted `value` from these inputs), so in-progress entry is never clobbered.
   const [syncedValue, setSyncedValue] = useState(value);
 
   if (value !== syncedValue) {
