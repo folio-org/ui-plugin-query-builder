@@ -242,4 +242,40 @@ describe('MarcFieldControl (subfield-target model)', () => {
       expect(indicator.selectionEnd).toBe(indicator.value.length);
     });
   });
+
+  // Rows are keyed by index, so deleting a sibling row re-uses this instance with a different row's value.
+  it('re-seeds its inputs when the value prop changes to a different field (e.g. a sibling row is deleted)', () => {
+    const { getByTestId, rerender } = setup({ value: 'marc_111_ind1_1_ind2_1_1' });
+
+    expect(getByTestId('marc-tag-0').value).toBe('111');
+
+    rerender(
+      <Intl>
+        <MarcFieldControl index={0} onFieldChange={jest.fn()} value="marc_222_ind1_2_ind2_2_2" />
+      </Intl>,
+    );
+
+    expect(getByTestId('marc-tag-0').value).toBe('222');
+    expect(getByTestId('marc-ind1-0').value).toBe('2');
+    expect(getByTestId('marc-ind2-0').value).toBe('2');
+    expect(getByTestId('marc-subfield-0').value).toBe('2');
+  });
+
+  it('does not re-seed when the parent echoes back the value the inputs just produced', () => {
+    const { getByTestId, rerender } = setup({ value: '' });
+
+    // Enter a valid tag. The control emits 'marc_245', which the parent echoes back as the value prop.
+    change(getByTestId('marc-tag-0'), '245');
+    change(getByTestId('marc-subfield-0'), 'a');
+
+    rerender(
+      <Intl>
+        <MarcFieldControl index={0} onFieldChange={jest.fn()} value="marc_245_a" />
+      </Intl>,
+    );
+
+    // Inputs are left exactly as typed - the echo is not treated as an external change.
+    expect(getByTestId('marc-tag-0').value).toBe('245');
+    expect(getByTestId('marc-subfield-0').value).toBe('a');
+  });
 });

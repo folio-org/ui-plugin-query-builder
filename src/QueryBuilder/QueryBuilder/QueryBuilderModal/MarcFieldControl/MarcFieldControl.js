@@ -42,24 +42,30 @@ export const MarcFieldControl = ({ sourcePrefix, value, onFieldChange, index }) 
   // only once they leave (blur); focusing back in clears this, so re-editing a tag never nags mid-change.
   const [tagTouched, setTagTouched] = useState(false);
 
+  const buildFieldName = (state) => assembleMarcFieldName({
+    sourcePrefix,
+    tag: state.tag,
+    target: !isControlFieldTag(state.tag) && state.subfield ? MARC_TARGETS.SUBFIELD : MARC_TARGETS.TAG,
+    subfield: state.subfield,
+    ind1: toIndicatorToken(state.ind1),
+    ind2: toIndicatorToken(state.ind2),
+  }) ?? '';
+
+  const [syncedValue, setSyncedValue] = useState(value);
+
+  if (value !== syncedValue) {
+    setSyncedValue(value);
+    if (buildFieldName(draft) !== value) {
+      setDraft(toDraft(value));
+      setTagTouched(false);
+    }
+  }
+
   const update = (patch) => {
     const next = { ...draft, ...patch };
 
-    // Subfield is the target when present; otherwise the whole tag. Control fields (00X) have no subfields or
-    // indicators, so they only ever build the whole-tag form.
-    const target = !isControlFieldTag(next.tag) && next.subfield ? MARC_TARGETS.SUBFIELD : MARC_TARGETS.TAG;
-
     setDraft(next);
-    onFieldChange(
-      assembleMarcFieldName({
-        sourcePrefix,
-        tag: next.tag,
-        target,
-        subfield: next.subfield,
-        ind1: toIndicatorToken(next.ind1),
-        ind2: toIndicatorToken(next.ind2),
-      }) ?? '',
-    );
+    onFieldChange(buildFieldName(next));
   };
 
   // Control fields (00X) have no subfields or indicators — only the tag box applies.
