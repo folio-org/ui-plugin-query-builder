@@ -9,6 +9,7 @@
 * [UIPQB-277](https://folio-org.atlassian.net/browse/UIPQB-277) Define supported operators for marcDataType
 * [UIPQB-290](https://folio-org.atlassian.net/browse/UIPQB-290) Trap keyboard focus inside the Build Query modal
 * [UIPQB-287](https://folio-org.atlassian.net/browse/UIPQB-287) Support querying dynamic MARC fields
+* [UIPQB-298](https://folio-org.atlassian.net/browse/UIPQB-298) Exclude hidden nested columns from results subtables
 
 ## [3.0.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v3.0.2) (2026-06-03)
 * [UIPQB-279](https://folio-org.atlassian.net/browse/UIPQB-279) Add support for fields containing a valueSourceApi property without a source property

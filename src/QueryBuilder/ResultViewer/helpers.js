@@ -51,7 +51,7 @@ export const getTableMetadata = (entityType, forcedVisibleValues, intl, contentD
     readOnly: false,
     selected: cell.visibleByDefault,
     dataType: cell.dataType.dataType,
-    properties: cell.dataType.itemDataType?.properties,
+    properties: cell.dataType.itemDataType?.properties?.filter((property) => !property.hidden),
     maxWidth: cell.maxColumnWidth,
   })) || []);
 

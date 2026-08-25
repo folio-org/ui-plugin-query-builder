@@ -45,7 +45,11 @@ export const formatValueByDataType = (value, dataType, properties, _intl) => {
     return value;
   }
 
-  if (properties?.length) {
+  // A nested column carries a `properties` array (non-nested columns pass undefined/null). Gate on the array
+  // itself, not its length, so a nested column whose sub-properties are all hidden (filtered to an empty array)
+  // still renders as an empty subtable rather than falling through to the array formatter below, which would
+  // call `.join` on the JSON-string value.
+  if (Array.isArray(properties)) {
     const values = JSON.parse(value);
     const columns = properties.map((prop) => ({
       id: prop.property,

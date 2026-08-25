@@ -67,8 +67,37 @@ describe('getTableMetadata (pure metadata)', () => {
 
     expect(defaultColumns).toHaveLength(2);
     expect(columnMapping).toEqual({ languages: 'Languages', tags: 'Tags' });
-    expect(columnWidths).toEqual({ languages: { min: 30, max: 200 }, tags: '360px' });
+    // 'tags' has 2 nested sub-properties, 1 of them hidden, so its width counts only the 1 visible sub-property
+    // (1 x 180 = 180px); 'languages' keeps its explicit maxColumnWidth.
+    expect(columnWidths).toEqual({ languages: { min: 30, max: 200 }, tags: '180px' });
     expect(defaultVisibleColumns.sort()).toEqual(['languages', 'tags'].sort());
+  });
+
+  it('excludes hidden nested sub-properties from a subtable column', () => {
+    const entityType = {
+      columns: [
+        {
+          labelAlias: 'Nested',
+          name: 'nested',
+          visibleByDefault: true,
+          dataType: {
+            dataType: 'arrayType',
+            itemDataType: {
+              properties: [
+                { property: 'shown1', labelAlias: 'Shown 1', hidden: false },
+                { property: 'shown2', labelAlias: 'Shown 2', hidden: false },
+                { property: 'hidden', labelAlias: 'Hidden', hidden: true },
+              ],
+            },
+          },
+        },
+      ],
+    };
+
+    const { defaultColumns } = getTableMetadata(entityType, [], intl);
+    const nested = defaultColumns.find((column) => column.value === 'nested');
+
+    expect(nested.properties.map((property) => property.property)).toEqual(['shown1', 'shown2']);
   });
 
   it('does not set a width when there are no nested properties', () => {
