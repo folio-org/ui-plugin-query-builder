@@ -8,6 +8,7 @@ import {
   sourceToFqlQuery,
 } from '../QueryBuilder/QueryBuilder/helpers/query';
 import {
+  generateRowId,
   getFieldOptions,
 } from '../QueryBuilder/QueryBuilder/helpers/selectOptions';
 import { RootContext } from '../context/RootContext';
@@ -37,7 +38,7 @@ export const useQuerySource = ({ initialValues, entityType }) => {
           originalEntityTypeId: entityType?.id,
         });
 
-        setSource(value);
+        setSource(value.map((row) => (row && !row.id ? { ...row, id: generateRowId() } : row)));
       };
 
       setInitialValue();
