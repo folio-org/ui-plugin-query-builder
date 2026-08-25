@@ -67,7 +67,8 @@ describe('getTableMetadata (pure metadata)', () => {
 
     expect(defaultColumns).toHaveLength(2);
     expect(columnMapping).toEqual({ languages: 'Languages', tags: 'Tags' });
-    // tags has two sub-properties but one is hidden, so only the visible one counts toward the width (1 x 180).
+    // 'tags' has 2 nested sub-properties, 1 of them hidden, so its width counts only the 1 visible sub-property
+    // (1 x 180 = 180px); 'languages' keeps its explicit maxColumnWidth.
     expect(columnWidths).toEqual({ languages: { min: 30, max: 200 }, tags: '180px' });
     expect(defaultVisibleColumns.sort()).toEqual(['languages', 'tags'].sort());
   });

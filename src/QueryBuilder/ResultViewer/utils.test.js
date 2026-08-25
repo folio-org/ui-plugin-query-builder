@@ -124,6 +124,21 @@ describe('formatValueByDataType returns correct value', () => {
   it('returns non-string DateType values unchanged', () => {
     expect(formatValueByDataType(12345, DATA_TYPES.DateType, null, null)).toBe(12345);
   });
+
+  it('routes a nested column with all sub-properties hidden (empty properties) to the subtable, not the array join', () => {
+    // After hidden-nested filtering, a nested column can arrive with an empty properties array. It must still be
+    // treated as nested (rendering an empty subtable) rather than falling through to the arrayType branch, which
+    // would call .join on the JSON-string value and throw.
+    render(
+      <>
+        {formatValueByDataType('[{"id":"t1"}]', 'arrayType', [], null)}
+      </>,
+    );
+
+    const table = screen.getByTestId('dynamic-table');
+
+    expect(JSON.parse(table.getAttribute('data-columns') || 'null')).toEqual([]);
+  });
 });
 
 describe('findLabelByValue', () => {
