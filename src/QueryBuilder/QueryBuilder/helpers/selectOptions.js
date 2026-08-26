@@ -1,3 +1,4 @@
+import { uniqueId } from 'lodash';
 import fuzzysort from 'fuzzysort';
 import { FormattedMessage } from 'react-intl';
 import { OptionSegment } from '@folio/stripes/components';
@@ -172,6 +173,8 @@ export const staticBooleanOptions = [
   { label: <FormattedMessage id="ui-plugin-query-builder.options.true" />, value: true },
   { label: <FormattedMessage id="ui-plugin-query-builder.options.false" />, value: false },
 ];
+
+export const generateRowId = () => uniqueId('qb-row-');
 
 export const sourceTemplate = (fieldOptions = []) => ({
   [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: '' },

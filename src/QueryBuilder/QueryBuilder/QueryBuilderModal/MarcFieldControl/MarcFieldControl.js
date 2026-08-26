@@ -51,16 +51,6 @@ export const MarcFieldControl = ({ sourcePrefix, value, onFieldChange, index }) 
     ind2: toIndicatorToken(state.ind2),
   }) ?? '';
 
-  const [syncedValue, setSyncedValue] = useState(value);
-
-  if (value !== syncedValue) {
-    setSyncedValue(value);
-    if (buildFieldName(draft) !== value) {
-      setDraft(toDraft(value));
-      setTagTouched(false);
-    }
-  }
-
   const update = (patch) => {
     const next = { ...draft, ...patch };
 

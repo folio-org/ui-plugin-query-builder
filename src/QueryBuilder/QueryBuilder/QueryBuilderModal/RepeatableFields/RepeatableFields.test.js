@@ -206,3 +206,58 @@ describe('RepeatableFields MARC wiring', () => {
     expect(await screen.findByTestId('operator-option-0')).toBeInTheDocument();
   });
 });
+
+const marcRow = (id) => ({
+  id,
+  [COLUMN_KEYS.BOOLEAN]: { options: [], current: '' },
+  [COLUMN_KEYS.FIELD]: { options: [], current: '', isMarc: true, dataType: MARC_DATA_TYPE },
+  [COLUMN_KEYS.OPERATOR]: { options: [], current: '' },
+  [COLUMN_KEYS.VALUE]: { current: '' },
+});
+
+const DeletionHarness = () => {
+  const [source, setSource] = useState([marcRow('row-a'), marcRow('row-b')]);
+
+  return (
+    <>
+      <button type="button" data-testid="delete-row-0" onClick={() => setSource((rows) => rows.slice(1))}>del</button>
+      <RepeatableFields source={source} setSource={setSource} columns={marcColumns} entityTypeId="et-1" />
+    </>
+  );
+};
+
+describe('RepeatableFields row identity', () => {
+  it('keeps a MARC row\'s own input when a sibling row above it is removed (rows keyed by id)', () => {
+    render(
+      <Intl>
+        <RootContext.Provider value={{ getDataOptions: () => [], getDataOptionsWithFetching: () => [] }}>
+          <DeletionHarness />
+        </RootContext.Provider>
+      </Intl>,
+    );
+
+    fireEvent.change(screen.getByTestId('marc-tag-0'), { target: { value: '11' } });
+    fireEvent.change(screen.getByTestId('marc-tag-1'), { target: { value: '222' } });
+
+    fireEvent.click(screen.getByTestId('delete-row-0'));
+
+    expect(screen.getByTestId('marc-tag-0').value).toBe('222');
+  });
+
+  it('preserves a surviving invalid MARC row\'s own input when an equally-invalid row above it is removed', () => {
+    render(
+      <Intl>
+        <RootContext.Provider value={{ getDataOptions: () => [], getDataOptionsWithFetching: () => [] }}>
+          <DeletionHarness />
+        </RootContext.Provider>
+      </Intl>,
+    );
+
+    fireEvent.change(screen.getByTestId('marc-tag-0'), { target: { value: '11' } });
+    fireEvent.change(screen.getByTestId('marc-tag-1'), { target: { value: '22' } });
+
+    fireEvent.click(screen.getByTestId('delete-row-0'));
+
+    expect(screen.getByTestId('marc-tag-0').value).toBe('22');
+  });
+});

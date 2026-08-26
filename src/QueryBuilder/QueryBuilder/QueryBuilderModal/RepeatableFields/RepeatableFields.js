@@ -22,6 +22,7 @@ import {
   getFieldOptions,
   getFilteredOptions,
   fuzzyOptionFormatter,
+  generateRowId,
   getOperatorOptions,
   hasValueOptions,
   REPEATABLE_FIELD_DELIMITER,
@@ -126,6 +127,7 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
       ...res,
       {
         ...sourceTemplate(fieldOptions),
+        id: generateRowId(),
         [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: BOOLEAN_OPERATORS.AND },
       },
     ]));
@@ -286,10 +288,11 @@ export const RepeatableFields = memo(({ source, setSource, columns, entityTypeId
         fields={source}
         onAdd={() => {}}
         hasMargin={false}
+        getFieldUniqueKey={(row, index) => row.id ?? index}
         renderField={(row, index) => {
           return (
             <Row
-              key={index}
+              key={row.id ?? index}
               data-testid={`row-${index}`}
               className={`${css.row} ${index % 2 === 0 ? css.even : ''}`}
             >
