@@ -38,7 +38,10 @@ export const useQuerySource = ({ initialValues, entityType }) => {
           originalEntityTypeId: entityType?.id,
         });
 
-        setSource(value.map((row) => (row && !row.id ? { ...row, id: generateRowId() } : row)));
+        // Attach a stable id to each seeded row (default or loaded) so rows are keyed by identity, not index.
+        // filter(Boolean) drops a possible null row (getSourceValue returns [null] for a single deleted/
+        // unsupported condition) so it never reaches the id-map or the rendered list.
+        setSource(value.filter(Boolean).map((row) => ({ ...row, id: generateRowId() })));
       };
 
       setInitialValue();
