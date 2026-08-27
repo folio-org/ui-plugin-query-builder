@@ -869,4 +869,8 @@ describe('attachRowIds', () => {
     expect(withIds).toHaveLength(1);
     expect(withIds[0].field).toBe('a');
   });
+
+  it('returns an empty array when called with no rows', () => {
+    expect(attachRowIds()).toEqual([]);
+  });
 });
