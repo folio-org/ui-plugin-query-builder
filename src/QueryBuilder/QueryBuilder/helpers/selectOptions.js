@@ -176,6 +176,10 @@ export const staticBooleanOptions = [
 
 export const generateRowId = () => uniqueId('qb-row-');
 
+export const attachRowIds = (rows = [], previousRows = []) => (
+  rows.filter(Boolean).map((row, index) => ({ ...row, id: previousRows[index]?.id ?? generateRowId() }))
+);
+
 export const sourceTemplate = (fieldOptions = []) => ({
   [COLUMN_KEYS.BOOLEAN]: { options: booleanOptions, current: '' },
   [COLUMN_KEYS.FIELD]: { options: fieldOptions, current: '' },

@@ -1,4 +1,5 @@
 import {
+  attachRowIds,
   getColumnsWithProperties,
   getFieldOptions,
   getFilteredOptions,
@@ -832,5 +833,44 @@ describe('getColumnsWithProperties', () => {
     const res = getColumnsWithProperties(columns);
 
     expect(res.map((i) => i.name)).toEqual(['noItemDataType', 'noDataType']);
+  });
+});
+
+describe('attachRowIds', () => {
+  it('assigns a fresh id to each row when there are no previous rows', () => {
+    const withIds = attachRowIds([{ field: 'a' }, { field: 'b' }]);
+
+    expect(withIds[0].id).toBeTruthy();
+    expect(withIds[1].id).toBeTruthy();
+    expect(withIds[0].id).not.toBe(withIds[1].id);
+    // original row data is preserved
+    expect(withIds[0].field).toBe('a');
+  });
+
+  it('reuses the previous rows\' ids by position (so a re-seed does not remount rows)', () => {
+    const previous = [{ field: 'a', id: 'keep-0' }, { field: 'b', id: 'keep-1' }];
+
+    const withIds = attachRowIds([{ field: 'a2' }, { field: 'b2' }], previous);
+
+    expect(withIds.map((row) => row.id)).toEqual(['keep-0', 'keep-1']);
+  });
+
+  it('generates ids only for positions the previous rows do not cover', () => {
+    const withIds = attachRowIds([{ field: 'a' }, { field: 'b' }], [{ id: 'keep-0' }]);
+
+    expect(withIds[0].id).toBe('keep-0');
+    expect(withIds[1].id).toBeTruthy();
+    expect(withIds[1].id).not.toBe('keep-0');
+  });
+
+  it('drops null rows before assigning ids', () => {
+    const withIds = attachRowIds([null, { field: 'a' }]);
+
+    expect(withIds).toHaveLength(1);
+    expect(withIds[0].field).toBe('a');
+  });
+
+  it('returns an empty array when called with no rows', () => {
+    expect(attachRowIds()).toEqual([]);
   });
 });
