@@ -9,7 +9,7 @@ import {
   enterMarcFieldMode,
   RepeatableFields,
 } from './RepeatableFields';
-import { sourceTemplate, getFieldOptions } from '../../helpers/selectOptions';
+import { attachRowIds, sourceTemplate, getFieldOptions } from '../../helpers/selectOptions';
 import { COLUMN_KEYS } from '../../../../constants/columnKeys';
 import { OPERATORS } from '../../../../constants/operators';
 import { MARC_DATA_TYPE } from '../../helpers/marcFields';
@@ -259,5 +259,34 @@ describe('RepeatableFields row identity', () => {
     fireEvent.click(screen.getByTestId('delete-row-0'));
 
     expect(screen.getByTestId('marc-tag-0').value).toBe('22');
+  });
+});
+
+const ReseedHarness = () => {
+  const [source, setSource] = useState([marcRow('row-1')]);
+  const reseed = () => setSource((prev) => attachRowIds([marcRow('fresh')], prev));
+
+  return (
+    <>
+      <button type="button" data-testid="reseed" onClick={reseed}>reseed</button>
+      <RepeatableFields source={source} setSource={setSource} columns={marcColumns} entityTypeId="et-1" />
+    </>
+  );
+};
+
+describe('RepeatableFields re-seed (entity-type load)', () => {
+  it('keeps the row mounted so its field state survives a re-seed (attachRowIds reuses the id)', () => {
+    render(
+      <Intl>
+        <RootContext.Provider value={{ getDataOptions: () => [], getDataOptionsWithFetching: () => [] }}>
+          <ReseedHarness />
+        </RootContext.Provider>
+      </Intl>,
+    );
+
+    fireEvent.change(screen.getByTestId('marc-tag-0'), { target: { value: '245' } });
+    fireEvent.click(screen.getByTestId('reseed'));
+
+    expect(screen.getByTestId('marc-tag-0').value).toBe('245');
   });
 });
