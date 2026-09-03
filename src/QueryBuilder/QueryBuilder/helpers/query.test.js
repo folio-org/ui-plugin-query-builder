@@ -556,6 +556,35 @@ describe('fqlQueryToSource()', () => {
     expect(result[1].field.current).toBe('user_full_name');
     expect(result[1].operator.current).toBe(OPERATORS.CONTAINS);
   });
+
+  it('should not fetch source values for the is null/empty operator (avoids infinite refetch loop)', async () => {
+    const intl = { formatMessage: jest.fn() };
+    const getDataOptionsWithFetching = jest.fn(() => Promise.resolve([]));
+
+    const fieldOptionsWithOrgSource = [{
+      value: 'donor_organizations',
+      label: 'Donor organizations',
+      dataType: DATA_TYPES.StringType,
+      source: { name: 'donor_organization', columnName: 'name' },
+    }];
+
+    const initialValuesWithEmpty = {
+      donor_organizations: { $empty: true },
+    };
+
+    const result = await fqlQueryToSource({
+      initialValues: initialValuesWithEmpty,
+      fieldOptions: fieldOptionsWithOrgSource,
+      intl,
+      getDataOptionsWithFetching,
+      preserveQueryValue: false,
+      originalEntityTypeId: 'entity-type-id',
+    });
+
+    expect(getDataOptionsWithFetching).not.toHaveBeenCalled();
+    expect(result[0].operator.current).toBe(OPERATORS.EMPTY);
+    expect(result[0].value.current).toBe(true);
+  });
 });
 
 describe('getQueryStr', () => {

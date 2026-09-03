@@ -320,7 +320,9 @@ const getFormattedSourceField = async ({
 
   let possibleValues = values;
 
-  if (source || valueSourceApi) {
+  // $empty's value is the True/False "is empty" flag, not a lookup id - never fetch for it,
+  // or a non-resolving id (e.g. `true`) would refetch on every render (infinite request loop).
+  if ((source || valueSourceApi) && operator !== OPERATORS.EMPTY) {
     possibleValues = await getDataOptionsWithFetching(
       field,
       source,

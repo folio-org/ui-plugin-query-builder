@@ -11,6 +11,7 @@
 * [UIPQB-287](https://folio-org.atlassian.net/browse/UIPQB-287) Support querying dynamic MARC fields
 * [UIPQB-298](https://folio-org.atlassian.net/browse/UIPQB-298) Exclude hidden nested columns from results subtables
 * [UIPQB-299](https://folio-org.atlassian.net/browse/UIPQB-299) Fix MARC field inputs showing a deleted row's values after removing a condition row
+* [UIPQB-297](https://folio-org.atlassian.net/browse/UIPQB-297) Null/empty query on field with `organizations` source triggers infinite value request loop
 
 ## [3.0.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v3.0.2) (2026-06-03)
 * [UIPQB-279](https://folio-org.atlassian.net/browse/UIPQB-279) Add support for fields containing a valueSourceApi property without a source property
