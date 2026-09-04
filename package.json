@@ -83,5 +83,8 @@
   },
   "optionalDependencies": {
     "@folio/plugin-find-organization": "^6.0.0"
+  },
+  "resolutions": {
+    "nwsapi": "2.2.24"
   }
 }
