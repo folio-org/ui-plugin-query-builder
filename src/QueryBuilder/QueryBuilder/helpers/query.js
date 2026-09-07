@@ -1,5 +1,5 @@
 import { Loading } from '@folio/stripes/components';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { DATA_TYPES } from '../../../constants/dataTypes';
@@ -274,20 +274,71 @@ const formatSingleValue = (value, possibleValues, preserveQueryValue) => {
   return possibleValues?.find(param => param.value === value)?.[key];
 };
 
-const getFormattedSourceField = async ({
-  item,
-  intl,
-  fieldOptions,
-  boolean,
-  getDataOptionsWithFetching,
-  preserveQueryValue, // for enum values, preserves the value (used for initial value handling in QB)
-  originalEntityTypeId,
-}) => {
+// Fields backed by a source or value API resolve their ids to labels through the value-options cache.
+// $empty's value is the True/False "is empty" flag, not a lookup id - never fetch for it,
+// or a non-resolving id (e.g. `true`) would refetch on every render (infinite request loop).
+const needsValueFetch = (fieldItem, operator) => (
+  Boolean(fieldItem?.source || fieldItem?.valueSourceApi) && operator !== OPERATORS.EMPTY
+);
+
+const parseQueryItem = (item, boolean) => {
   const [field, query] = Object.entries(item)[0];
   const fqlOperator = Object.keys(query)[0];
-  const fqlValue = query[fqlOperator];
+  const { operator, value } = getSourceFields(fqlOperator)?.(query[fqlOperator]) || {};
 
-  const { operator, value } = getSourceFields(fqlOperator)?.(fqlValue) || {};
+  return { field, operator, value, boolean };
+};
+
+// Resolves value options for every source-backed field in the query up front: one request per field,
+// carrying the ids of all rows that use it. Fetching row by row let a later row be handed an earlier
+// row's still-pending fetch (which never contained the later row's ids), so it rendered raw ids.
+const fetchValueOptions = async ({
+  parsedItems,
+  fieldOptions,
+  getDataOptionsWithFetching,
+  originalEntityTypeId,
+}) => {
+  const requestsByField = new Map();
+
+  parsedItems.forEach(({ field, operator, value }) => {
+    const fieldItem = fieldOptions.find(f => f.value === field);
+
+    if (!operator || !needsValueFetch(fieldItem, operator)) {
+      return;
+    }
+
+    const request = requestsByField.get(field) ?? { fieldItem, ids: new Set() };
+
+    (Array.isArray(value) ? value : [value]).forEach((id) => request.ids.add(id));
+    requestsByField.set(field, request);
+  });
+
+  const resolved = await Promise.all(
+    Array.from(requestsByField, async ([field, { fieldItem, ids }]) => {
+      const options = await getDataOptionsWithFetching(
+        field,
+        fieldItem.source,
+        '',
+        Array.from(ids),
+        originalEntityTypeId,
+        fieldItem.valueSourceApi,
+      );
+
+      return [field, options];
+    }),
+  );
+
+  return new Map(resolved);
+};
+
+const getFormattedSourceField = ({
+  parsedItem,
+  intl,
+  fieldOptions,
+  fetchedValueOptions,
+  preserveQueryValue, // for enum values, preserves the value (used for initial value handling in QB)
+}) => {
+  const { field, operator, value, boolean } = parsedItem;
 
   if (!operator) {
     return null;
@@ -318,20 +369,9 @@ const getFormattedSourceField = async ({
   const { dataType, values, source, valueSourceApi } = fieldItem;
   const hasSourceOrValues = hasValueOptions(fieldItem);
 
-  let possibleValues = values;
-
-  // $empty's value is the True/False "is empty" flag, not a lookup id - never fetch for it,
-  // or a non-resolving id (e.g. `true`) would refetch on every render (infinite request loop).
-  if ((source || valueSourceApi) && operator !== OPERATORS.EMPTY) {
-    possibleValues = await getDataOptionsWithFetching(
-      field,
-      source,
-      '',
-      Array.isArray(value) ? value : [value],
-      originalEntityTypeId,
-      valueSourceApi,
-    );
-  }
+  const possibleValues = needsValueFetch(fieldItem, operator)
+    ? fetchedValueOptions.get(field)
+    : values;
 
   const formattedValue = Array.isArray(value)
     ? formatArrayValue(value, hasSourceOrValues, possibleValues)
@@ -371,41 +411,34 @@ export const fqlQueryToSource = async ({
   if (!fieldOptions?.length || !Object.keys(initialValues).length) return [];
 
   const key = Object.keys(initialValues)[0];
-  const sharedArgs = {
-    intl,
+  // handle case when query contains boolean operators (AND, OR, etc.)
+  const hasBooleanOperator = Object.values(BOOLEAN_OPERATORS).includes(key);
+
+  const parsedItems = hasBooleanOperator
+    ? initialValues[key].map((item) => parseQueryItem(item, key))
+    : [parseQueryItem(initialValues, '')];
+
+  const fetchedValueOptions = await fetchValueOptions({
+    parsedItems,
     fieldOptions,
     getDataOptionsWithFetching,
-    preserveQueryValue,
     originalEntityTypeId,
-  };
+  });
 
-  // handle case when query contains boolean operators (AND, OR, etc.)
-  if (Object.values(BOOLEAN_OPERATORS).includes(key)) {
-    const formattedSource = [];
+  const formattedSource = parsedItems.map((parsedItem) => getFormattedSourceField({
+    parsedItem,
+    intl,
+    fieldOptions,
+    fetchedValueOptions,
+    preserveQueryValue,
+  }));
 
-    for (const item of initialValues[key]) {
-      const formattedItem = await getFormattedSourceField({
-        item,
-        boolean: key,
-        ...sharedArgs,
-      });
-
-      // Filter out deleted fields and unsupported operators (null)
-      if (formattedItem && !formattedItem.deleted) {
-        formattedSource.push(formattedItem);
-      }
-    }
-
+  if (!hasBooleanOperator) {
     return formattedSource;
   }
 
-  const singleItem = await getFormattedSourceField({
-    item: initialValues,
-    boolean: '',
-    ...sharedArgs,
-  });
-
-  return [singleItem];
+  // Filter out deleted fields and unsupported operators (null)
+  return formattedSource.filter((formattedItem) => formattedItem && !formattedItem.deleted);
 };
 
 export const getSourceValue = ({
@@ -465,8 +498,25 @@ export const useQueryStr = (entityType, { source, fqlQuery }) => {
 
   const fieldOptions = useMemo(() => getFieldOptions(entityType?.columns), [entityType]);
 
+  // Key the resolution on the query's content, not its identity, so a host that re-derives an equal
+  // fqlQuery object on every render doesn't restart the fetch and flash the loader.
+  const fqlQueryKey = useMemo(() => (fqlQuery ? JSON.stringify(fqlQuery) : ''), [fqlQuery]);
+
+  // The cache getter changes identity on every cache write (when a fetch starts and again when it settles).
+  // Reading it through a ref keeps those writes from re-running the resolution below, which used to launch
+  // overlapping runs that each published a partially-resolved query (raw ids flashing before labels).
+  const getDataOptionsWithFetchingRef = useRef(getDataOptionsWithFetching);
+
+  // Assigned in an effect rather than during render so a discarded render can't leave a stale getter behind.
+  // Effects run in declaration order, so the resolution effect below always reads the getter from its own commit.
+  useEffect(() => {
+    getDataOptionsWithFetchingRef.current = getDataOptionsWithFetching;
+  });
+
   // there are async calls within getSourceValue, so we must use an effect :(
   useEffect(() => {
+    let isCurrentRun = true;
+
     const calculateRows = async () => {
       if (source?.length) {
         setRows(source);
@@ -482,18 +532,23 @@ export const useQueryStr = (entityType, { source, fqlQuery }) => {
           return;
         }
 
-        const upgraded = upgradeInitialValues(fqlQuery, entityType);
+        // Show the loader until every id in the query is resolved, then publish the final string once.
+        setRows(null);
 
-        setRows(
-          await getSourceValue({
-            initialValues: upgraded,
-            fieldOptions,
-            intl,
-            getDataOptionsWithFetching,
-            preserveQueryValue: false, // pretty print
-            originalEntityTypeId: entityType.id,
-          }),
-        );
+        const upgraded = upgradeInitialValues(fqlQuery, entityType);
+        const resolvedRows = await getSourceValue({
+          initialValues: upgraded,
+          fieldOptions,
+          intl,
+          getDataOptionsWithFetching: getDataOptionsWithFetchingRef.current,
+          preserveQueryValue: false, // pretty print
+          originalEntityTypeId: entityType.id,
+        });
+
+        // A newer query or entity type superseded this run while it was fetching - drop its result.
+        if (isCurrentRun) {
+          setRows(resolvedRows);
+        }
 
         return;
       }
@@ -501,8 +556,18 @@ export const useQueryStr = (entityType, { source, fqlQuery }) => {
       setRows([]);
     };
 
-    calculateRows();
-  }, [source, fqlQuery, fieldOptions, intl, entityType?.id, getDataOptionsWithFetching]);
+    // Resolution only throws on malformed input. Publish an empty query in that case rather than leaving
+    // the loader up for good.
+    calculateRows().catch(() => {
+      if (isCurrentRun) {
+        setRows([]);
+      }
+    });
+
+    return () => {
+      isCurrentRun = false;
+    };
+  }, [source, fqlQueryKey, fieldOptions, intl, entityType?.id]);
 
   return useMemo(() => {
     if (rows === null) {

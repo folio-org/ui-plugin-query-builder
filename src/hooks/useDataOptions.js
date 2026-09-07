@@ -52,16 +52,8 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
         return cachedOptions;
       }
 
-      // only return promises/failures if requested, to prevent non-async code from exploding here
-      // we don't need to worry about fetchIfValuesMissing here as we will re-render once this promise is resolved,
-      // and any missing ones will then be checked
-      if (shouldUseCachedOptions(cachedOptions, fetchPromise, requestKey)) {
-        return allowPromises ? cachedOptions : [];
-      }
-
-      // if we're provided a fetcher, atomically set it here and automatically put its value back
-      if (fetchPromise) {
-        const existingValues = Array.isArray(cachedOptions) ? cachedOptions : [];
+      // Starts the fetch, publishes its promise to the cache, and puts the settled value back once it lands.
+      const startFetch = (existingValues) => {
         const promise = fetchPromise()
           .then((newValues) => (Array.isArray(newValues)
             ? getUniqueValues(existingValues, newValues)
@@ -81,6 +73,32 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
         });
 
         return promise;
+      };
+
+      // only return promises/failures if requested, to prevent non-async code from exploding here
+      if (shouldUseCachedOptions(cachedOptions, fetchPromise, requestKey)) {
+        if (!allowPromises) {
+          return [];
+        }
+
+        // A pending fetch was started for whichever ids were asked for first, so it may not carry the ids this
+        // caller needs. Wait for it, then fetch only what it left uncovered, merging into the settled options.
+        // Callers that resolve once (the viewer query string) rely on this instead of re-running on cache writes.
+        if (fetchPromise && fetchIfValuesMissing.length && typeof cachedOptions?.then === 'function') {
+          return cachedOptions.then((settledOptions) => (
+            Array.isArray(settledOptions)
+              && !fetchIfValuesMissing.every((v) => settledOptions.find((o) => o.value === v))
+              ? startFetch(settledOptions)
+              : settledOptions
+          ));
+        }
+
+        return cachedOptions;
+      }
+
+      // if we're provided a fetcher, atomically set it here and automatically put its value back
+      if (fetchPromise) {
+        return startFetch(Array.isArray(cachedOptions) ? cachedOptions : []);
       }
 
       return cachedOptions ?? [];
