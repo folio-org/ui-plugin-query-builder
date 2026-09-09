@@ -21,6 +21,8 @@ function getUniqueValues(a, b) {
   return Array.from(uniqueValues.values()).toSorted((aa, bb) => aa.label.localeCompare(bb.label));
 }
 
+const hasAllValues = (options, values) => values.every((v) => options.some((o) => o.value === v));
+
 const isPendingOrFailedOptions = (options) => (
   typeof options === 'object' && !Array.isArray(options)
 );
@@ -29,6 +31,48 @@ const shouldUseCachedOptions = (options, fetchPromise, requestKey) => (
   isPendingOrFailedOptions(options) &&
   (!isDataOptionsLoadFailure(options) || !fetchPromise || options.requestKey === requestKey)
 );
+
+// API calls get fussy when packing too many orgs into one URL, so ask for them in buckets
+const fetchOrganizationsInBatches = async (getOrganizations, usedIds, columnName) => {
+  const buckets = [];
+
+  for (let i = 0; i < usedIds.length; i += 50) {
+    buckets.push(usedIds.slice(i, i + 50));
+  }
+
+  const results = await Promise.all(
+    buckets.map((bucket) => getOrganizations(bucket, columnName)),
+  );
+
+  return results.flat();
+};
+
+const publishFieldOptions = (setDataOptions, field, options) => {
+  setDataOptions((prev) => ({
+    ...prev,
+    [field]: options,
+  }));
+};
+
+// Starts the fetch, publishes its promise to the cache, and puts the settled value back once it lands.
+const startFieldFetch = ({
+  setDataOptions,
+  field,
+  fetchPromise,
+  requestKey,
+  existingValues,
+}) => {
+  const promise = fetchPromise()
+    .then((newValues) => (Array.isArray(newValues)
+      ? getUniqueValues(existingValues, newValues)
+      : getDataOptionsLoadFailure(requestKey)))
+    .catch(() => getDataOptionsLoadFailure(requestKey));
+
+  publishFieldOptions(setDataOptions, field, promise);
+  promise.then((newValues) => publishFieldOptions(setDataOptions, field, newValues));
+
+  return promise;
+};
 
 export function useDataOptions({ getParamsSource, getOrganizations }) {
   const [dataOptions, setDataOptions] = useState({});
@@ -44,43 +88,42 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
     ) => {
       const cachedOptions = dataOptions[field];
 
-      if (
-        Array.isArray(cachedOptions) &&
-                // check that all specially requested values are present
-                fetchIfValuesMissing.every((v) => !!cachedOptions.find((o) => o.value === v))
-      ) {
+      // check that all specially requested values are present
+      if (Array.isArray(cachedOptions) && hasAllValues(cachedOptions, fetchIfValuesMissing)) {
         return cachedOptions;
       }
 
+      const startFetch = (existingValues) => startFieldFetch({
+        setDataOptions,
+        field,
+        fetchPromise,
+        requestKey,
+        existingValues,
+      });
+
       // only return promises/failures if requested, to prevent non-async code from exploding here
-      // we don't need to worry about fetchIfValuesMissing here as we will re-render once this promise is resolved,
-      // and any missing ones will then be checked
       if (shouldUseCachedOptions(cachedOptions, fetchPromise, requestKey)) {
-        return allowPromises ? cachedOptions : [];
+        if (!allowPromises) {
+          return [];
+        }
+
+        // A pending fetch was started for whichever ids were asked for first, so it may not carry the ids this
+        // caller needs. Wait for it, then fetch only what it left uncovered, merging into the settled options.
+        // Callers that resolve once (the viewer query string) rely on this instead of re-running on cache writes.
+        if (fetchPromise && fetchIfValuesMissing.length && typeof cachedOptions?.then === 'function') {
+          return cachedOptions.then((settledOptions) => (
+            Array.isArray(settledOptions) && !hasAllValues(settledOptions, fetchIfValuesMissing)
+              ? startFetch(settledOptions)
+              : settledOptions
+          ));
+        }
+
+        return cachedOptions;
       }
 
       // if we're provided a fetcher, atomically set it here and automatically put its value back
       if (fetchPromise) {
-        const existingValues = Array.isArray(cachedOptions) ? cachedOptions : [];
-        const promise = fetchPromise()
-          .then((newValues) => (Array.isArray(newValues)
-            ? getUniqueValues(existingValues, newValues)
-            : getDataOptionsLoadFailure(requestKey)))
-          .catch(() => getDataOptionsLoadFailure(requestKey));
-
-        setDataOptions((prev) => ({
-          ...prev,
-          [field]: promise,
-        }));
-
-        promise.then((newValues) => {
-          setDataOptions((prev) => ({
-            ...prev,
-            [field]: newValues,
-          }));
-        });
-
-        return promise;
+        return startFetch(Array.isArray(cachedOptions) ? cachedOptions : []);
       }
 
       return cachedOptions ?? [];
@@ -100,20 +143,7 @@ export function useDataOptions({ getParamsSource, getOrganizations }) {
           true,
           !usedIds.length
             ? undefined
-            : async () => {
-              // API calls get fussy when packing too many orgs into one URL
-              const buckets = [];
-
-              for (let i = 0; i < usedIds.length; i += 50) {
-                buckets.push(usedIds.slice(i, i + 50));
-              }
-
-              const results = await Promise.all(
-                buckets.map((bucket) => getOrganizations(bucket, source.columnName)),
-              );
-
-              return results.flat();
-            },
+            : () => fetchOrganizationsInBatches(getOrganizations, usedIds, source.columnName),
           usedIds,
           getRequestKey({
             source: source.name,

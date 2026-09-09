@@ -75,6 +75,58 @@ describe('useDataOptions', () => {
         { value: 'foo', label: 'foo' },
       ]));
     });
+
+    it('fetches values a pending fetch did not cover once that fetch settles', async () => {
+      const { result, rerender } = renderHook(() => useDataOptions({}));
+
+      let resolveFirst;
+      const firstFetch = jest.fn(() => new Promise((resolve) => {
+        resolveFirst = resolve;
+      }));
+      const secondFetch = jest.fn(() => Promise.resolve([{ value: 'bar', label: 'bar' }]));
+
+      result.current.getDataOptions('field', true, firstFetch, ['foo'], 'key-foo');
+      rerender();
+
+      // Asked for while the first fetch is pending: it must not be handed that result as if it covered 'bar'.
+      const chained = result.current.getDataOptions('field', true, secondFetch, ['bar'], 'key-bar');
+
+      expect(secondFetch).not.toHaveBeenCalled();
+
+      resolveFirst([{ value: 'foo', label: 'foo' }]);
+
+      await expect(chained).resolves.toEqual([
+        { value: 'bar', label: 'bar' },
+        { value: 'foo', label: 'foo' },
+      ]);
+      expect(secondFetch).toHaveBeenCalledTimes(1);
+
+      rerender();
+      await waitFor(() => expect(result.current.getDataOptions('field')).toEqual([
+        { value: 'bar', label: 'bar' },
+        { value: 'foo', label: 'foo' },
+      ]));
+    });
+
+    it('reuses a pending fetch that already covers the requested values', async () => {
+      const { result, rerender } = renderHook(() => useDataOptions({}));
+
+      let resolveFirst;
+      const firstFetch = jest.fn(() => new Promise((resolve) => {
+        resolveFirst = resolve;
+      }));
+      const secondFetch = jest.fn(() => Promise.resolve([]));
+
+      result.current.getDataOptions('field', true, firstFetch, ['foo'], 'key-foo');
+      rerender();
+
+      const chained = result.current.getDataOptions('field', true, secondFetch, ['foo'], 'key-foo');
+
+      resolveFirst([{ value: 'foo', label: 'foo' }]);
+
+      await expect(chained).resolves.toEqual([{ value: 'foo', label: 'foo' }]);
+      expect(secondFetch).not.toHaveBeenCalled();
+    });
   });
 
   describe('getDataOptionsWithFetching', () => {

@@ -1046,3 +1046,53 @@ describe('findMissingValues', () => {
     expect(result).toEqual(['value3']);
   });
 });
+
+describe('fqlQueryToSource() value fetching', () => {
+  const intl = { formatMessage: jest.fn() };
+
+  const orgFieldOptions = [{
+    value: 'vendor_id',
+    label: 'Vendor',
+    dataType: DATA_TYPES.StringType,
+    source: { name: 'organization', columnName: 'name' },
+  }];
+
+  it('requests each source-backed field once with the ids of every row that uses it', async () => {
+    const getDataOptionsWithFetching = jest.fn(() => Promise.resolve([
+      { value: 'org-a', label: 'Vendor A' },
+      { value: 'org-b', label: 'Vendor B' },
+      { value: 'org-c', label: 'Vendor C' },
+    ]));
+
+    const result = await fqlQueryToSource({
+      initialValues: {
+        $and: [
+          { vendor_id: { $eq: 'org-a' } },
+          { vendor_id: { $in: ['org-b', 'org-c', 'org-a'] } },
+        ],
+      },
+      fieldOptions: orgFieldOptions,
+      intl,
+      getDataOptionsWithFetching,
+      preserveQueryValue: false,
+      originalEntityTypeId: 'entity-type-id',
+    });
+
+    expect(getDataOptionsWithFetching).toHaveBeenCalledTimes(1);
+    expect(getDataOptionsWithFetching).toHaveBeenCalledWith(
+      'vendor_id',
+      orgFieldOptions[0].source,
+      '',
+      ['org-a', 'org-b', 'org-c'],
+      'entity-type-id',
+      undefined,
+    );
+
+    expect(result[0].value.current).toBe('Vendor A');
+    expect(result[1].value.current).toEqual([
+      { value: 'org-b', label: 'Vendor B' },
+      { value: 'org-c', label: 'Vendor C' },
+      { value: 'org-a', label: 'Vendor A' },
+    ]);
+  });
+});
