@@ -1,6 +1,6 @@
 import upgradeInitialValues, { filterByEntityColumns } from './upgradeInitialValues';
 
-describe('initial values legacy conversion', () => {
+describe('initial values normalization', () => {
   const ENTITY_TYPE = {
     columns: [
       { name: 'foo', idColumnName: 'idColumn', queryable: true },
@@ -27,7 +27,7 @@ describe('initial values legacy conversion', () => {
   });
 
   it.each([{ foo: '' }, { bar: '' }, { foo: '', bar: '' }])(
-    'processes but does not convert non-id columns in %s',
+    'processes but does not rewrite the keys in %s',
     (values) => {
       expect(upgradeInitialValues(values, ENTITY_TYPE)).toStrictEqual(values);
       // indicates that processing was actually done
@@ -38,8 +38,45 @@ describe('initial values legacy conversion', () => {
   it.each([
     [{ _version: '1', idColumn: '' }, {}],
     [{ idColumn: '', bar: '' }, { bar: '' }],
-  ])('converts %s to %s', (input, expected) => {
+  ])('drops %s, which is not selectable, leaving %s', (input, expected) => {
     expect(upgradeInitialValues(input, ENTITY_TYPE)).toStrictEqual(expected);
+  });
+});
+
+describe('queries on selectable id columns (UIPQB-295)', () => {
+  // Mirrors the Budgets entity type: `fiscal_year.name` is the label column and
+  // `fiscal_year.id` is the UUID column, which is selectable in its own right since UIPQB-282.
+  const ENTITY_TYPE = {
+    columns: [
+      { name: 'fiscal_year.name', idColumnName: 'fiscal_year.id', queryable: true },
+      { name: 'fiscal_year.id', idColumnName: null, queryable: true },
+      { name: 'budget.name', queryable: true },
+    ],
+  };
+
+  const UUID = 'a0c27057-c63e-41a6-ba43-8efa41101acc';
+
+  it('leaves a single-row query on the UUID column alone', () => {
+    const query = { 'fiscal_year.id': { $eq: UUID } };
+
+    expect(upgradeInitialValues(query, ENTITY_TYPE)).toStrictEqual(query);
+  });
+
+  it('leaves a multi-row query on the UUID column alone', () => {
+    const query = {
+      $and: [
+        { 'fiscal_year.id': { $eq: UUID } },
+        { 'budget.name': { $eq: 'Alpha-FYA2024' } },
+      ],
+    };
+
+    expect(upgradeInitialValues(query, ENTITY_TYPE)).toStrictEqual(query);
+  });
+
+  it('leaves a query on the label column alone', () => {
+    const query = { 'fiscal_year.name': { $eq: 'FYA2024' } };
+
+    expect(upgradeInitialValues(query, ENTITY_TYPE)).toStrictEqual(query);
   });
 });
 
