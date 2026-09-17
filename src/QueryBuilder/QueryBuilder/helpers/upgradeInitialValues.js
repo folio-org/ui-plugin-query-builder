@@ -39,9 +39,15 @@ export function filterByEntityColumns(initialValues, entityTypes) {
 }
 
 /**
- * Upgrades initial values to indirectly reference id columns (e.g. vendor_code instead of vendor_id).
- * FQM used to previously require vendor_id, but this was changed in MODFQMMGR-151 to allow for better expression
- * and to allow for more flexibility in the future.
+ * Normalizes initial values before they are handed to the builder.
+ *
+ * This used to also rewrite id columns to their label column (e.g. vendor_id -> vendor_code), because FQM once
+ * required vendor_id and MODFQMMGR-151 changed it to prefer the label column. That rewrite is gone as of UIPQB-295:
+ * since UIPQB-282 stopped hiding columns that are used as another column's `idColumnName`, users can deliberately
+ * query a UUID column, and rewriting the key silently swapped their field (and, through the label column's value
+ * source, their UUID for a name) on save. Legacy queries are upgraded server-side in mod-lists, and any id column
+ * that is not selectable here is dropped by `filterByEntityColumns` before it could have been rewritten anyway,
+ * so nothing is lost by leaving the keys alone.
  *
  * As part of UIPQB-125, we're stripping out the _version key from the initial values, too. We will assume that any
  * queries edited/created here are the latest version, as we only have the latest version of entity types available.
@@ -70,23 +76,5 @@ export default function upgradeInitialValues(initialValues, entityType) {
     return withoutVersion;
   }
 
-  const filteredInitialValues = filterByEntityColumns(withoutVersion, entityType);
-
-  const idColumnMapping = {};
-
-  getColumnsWithProperties(entityType.columns).forEach((column) => {
-    if (column.idColumnName) {
-      idColumnMapping[column.idColumnName] = column.name;
-    }
-  });
-
-  const upgradedInitialValues = {};
-
-  Object.keys(filteredInitialValues).forEach((key) => {
-    const newKey = idColumnMapping[key] || key;
-
-    upgradedInitialValues[newKey] = filteredInitialValues[key];
-  });
-
-  return upgradedInitialValues;
+  return filterByEntityColumns(withoutVersion, entityType);
 }
