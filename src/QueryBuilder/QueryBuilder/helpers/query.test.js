@@ -588,6 +588,25 @@ describe('fqlQueryToSource()', () => {
 });
 
 describe('getQueryStr', () => {
+  it('renders a UUID field\'s saved in-value (an id array) like the typed comma-separated string', () => {
+    const uuidFieldOptions = [
+      { value: 'loan_policy_id', label: 'Loan policy — UUID', dataType: DATA_TYPES.RangedUUIDType },
+    ];
+    const intl = { formatDate: jest.fn(), formatMessage: jest.fn(({ id }) => (id.endsWith('.IN') ? 'in' : id)) };
+    const buildRow = (current) => [{
+      boolean: { current: '' },
+      field: { options: uuidFieldOptions, current: 'loan_policy_id' },
+      operator: { current: OPERATORS.IN },
+      value: { current },
+    }];
+
+    const seeded = getQueryStr(buildRow(['id1', 'id2']), uuidFieldOptions, intl, 'UTC', jest.fn(() => []));
+    const typed = getQueryStr(buildRow('id1, id2'), uuidFieldOptions, intl, 'UTC', jest.fn(() => []));
+
+    expect(seeded).toBe('(loan_policy_id in (id1, id2))');
+    expect(typed).toBe(seeded);
+  });
+
   it('uses static option labels for single-value custom field values', () => {
     const customFieldOptions = [
       {
