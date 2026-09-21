@@ -26,6 +26,32 @@ describe('fqlQueryToSource()', () => {
     expect(result).toEqual([]);
   });
 
+  it('attaches the UUID operator set to a saved query on an array-of-UUIDs field', async () => {
+    const uuidArrayFieldOptions = [{
+      value: 'holdings.statistical_code_ids',
+      label: 'Statistical code UUIDs',
+      dataType: DATA_TYPES.JsonbArrayType,
+      itemDataType: DATA_TYPES.RangedUUIDType,
+    }];
+
+    const result = await fqlQueryToSource({
+      initialValues: { 'holdings.statistical_code_ids': { $in: ['id1', 'id2'] } },
+      fieldOptions: uuidArrayFieldOptions,
+      intl: { formatMessage: jest.fn(({ id }) => id) },
+      getDataOptionsWithFetching: jest.fn(),
+    });
+
+    expect(result[0].operator.current).toBe(OPERATORS.IN);
+    expect(result[0].operator.options.map((option) => option.value)).toEqual([
+      '',
+      OPERATORS.EQUAL,
+      OPERATORS.IN,
+      OPERATORS.NOT_IN,
+      OPERATORS.EMPTY,
+    ]);
+    expect(result[0].value.current).toEqual(['id1', 'id2']);
+  });
+
   it('round-trips a MARC subfield field (not in fieldOptions) into a MARC-mode row', async () => {
     const result = await fqlQueryToSource({
       initialValues: { marc_245_ind1_1_a: { $eq: 'Shakespeare' } },
