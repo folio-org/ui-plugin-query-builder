@@ -15,7 +15,7 @@ export const getQuotedStr = (value, isInRelatedOperator = false) => {
   }
 
   if (typeof value === 'string' && isInRelatedOperator) {
-    return `(${value.split(',').map(item => `${item}`).join(', ')})`;
+    return `(${value.split(',').map(item => item.trim()).join(', ')})`;
   }
 
   return value ? `${value}` : '';
@@ -52,9 +52,18 @@ const formatDateToPreview = (dateString, intl, timezone) => {
   return dateString;
 };
 
-export const valueBuilder = ({ value, field, operator, fieldOptions, intl, timezone }) => {
+// A row seeded from a saved `$in`/`$nin` query on a text-controlled field (UUID types, strings without
+// options) holds its ids as a plain array, while a typed value is a comma-separated string. Arrays of
+// `{ value, label }` options (multi-select fields) are a different shape and keep their own rendering.
+const isPrimitiveArray = (value) => (
+  Array.isArray(value) && value.length > 0 && value.every(item => typeof item !== 'object')
+);
+
+export const valueBuilder = ({ value: rawValue, field, operator, fieldOptions, intl, timezone }) => {
   const dataType = fieldOptions?.find(o => o.value === field)?.dataType || DATA_TYPES.BooleanType;
   const isInRelatedOperator = [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
+  // Fold a seeded id array into the string the user would have typed, so both render the same way.
+  const value = isPrimitiveArray(rawValue) ? rawValue.join(', ') : rawValue;
   const isArray = Array.isArray(value);
 
   // The "is null/empty" operator carries a True/False value regardless of the field's
@@ -112,6 +121,11 @@ export const valueBuilder = ({ value, field, operator, fieldOptions, intl, timez
   return valueMap[dataType]?.();
 };
 
+const isInRelatedOperator = (operator) => [OPERATORS.IN, OPERATORS.NOT_IN].includes(operator);
+
+// Multi-select values are `{ value, label }` (or `{ id, label }`) objects; text-control arrays hold raw ids.
+const getOptionValue = (item) => item?.value ?? item?.id ?? item;
+
 export const retainValueOnOperatorChange = ({
   dataType,
   operator,
@@ -130,6 +144,14 @@ export const retainValueOnOperatorChange = ({
 
   // If control types are the same, retain previous value
   if (prevType === newType) {
+    // A row seeded from a saved `$in`/`$nin` query holds its value as an array even when the field renders a
+    // plain text box (UUID types, strings without options), since both operators share the TEXT control.
+    // A scalar operator (==, !=, contains, ...) must get a scalar back, or the FQL becomes `{ $eq: [id] }`,
+    // which the backend rejects. Keep the first entry, as the select multi → single conversion below does.
+    if (Array.isArray(prevValue) && !isInRelatedOperator(newOperator)) {
+      return prevValue.length ? getOptionValue(prevValue[0]) : '';
+    }
+
     return prevValue;
   }
 

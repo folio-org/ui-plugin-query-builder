@@ -219,6 +219,74 @@ describe('stripDirectionalMarks', () => {
   });
 });
 
+// A row seeded from a saved `$in`/`$nin` query on a text-controlled field (UUID types, strings without options)
+// holds the ids as an array, while a typed value is a comma-separated string. Both must render the same way.
+describe('valueBuilder with a value seeded from a saved in/not in query', () => {
+  it.each([
+    {
+      name: 'RangedUUIDType IN with two ids',
+      field: 'user_patron_group',
+      operator: OPERATORS.IN,
+      value: ['id1', 'id2'],
+      expected: '(id1, id2)',
+    },
+    {
+      name: 'RangedUUIDType NOT_IN with one id',
+      field: 'user_patron_group',
+      operator: OPERATORS.NOT_IN,
+      value: ['id1'],
+      expected: '(id1)',
+    },
+    {
+      name: 'StringUUIDType IN',
+      field: 'string_uuid',
+      operator: OPERATORS.IN,
+      value: ['id1', 'id2'],
+      expected: '"id1, id2"',
+      // the fixture's string_uuid column is not queryable, so it is absent from the shared fieldOptions
+      options: [{ value: 'string_uuid', dataType: DATA_TYPES.StringUUIDType }],
+    },
+    {
+      name: 'OpenUUIDType NOT_IN',
+      field: 'instance_id',
+      operator: OPERATORS.NOT_IN,
+      value: ['id1', 'id2'],
+      expected: '"id1, id2"',
+    },
+    {
+      name: 'StringType without options IN',
+      field: 'item_holdingsrecord_id',
+      operator: OPERATORS.IN,
+      value: ['123', '456'],
+      expected: '(123, 456)',
+    },
+  ])('renders $name like the equivalent typed string', ({ field, operator, value, expected, options = fieldOptions }) => {
+    expect(valueBuilder({ value, field, operator, fieldOptions: options })).toBe(expected);
+  });
+
+  it('renders a typed comma-space separated RangedUUIDType value without doubling the spaces', () => {
+    const field = 'user_patron_group';
+    const operator = OPERATORS.IN;
+
+    expect(valueBuilder({ value: 'id1, id2', field, operator, fieldOptions })).toBe('(id1, id2)');
+    expect(valueBuilder({ value: 'id1,id2', field, operator, fieldOptions })).toBe('(id1, id2)');
+  });
+});
+
+describe('getQuotedStr', () => {
+  it('normalizes separators of an in-related string value to a single comma and space', () => {
+    expect(getQuotedStr('a, b', true)).toBe('(a, b)');
+    expect(getQuotedStr('a,b', true)).toBe('(a, b)');
+    expect(getQuotedStr('a ,  b', true)).toBe('(a, b)');
+  });
+
+  it('leaves a scalar value alone', () => {
+    expect(getQuotedStr('a, b')).toBe('a, b');
+    expect(getQuotedStr(true)).toBe('true');
+    expect(getQuotedStr('')).toBe('');
+  });
+});
+
 describe('retainValueOnOperatorChange', () => {
   describe('when control type does not change and value should be retained', () => {
     it.each([
@@ -607,5 +675,58 @@ describe('retainValueOnOperatorChange', () => {
         prevValue,
       }),
     ).toBe('active');
+  });
+
+  // A row seeded from a saved `$in`/`$nin` query holds its value as an array even when the field renders a
+  // plain text box (UUID types, strings without options). Both operators share the TEXT control, so the
+  // control type doesn't change on switch; the value shape still has to.
+  describe('when the control stays a text input but the value was seeded as an array', () => {
+    it.each([
+      {
+        name: 'RangedUUIDType NOT_IN → EQUAL collapses a single-id array to the id',
+        dataType: DATA_TYPES.RangedUUIDType,
+        operator: OPERATORS.NOT_IN,
+        newOperator: OPERATORS.EQUAL,
+        prevValue: ['ac6b49ef-8cef-4647-a12b-758dbb2728f7'],
+        expected: 'ac6b49ef-8cef-4647-a12b-758dbb2728f7',
+      },
+      {
+        name: 'StringUUIDType IN → NOT_EQUAL keeps the first id',
+        dataType: DATA_TYPES.StringUUIDType,
+        operator: OPERATORS.IN,
+        newOperator: OPERATORS.NOT_EQUAL,
+        prevValue: ['id-1', 'id-2'],
+        expected: 'id-1',
+      },
+      {
+        name: 'StringType without options NOT_IN → CONTAINS',
+        dataType: DATA_TYPES.StringType,
+        operator: OPERATORS.NOT_IN,
+        newOperator: OPERATORS.CONTAINS,
+        prevValue: ['abc'],
+        expected: 'abc',
+      },
+      {
+        name: 'RangedUUIDType NOT_IN → EQUAL with an empty array resets to an empty string',
+        dataType: DATA_TYPES.RangedUUIDType,
+        operator: OPERATORS.NOT_IN,
+        newOperator: OPERATORS.EQUAL,
+        prevValue: [],
+        expected: '',
+      },
+    ])('$name', ({ dataType, operator, newOperator, prevValue, expected }) => {
+      expect(retainValueOnOperatorChange({ dataType, operator, newOperator, prevValue })).toBe(expected);
+    });
+
+    it('keeps the array when switching between in-related operators (NOT_IN → IN)', () => {
+      const prevValue = ['id-1', 'id-2'];
+
+      expect(retainValueOnOperatorChange({
+        dataType: DATA_TYPES.RangedUUIDType,
+        operator: OPERATORS.NOT_IN,
+        newOperator: OPERATORS.IN,
+        prevValue,
+      })).toBe(prevValue);
+    });
   });
 });

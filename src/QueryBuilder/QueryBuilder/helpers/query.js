@@ -384,6 +384,7 @@ const getFormattedSourceField = ({
       dataType,
       options: getOperatorOptions({
         dataType,
+        itemDataType: fieldItem.itemDataType,
         hasSourceOrValues,
         isFromNestedField: fieldItem.value.includes(REPEATABLE_FIELD_DELIMITER),
         fieldName: fieldItem.value,

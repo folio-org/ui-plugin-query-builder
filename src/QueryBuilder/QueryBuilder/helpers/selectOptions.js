@@ -2,7 +2,7 @@ import { uniqueId } from 'lodash';
 import fuzzysort from 'fuzzysort';
 import { FormattedMessage } from 'react-intl';
 import { OptionSegment } from '@folio/stripes/components';
-import { DATA_TYPES } from '../../../constants/dataTypes';
+import { DATA_TYPES, UUID_DATA_TYPES } from '../../../constants/dataTypes';
 import { BOOLEAN_OPERATORS, OPERATORS, getDiscreteOrTextOperators } from '../../../constants/operators';
 import { COLUMN_KEYS } from '../../../constants/columnKeys';
 import { getOperatorLabel } from './operatorLabels';
@@ -82,6 +82,7 @@ const marcOperators = (fieldName, intl) => (
 
 export const getOperatorOptions = ({
   dataType,
+  itemDataType,
   hasSourceOrValues,
   isFromNestedField,
   fieldName,
@@ -105,6 +106,10 @@ export const getOperatorOptions = ({
 
     case DATA_TYPES.ArrayType:
     case DATA_TYPES.JsonbArrayType:
+      if (UUID_DATA_TYPES.includes(itemDataType)) {
+        return getOperatorsWithPlaceholder(UUIDOperators(intl), intl);
+      }
+
       return getOperatorsWithPlaceholder(ArrayOperators(hasSourceOrValues, intl), intl);
 
     case DATA_TYPES.DateType:
@@ -159,6 +164,7 @@ export const getFieldOptions = (options) => {
       label: o.labelAliasFullyQualified || o.labelAlias,
       value: o.name,
       dataType: o.dataType.dataType,
+      itemDataType: o.dataType.itemDataType?.dataType,
       source: o.source,
       valueSourceApi: o.valueSourceApi,
       values: getFilledValues(o.values),

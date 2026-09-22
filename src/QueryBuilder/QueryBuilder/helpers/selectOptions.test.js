@@ -98,6 +98,26 @@ describe('select options', () => {
       expect(getFieldOptions(entityType?.columns)).toEqual(result);
     });
 
+    it('carries the item data type of an array column so operators can be chosen by element type', () => {
+      const [uuidArray, scalar] = getFieldOptions([
+        {
+          name: 'statistical_code_ids',
+          queryable: true,
+          labelAlias: 'Statistical code UUIDs',
+          dataType: { dataType: 'jsonbArrayType', itemDataType: { dataType: 'rangedUUIDType' } },
+        },
+        {
+          name: 'id',
+          queryable: true,
+          labelAlias: 'UUID',
+          dataType: { dataType: 'rangedUUIDType' },
+        },
+      ]);
+
+      expect(uuidArray.itemDataType).toBe(DATA_TYPES.RangedUUIDType);
+      expect(scalar.itemDataType).toBeUndefined();
+    });
+
     it('uses source when valueSourceApi is not present', () => {
       const source = { name: 'organization', columnName: 'name' };
 
@@ -382,6 +402,61 @@ describe('select options', () => {
             { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
           ],
         });
+      });
+    });
+
+    // UIPQB-295: every UUID-valued field offers the same operators, whether the column holds one id or an array
+    // of ids. Arrays of UUIDs used to fall into the free-text array set (not equal to, contains, starts with).
+    const uuidOperators = [
+      { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+      { label: OPERATORS_LABELS.IN, value: OPERATORS.IN },
+      { label: OPERATORS_LABELS.NOT_IN, value: OPERATORS.NOT_IN },
+      { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+    ];
+
+    [DATA_TYPES.ArrayType, DATA_TYPES.JsonbArrayType].forEach((dataType) => {
+      [DATA_TYPES.RangedUUIDType, DATA_TYPES.OpenUUIDType, DATA_TYPES.StringUUIDType].forEach((itemDataType) => {
+        it(`should return UUID operators for ${dataType} whose items are ${itemDataType}`, () => {
+          const options = getOperatorOptions({
+            dataType,
+            itemDataType,
+            hasSourceOrValues: false,
+            intl: intlMock,
+          });
+
+          expectFn({ options, operators: uuidOperators });
+        });
+      });
+    });
+
+    it('should return UUID operators for an array of UUIDs with a value source, like a scalar UUID with one', () => {
+      const options = getOperatorOptions({
+        dataType: DATA_TYPES.JsonbArrayType,
+        itemDataType: DATA_TYPES.RangedUUIDType,
+        hasSourceOrValues: true,
+        intl: intlMock,
+      });
+
+      expectFn({ options, operators: uuidOperators });
+    });
+
+    it('should keep the text operators for an array whose items are strings', () => {
+      const options = getOperatorOptions({
+        dataType: DATA_TYPES.JsonbArrayType,
+        itemDataType: DATA_TYPES.StringType,
+        hasSourceOrValues: false,
+        intl: intlMock,
+      });
+
+      expectFn({
+        options,
+        operators: [
+          { label: OPERATORS_LABELS.EQUAL, value: OPERATORS.EQUAL },
+          { label: OPERATORS_LABELS.NOT_EQUAL, value: OPERATORS.NOT_EQUAL },
+          { label: OPERATORS_LABELS.CONTAINS, value: OPERATORS.CONTAINS },
+          { label: OPERATORS_LABELS.STARTS_WITH, value: OPERATORS.STARTS_WITH },
+          { label: OPERATORS_LABELS.EMPTY, value: OPERATORS.EMPTY },
+        ],
       });
     });
 

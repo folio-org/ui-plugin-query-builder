@@ -26,6 +26,32 @@ describe('fqlQueryToSource()', () => {
     expect(result).toEqual([]);
   });
 
+  it('attaches the UUID operator set to a saved query on an array-of-UUIDs field', async () => {
+    const uuidArrayFieldOptions = [{
+      value: 'holdings.statistical_code_ids',
+      label: 'Statistical code UUIDs',
+      dataType: DATA_TYPES.JsonbArrayType,
+      itemDataType: DATA_TYPES.RangedUUIDType,
+    }];
+
+    const result = await fqlQueryToSource({
+      initialValues: { 'holdings.statistical_code_ids': { $in: ['id1', 'id2'] } },
+      fieldOptions: uuidArrayFieldOptions,
+      intl: { formatMessage: jest.fn(({ id }) => id) },
+      getDataOptionsWithFetching: jest.fn(),
+    });
+
+    expect(result[0].operator.current).toBe(OPERATORS.IN);
+    expect(result[0].operator.options.map((option) => option.value)).toEqual([
+      '',
+      OPERATORS.EQUAL,
+      OPERATORS.IN,
+      OPERATORS.NOT_IN,
+      OPERATORS.EMPTY,
+    ]);
+    expect(result[0].value.current).toEqual(['id1', 'id2']);
+  });
+
   it('round-trips a MARC subfield field (not in fieldOptions) into a MARC-mode row', async () => {
     const result = await fqlQueryToSource({
       initialValues: { marc_245_ind1_1_a: { $eq: 'Shakespeare' } },
@@ -588,6 +614,25 @@ describe('fqlQueryToSource()', () => {
 });
 
 describe('getQueryStr', () => {
+  it('renders a UUID field\'s saved in-value (an id array) like the typed comma-separated string', () => {
+    const uuidFieldOptions = [
+      { value: 'loan_policy_id', label: 'Loan policy — UUID', dataType: DATA_TYPES.RangedUUIDType },
+    ];
+    const intl = { formatDate: jest.fn(), formatMessage: jest.fn(({ id }) => (id.endsWith('.IN') ? 'in' : id)) };
+    const buildRow = (current) => [{
+      boolean: { current: '' },
+      field: { options: uuidFieldOptions, current: 'loan_policy_id' },
+      operator: { current: OPERATORS.IN },
+      value: { current },
+    }];
+
+    const seeded = getQueryStr(buildRow(['id1', 'id2']), uuidFieldOptions, intl, 'UTC', jest.fn(() => []));
+    const typed = getQueryStr(buildRow('id1, id2'), uuidFieldOptions, intl, 'UTC', jest.fn(() => []));
+
+    expect(seeded).toBe('(loan_policy_id in (id1, id2))');
+    expect(typed).toBe(seeded);
+  });
+
   it('uses static option labels for single-value custom field values', () => {
     const customFieldOptions = [
       {

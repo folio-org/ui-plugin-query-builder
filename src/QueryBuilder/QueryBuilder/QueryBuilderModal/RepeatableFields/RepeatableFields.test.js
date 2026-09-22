@@ -290,3 +290,42 @@ describe('RepeatableFields re-seed (entity-type load)', () => {
     expect(screen.getByTestId('marc-tag-0').value).toBe('245');
   });
 });
+
+// UIPQB-295: an array of UUIDs gets the same operator set as a scalar UUID column once a field is picked.
+const uuidArrayColumns = [
+  {
+    name: 'statistical_code_ids',
+    labelAlias: 'Statistical code UUIDs',
+    dataType: { dataType: 'jsonbArrayType', itemDataType: { dataType: 'rangedUUIDType' } },
+    queryable: true,
+    visibleByDefault: true,
+  },
+];
+
+const ColumnsHarness = ({ columns }) => {
+  const [source, setSource] = useState([sourceTemplate(getFieldOptions(columns))]);
+
+  return <RepeatableFields source={source} setSource={setSource} columns={columns} entityTypeId="et-1" />;
+};
+
+describe('RepeatableFields operator set for arrays of UUIDs', () => {
+  it('offers the UUID operators when an array-of-UUIDs field is selected', async () => {
+    render(
+      <Intl>
+        <RootContext.Provider value={{ getDataOptions: () => [], getDataOptionsWithFetching: () => [] }}>
+          <ColumnsHarness columns={uuidArrayColumns} />
+        </RootContext.Provider>
+      </Intl>,
+    );
+
+    await userEvent.click(await screen.findByText('ui-plugin-query-builder.control.selection.placeholder'));
+    await userEvent.click(await screen.findByText('Statistical code UUIDs'));
+
+    const operatorSelect = await screen.findByTestId('operator-option-0');
+    const offered = Array.from(operatorSelect.querySelectorAll('option'))
+      .map((option) => option.value)
+      .filter(Boolean);
+
+    expect(offered).toEqual([OPERATORS.EQUAL, OPERATORS.IN, OPERATORS.NOT_IN, OPERATORS.EMPTY]);
+  });
+});

@@ -15,5 +15,11 @@ export const DATA_TYPES = {
   MarcType: 'marcType',
 };
 
+export const UUID_DATA_TYPES = [
+  DATA_TYPES.RangedUUIDType,
+  DATA_TYPES.OpenUUIDType,
+  DATA_TYPES.StringUUIDType,
+];
+
 export const ORGANIZATIONS_TYPES = ['organization', 'donor_organization'];
 export const ORGANIZATIONS_TYPE_DONOR = 'donor_organization';
