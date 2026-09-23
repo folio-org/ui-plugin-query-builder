@@ -629,7 +629,7 @@ describe('getQueryStr', () => {
     const seeded = getQueryStr(buildRow(['id1', 'id2']), uuidFieldOptions, intl, 'UTC', jest.fn(() => []));
     const typed = getQueryStr(buildRow('id1, id2'), uuidFieldOptions, intl, 'UTC', jest.fn(() => []));
 
-    expect(seeded).toBe('(loan_policy_id in (id1, id2))');
+    expect(seeded).toBe('(loan_policy_id in [id1, id2])');
     expect(typed).toBe(seeded);
   });
 
