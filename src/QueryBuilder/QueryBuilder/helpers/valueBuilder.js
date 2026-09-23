@@ -15,7 +15,7 @@ export const getQuotedStr = (value, isInRelatedOperator = false) => {
   }
 
   if (typeof value === 'string' && isInRelatedOperator) {
-    return `(${value.split(',').map(item => item.trim()).join(', ')})`;
+    return `[${value.split(',').map(item => item.trim()).join(', ')}]`;
   }
 
   return value ? `${value}` : '';
@@ -147,9 +147,10 @@ export const retainValueOnOperatorChange = ({
     // A row seeded from a saved `$in`/`$nin` query holds its value as an array even when the field renders a
     // plain text box (UUID types, strings without options), since both operators share the TEXT control.
     // A scalar operator (==, !=, contains, ...) must get a scalar back, or the FQL becomes `{ $eq: [id] }`,
-    // which the backend rejects. Keep the first entry, as the select multi → single conversion below does.
+    // which the backend rejects. Fold the array into the comma-separated string the user would have typed,
+    // so switching operators never drops ids, same as for a freshly built row.
     if (Array.isArray(prevValue) && !isInRelatedOperator(newOperator)) {
-      return prevValue.length ? getOptionValue(prevValue[0]) : '';
+      return prevValue.map(getOptionValue).join(',');
     }
 
     return prevValue;

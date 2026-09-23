@@ -228,14 +228,14 @@ describe('valueBuilder with a value seeded from a saved in/not in query', () => 
       field: 'user_patron_group',
       operator: OPERATORS.IN,
       value: ['id1', 'id2'],
-      expected: '(id1, id2)',
+      expected: '[id1, id2]',
     },
     {
       name: 'RangedUUIDType NOT_IN with one id',
       field: 'user_patron_group',
       operator: OPERATORS.NOT_IN,
       value: ['id1'],
-      expected: '(id1)',
+      expected: '[id1]',
     },
     {
       name: 'StringUUIDType IN',
@@ -258,7 +258,7 @@ describe('valueBuilder with a value seeded from a saved in/not in query', () => 
       field: 'item_holdingsrecord_id',
       operator: OPERATORS.IN,
       value: ['123', '456'],
-      expected: '(123, 456)',
+      expected: '[123, 456]',
     },
   ])('renders $name like the equivalent typed string', ({ field, operator, value, expected, options = fieldOptions }) => {
     expect(valueBuilder({ value, field, operator, fieldOptions: options })).toBe(expected);
@@ -268,16 +268,16 @@ describe('valueBuilder with a value seeded from a saved in/not in query', () => 
     const field = 'user_patron_group';
     const operator = OPERATORS.IN;
 
-    expect(valueBuilder({ value: 'id1, id2', field, operator, fieldOptions })).toBe('(id1, id2)');
-    expect(valueBuilder({ value: 'id1,id2', field, operator, fieldOptions })).toBe('(id1, id2)');
+    expect(valueBuilder({ value: 'id1, id2', field, operator, fieldOptions })).toBe('[id1, id2]');
+    expect(valueBuilder({ value: 'id1,id2', field, operator, fieldOptions })).toBe('[id1, id2]');
   });
 });
 
 describe('getQuotedStr', () => {
   it('normalizes separators of an in-related string value to a single comma and space', () => {
-    expect(getQuotedStr('a, b', true)).toBe('(a, b)');
-    expect(getQuotedStr('a,b', true)).toBe('(a, b)');
-    expect(getQuotedStr('a ,  b', true)).toBe('(a, b)');
+    expect(getQuotedStr('a, b', true)).toBe('[a, b]');
+    expect(getQuotedStr('a,b', true)).toBe('[a, b]');
+    expect(getQuotedStr('a ,  b', true)).toBe('[a, b]');
   });
 
   it('leaves a scalar value alone', () => {
@@ -691,12 +691,12 @@ describe('retainValueOnOperatorChange', () => {
         expected: 'ac6b49ef-8cef-4647-a12b-758dbb2728f7',
       },
       {
-        name: 'StringUUIDType IN → NOT_EQUAL keeps the first id',
+        name: 'StringUUIDType IN → NOT_EQUAL keeps every id as a comma-separated string',
         dataType: DATA_TYPES.StringUUIDType,
         operator: OPERATORS.IN,
         newOperator: OPERATORS.NOT_EQUAL,
         prevValue: ['id-1', 'id-2'],
-        expected: 'id-1',
+        expected: 'id-1,id-2',
       },
       {
         name: 'StringType without options NOT_IN → CONTAINS',
@@ -716,6 +716,22 @@ describe('retainValueOnOperatorChange', () => {
       },
     ])('$name', ({ dataType, operator, newOperator, prevValue, expected }) => {
       expect(retainValueOnOperatorChange({ dataType, operator, newOperator, prevValue })).toBe(expected);
+    });
+
+    it('keeps every id when a seeded RangedUUIDType IN value switches to EQUAL, like a typed value does', () => {
+      expect(retainValueOnOperatorChange({
+        dataType: DATA_TYPES.RangedUUIDType,
+        operator: OPERATORS.IN,
+        newOperator: OPERATORS.EQUAL,
+        prevValue: ['123', '456'],
+      })).toBe('123,456');
+
+      expect(retainValueOnOperatorChange({
+        dataType: DATA_TYPES.RangedUUIDType,
+        operator: OPERATORS.IN,
+        newOperator: OPERATORS.EQUAL,
+        prevValue: '123,456',
+      })).toBe('123,456');
     });
 
     it('keeps the array when switching between in-related operators (NOT_IN → IN)', () => {
