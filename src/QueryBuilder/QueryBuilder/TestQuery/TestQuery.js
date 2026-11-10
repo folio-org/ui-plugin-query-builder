@@ -150,7 +150,7 @@ export const TestQuery = ({
 
   return (
     <>
-      <Layout className="display-flex flex-direction-column flex-align-items-start">
+      <Layout className="display-flex flex-direction-column flex-align-items-start marginTop1">
         {renderTestButton()}
       </Layout>
 
