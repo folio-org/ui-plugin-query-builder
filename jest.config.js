@@ -1,7 +1,16 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const path = require('path');
 
-const esModules = ['@folio', 'ky', 'uuid', 'keyboardjs'].join('|');
+const esModules = [
+  '@folio',
+  'ky',
+  'uuid',
+  'keyboardjs',
+  'query-string',
+  'decode-uri-component',
+  'filter-obj',
+  'split-on-first',
+].join('|');
 
 module.exports = {
   collectCoverageFrom: [
