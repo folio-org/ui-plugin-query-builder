@@ -18,6 +18,10 @@
     word-wrap: break-word;
 }
 
+.DynamicTable td {
+    white-space: pre-wrap;
+}
+
 .DynamicTable th:first-of-type, .DynamicTable td:first-of-type {
     border-left: none;
 }

@@ -20,4 +20,5 @@ input.NumberInput[type=number] {
 
 :global(#results-viewer-table [role="gridcell"]) {
     align-items: flex-start;
+    white-space: pre-wrap;
 }
