@@ -44,6 +44,7 @@
     resize: vertical;
     overflow-y: auto;
     line-height: 1.5;
+    white-space: pre-wrap;
 }
 
 .regularFont {
