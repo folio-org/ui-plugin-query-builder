@@ -9,12 +9,16 @@
     flex-direction: row-reverse;
   }
 
+  & span {
+    white-space: pre-wrap;
+  }
+
   &.truncate {
     --truncate-to: 100%; /* will be overridden by JS */
     max-width: var(--truncate-to);
 
     & span {
-      white-space: nowrap;
+      white-space: pre;
       overflow: hidden;
       text-overflow: ellipsis;
     }
