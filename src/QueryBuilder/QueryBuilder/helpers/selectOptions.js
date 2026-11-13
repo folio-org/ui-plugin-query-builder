@@ -271,35 +271,44 @@ export const fuzzySortOptions = (searchTerm, list) => {
 
 export const getFilteredOptions = fuzzySortOptions;
 
+// OptionSegment (stripes-components) renders labels with the browser default `white-space:
+// normal`, which collapses repeated spaces from BE-provided values (e.g. note types). The
+// inline style here preserves them regardless of where OptionSegment's markup ends up getting
+// rendered (dropdown list items are portaled into a shared overlay outside this plugin's own
+// DOM tree, so a CSS rule scoped to our own stylesheet couldn't reach them).
+const withPreservedWhitespace = (content) => (
+  <span style={{ whiteSpace: 'pre-wrap' }}>{content}</span>
+);
+
 export const fuzzyOptionFormatter = ({ option, searchTerm }) => {
   if (!option?.label) {
     return null;
   }
 
   if (typeof searchTerm !== 'string' || searchTerm === '') {
-    return <OptionSegment>{option.label}</OptionSegment>;
+    return <OptionSegment>{withPreservedWhitespace(option.label)}</OptionSegment>;
   }
 
   if (typeof option.label !== 'string') {
-    return <OptionSegment>{option.label}</OptionSegment>;
+    return <OptionSegment>{withPreservedWhitespace(option.label)}</OptionSegment>;
   }
 
   const normalizedSearchTerm = normalizeSearchText(searchTerm);
 
   if (!normalizedSearchTerm) {
-    return <OptionSegment>{option.label}</OptionSegment>;
+    return <OptionSegment>{withPreservedWhitespace(option.label)}</OptionSegment>;
   }
 
   const normalizedLabel = normalizeDashCharacters(option.label);
   const result = fuzzysort.single(normalizedSearchTerm, normalizedLabel);
 
   if (!result) {
-    return <OptionSegment>{option.label}</OptionSegment>;
+    return <OptionSegment>{withPreservedWhitespace(option.label)}</OptionSegment>;
   }
 
   return (
     <OptionSegment>
-      {getHighlightedLabel(option.label, fuzzysort.indexes(result))}
+      {withPreservedWhitespace(getHighlightedLabel(option.label, fuzzysort.indexes(result)))}
     </OptionSegment>
   );
 };
