@@ -191,7 +191,7 @@ describe('SelectionContainer', () => {
       searchTerm: '',
     });
 
-    expect(element.props.children).toBe('Apple');
+    expect(element.props.children.props.children).toBe('Apple');
   });
 
   it('formatter returns null when no selected option is present so the control placeholder can render', () => {
@@ -223,7 +223,7 @@ describe('SelectionContainer', () => {
       searchTerm: 'zzz',
     });
 
-    expect(element.props.children).toBe('Banana');
+    expect(element.props.children.props.children).toBe('Banana');
   });
 
   it('formatter highlights matching text', () => {
