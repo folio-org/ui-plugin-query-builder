@@ -810,7 +810,7 @@ describe('getFilteredOptions', () => {
       searchTerm: 'Parent - Child',
     });
 
-    expect(element.props.children[0].props.children).toBe('Parent — Child');
+    expect(getElementText(element)).toBe('Parent — Child');
   });
 
   it('should render non-string labels without highlighting', () => {
@@ -820,7 +820,7 @@ describe('getFilteredOptions', () => {
       searchTerm: 'Formatted',
     });
 
-    expect(element.props.children).toBe(label);
+    expect(element.props.children.props.children).toBe(label);
   });
 
   it('should render unhighlighted labels when the search term only contains ignored special characters', () => {
@@ -829,7 +829,16 @@ describe('getFilteredOptions', () => {
       searchTerm: '!*?',
     });
 
-    expect(element.props.children).toBe('Alpha');
+    expect(element.props.children.props.children).toBe('Alpha');
+  });
+
+  it('should preserve repeated spaces in a label via inline white-space styling', () => {
+    const element = fuzzyOptionFormatter({
+      option: { label: 'Admin   note' },
+    });
+
+    expect(element.props.children.props.style).toEqual({ whiteSpace: 'pre-wrap' });
+    expect(getElementText(element)).toBe('Admin   note');
   });
 
   it('should not reuse stale fuzzy indexes when formatting a shorter dash match', () => {
