@@ -15,6 +15,7 @@
 * [UIPQB-295](https://folio-org.atlassian.net/browse/UIPQB-295) Query on `idColumnName` fields displays names instead of UUIDs after list save
 * [UIPQB-303](https://folio-org.atlassian.net/browse/UIPQB-303) "Build query" plugin: Extra spaces are trimmed in the results table, so copied values return no matching records
 * [UIPQB-293](https://folio-org.atlassian.net/browse/UIPQB-293) Query results table has no accessible caption/name for screen readers
+* [UILISTS-269](https://folio-org.atlassian.net/browse/UILISTS-269) Lists app: "Refresh list" loading status is not announced to screen readers
 
 ## [3.0.2](https://github.com/folio-org/ui-plugin-query-builder/tree/v3.0.2) (2026-06-03)
 * [UIPQB-279](https://folio-org.atlassian.net/browse/UIPQB-279) Add support for fields containing a valueSourceApi property without a source property
