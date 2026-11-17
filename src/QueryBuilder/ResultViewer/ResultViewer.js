@@ -276,6 +276,15 @@ export const ResultViewer = ({
 
   const headerRef = useRef(null);
 
+  const setResultsTableLabel = (node) => {
+    if (node?.getAttribute('role') === 'grid') {
+      node.setAttribute(
+        'aria-label',
+        intl.formatMessage({ id: 'ui-plugin-query-builder.ariaLabel.resultsTable' }),
+      );
+    }
+  };
+
   const renderHeader = () => {
     const renderErrorMessage = () => {
       return (
@@ -344,6 +353,7 @@ export const ResultViewer = ({
             <MultiColumnList
               id="results-viewer-table"
               data-testid="results-viewer-table"
+              containerRef={setResultsTableLabel}
               contentData={tableData}
               columnMapping={columnMapping}
               formatter={formatter}

@@ -131,6 +131,16 @@ describe('ResultViewer', () => {
       });
     });
 
+    it('should expose an accessible name on the results grid for screen readers', async () => {
+      render(renderResultViewer({}));
+
+      await waitFor(() => {
+        expect(screen.queryByText('ui-plugin-query-builder.result.inProgress')).not.toBeInTheDocument();
+
+        expect(screen.getByRole('grid')).toHaveAccessibleName('ui-plugin-query-builder.ariaLabel.resultsTable');
+      });
+    });
+
     it('should be rendered with pagination', async () => {
       jest.spyOn(pagination, 'usePagination').mockImplementation(() => ({
         limit,
