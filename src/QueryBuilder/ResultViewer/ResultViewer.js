@@ -8,6 +8,7 @@ import {
   Layout,
   MultiColumnList,
   Row,
+  SRStatus,
 } from '@folio/stripes/components';
 import classNames from 'classnames';
 import { isEmpty } from 'lodash';
@@ -19,6 +20,7 @@ import { useLastNotEmptyValue } from '../../hooks/useLastNotEmptyValue';
 import { usePagination } from '../../hooks/usePagination';
 import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
 import { useViewerRefresh } from '../../hooks/useViewerRefresh';
+import { useViewerSRStatus } from '../../hooks/useViewerSRStatus';
 import { useQueryStr } from '../QueryBuilder/helpers/query';
 import { QueryLoader } from './QueryLoader';
 
@@ -251,6 +253,13 @@ export const ResultViewer = ({
   const validVisibleColumns = visibleColumns.filter((column) => columnMapping[column]);
   const isListLoading =
     isContentDataFetching || isContentDataLoading || isEntityTypeLoading || refreshInProgress;
+  const showSpinner =
+    refreshInProgress ||
+    (isEmpty(lastNotEmptyContent) &&
+      (isListLoading || isContentDataLoading) &&
+      isEmpty(contentData));
+
+  const { readerStatusRef } = useViewerSRStatus({ isLoading: showSpinner });
 
   useViewerCallbacks({
     onSetDefaultColumns,
@@ -338,12 +347,6 @@ export const ResultViewer = ({
   );
 
   const renderTable = () => {
-    const showSpinner =
-      refreshInProgress ||
-      (isEmpty(lastNotEmptyContent) &&
-        (isListLoading || isContentDataLoading) &&
-        isEmpty(contentData));
-
     return (
       <Row center="xs" className={css.ResultViewerRowWrapper}>
         <Col xs={12}>
@@ -387,6 +390,7 @@ export const ResultViewer = ({
   const renderContent = () => {
     return (
       <>
+        <SRStatus ref={readerStatusRef} />
         {renderHeader()}
         {renderAdditionalControls()}
         {!isEmpty(columnMapping) && renderTable()}

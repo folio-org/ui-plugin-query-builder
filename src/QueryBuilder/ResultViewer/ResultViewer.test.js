@@ -188,5 +188,22 @@ describe('ResultViewer', () => {
         expect(changePage).toBeCalled();
       });
     });
+
+    it('should announce the loading status to screen readers while refreshing', async () => {
+      const { rerender } = render(renderResultViewer());
+
+      await waitFor(() => {
+        expect(screen.getByText(`${content.totalRecords} records found`)).toBeVisible();
+      });
+
+      rerender(renderResultViewer({ refreshInProgress: true }));
+
+      await waitFor(() => {
+        const announcements = screen.getAllByText('ui-plugin-query-builder.result.inProgress');
+        const announcement = announcements.find((el) => el.closest('[aria-live]'));
+
+        expect(announcement).toBeDefined();
+      });
+    });
   });
 });
