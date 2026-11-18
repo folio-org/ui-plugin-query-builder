@@ -4,6 +4,7 @@
 
   "modal.cancel": "Cancel",
   "modal.run": "Run query",
+  "modal.run.inProgress": "Compiling results...",
   "modal.query": "Query",
   "modal.test": "Test query",
   "modal.entityType": "Record type:",

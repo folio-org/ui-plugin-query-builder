@@ -1,21 +1,19 @@
 import { useEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
 
-// Announces the loading state to screen readers (WCAG 4.1.3 Status Messages).
-// The spinner shown while refreshing/retrieving results otherwise has no
-// accessible notification, since it replaces table content without any
-// surrounding text change.
-export const useViewerSRStatus = ({ isLoading }) => {
+// Announces a loading state to screen readers (WCAG 4.1.3 Status Messages).
+// Several loading indicators in this plugin (a spinner replacing table
+// content, a disabled button during a mutation, ...) otherwise have no
+// accessible notification, since they don't change any surrounding text.
+export const useViewerSRStatus = ({ isLoading, messageId = 'ui-plugin-query-builder.result.inProgress' }) => {
   const intl = useIntl();
   const readerStatusRef = useRef();
 
   useEffect(() => {
     if (isLoading) {
-      readerStatusRef.current?.sendMessage(
-        intl.formatMessage({ id: 'ui-plugin-query-builder.result.inProgress' }),
-      );
+      readerStatusRef.current?.sendMessage(intl.formatMessage({ id: messageId }));
     }
-  }, [isLoading, intl]);
+  }, [isLoading, intl, messageId]);
 
   return { readerStatusRef };
 };
