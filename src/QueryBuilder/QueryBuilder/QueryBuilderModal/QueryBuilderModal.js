@@ -8,6 +8,7 @@ import {
   Headline,
   Loading,
   Row,
+  SRStatus,
   StripesOverlayWrapper,
   Layout,
   getFirstFocusable,
@@ -22,6 +23,7 @@ import { TestQuery } from '../TestQuery/TestQuery';
 import { getSourceValue } from '../helpers/query';
 import { useRunQuery } from '../../../hooks/useRunQuery';
 import { useQuerySource } from '../../../hooks/useQuerySource';
+import { useViewerSRStatus } from '../../../hooks/useViewerSRStatus';
 import { queryBuilderModalPropTypes } from '../../propTypes';
 import { QUERY_DETAILS_STATUSES, QUERY_KEYS } from '../../../constants/query';
 import { useCancelQuery } from '../../../hooks/useCancelQuery';
@@ -128,6 +130,11 @@ export const QueryBuilderModal = ({
     queryId,
     runQueryDataSource,
     onQueryRunFail,
+  });
+
+  const { readerStatusRef } = useViewerSRStatus({
+    isLoading: isRunQueryLoading,
+    messageId: 'ui-plugin-query-builder.modal.run.inProgress',
   });
 
   const { getDataOptionsWithFetching } = useContext(RootContext);
@@ -266,6 +273,7 @@ export const QueryBuilderModal = ({
         aria-modal="true"
         defaultWidth="fill"
       >
+        <SRStatus ref={readerStatusRef} />
         {isEntityTypeFetching ? (
           <Row center="xs">
             <Loading size="large" />

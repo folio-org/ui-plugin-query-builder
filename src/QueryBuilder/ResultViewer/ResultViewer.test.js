@@ -131,6 +131,16 @@ describe('ResultViewer', () => {
       });
     });
 
+    it('should expose an accessible name on the results grid for screen readers', async () => {
+      render(renderResultViewer({}));
+
+      await waitFor(() => {
+        expect(screen.queryByText('ui-plugin-query-builder.result.inProgress')).not.toBeInTheDocument();
+
+        expect(screen.getByRole('grid')).toHaveAccessibleName('ui-plugin-query-builder.ariaLabel.resultsTable');
+      });
+    });
+
     it('should be rendered with pagination', async () => {
       jest.spyOn(pagination, 'usePagination').mockImplementation(() => ({
         limit,
@@ -176,6 +186,23 @@ describe('ResultViewer', () => {
         expect(screen.queryByText('ui-plugin-query-builder.viewer.retrieving')).not.toBeInTheDocument();
 
         expect(changePage).toBeCalled();
+      });
+    });
+
+    it('should announce the loading status to screen readers while refreshing', async () => {
+      const { rerender } = render(renderResultViewer());
+
+      await waitFor(() => {
+        expect(screen.getByText(`${content.totalRecords} records found`)).toBeVisible();
+      });
+
+      rerender(renderResultViewer({ refreshInProgress: true }));
+
+      await waitFor(() => {
+        const announcements = screen.getAllByText('ui-plugin-query-builder.result.inProgress');
+        const announcement = announcements.find((el) => el.closest('[aria-live]'));
+
+        expect(announcement).toBeDefined();
       });
     });
   });

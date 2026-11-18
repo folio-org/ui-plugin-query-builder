@@ -8,6 +8,7 @@ import {
   Layout,
   MultiColumnList,
   Row,
+  SRStatus,
 } from '@folio/stripes/components';
 import classNames from 'classnames';
 import { isEmpty } from 'lodash';
@@ -19,6 +20,7 @@ import { useLastNotEmptyValue } from '../../hooks/useLastNotEmptyValue';
 import { usePagination } from '../../hooks/usePagination';
 import { useViewerCallbacks } from '../../hooks/useViewerCallbacks';
 import { useViewerRefresh } from '../../hooks/useViewerRefresh';
+import { useViewerSRStatus } from '../../hooks/useViewerSRStatus';
 import { useQueryStr } from '../QueryBuilder/helpers/query';
 import { QueryLoader } from './QueryLoader';
 
@@ -251,6 +253,13 @@ export const ResultViewer = ({
   const validVisibleColumns = visibleColumns.filter((column) => columnMapping[column]);
   const isListLoading =
     isContentDataFetching || isContentDataLoading || isEntityTypeLoading || refreshInProgress;
+  const showSpinner =
+    refreshInProgress ||
+    (isEmpty(lastNotEmptyContent) &&
+      (isListLoading || isContentDataLoading) &&
+      isEmpty(contentData));
+
+  const { readerStatusRef } = useViewerSRStatus({ isLoading: showSpinner });
 
   useViewerCallbacks({
     onSetDefaultColumns,
@@ -275,6 +284,15 @@ export const ResultViewer = ({
   });
 
   const headerRef = useRef(null);
+
+  const setResultsTableLabel = (node) => {
+    if (node?.getAttribute('role') === 'grid') {
+      node.setAttribute(
+        'aria-label',
+        intl.formatMessage({ id: 'ui-plugin-query-builder.ariaLabel.resultsTable' }),
+      );
+    }
+  };
 
   const renderHeader = () => {
     const renderErrorMessage = () => {
@@ -329,12 +347,6 @@ export const ResultViewer = ({
   );
 
   const renderTable = () => {
-    const showSpinner =
-      refreshInProgress ||
-      (isEmpty(lastNotEmptyContent) &&
-        (isListLoading || isContentDataLoading) &&
-        isEmpty(contentData));
-
     return (
       <Row center="xs" className={css.ResultViewerRowWrapper}>
         <Col xs={12}>
@@ -344,6 +356,7 @@ export const ResultViewer = ({
             <MultiColumnList
               id="results-viewer-table"
               data-testid="results-viewer-table"
+              containerRef={setResultsTableLabel}
               contentData={tableData}
               columnMapping={columnMapping}
               formatter={formatter}
@@ -377,6 +390,7 @@ export const ResultViewer = ({
   const renderContent = () => {
     return (
       <>
+        <SRStatus ref={readerStatusRef} />
         {renderHeader()}
         {renderAdditionalControls()}
         {!isEmpty(columnMapping) && renderTable()}

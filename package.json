@@ -85,6 +85,7 @@
     "@folio/plugin-find-organization": "^6.0.0"
   },
   "resolutions": {
+    "@folio/stripes-testing": "^5.0.0",
     "nwsapi": "2.2.24"
   }
 }

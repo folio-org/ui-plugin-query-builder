@@ -12,6 +12,7 @@ import {
 } from '../../../../test/jest/data/sources';
 import { getFieldOptions } from '../helpers/selectOptions';
 import { RootContext } from '../../../context/RootContext';
+import Intl from '../../../../test/jest/__mock__/intlProvider.mock';
 
 const queryClient = new QueryClient();
 
@@ -41,24 +42,26 @@ const renderQueryBuilderModal = ({
   onQueryRunSuccess = onRunSuccessMock,
   ...rest
 }) => render(
-  <QueryClientProvider client={queryClient}>
-    <RootContext.Provider value={{ setVisibleColumns: () => {}, getDataOptions: () => [] }}>
-      <QueryBuilderModal
-        setIsModalShown={setIsModalShown}
-        isOpen={isOpen}
-        saveBtnLabel={saveBtnLabel}
-        getParamsSource={getParamsSource}
-        entityTypeDataSource={entityTypeDataSource}
-        runQueryDataSource={runQueryDataSource}
-        queryDetailsDataSource={queryDetailsDataSource}
-        testQueryDataSource={testQueryDataSource}
-        cancelQueryDataSource={cancelQueryDataSource}
-        onQueryRunSuccess={onQueryRunSuccess}
-        onQueryRunFail={onQueryRunFail}
-        {...rest}
-      />
-    </RootContext.Provider>
-  </QueryClientProvider>,
+  <Intl locale="en">
+    <QueryClientProvider client={queryClient}>
+      <RootContext.Provider value={{ setVisibleColumns: () => {}, getDataOptions: () => [] }}>
+        <QueryBuilderModal
+          setIsModalShown={setIsModalShown}
+          isOpen={isOpen}
+          saveBtnLabel={saveBtnLabel}
+          getParamsSource={getParamsSource}
+          entityTypeDataSource={entityTypeDataSource}
+          runQueryDataSource={runQueryDataSource}
+          queryDetailsDataSource={queryDetailsDataSource}
+          testQueryDataSource={testQueryDataSource}
+          cancelQueryDataSource={cancelQueryDataSource}
+          onQueryRunSuccess={onQueryRunSuccess}
+          onQueryRunFail={onQueryRunFail}
+          {...rest}
+        />
+      </RootContext.Provider>
+    </QueryClientProvider>
+  </Intl>,
 );
 
 const fillFormAndClickTestQuery = async () => {
@@ -187,6 +190,31 @@ describe('QueryBuilderModal', () => {
     await waitFor(() => {
       expect(screen.queryByText('ui-plugin-query-builder.viewer.retrieving')).not.toBeInTheDocument();
     });
+  });
+
+  it('should announce the "Run & Save" action to screen readers while it is running', async () => {
+    renderQueryBuilderModal({});
+
+    await waitFor(() => {
+      expect(screen.queryByText('LOADING')).not.toBeInTheDocument();
+    });
+
+    await fillFormAndClickTestQuery();
+
+    const runButton = screen.getByRole('button', { name: /ui-plugin-query-builder\.modal\.run$/ });
+
+    await waitFor(() => {
+      expect(runButton).toBeEnabled();
+    }, { timeout: 5000 });
+
+    userEvent.click(runButton);
+
+    await waitFor(() => {
+      const announcements = screen.getAllByText('ui-plugin-query-builder.modal.run.inProgress');
+      const announcement = announcements.find((el) => el.closest('[aria-live]'));
+
+      expect(announcement).toBeDefined();
+    }, { timeout: 5000 });
   });
 
   describe('keyboard focus trap', () => {
